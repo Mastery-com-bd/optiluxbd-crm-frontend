@@ -6,7 +6,7 @@ export default function WhyChooseUs() {
         <section className="w-full px-6 md:px-12 lg:px-20 py-20 bg-white">
             {/* Section Header */}
             <div className="text-center max-w-3xl mx-auto mb-12">
-                <span className="text-xs font-bold text-white bg-gradient-to-r from-yellow-400 to-orange-500 inline-block px-3 py-1 rounded-full shadow-sm">
+                <span className="text-xs font-bold text-yellow-800 bg-yellow-200 inline-block px-4 py-1 rounded-full">
                     WHY CHOOSE US
                 </span>
                 <h2 className="mt-4 text-3xl md:text-4xl font-bold text-gray-900">
