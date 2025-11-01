@@ -13,6 +13,7 @@ type TInputTypeProps = {
   type?: string;
   required?: boolean;
   props?: string;
+  validateMatch?: string | boolean;
 };
 
 const InputType = ({
@@ -24,6 +25,7 @@ const InputType = ({
   type = "text",
   required = false,
   props,
+  validateMatch,
 }: TInputTypeProps) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -44,21 +46,6 @@ const InputType = ({
                 message: "enter a valid email address",
               },
             }),
-            ...(type === "date" && {
-              validate: (value) => {
-                const birthDate = new Date(value);
-                const today = new Date();
-                const age = today.getFullYear() - birthDate.getFullYear();
-                if (label !== "Service Date") {
-                  const isUnderage =
-                    age < 18 ||
-                    (age === 18 &&
-                      today <
-                        new Date(birthDate.setFullYear(today.getFullYear())));
-                  return !isUnderage || "You must be at least 18 years old.";
-                }
-              },
-            }),
             ...(type === "password" &&
               name === "newPassword" && {
                 pattern: {
@@ -67,8 +54,13 @@ const InputType = ({
                     "use min 8 character with letters numbers and symbols",
                 },
               }),
+            ...(type === "password" &&
+              name === "confirmPass" && {
+                validate: (value) =>
+                  value === validateMatch || "Passwords do not match",
+              }),
           })}
-          className={`peer w-full px-4 py-2 rounded-lg border transition-all duration-300 outline-none bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:border hover:border-gray-500 ${
+          className={`peer w-full px-4 py-2 rounded-lg border transition-all duration-300 outline-none bg-white text-gray-800  hover:border hover:border-gray-500 ${
             error
               ? "border-2 border-red-300 focus:border-red-300 focus:ring-red-300"
               : "border border-gray-300 dark:border-gray-600 "
@@ -88,6 +80,9 @@ const InputType = ({
         <p className="text-gray-500 text-sm">
           use min 8 character with letters numbers and symbols
         </p>
+      )}
+      {type === "password" && name === "confirmPass" && error && (
+        <p className="text-red-700">{error?.message as string}</p>
       )}
     </div>
   );

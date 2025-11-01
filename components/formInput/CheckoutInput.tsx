@@ -19,14 +19,14 @@ const CheckoutInput = ({
 }: ITermsCheckboxProps) => {
   return (
     <section className=" font-inter">
-      <label className="flex items-start space-x-2 cursor-pointer">
-        {errors?.[name] && <Ban className="text-red-600" />}
+      <label className="flex items-center space-x-2 cursor-pointer ">
+        {errors?.[name] && <Ban size={18} className="text-red-600" />}
         <input
           type="checkbox"
           {...register(name, {
             ...(required && { required: `${name} is required` }),
           })}
-          className="accent-black mt-1 w-4 h-4 "
+          className="accent-black w-4 h-4 "
         />
         <span className="text-gray-500 text-sm">{label}</span>
       </label>
