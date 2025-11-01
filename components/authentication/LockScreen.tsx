@@ -20,7 +20,7 @@ const LockScreen = () => {
     reset();
   };
   return (
-    <div className="bg-[#ffffff] p-8 lg:w-[25vw] space-y-6">
+    <div className="bg-[#ffffff] p-8 lg:w-[25vw] space-y-6 rounded-xl">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
         <Image
           src={`https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png`}
