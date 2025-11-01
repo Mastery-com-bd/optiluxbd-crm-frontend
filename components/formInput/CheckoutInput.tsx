@@ -28,7 +28,7 @@ const CheckoutInput = ({
           })}
           className="accent-black mt-1 w-4 h-4 "
         />
-        <span className="text-gray-500">{label}</span>
+        <span className="text-gray-500 text-sm">{label}</span>
       </label>
     </section>
   );

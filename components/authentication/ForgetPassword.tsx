@@ -9,10 +9,9 @@ import CheckoutInput from "../formInput/CheckoutInput";
 
 type TSingInForm = {
   email: string;
-  password: string;
 };
 
-const Login = () => {
+const ForgetPassword = () => {
   const router = useRouter();
   const {
     handleSubmit,
@@ -26,6 +25,7 @@ const Login = () => {
     router.push("/");
     reset();
   };
+
   return (
     <div className="bg-[#ffffff] p-8 lg:w-[30vw] space-y-6">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
@@ -37,7 +37,8 @@ const Login = () => {
         />
       </div>
       <p className="flex items-center justify-center text-center text-sm px-6 lg:px-16 text-[#a2b1ca]">
-        Lets get you signed in. Enter your email and password to continue
+        Enter your email address and we will send you a link to reset your
+        pasword
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputType
@@ -49,48 +50,32 @@ const Login = () => {
           required={true}
           error={errors.email}
         />
-        <InputType
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="********"
+
+        <CheckoutInput
           register={register}
-          required={true}
-          error={errors.password}
+          name="acceptTerms"
+          errors={errors}
+          label="Agree the Terms and Policy"
         />
-        <div className="flex items-center justify-between">
-          <CheckoutInput
-            register={register}
-            name="acceptTerms"
-            errors={errors}
-            label="Keep me signed in"
-          />
-          <Link
-            href="/forgot-password"
-            className=" border-b border-gray-500 text-gray-400 text-sm"
-          >
-            Forgot Password?
-          </Link>
-        </div>
         <button
           type="submit"
           disabled={isSubmitting}
           className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer"
         >
-          Login
+          Send Request
         </button>
       </form>
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
-        New here ?
+        Return to
         <Link
           className="border-b border-[#ffc500] text-yellow-600"
-          href="/register"
+          href="/login"
         >
-          Create an account
+          Login
         </Link>
       </p>
     </div>
   );
 };
 
-export default Login;
+export default ForgetPassword;
