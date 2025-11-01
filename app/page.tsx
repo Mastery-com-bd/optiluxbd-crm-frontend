@@ -1,10 +1,11 @@
-import HomePage1 from "@/components/pages/home/homePage1";
-import React from "react";
+import HeroBanner from "@/components/HomeComponents/HeroBanner";
+import WhyChooseUs from "@/components/HomeComponents/WhyChooseUs";
 
 const Home: React.FC = () => {
   return (
     <div>
-      <HomePage1 />
+      <HeroBanner />
+      <WhyChooseUs />
     </div>
   );
 }
