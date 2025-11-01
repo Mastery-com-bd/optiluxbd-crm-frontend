@@ -8,7 +8,7 @@ interface ITermsCheckboxProps {
   name: string;
   errors?: FieldErrors;
   required?: boolean;
-  label?: string;
+  label: string;
 }
 const CheckoutInput = ({
   register,
@@ -28,11 +28,7 @@ const CheckoutInput = ({
           })}
           className="accent-black mt-1 w-4 h-4 "
         />
-        {label ? (
-          <span>{label}</span>
-        ) : (
-          <span className="text-gray-500">Keep me signed in</span>
-        )}
+        <span className="text-gray-500">{label}</span>
       </label>
     </section>
   );

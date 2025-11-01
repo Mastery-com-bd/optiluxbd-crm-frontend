@@ -12,6 +12,7 @@ type TInputTypeProps = {
   error?: FieldError;
   type?: string;
   required?: boolean;
+  props?: string;
 };
 
 const InputType = ({
@@ -22,10 +23,11 @@ const InputType = ({
   error,
   type = "text",
   required = false,
+  props,
 }: TInputTypeProps) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <div className="w-full font-inter relative">
+    <div className="w-full font-inter relative space-y-2">
       <label className="block text-sm font-semibold text-gray-500 mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
@@ -60,9 +62,9 @@ const InputType = ({
             ...(type === "password" &&
               name === "newPassword" && {
                 pattern: {
-                  value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                  value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
                   message:
-                    "pass needs at least 8 chars with include one uppercase, lowercase, number & special char.",
+                    "use min 8 character with letters numbers and symbols",
                 },
               }),
           })}
@@ -82,6 +84,11 @@ const InputType = ({
           </span>
         )}
       </div>
+      {props === "register" && (
+        <p className="text-gray-500 text-sm">
+          use min 8 character with letters numbers and symbols
+        </p>
+      )}
     </div>
   );
 };
