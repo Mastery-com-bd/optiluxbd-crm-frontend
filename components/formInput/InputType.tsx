@@ -27,8 +27,8 @@ const InputType = ({
 }: TInputTypeProps) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <div className="w-full font-inter relative space-y-2">
-      <label className="block text-sm font-semibold text-gray-500 mb-1">
+    <div className="w-full font-inter relative space-y-3">
+      <label className="block text-sm font-semibold text-gray-500">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
