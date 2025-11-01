@@ -1,9 +1,9 @@
-import Registration from "@/components/authentication/Registration";
+import DeleteAccount from "@/components/auth/DeleteAccount";
 
-const RegistrationPage = () => {
+const DeleteAccountPage = () => {
   return (
     <section className="min-h-screen bg-[#f5f6f8] flex flex-col items-center justify-center space-y-6">
-      <Registration />
+      <DeleteAccount />
       <p className="text-sm text-gray-500">
         © <span>{new Date().getFullYear()}</span> Mastery — by Team Mastery
       </p>
@@ -11,4 +11,4 @@ const RegistrationPage = () => {
   );
 };
 
-export default RegistrationPage;
+export default DeleteAccountPage;

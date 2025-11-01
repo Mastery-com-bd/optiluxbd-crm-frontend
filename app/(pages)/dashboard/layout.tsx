@@ -1,6 +1,11 @@
+import { AppSidebar } from "@/components/pages/shared/sidebar/app-sidebar";
+import {
+    SidebarInset,
+    SidebarProvider
+} from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css"
+import "../../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,10 +32,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-1 flex-col gap-4 pt-0">
-          {children}
-          <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
-        </div>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            
+            <div className="flex flex-1 flex-col gap-4 pt-0">
+              {children}
+              <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
       </body>
     </html>
   );

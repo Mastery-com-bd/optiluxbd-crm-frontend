@@ -34,7 +34,6 @@ import {
   Truck,
   AlertTriangle,
   Users2,
-  UserCheck,
   Shield,
   Clock,
   Wallet,
@@ -65,21 +64,31 @@ export interface NavRoute {
 export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Products",
     icon: Package,
     children: [
-      { title: "All Products", path: "/products", icon: ListOrdered },
-      { title: "Add Product", path: "/products/add", icon: PlusSquare },
-      { title: "Draft Products", path: "/products/drafts", icon: FileMinus },
-      { title: "Deleted Products", path: "/products/deleted", icon: Trash2 },
-      { title: "Categories", path: "/products/categories", icon: Tags },
-      { title: "Reviews", path: "/products/reviews", icon: Star },
-      { title: "Inventory", path: "/products/inventory", icon: Warehouse },
-      { title: "Bulk Upload", path: "/products/bulk-upload", icon: Upload },
+      { title: "All Products", path: "/dashboard/products/all", icon: ListOrdered },
+      { title: "Add Product", path: "/dashboard/products/add", icon: PlusSquare },
+      { title: "Draft Products", path: "/dashboard/products/drafts", icon: FileMinus },
+      { title: "Deleted Products", path: "/dashboard/products/deleted", icon: Trash2 },
+      { title: "Reviews", path: "/dashboard/products/reviews", icon: Star },
+      { title: "Inventory", path: "/dashboard/products/inventory", icon: Warehouse },
+      { title: "Bulk Upload", path: "/dashboard/products/bulk-upload", icon: Upload },
+    ],
+  },
+  {
+    title: "Categories",
+    icon: Tags,
+    children: [
+      { title: "All Categories", path: "/dashboard/categories/all", icon: ListOrdered },
+      { title: "Add Category", path: "/dashboard/categories/add", icon: PlusSquare },
+      { title: "Edit Categories", path: "/dashboard/categories/edit", icon: Tags },
+      { title: "Add Sub Category", path: "/dashboard/categories/sub/add", icon: PlusSquare },
+      { title: "Edit Sub Categories", path: "/dashboard/categories/sub/edit", icon: Tags },
     ],
   },
   {
