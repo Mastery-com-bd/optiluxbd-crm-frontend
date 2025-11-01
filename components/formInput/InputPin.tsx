@@ -1,8 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
-const InputPin = () => {
+const InputPin = ({
+  handleSubmit,
+}: {
+  handleSubmit: (
+    e: FormEvent<HTMLFormElement>,
+    otpNum: string[]
+  ) => Promise<void>;
+}) => {
   const [otpNum, setOtpNum] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -36,15 +43,8 @@ const InputPin = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = {
-      otp: otpNum.join(""),
-    };
-    console.log(data);
-  };
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
+    <form onSubmit={(e) => handleSubmit(e, otpNum)} className="space-y-2">
       <h1 className="text-sm text-gray-500">
         Enter your 6-digit code <span className="text-red-500">*</span>
       </h1>

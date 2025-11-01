@@ -4,6 +4,16 @@ import Link from "next/link";
 import InputPin from "../formInput/InputPin";
 
 const LoginPin = () => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    otpNum: string[]
+  ) => {
+    e.preventDefault();
+    const data = {
+      otp: otpNum.join(""),
+    };
+    console.log(data);
+  };
   return (
     <div className="bg-[#ffffff] p-8 lg:w-[24vw] space-y-6 rounded-xl">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
@@ -27,7 +37,7 @@ const LoginPin = () => {
         />
         <h1 className="font-semibold text-gray-600">Steven McDonald</h1>
       </div>
-      <InputPin />
+      <InputPin handleSubmit={handleSubmit} />
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         Not you ? Return to
         <Link

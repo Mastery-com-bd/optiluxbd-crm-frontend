@@ -9,6 +9,17 @@ const ResetPassowrd = () => {
     console.log("clicked");
   };
 
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    otpNum: string[]
+  ) => {
+    e.preventDefault();
+    const data = {
+      otp: otpNum.join(""),
+    };
+    console.log(data);
+  };
+
   return (
     <div className="bg-[#ffffff] p-8 lg:w-[25vw] space-y-6 rounded-xl">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
@@ -23,7 +34,7 @@ const ResetPassowrd = () => {
         We`ve emailed you a 6-digit verification code in your email, you have
         sent us`
       </p>
-      <InputPin />
+      <InputPin handleSubmit={handleSubmit} />
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         Don`t have a code` ?
         <button
