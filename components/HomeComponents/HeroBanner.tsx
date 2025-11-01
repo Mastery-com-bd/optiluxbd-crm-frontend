@@ -92,7 +92,7 @@ export default function HeroBanner() {
                 </div>
             </div>
 
-            {/* ✅ Lucide Icons Section */}
+            {/* Lucide Icons Section */}
             <div className="mt-20 w-full flex flex-col items-center">
                 <p className="text-sm text-neutral-300 mb-4">
                     Trusted by teams around the world

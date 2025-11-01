@@ -1,7 +1,11 @@
-import HeroBanner from "@/components/HeroBanner";
+import HeroBanner from "@/components/HomeComponents/HeroBanner";
+import WhyChooseUs from "@/components/HomeComponents/WhyChooseUs";
 
 export default function Home() {
   return (
-    <HeroBanner />
+    <div>
+      <HeroBanner />
+      <WhyChooseUs />
+    </div>
   );
 }
