@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import VerifyEmailIcon from "../svgIcon/VerifyEmailIcon";
+import DeactiveIcon from "../svgIcon/DeactiveIcon";
 
-const SuccessMail = () => {
+const DeleteAccount = () => {
   return (
-    <div className="bg-[#ffffff] p-8 lg:w-[25vw] space-y-6">
+    <div className="bg-[#ffffff] p-8 lg:w-[30vw] space-y-6">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
         <Image
           src={`https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png`}
@@ -14,21 +14,22 @@ const SuccessMail = () => {
           alt="brand logo"
         />
       </div>
+      <div className="flex justify-center">
+        <DeactiveIcon />
+      </div>
+      <h1 className="text-gray-700 font-bold text-center">
+        Account Deactivated
+      </h1>
       <p className="flex items-center justify-center text-center text-sm px-6 text-[#a2b1ca]">
-        Awesome ! You`ve read the important message like a pro`
+        Your account is currently deactive. Reactive now to regain access to all
+        features and opportunities
       </p>
 
-      <h1 className="text-gray-700 font-bold text-center">
-        Well Done! Email verified Successfully
-      </h1>
-      <div className="flex justify-center">
-        <VerifyEmailIcon />
-      </div>
       <button className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer">
-        Back to Dashboard
+        Reactive Now
       </button>
     </div>
   );
 };
 
-export default SuccessMail;
+export default DeleteAccount;
