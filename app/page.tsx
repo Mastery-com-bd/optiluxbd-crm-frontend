@@ -1,10 +1,12 @@
 import HomePage1 from "@/components/pages/home/homePage1";
-import Image from "next/image";
+import React from "react";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <div>
       <HomePage1 />
     </div>
   );
 }
+
+export default Home
