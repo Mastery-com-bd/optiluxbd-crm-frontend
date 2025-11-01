@@ -27,10 +27,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-1 flex-col gap-4 pt-0">
+        {/* <div className="flex flex-1 flex-col gap-4 pt-0"> */}
           {children}
-          <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
-        </div>
+        {/* </div> */}
       </body>
     </html>
   );

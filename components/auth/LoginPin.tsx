@@ -29,11 +29,11 @@ const LoginPin = () => {
       </p>
       <div className="flex flex-col items-center gap-4">
         <Image
-          src={`https://www.faceplusplus.com/demo/images/demo-pic35.jpg`}
+          src={`https://images.unsplash.com/photo-1651684215020-f7a5b6610f23?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069`}
           height={500}
           width={500}
           alt="brand logo"
-          className="w-24 h-24 rounded-full"
+          className="w-24 h-24 rounded-full object-cover"
         />
         <h1 className="font-semibold text-gray-600">Steven McDonald</h1>
       </div>

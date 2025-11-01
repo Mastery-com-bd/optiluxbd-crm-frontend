@@ -6,6 +6,7 @@ import {
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
+import Navbar from "@/components/pages/shared/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,10 +36,9 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            
+            <Navbar />
             <div className="flex flex-1 flex-col gap-4 pt-0">
               {children}
-              <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
             </div>
           </SidebarInset>
         </SidebarProvider>
