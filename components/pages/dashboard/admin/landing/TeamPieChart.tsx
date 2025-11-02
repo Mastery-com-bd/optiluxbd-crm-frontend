@@ -1,6 +1,6 @@
 "use client"
 
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts"
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts"
 
 const data = [
     { name: "In Pipeline", value: 400 },
@@ -21,14 +21,14 @@ export default function TeamPieChart() {
                 </button>
             </div>
 
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={400}>
                 <PieChart>
                     <Pie
                         data={data}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        outerRadius={100}
+                        outerRadius={150}
                         fill="#8884d8"
                         dataKey="value"
                     >
@@ -36,6 +36,7 @@ export default function TeamPieChart() {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
+                    <Tooltip /> 
                     <Legend />
                 </PieChart>
             </ResponsiveContainer>

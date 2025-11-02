@@ -12,11 +12,11 @@ const page = () => {
             {/* <DateRangeSelector onChange={(val) => { console.log(val) }} /> */}
             <TeamPerformanceOverview />
             <TodaySummaryMetrics />
-            <div className="mt-4 flex gap-6">
+            <div className="mt-4 lg:flex gap-6">
                 <TeamStatsChart />
                 <TeamPieChart />
             </div>
-            <div className="flex gap-6">
+            <div className="lg:flex gap-6">
                 <LiveAgentSnapshot />
                 <LiveCallMonitoring />
             </div>
