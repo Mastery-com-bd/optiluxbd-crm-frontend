@@ -17,6 +17,7 @@ import {
   setname,
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
+import ProfileStats from "./ProfileStats";
 
 interface IProfileInfo {
   profileImage: string;
@@ -53,6 +54,7 @@ const Profile = () => {
   const [formData, setFormData] = useState<IProfileInfo | null>(
     userInfo ?? null
   );
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(currentuserInfo);
 
@@ -63,13 +65,15 @@ const Profile = () => {
   };
 
   const handleSave = () => {
+    setLoading(true);
     console.log("Saving changes:", currentUser);
     setIsEditing(false);
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex justify-center items-start">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow p-8">
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center space-y-10 ">
+      <div className="w-full lg:max-w-4xl bg-white rounded-2xl shadow p-8">
         <h2 className="text-2xl font-semibold text-black mb-8 border-b pb-4 border-gray-200">
           My Profile
         </h2>
@@ -326,12 +330,14 @@ const Profile = () => {
 
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
                   <button
+                    disabled={loading}
                     onClick={handleCancel}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
+                    disabled={loading}
                     onClick={handleSave}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-400 text-black font-medium hover:bg-yellow-500 transition cursor-pointer"
                   >
@@ -343,6 +349,7 @@ const Profile = () => {
           </section>
         </div>
       </div>
+      <ProfileStats />
     </div>
   );
 };
