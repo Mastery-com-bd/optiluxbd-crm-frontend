@@ -1,9 +1,9 @@
-import DeleteAccount from "@/components/authentication/DeleteAccount";
+import Login from "@/components/auth/Login";
 
-const DeleteAccountPage = () => {
+const LoginPage = () => {
   return (
     <section className="min-h-screen bg-[#f5f6f8] flex flex-col items-center justify-center space-y-6">
-      <DeleteAccount />
+      <Login />
       <p className="text-sm text-gray-500">
         © <span>{new Date().getFullYear()}</span> Mastery — by Team Mastery
       </p>
@@ -11,4 +11,4 @@ const DeleteAccountPage = () => {
   );
 };
 
-export default DeleteAccountPage;
+export default LoginPage;

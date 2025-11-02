@@ -1,8 +1,10 @@
-import React from 'react'
+import Error404TV from '@/components/pages/notFound/notFount'
 
 const NotFound = () => {
   return (
-    <div>Page NotFound</div>
+    <div className='min-h-screen flex flex-col items-center justify-center'>
+      <Error404TV />
+    </div>
   )
 }
 

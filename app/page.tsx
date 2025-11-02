@@ -1,7 +1,7 @@
 import HeroBanner from "@/components/HomeComponents/HeroBanner";
 import WhyChooseUs from "@/components/HomeComponents/WhyChooseUs";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <div>
       <HeroBanner />
@@ -9,3 +9,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home

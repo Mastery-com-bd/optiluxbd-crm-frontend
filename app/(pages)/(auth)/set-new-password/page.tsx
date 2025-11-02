@@ -1,4 +1,4 @@
-import SetNewPassword from "@/components/authentication/SetNewPassword";
+import SetNewPassword from "@/components/auth/SetNewPassword";
 
 const SetNewPasswordPage = () => {
   return (
