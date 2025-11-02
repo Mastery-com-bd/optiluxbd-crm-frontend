@@ -136,6 +136,14 @@ const ProfileStats = () => {
 
   const COLORS = ["#FACC15", "#3B82F6", "#2563EB", "#22C55E", "#EF4444"];
 
+  const orderProcessSummary = [
+    { stage: "Pending", count: 25 },
+    { stage: "Processed", count: 70 },
+    { stage: "Shipped", count: 60 },
+    { stage: "Delivered", count: 55 },
+    { stage: "Cancelled", count: 10 },
+  ];
+
   return (
     <section className="w-full lg:max-w-4xl space-y-6">
       {/* card section */}
@@ -289,6 +297,35 @@ const ProfileStats = () => {
                   label
                 >
                   {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Order Process Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={orderProcessSummary}
+                  dataKey="count"
+                  nameKey="stage"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {orderProcessSummary.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
