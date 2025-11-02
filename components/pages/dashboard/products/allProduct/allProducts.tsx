@@ -203,13 +203,13 @@ const AllProducts = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Products</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">All Products</h1>
             <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
-              <span className="font-medium text-gray-900">UBold</span>
+              <span className="font-medium text-gray-900">CRM</span>
               <span>›</span>
-              <span>Ecommerce</span>
+              <span>Dashboard</span>
               <span>›</span>
-              <span>Products</span>
+              <span>All Products</span>
             </div>
           </div>
           <Button className="bg-indigo-600 hover:bg-indigo-700">

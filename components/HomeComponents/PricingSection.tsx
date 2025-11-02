@@ -106,7 +106,7 @@ export default function PricingSection() {
                         </div>
 
                         <button
-                            className="mt-auto bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-md mt-6 transition duration-200"
+                            className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-md mt-6 transition duration-200"
                         >
                             Get Started
                         </button>
