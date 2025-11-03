@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
@@ -7,13 +8,30 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import {
+  useResetPasswordMutation,
+  useValidateresetTokenQuery,
+} from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import { usePasswordToggle } from "@/hooks/usePasswordToggle";
+import { Eye, EyeOff } from "lucide-react";
 
 export type TSetNewPass = {
   password: string;
   confirmPass: string;
-  acceptTerms: boolean;
+  acceptTerms?: boolean;
 };
+
 const SetNewPassword = () => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const router = useRouter();
+  const { visible, toggle } = usePasswordToggle();
+  const [resetPassword] = useResetPasswordMutation();
+  const { data, isLoading } = useValidateresetTokenQuery(token);
+  const validate = data?.data;
+
   const {
     handleSubmit,
     register,
@@ -22,10 +40,34 @@ const SetNewPassword = () => {
     formState: { errors, isSubmitting },
   } = useForm<TSetNewPass>();
   const passwordValue = useWatch({ control, name: "password" });
-  const onSubmit = (data: TSetNewPass) => {
-    console.log(data);
-    reset();
+
+  const onSubmit = async (data: TSetNewPass) => {
+    if (data?.acceptTerms) {
+      delete data.acceptTerms;
+    }
+    try {
+      const res = await resetPassword({ data, token }).unwrap();
+      if (res?.data) {
+        toast.success("passord reset successfully", { duration: 3000 });
+        router.push("/login");
+        reset();
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.data?.errorSource[1]?.message ||
+        error?.data?.message ||
+        error?.error ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+    }
   };
+  if (isLoading) {
+    return <div>loading</div>;
+  }
+  if (!validate) {
+    return router.push("forgot-password");
+  }
+
   return (
     <div className="bg-[#ffffff] p-8 lg:w-[30vw] space-y-6 rounded-xl">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
@@ -41,11 +83,11 @@ const SetNewPassword = () => {
         it
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-2">
+        <div className="space-y-2 relative">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
-            type="password"
+            type={visible ? "text" : "password"}
             placeholder="********"
             className={errors.password ? "border-red-500" : ""}
             {...register("password", {
@@ -57,6 +99,13 @@ const SetNewPassword = () => {
               },
             })}
           />
+          <button
+            type="button"
+            onClick={toggle}
+            className="absolute right-2 top-8 text-gray-400 hover:text-gray-600"
+          >
+            {visible ? <Eye size={18} /> : <EyeOff size={18} />}
+          </button>
           <p className="text-gray-500 text-sm">
             use min 8 character with letters numbers and symbols
           </p>
@@ -67,11 +116,7 @@ const SetNewPassword = () => {
             id="confirmPass"
             type="password"
             placeholder="********"
-            className={
-              errors.confirmPass
-                ? "border-red-500 focus-visible:ring-red-500"
-                : ""
-            }
+            className={errors.confirmPass ? "border-red-500" : ""}
             {...register("confirmPass", {
               required: "Confirm password is required",
               validate: (value) =>

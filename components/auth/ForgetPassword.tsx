@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Controller, useForm } from "react-hook-form";
@@ -8,26 +9,44 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
+import { useForgetPasswordMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
 
-type TSingInForm = {
+type TForgotPassword = {
   email: string;
-  acceptTerms: boolean;
+  acceptTerms?: boolean;
 };
 
 const ForgetPassword = () => {
   const router = useRouter();
+  const [forgotPassword] = useForgetPasswordMutation();
   const {
     handleSubmit,
     register,
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<TSingInForm>();
+  } = useForm<TForgotPassword>();
 
-  const onSubmit = (data: TSingInForm) => {
-    console.log(data);
-    router.push("/");
-    reset();
+  const onSubmit = async (data: TForgotPassword) => {
+    if (data?.acceptTerms) {
+      delete data.acceptTerms;
+    }
+    try {
+      const res = await forgotPassword(data).unwrap();
+      if (res?.data) {
+        toast.success("request sent successfully", { duration: 3000 });
+        router.push("/reset-password");
+        reset();
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.data?.errorSource[1]?.message ||
+        error?.data?.message ||
+        error?.error ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+    }
   };
 
   return (
