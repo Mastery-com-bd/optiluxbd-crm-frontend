@@ -1,8 +1,16 @@
 'use client';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 
-const pricingPlans = [
+interface PricingPlan {
+    name: string;
+    price: string;
+    highlighted: boolean;
+    features: string[];
+}
+
+const pricingPlans: PricingPlan[] = [
     {
         name: 'Basic',
         price: '$99',
@@ -46,7 +54,7 @@ const pricingPlans = [
     },
 ];
 
-const cardVariants = {
+const cardVariants: Variants = {
     hidden: { opacity: 0, y: 40, scale: 0.95 },
     visible: {
         opacity: 1,
@@ -84,7 +92,7 @@ export default function PricingSection() {
                         variants={cardVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true }}
+                        viewport={{ once: true, amount: 0.3 }}
                         transition={{ delay: index * 0.08 }}
                     >
                         <h3 className="text-xl font-semibold text-black">{plan.name}</h3>
@@ -106,7 +114,7 @@ export default function PricingSection() {
                         </div>
 
                         <button
-                            className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-md mt-6 transition duration-200"
+                            className="mt-auto bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-md transition duration-200"
                         >
                             Get Started
                         </button>

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
+import { useEffect } from "react";
 
 export type TSetNewPass = {
   password: string;
@@ -31,7 +32,6 @@ const SetNewPassword = () => {
   const [resetPassword] = useResetPasswordMutation();
   const { data, isLoading } = useValidateresetTokenQuery(token);
   const validate = data?.data;
-
   const {
     handleSubmit,
     register,
@@ -40,6 +40,12 @@ const SetNewPassword = () => {
     formState: { errors, isSubmitting },
   } = useForm<TSetNewPass>();
   const passwordValue = useWatch({ control, name: "password" });
+
+  useEffect(() => {
+    if (!isLoading && !validate) {
+      router.push("/forgot-password");
+    }
+  }, [isLoading, validate, router]);
 
   const onSubmit = async (data: TSetNewPass) => {
     if (data?.acceptTerms) {
@@ -61,11 +67,13 @@ const SetNewPassword = () => {
       toast.error(errorInfo, { duration: 3000 });
     }
   };
+
   if (isLoading) {
     return <div>loading</div>;
   }
+
   if (!validate) {
-    return router.push("forgot-password");
+    return <div>Redirecting...</div>;
   }
 
   return (
