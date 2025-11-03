@@ -38,6 +38,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@reduxjs/toolkit':
+        specifier: ^2.9.2
+        version: 2.9.2(react-redux@9.2.0(@types/react@19.2.2)(react@19.2.0)(redux@5.0.1))(react@19.2.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -59,15 +62,18 @@ importers:
       react-dom:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
-      swiper:
-        specifier: ^12.0.3
-        version: 12.0.3
       react-hook-form:
         specifier: ^7.66.0
         version: 7.66.0(react@19.2.0)
+      react-redux:
+        specifier: ^9.2.0
+        version: 9.2.0(@types/react@19.2.2)(react@19.2.0)(redux@5.0.1)
       recharts:
         specifier: ^3.3.0
         version: 3.3.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@16.13.1)(react@19.2.0)(redux@5.0.1)
+      swiper:
+        specifier: ^12.0.3
+        version: 12.0.3
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
