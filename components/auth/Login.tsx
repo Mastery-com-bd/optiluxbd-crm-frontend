@@ -1,15 +1,18 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import InputType from "../formInput/InputType";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import CheckoutInput from "../formInput/CheckoutInput";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 type TSingInForm = {
   email: string;
   password: string;
+  keepSignedIn?: boolean;
 };
 
 const Login = () => {
@@ -40,31 +43,31 @@ const Login = () => {
         Lets get you signed in. Enter your email and password to continue
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <InputType
-          label="Email address"
-          name="email"
-          placeholder="you@example.com"
-          type="email"
-          register={register}
-          required={true}
-          error={errors.email}
-        />
-        <InputType
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="********"
-          register={register}
-          required={true}
-          error={errors.password}
-        />
-        <div className="flex items-center justify-between">
-          <CheckoutInput
-            register={register}
-            name="acceptTerms"
-            errors={errors}
-            label="Keep me signed in"
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            className={errors.email ? "border-red-500" : ""}
+            {...register("email", { required: "Email is required" })}
           />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="********"
+            className={errors.password ? "border-red-500" : ""}
+            {...register("password", { required: "Password is required" })}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Checkbox id="keepSignedIn" {...register("keepSignedIn")} />
+            <Label htmlFor="keepSignedIn">Keep me signed in</Label>
+          </div>
           <Link
             href="/forgot-password"
             className=" border-b border-gray-500 text-gray-400 text-sm"
@@ -72,13 +75,13 @@ const Login = () => {
             Forgot Password?
           </Link>
         </div>
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer"
+          className="w-full bg-yellow-500 hover:bg-[#ffc500] text-white cursor-pointer"
         >
-          Login
-        </button>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </Button>
       </form>
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         New here ?

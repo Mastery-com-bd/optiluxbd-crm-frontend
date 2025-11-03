@@ -1,15 +1,18 @@
 "use client";
-import { useForm } from "react-hook-form";
-import InputType from "../formInput/InputType";
+import { Controller, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import CheckoutInput from "../formInput/CheckoutInput";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 type TRegisterForm = {
   name: string;
   email: string;
   password: string;
+  acceptTerms: boolean;
 };
 
 const Registration = () => {
@@ -18,6 +21,7 @@ const Registration = () => {
     handleSubmit,
     register,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<TRegisterForm>();
   const onSubmit = (data: TRegisterForm) => {
@@ -40,48 +44,78 @@ const Registration = () => {
         below
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <InputType
-          label="Name"
-          name="name"
-          placeholder="Damian D."
-          type="text"
-          register={register}
-          required={true}
-          error={errors.name}
-        />
-        <InputType
-          label="Email address"
-          name="email"
-          placeholder="you@example.com"
-          type="email"
-          register={register}
-          required={true}
-          error={errors.email}
-        />
-        <InputType
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="********"
-          register={register}
-          required={true}
-          error={errors.password}
-          props="register"
-        />
-        <CheckoutInput
-          register={register}
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Damian D."
+            className={errors.name ? "border-red-500" : ""}
+            {...register("name", { required: "Name is required" })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            className={errors.email ? "border-red-500" : ""}
+            {...register("email", { required: "Email is required" })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="********"
+            className={errors.password ? "border-red-500" : ""}
+            {...register("password", {
+              required: "Password is required",
+              pattern: {
+                value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                message:
+                  "Use at least 8 characters with letters, numbers, and symbols",
+              },
+            })}
+          />
+          <p className="text-gray-500 text-sm">
+            use min 8 character with letters numbers and symbols
+          </p>
+        </div>
+        <Controller
           name="acceptTerms"
-          errors={errors}
-          required={true}
-          label="Agree the Terms and Policy"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="acceptTerms"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+                <Label htmlFor="acceptTerms" className="text-sm text-gray-600">
+                  Agree to the Terms and Policy
+                </Label>
+              </div>
+
+              {errors.acceptTerms && (
+                <p className="text-red-500 text-xs flex items-center gap-1">
+                  ⚠️ Please accept the terms to continue
+                </p>
+              )}
+            </div>
+          )}
         />
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer"
+          className="w-full bg-yellow-500 hover:bg-[#ffc500] text-white cursor-pointer"
         >
-          Create account
-        </button>
+          {isSubmitting ? "Creating account..." : "Create account"}
+        </Button>
       </form>
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         Already have an account ?

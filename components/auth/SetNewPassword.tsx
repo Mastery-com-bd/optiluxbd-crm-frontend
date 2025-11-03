@@ -1,14 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useForm, useWatch } from "react-hook-form";
-import InputType from "../formInput/InputType";
-import CheckoutInput from "../formInput/CheckoutInput";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import Link from "next/link";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export type TSetNewPass = {
   password: string;
   confirmPass: string;
+  acceptTerms: boolean;
 };
 const SetNewPassword = () => {
   const {
@@ -38,40 +41,76 @@ const SetNewPassword = () => {
         it
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <InputType
-          label="Password"
-          name="password"
-          placeholder="********"
-          type="password"
-          register={register}
-          required={true}
-          error={errors.password}
-          props="register"
-        />
-        <InputType
-          label="Confirm New Password"
-          name="confirmPass"
-          type="password"
-          placeholder="********"
-          register={register}
-          required={true}
-          error={errors.confirmPass}
-          validateMatch={passwordValue}
-        />
-        <CheckoutInput
-          register={register}
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="********"
+            className={errors.password ? "border-red-500" : ""}
+            {...register("password", {
+              required: "Password is required",
+              pattern: {
+                value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+                message:
+                  "Use at least 8 characters with letters, numbers, and symbols",
+              },
+            })}
+          />
+          <p className="text-gray-500 text-sm">
+            use min 8 character with letters numbers and symbols
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="confirmPass">Confirm New Password</Label>
+          <Input
+            id="confirmPass"
+            type="password"
+            placeholder="********"
+            className={
+              errors.confirmPass
+                ? "border-red-500 focus-visible:ring-red-500"
+                : ""
+            }
+            {...register("confirmPass", {
+              required: "Confirm password is required",
+              validate: (value) =>
+                value === passwordValue || "Passwords do not match",
+            })}
+          />
+        </div>
+        <Controller
           name="acceptTerms"
-          errors={errors}
-          required={true}
-          label="Agree the Terms and Policy"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="acceptTerms"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+                <Label htmlFor="acceptTerms" className="text-sm text-gray-600">
+                  Agree to the Terms and Policy
+                </Label>
+              </div>
+
+              {errors.acceptTerms && (
+                <p className="text-red-500 text-xs flex items-center gap-1">
+                  ⚠️ Please accept the terms to continue
+                </p>
+              )}
+            </div>
+          )}
         />
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer"
+          className="w-full bg-yellow-500 hover:bg-[#ffc500] text-white cursor-pointer"
         >
-          Update password
-        </button>
+          {isSubmitting ? "Updating password..." : "Update password"}
+        </Button>
       </form>
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         Return to
