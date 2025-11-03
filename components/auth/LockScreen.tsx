@@ -31,7 +31,7 @@ const LockScreen = () => {
       </div>
       <div className="flex flex-col items-center gap-4">
         <Image
-          src={`https://www.faceplusplus.com/demo/images/demo-pic35.jpg`}
+          src={`https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=764`}
           height={500}
           width={500}
           alt="brand logo"
