@@ -2,7 +2,7 @@
 
 import { Eye, Edit, Trash } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {

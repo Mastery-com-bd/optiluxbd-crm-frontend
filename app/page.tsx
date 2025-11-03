@@ -1,4 +1,3 @@
-import Footer from "@/components/common/Footer";
 import HeroBanner from "@/components/HomeComponents/HeroBanner";
 import KeyFeatures from "@/components/HomeComponents/KeyFeatures";
 import PricingSection from "@/components/HomeComponents/PricingSection";
