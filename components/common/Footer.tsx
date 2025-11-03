@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -6,11 +8,17 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/dashboard")) return null;
+
   return (
     <footer className="bg-black text-white">
-      {/* 🟡 Top CTA Section */}
+      {/* CTA Section */}
       <div className="bg-black text-center py-12 px-6 border-b border-orange-500">
         <h2 className="text-2xl sm:text-3xl font-semibold leading-relaxed">
           <span className="text-yellow-400">Discover</span> How Our CRM <br />
@@ -23,7 +31,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 🧱 Grid Links Section */}
+      {/* Grid & Contact Section */}
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
         {/* Brand */}
         <div>
@@ -76,7 +84,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ⬛ Bottom Bar */}
+      {/* Bottom Bar */}
       <div className="border-t border-gray-700 py-4 px-6 text-center text-xs sm:flex sm:items-center sm:justify-between text-gray-400">
         <p>© {new Date().getFullYear()} SalesSync. All rights reserved.</p>
         <div className="flex gap-4 justify-center sm:justify-end mt-2 sm:mt-0">

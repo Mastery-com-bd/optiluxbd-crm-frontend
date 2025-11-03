@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
@@ -22,15 +23,16 @@ export default function RealTimeSection() {
             <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 1 }}
                 className="mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
             >
                 {/* Left — Image */}
                 <motion.div
-                    initial={{ x: -60, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
                     className="flex justify-center lg:justify-end"
                 >
                     <div className="relative w-full h-[300px] md:h-[400px] lg:h-[480px]">
@@ -47,9 +49,10 @@ export default function RealTimeSection() {
 
                 {/* Right — Content */}
                 <motion.div
-                    initial={{ x: 60, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.2 }}
                 >
                     <p className="text-xs font-bold text-yellow-800 bg-yellow-200 px-4 py-1 rounded-full mb-4 inline-block">
                         REAL-TIME INSIGHTS
@@ -66,6 +69,7 @@ export default function RealTimeSection() {
                         className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6"
                         initial="hidden"
                         whileInView="visible"
+                        viewport={{ once: true }}
                         variants={{
                             hidden: {},
                             visible: {
@@ -81,8 +85,8 @@ export default function RealTimeSection() {
                                 <motion.div
                                     key={item.title}
                                     variants={{
-                                        hidden: { opacity: 0, y: 20 },
-                                        visible: { opacity: 1, y: 0 },
+                                        hidden: { opacity: 0 },
+                                        visible: { opacity: 1 },
                                     }}
                                     className="flex items-center gap-3 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium"
                                 >
@@ -95,9 +99,9 @@ export default function RealTimeSection() {
 
                     {/* CTA Button */}
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.3, duration: 0.7 }}
                         viewport={{ once: true }}
                     >
                         <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold w-full sm:w-auto mt-3.5">
