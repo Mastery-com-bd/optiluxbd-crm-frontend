@@ -1,19 +1,19 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import InputPin from "../formInput/InputPin";
+import InputPin, { TSubmitHandler } from "./InputPin";
 
 const LoginPin = () => {
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    otpNum: string[]
-  ) => {
+  const handleSubmit = async ({ e, otpNum, setLoading }: TSubmitHandler) => {
     e.preventDefault();
+    setLoading(true);
     const data = {
       otp: otpNum.join(""),
     };
     console.log(data);
+    setLoading(false);
   };
+
   return (
     <div className="bg-[#ffffff] p-8 lg:w-[24vw] space-y-6 rounded-xl">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
