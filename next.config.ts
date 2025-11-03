@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: "optilux.com.bd",
       },
+      {
+        protocol: 'https',
+        hostname: "i.ibb.co.com",
+      },
     ],
   },
 };

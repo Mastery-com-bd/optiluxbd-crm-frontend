@@ -17,7 +17,6 @@ const Home: React.FC = () => {
       <TestimonialsSection />
       <PricingSection />
       <RealTimeSection />
-      <Footer />
     </div>
   );
 }
