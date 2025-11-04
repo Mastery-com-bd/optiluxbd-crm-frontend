@@ -3,7 +3,6 @@
 
 import { Controller, useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -18,7 +17,6 @@ type TForgotPassword = {
 };
 
 const ForgetPassword = () => {
-  const router = useRouter();
   const [forgotPassword] = useForgetPasswordMutation();
   const {
     handleSubmit,
@@ -29,14 +27,11 @@ const ForgetPassword = () => {
   } = useForm<TForgotPassword>();
 
   const onSubmit = async (data: TForgotPassword) => {
-    if (data?.acceptTerms) {
-      delete data.acceptTerms;
-    }
+    delete data.acceptTerms;
     try {
       const res = await forgotPassword(data).unwrap();
-      if (res?.data) {
-        toast.success("request sent successfully", { duration: 3000 });
-        router.push("/reset-password");
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
         reset();
       }
     } catch (error: any) {

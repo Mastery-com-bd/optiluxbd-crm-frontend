@@ -38,23 +38,27 @@ const Login = () => {
   } = useForm<TLoginData>();
 
   const onSubmit = async (data: TLoginData) => {
-    if (data?.keepSignedIn) {
-      delete data.keepSignedIn;
-    }
+    delete data.keepSignedIn;
     try {
       const res = await login(data).unwrap();
-      if (res?.data) {
-        const user = decodeToken(res?.data);
-        dispatch(setUser({ user, token: res?.data }));
-        toast.success("successfully logged in", {
+      if (res?.success) {
+        console.log(res?.data?.token);
+        const token = res?.data?.token;
+        const user = decodeToken(token);
+        dispatch(setUser({ user, token: res?.data?.token }));
+        toast.success(res?.message, {
           duration: 3000,
         });
-        router.push("/");
+        router.push("/dashboard/agent/profile");
         reset();
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
-        error?.data?.message || error?.error || "Something went wrong!";
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
     }
   };

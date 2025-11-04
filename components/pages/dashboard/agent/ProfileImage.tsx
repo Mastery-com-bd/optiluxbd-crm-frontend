@@ -23,7 +23,7 @@ const ProfileImage = ({ profileImage }: { profileImage: string | null }) => {
 
   return (
     <div
-      className="relative rounded-full"
+      className="relative rounded-full border border-red-600"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);
@@ -37,7 +37,7 @@ const ProfileImage = ({ profileImage }: { profileImage: string | null }) => {
         alt="Agent Avatar"
         width={500}
         height={500}
-        className="rounded-full h-56 w-56 object-cover border-4 border-yellow-400 shadow-md"
+        className="rounded-full h-56 w-56 object-cover border-2 border-yellow-400 shadow-md"
       />
       <input
         type="file"
