@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
     BarChart,
@@ -9,6 +8,8 @@ import {
     DatabaseZap,
 } from 'lucide-react';
 import { Button } from '../ui/button';
+import Lottie from 'lottie-react';
+import animationData2 from '../../public/lottie/Financial charts and statistics on tab with up arrow.json';
 
 export default function RealTimeSection() {
     const features = [
@@ -33,17 +34,10 @@ export default function RealTimeSection() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1 }}
-                    className="flex justify-center lg:justify-end"
+                    className="flex justify-center lg:justify-end "
                 >
-                    <div className="relative w-full h-[300px] md:h-[400px] lg:h-[480px]">
-                        <Image
-                            src="/images/analytics-dashboard-with-person.jpg"
-                            alt="Analytics dashboard with a person"
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
-                            className="object-cover rounded-md"
-                            priority
-                        />
+                    <div className="relative">
+                        <Lottie animationData={animationData2} />
                     </div>
                 </motion.div>
 
