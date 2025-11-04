@@ -18,6 +18,7 @@ import {
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
 import ProfileStats from "./ProfileStats";
+// import ChangePassword from "./ChangePassword";
 
 interface IProfileInfo {
   profileImage: string;
@@ -348,7 +349,11 @@ const Profile = () => {
             )}
           </section>
         </div>
+        {/* <div className="flex items-center justify-center mt-10">
+          <ChangePassword />
+        </div> */}
       </div>
+
       <ProfileStats />
     </div>
   );
