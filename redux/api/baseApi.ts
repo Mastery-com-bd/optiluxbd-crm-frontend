@@ -19,7 +19,7 @@ const baseQuery = fetchBaseQuery({
     console.log(token);
     console.log(typeof token);
     if (token) {
-      headers.set("authorization", token);
+      headers.set("authorization", `Bearer ${token}`);
     }
     return headers;
   },
@@ -40,7 +40,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       }
     );
     const data = await res.json();
-    console.log(data);
     if (data?.data) {
       const user = (api.getState() as RootState).auth.user;
       api.dispatch(
