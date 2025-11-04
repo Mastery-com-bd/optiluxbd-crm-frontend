@@ -1,8 +1,10 @@
 "use client";
 import { useForm } from "react-hook-form";
-import InputType from "../formInput/InputType";
 import Link from "next/link";
 import Image from "next/image";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 type TLockScreen = {
   password: string;
@@ -40,23 +42,24 @@ const LockScreen = () => {
         <h1 className="font-semibold text-gray-600">Steven McDonald</h1>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <InputType
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="********"
-          register={register}
-          required={true}
-          error={errors.password}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="********"
+            className={errors.password ? "border-red-500" : ""}
+            {...register("password", { required: "Password is required" })}
+          />
+        </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 cursor-pointer"
+          className="w-full bg-yellow-500 hover:bg-[#ffc500] text-white cursor-pointer"
         >
-          Unlock
-        </button>
+          {isSubmitting ? "Unlocking..." : "Unlock"}
+        </Button>
       </form>
       <p className=" flex justify-center gap-1 text-gray-500 text-sm">
         Not you ? Return to

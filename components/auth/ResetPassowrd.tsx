@@ -2,22 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import InputPin from "../formInput/InputPin";
+import InputPin, { TSubmitHandler } from "./InputPin";
 
 const ResetPassowrd = () => {
   const resendOTP = async () => {
     console.log("clicked");
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    otpNum: string[]
-  ) => {
+  const handleSubmit = async ({ e, otpNum, setLoading }: TSubmitHandler) => {
     e.preventDefault();
+    setLoading(true);
     const data = {
       otp: otpNum.join(""),
     };
     console.log(data);
+    setLoading(false);
   };
 
   return (
