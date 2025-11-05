@@ -10,27 +10,27 @@ import { Star } from 'lucide-react';
 const testimonials = [
     {
         name: 'David Gilroy',
-        image: '/images/person1.jpg',
+        image: 'https://i.ibb.co.com/Xfx69qYG/icon-256x256.png',
         quote: "Nowadays, it isn't great uncommon to see lenders rapidly adopting.",
     },
     {
         name: 'Kyla Showalter',
-        image: '/images/person2.jpg',
+        image: 'https://i.ibb.co.com/Xfx69qYG/icon-256x256.png',
         quote: 'This platform truly simplified how we handle feedback and success.',
     },
     {
         name: 'Akash Hossain',
-        image: '/images/person3.jpg',
+        image: 'https://i.ibb.co.com/Xfx69qYG/icon-256x256.png',
         quote: 'Amazing interface and clean approach to managing testimonials!',
     },
     {
         name: 'Fatima Rahman',
-        image: '/images/person3.jpg',
+        image: 'https://i.ibb.co.com/Xfx69qYG/icon-256x256.png',
         quote: 'Easy to use, effective, and stunningly designed feature.',
     },
     {
         name: 'Jamal Uddin',
-        image: '/images/person2.jpg',
+        image: 'https://i.ibb.co.com/Xfx69qYG/icon-256x256.png',
         quote: 'Customer service is excellent: fast, responsive, and helpful!',
     },
 ];
