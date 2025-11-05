@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Lottie from 'lottie-react';
 import {
     Layers,
     SquareAsterisk,
@@ -9,7 +10,7 @@ import {
     Hourglass,
     RefreshCw,
 } from "lucide-react";
-import Image from "next/image";
+import animationData from '../../public/lottie/About Us Team.json';
 
 export default function HeroBanner() {
     return (
@@ -79,21 +80,14 @@ export default function HeroBanner() {
                     className="lg:max-w-[50%] relative w-full flex justify-center items-center z-10"
                 >
                     <div
-                        className="relative bg-cover bg-center bg-no-repeat h-[400px] w-full flex justify-center"
+                        className="relative bg-cover bg-center bg-no-repeat  w-full flex justify-center"
                         style={{ backgroundImage: "url('/images/person-bg.png')" }}
                     >
-                        <Image
-                            src="/images/person.png"
-                            fill
-                            alt="Person Image"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-contain rounded-full"
-                            priority
-                        />
+                        <Lottie animationData={animationData}></Lottie>
                     </div>
 
                     {/* Card 1 */}
-                    <motion.div
+                    {/* <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9 }}
@@ -107,10 +101,10 @@ export default function HeroBanner() {
                                 89%
                             </span>
                         </div>
-                    </motion.div>
+                    </motion.div> */}
 
                     {/* Card 2 */}
-                    <motion.div
+                    {/* <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: 1.1 }}
@@ -125,10 +119,10 @@ export default function HeroBanner() {
                         <div className="w-full h-1 bg-yellow-200 rounded mt-1">
                             <div className="h-1 bg-yellow-600 rounded w-[42%]" />
                         </div>
-                    </motion.div>
+                    </motion.div> */}
 
                     {/* Card 3 */}
-                    <motion.div
+                    {/* <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.3 }}
@@ -142,7 +136,7 @@ export default function HeroBanner() {
                         <div className="w-full h-1 bg-yellow-200 rounded mt-1">
                             <div className="h-1 bg-yellow-500 rounded w-[75%]" />
                         </div>
-                    </motion.div>
+                    </motion.div> */}
                 </motion.div>
             </div>
 
