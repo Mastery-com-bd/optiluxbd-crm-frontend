@@ -1,10 +1,15 @@
+"use client"
+
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { BellDotIcon, SunIcon } from "lucide-react";
+import { BellDotIcon, MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import React from "react";
 
 const Navbar: React.FC = () => {
+   const { setTheme } = useTheme()
   return (
     <div>
       <header className="sticky top-0 z-999 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
@@ -20,9 +25,21 @@ const Navbar: React.FC = () => {
               </span>
             </div>
             <div className="flex items-center gap-4">
-              {/* TODO: Make This Dark Mode Button */}
-              <div>
-                <SunIcon className="w-6 h-6" />
+              <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
+                <button
+                  onClick={() => setTheme("light")}
+                  className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                  aria-label="Switch to light mode"
+                >
+                  <SunIcon className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => setTheme("dark")}
+                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out flex dark:hidden`}
+                  aria-label="Switch to dark mode"
+                >
+                  <MoonIcon className="w-6 h-6" />
+                </button>
               </div>
               <Popover>
                 <PopoverTrigger asChild>
@@ -75,8 +92,8 @@ const Navbar: React.FC = () => {
                   </div>
                 </PopoverContent>
               </Popover>
-              <div>
-                <div className="relative group">
+              <Popover>
+                <PopoverTrigger asChild>
                   <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background">
                     <Avatar className="w-9 h-9 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
                       <AvatarImage src="https://github.com/shadcn.png" />
@@ -93,43 +110,39 @@ const Navbar: React.FC = () => {
                       </span>
                     </div>
                   </button>
-
-                  {/* Dropdown Menu */}
-                  <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl border bg-popover shadow-lg ring-1 ring-black/5 focus:outline-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <div className="p-2">
-                      <div className="flex items-center gap-3 px-2 py-2">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>BI</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-semibold">Bishal</p>
-                          <p className="text-xs text-muted-foreground">
-                            bishal@example.com
-                          </p>
-                        </div>
-                      </div>
-                      <hr className="my-2" />
-                      <a
-                        href="/profile"
-                        className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                      >
-                        Profile
-                      </a>
-                      <a
-                        href="/settings"
-                        className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                      >
-                        Settings
-                      </a>
-                      <hr className="my-2" />
-                      <button className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
-                        Log out
-                      </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 p-2" align="end">
+                  <div className="flex items-center gap-3 px-2 py-2">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>BI</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-semibold">Bishal</p>
+                      <p className="text-xs text-muted-foreground">
+                        bishal@example.com
+                      </p>
                     </div>
                   </div>
-                </div>
-              </div>
+                  <hr className="my-2" />
+                  <a
+                    href="/profile"
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    Profile
+                  </a>
+                  <a
+                    href="/settings"
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    Settings
+                  </a>
+                  <hr className="my-2" />
+                  <button className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
+                    Log out
+                  </button>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
