@@ -1,48 +1,62 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
+import { useForm, Controller } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Card } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, Bold, Italic, Underline, Strikethrough, Code, List, LinkIcon, ImageIcon } from "lucide-react"
+import {
+  Upload,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Code,
+  List,
+  LinkIcon,
+  ImageIcon,
+} from "lucide-react"
 import Link from "next/link"
+import { useAddProductMutation } from "@/redux/features/products/productsApi"
+
+type FormData = {
+  productName: string
+  sku: string
+  stock: number
+  description: string
+  basePrice: number
+  discountType: "percentage" | "fixed"
+  discountValue: string
+  brand: string
+  category: string
+  subCategory: string
+  status: string
+  tags: string
+}
 
 const AddProduct = () => {
-  const [formData, setFormData] = useState({
-    productName: "",
-    sku: "",
-    stock: "",
-    description: "",
-    basePrice: "",
-    discountType: "percentage",
-    discountValue: "",
-    brand: "",
-    category: "",
-    subCategory: "",
-    status: "",
-    tags: "",
-  })
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleDiscard = () => {
-    setFormData({
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
       productName: "",
       sku: "",
-      stock: "",
+      stock: 0,
       description: "",
-      basePrice: "",
+      basePrice: 0,
       discountType: "percentage",
       discountValue: "",
       brand: "",
@@ -50,343 +64,303 @@ const AddProduct = () => {
       subCategory: "",
       status: "",
       tags: "",
-    })
-  }
+    },
+  })
 
-  const handleSaveAsDraft = () => {
-    console.log("Saving as draft:", formData)
-    alert("Product saved as draft!")
-  }
+  const [image, setImage] = useState<File | null>(null)
+  const[ addProduct, isLoading, ] = useAddProductMutation();
 
-  const handlePublish = () => {
-    if (
-      !formData.productName ||
-      !formData.sku ||
-      !formData.stock ||
-      !formData.category ||
-      !formData.subCategory ||
-      !formData.status
-    ) {
-      alert("Please fill in all required fields")
-      return
+  const onSubmit = async (data: FormData) => {
+    const productInfo = {
+      name: data.productName,
+      description: data.description,
+      sku: data.sku,
+      price: data.basePrice,
+      quantity: data.stock,
+      category: data.category,
+      brand: data.brand,
+      isActive: data.status === "published",
+      imageUrl:"",
     }
-    console.log("Publishing product:", formData)
-    alert("Product published successfully!")
+    const res = await addProduct(productInfo).unwrap();
+    console.log(res);
+
+  }
+
+  const onDiscard = () => {
+    reset()
+    setImage(null)
   }
 
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Add Product</h1>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/" className="hover:text-foreground">
-              UBold
-            </Link>
+            <Link href="/" className="hover:text-foreground">UBold</Link>
             <span>›</span>
-            <Link href="/products" className="hover:text-foreground">
-              Ecommerce
-            </Link>
+            <Link href="/products" className="hover:text-foreground">Ecommerce</Link>
             <span>›</span>
             <span>Add Product</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="col-span-2 space-y-8">
-            {/* Product Information */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-2">Product Information</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                To add a new product, please provide the necessary details in the fields below.
-              </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-3 gap-8">
+            {/* MAIN SECTION */}
+            <div className="col-span-2 space-y-8">
+              <Card className="p-6 space-y-6">
+                <h2 className="text-lg font-semibold">Product Information</h2>
 
-              <div className="space-y-6">
+                {/* Product Name */}
                 <div>
-                  <Label htmlFor="productName" className="text-foreground font-medium">
-                    Product Name <span className="text-red-500">*</span>
-                  </Label>
+                  <Label htmlFor="productName">Product Name *</Label>
                   <Input
                     id="productName"
-                    name="productName"
-                    placeholder="Enter product name"
-                    value={formData.productName}
-                    onChange={handleInputChange}
+                    {...register("productName", { required: true })}
+                    placeholder="Product name"
                     className="mt-2"
                   />
+                  {errors.productName && (
+                    <p className="text-red-500 text-sm">Required</p>
+                  )}
                 </div>
 
+                {/* SKU + Stock */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="sku" className="text-foreground font-medium">
-                      SKU <span className="text-red-500">*</span>
-                    </Label>
+                    <Label htmlFor="sku">SKU *</Label>
                     <Input
                       id="sku"
-                      name="sku"
-                      placeholder="SOFA-10058"
-                      value={formData.sku}
-                      onChange={handleInputChange}
+                      {...register("sku", { required: true })}
                       className="mt-2"
                     />
+                    {errors.sku && <p className="text-red-500 text-sm">Required</p>}
                   </div>
                   <div>
-                    <Label htmlFor="stock" className="text-foreground font-medium">
-                      Stock <span className="text-red-500">*</span>
-                    </Label>
+                    <Label htmlFor="stock">Stock *</Label>
                     <Input
                       id="stock"
-                      name="stock"
-                      placeholder="250"
                       type="number"
-                      value={formData.stock}
-                      onChange={handleInputChange}
+                      {...register("stock", { required: true, valueAsNumber: true })}
                       className="mt-2"
                     />
+                    {errors.stock && (
+                      <p className="text-red-500 text-sm">Required</p>
+                    )}
                   </div>
                 </div>
 
+                {/* Text Editor & Description */}
                 <div>
-                  <Label htmlFor="description" className="text-foreground font-medium">
-                    Product Description <span className="text-gray-500 text-sm">(Optional)</span>
-                  </Label>
-                  <div className="mt-2 border rounded-lg overflow-hidden">
-                    <div className="flex items-center gap-1 p-3 border-b bg-gray-50">
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <Bold className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <Italic className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <Underline className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <Strikethrough className="w-4 h-4" />
-                      </button>
-                      <div className="w-px h-6 bg-gray-300 mx-1" />
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <Code className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <List className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <LinkIcon className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-gray-200 rounded">
-                        <ImageIcon className="w-4 h-4" />
-                      </button>
+                  <Label htmlFor="description">Product Description</Label>
+                  <div className="mt-2 border rounded">
+                    <div className="flex gap-2 border-b p-2 bg-gray-50">
+                      <Bold className="w-4 h-4" />
+                      <Italic className="w-4 h-4" />
+                      <Underline className="w-4 h-4" />
+                      <Strikethrough className="w-4 h-4" />
+                      <Code className="w-4 h-4" />
+                      <List className="w-4 h-4" />
+                      <LinkIcon className="w-4 h-4" />
+                      <ImageIcon className="w-4 h-4" />
                     </div>
                     <Textarea
                       id="description"
-                      name="description"
-                      placeholder="Introducing the Azure Comfort Single Sofa, a perfect blend of modern design and luxurious comfort..."
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="border-0 min-h-40 resize-none"
+                      {...register("description")}
+                      placeholder="Product description..."
+                      rows={6}
+                      className="border-0"
                     />
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
 
-            {/* Product Image */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-2">Product Image</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                To upload a product image, please use the option below to select and upload the relevant file.
-              </p>
-
-              <div className="border-2 border-dashed rounded-lg p-12 text-center">
-                <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="font-semibold text-foreground mb-2">Drop files here or click to upload.</h3>
-                <p className="text-sm text-muted-foreground mb-6">
-                  You can drag images here, or browse files via the button below.
-                </p>
-                <Button variant="outline">Browse Images</Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Pricing */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-2">Pricing</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                Set the base price and applicable discount for the product using the options below.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="basePrice" className="text-foreground font-medium">
-                    Base Price <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="flex mt-2">
-                    <Input
-                      id="basePrice"
-                      name="basePrice"
-                      placeholder="Enter base price (e.g., 199.99)"
-                      type="number"
-                      value={formData.basePrice}
-                      onChange={handleInputChange}
-                      className="rounded-r-none"
-                    />
-                    <div className="bg-gray-100 px-3 py-2 border border-l-0 rounded-r flex items-center text-foreground">
-                      $
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="discountType" className="text-foreground font-medium">
-                    Discount Type <span className="text-gray-500 text-sm">(Optional)</span>
-                  </Label>
-                  <Select
-                    value={formData.discountType}
-                    onValueChange={(value) => handleSelectChange("discountType", value)}
-                  >
-                    <SelectTrigger className="mt-2">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="percentage">Percentage (%)</SelectItem>
-                      <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="discountValue" className="text-foreground font-medium">
-                    Discount Value <span className="text-gray-500 text-sm">(Optional)</span>
-                  </Label>
-                  <div className="flex mt-2">
-                    <Input
-                      id="discountValue"
-                      name="discountValue"
-                      placeholder="Enter discount amount or percentage"
-                      value={formData.discountValue}
-                      onChange={handleInputChange}
-                      className="rounded-r-none"
-                    />
-                    <div className="bg-gray-100 px-3 py-2 border border-l-0 rounded-r flex items-center text-foreground">
-                      {formData.discountType === "percentage" ? "%" : "$"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Organize */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-2">Organize</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                Organize your product by selecting the appropriate brand, category, sub-category, status, and tags.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="brand" className="text-foreground font-medium">
-                    Brand
-                  </Label>
+              {/* Image Upload */}
+              <Card className="p-6 space-y-4">
+                <h2 className="text-lg font-semibold">Product Image</h2>
+                <div className="border-2 border-dashed px-4 py-8 rounded text-center">
+                  <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground mb-2">Upload an image</p>
                   <Input
-                    id="brand"
-                    name="brand"
-                    placeholder="Enter brand name"
-                    value={formData.brand}
-                    onChange={handleInputChange}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        setImage(e.target.files[0])
+                      }
+                    }}
+                  />
+                  {image && (
+                    <p className="text-sm mt-2 text-green-600 font-medium">
+                      Selected: {image.name}
+                    </p>
+                  )}
+                </div>
+              </Card>
+            </div>
+
+            {/* Sidebar Section */}
+            <div className="space-y-6">
+              {/* Pricing */}
+              <Card className="p-6 space-y-4">
+                <h2 className="text-lg font-semibold">Pricing</h2>
+
+                <div>
+                  <Label>Base Price *</Label>
+                  <Input
+                    type="number"
+                    {...register("basePrice", { required: true, valueAsNumber: true })}
                     className="mt-2"
+                    placeholder="e.g., 199.99"
+                  />
+                </div>
+
+                {/* Discount */}
+                <div>
+                  <Label>Discount Type</Label>
+                  <Controller
+                    control={control}
+                    name="discountType"
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="percentage">Percentage</SelectItem>
+                          <SelectItem value="fixed">Fixed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="category" className="text-foreground font-medium">
-                    Category <span className="text-red-500">*</span>
-                  </Label>
-                  <Select value={formData.category} onValueChange={(value) => handleSelectChange("category", value)}>
-                    <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Choose Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="electronics">Electronics</SelectItem>
-                      <SelectItem value="furniture">Furniture</SelectItem>
-                      <SelectItem value="fashion">Fashion</SelectItem>
-                      <SelectItem value="home">Home & Office</SelectItem>
-                      <SelectItem value="fitness">Fitness</SelectItem>
-                      <SelectItem value="gaming">Gaming</SelectItem>
-                      <SelectItem value="toys">Toys</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="subCategory" className="text-foreground font-medium">
-                    Sub Category <span className="text-red-500">*</span>
-                  </Label>
-                  <Select
-                    value={formData.subCategory}
-                    onValueChange={(value) => handleSelectChange("subCategory", value)}
-                  >
-                    <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Choose Sub Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="subcategory1">Sub Category 1</SelectItem>
-                      <SelectItem value="subcategory2">Sub Category 2</SelectItem>
-                      <SelectItem value="subcategory3">Sub Category 3</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="status" className="text-foreground font-medium">
-                    Status <span className="text-red-500">*</span>
-                  </Label>
-                  <Select value={formData.status} onValueChange={(value) => handleSelectChange("status", value)}>
-                    <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Choose Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="draft">Draft</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="tags" className="text-foreground font-medium">
-                    Tags
-                  </Label>
+                  <Label>Discount Value</Label>
                   <Input
-                    id="tags"
-                    name="tags"
-                    placeholder="Enter tags separated by commas"
-                    value={formData.tags}
-                    onChange={handleInputChange}
+                    type="text"
+                    {...register("discountValue")}
                     className="mt-2"
+                    placeholder="10 or 50"
                   />
                 </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+              </Card>
 
-        {/* Action Buttons */}
-        <div className="flex justify-center gap-4 mt-8">
-          <Button variant="outline" className="text-red-500 bg-transparent hover:bg-red-50" onClick={handleDiscard}>
-            Discard
-          </Button>
-          <Button variant="outline" onClick={handleSaveAsDraft}>
-            Save as Draft
-          </Button>
-          <Button className="bg-teal-600 hover:bg-teal-700 text-white" onClick={handlePublish}>
-            Publish
-          </Button>
-        </div>
+              {/* Organize */}
+              <Card className="p-6 space-y-4">
+                <h2 className="text-lg font-semibold">Organize</h2>
+
+                <div>
+                  <Label>Brand</Label>
+                  <Input {...register("brand")} className="mt-2" />
+                </div>
+
+                <div>
+                  <Label>Category *</Label>
+                  <Controller
+                    control={control}
+                    name="category"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="electronics">Electronics</SelectItem>
+                          <SelectItem value="furniture">Furniture</SelectItem>
+                          <SelectItem value="fashion">Fashion</SelectItem>
+                          <SelectItem value="home">Home</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <Label>Subcategory *</Label>
+                  <Controller
+                    control={control}
+                    name="subCategory"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Pick a sub category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="chairs">Chairs</SelectItem>
+                          <SelectItem value="tables">Tables</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <Label>Status *</Label>
+                  <Controller
+                    control={control}
+                    name="status"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="published">Published</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <Label>Tags</Label>
+                  <Input {...register("tags")} className="mt-2" placeholder="chair,wood" />
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          {/* Action buttons below form */}
+          <div className="flex justify-center gap-4 mt-8">
+            {/* Discard */}
+            <Button
+              type="button"
+              variant="outline"
+              className="text-red-500 bg-transparent hover:bg-red-50"
+              onClick={() => {
+                reset()
+                setImage(null)
+              }}
+            >
+              Discard
+            </Button>
+
+            {/* Save as Draft (skip validation) */}
+            <Button
+              type="button"
+              variant="outline"
+            >
+              Save as Draft
+            </Button>
+
+            {/* Publish (runs full validation) */}
+            <Button
+              type="submit"
+              className="bg-teal-600 text-white hover:bg-teal-700"
+            >
+              Publish
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   )

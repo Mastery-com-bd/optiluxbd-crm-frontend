@@ -1,8 +1,5 @@
 "use client"
-
 import {
-  AudioWaveform,
-  Command,
   Frame,
   GalleryVerticalEnd,
   PieChart,
@@ -22,7 +19,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { crmRoutes } from "@/constants/CRM_Navigation"
-
+import Optilux from "../../../../../public/images/OptiluxBD.png";
+import Image from "next/image"
 // This is sample data.
 const data = {
   user: {
@@ -32,42 +30,15 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-      icon: GalleryVerticalEnd,
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-      icon: AudioWaveform,
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-      icon: Command,
+      name: "OpitluxBD",
+      logo: () => <Image src={Optilux} alt="Logo" width={24} height={24} />,
+      plan: "CRM",
+      icon: Frame,
     },
   ],
   navMain: crmRoutes,
   projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: MapIcon,
-    },
-  ], 
+  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
