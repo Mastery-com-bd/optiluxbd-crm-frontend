@@ -1,15 +1,18 @@
-"use client"
-
+"use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { BellDotIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import React from "react";
 
 const Navbar: React.FC = () => {
-   const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
   return (
     <div>
       <header className="sticky top-0 z-999 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
@@ -27,15 +30,21 @@ const Navbar: React.FC = () => {
             <div className="flex items-center gap-4">
               <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
                 <button
-                  onClick={() => setTheme("light")}
+                  onClick={() => {
+                    setTheme("light");
+                    console.log("clicked sun");
+                  }}
                   className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
                   aria-label="Switch to light mode"
                 >
                   <SunIcon className="w-6 h-6" />
                 </button>
                 <button
-                  onClick={() => setTheme("dark")}
-                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out flex dark:hidden`}
+                  onClick={() => {
+                    setTheme("dark");
+                    console.log("clicked moon");
+                  }}
+                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
                   aria-label="Switch to dark mode"
                 >
                   <MoonIcon className="w-6 h-6" />
@@ -64,24 +73,36 @@ const Navbar: React.FC = () => {
                       <div className="mt-1 w-2 h-2 rounded-full bg-blue-500 shrink-0" />
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">New lead assigned</p>
-                        <p className="text-xs text-muted-foreground">Sarah Johnson just filled the contact form.</p>
-                        <p className="text-xs text-muted-foreground/70">2 minutes ago</p>
+                        <p className="text-xs text-muted-foreground">
+                          Sarah Johnson just filled the contact form.
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">
+                          2 minutes ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
                       <div className="mt-1 w-2 h-2 rounded-full bg-green-500 shrink-0" />
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">Deal won</p>
-                        <p className="text-xs text-muted-foreground">Acme Corp deal ($45,000) moved to Closed-Won.</p>
-                        <p className="text-xs text-muted-foreground/70">1 hour ago</p>
+                        <p className="text-xs text-muted-foreground">
+                          Acme Corp deal ($45,000) moved to Closed-Won.
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">
+                          1 hour ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
                       <div className="mt-1 w-2 h-2 rounded-full bg-amber-500 shrink-0" />
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">Task overdue</p>
-                        <p className="text-xs text-muted-foreground">Follow-up with TechGlobal is 3 days overdue.</p>
-                        <p className="text-xs text-muted-foreground/70">3 hours ago</p>
+                        <p className="text-xs text-muted-foreground">
+                          Follow-up with TechGlobal is 3 days overdue.
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">
+                          3 hours ago
+                        </p>
                       </div>
                     </div>
                   </div>

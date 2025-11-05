@@ -8,6 +8,7 @@ import {
     DatabaseZap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Lottie from 'lottie-react';
 
 export default function RealTimeSection() {
     const features = [

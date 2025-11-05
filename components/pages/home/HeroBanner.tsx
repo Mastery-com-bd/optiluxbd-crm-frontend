@@ -10,7 +10,7 @@ import {
     Hourglass,
     RefreshCw,
 } from "lucide-react";
-import animationData from '../../public/lottie/About Us Team.json';
+import animationData from '@/public/lottie/About Us Team.json';
 
 export default function HeroBanner() {
     return (
