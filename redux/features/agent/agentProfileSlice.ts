@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type TGender = "male" | "female" | "others";
 type TProfileInitialState = {
   name: string;
-  email: string;
   phone: string;
   city: string;
   country: string;
@@ -21,9 +20,6 @@ const agentProfileSlice = createSlice({
   reducers: {
     setname: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
-    },
-    setEmail: (state, action: PayloadAction<string>) => {
-      state.email = action.payload;
     },
     setPhone: (state, action: PayloadAction<string>) => {
       state.phone = action.payload;
@@ -52,7 +48,6 @@ const agentProfileSlice = createSlice({
 
 export const {
   setname,
-  setEmail,
   setPhone,
   setCity,
   setCountry,
