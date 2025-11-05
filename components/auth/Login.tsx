@@ -61,6 +61,7 @@ const Login = () => {
         reset();
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.message ||

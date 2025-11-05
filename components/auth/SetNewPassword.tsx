@@ -53,6 +53,7 @@ export type TSetNewPass = z.infer<typeof setPasswordSchema>;
 const SetNewPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  console.log(token);
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
   const [resetPassword] = useResetPasswordMutation();
