@@ -18,20 +18,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser } from "@/redux/features/auth/authSlice";
 
-const user = {
-    isLoggedIn: true,
-    role: "admin", 
-    name: "John Doe",
-};
+
 
 export default function Navbar() {
+    const user = useAppSelector(currentUser);
     const pathname = usePathname();
-
     const dashboardRoute =
-        user.role === "admin"
+        user?.role === "ADMIN"
             ? "/dashboard/admin/landing"
-            : user.role === "agent"
+            : user?.role === "AGENT"
                 ? "/dashboard/agent"
                 : "/dashboard/user";
 
@@ -49,7 +47,7 @@ export default function Navbar() {
         >
             <div className="mx-auto px-4 sm:px-6 lg:px-20">
                 <div className="flex items-center justify-between h-16">
-                    {/* 🔰 Logo */}
+                    {/* Logo */}
                     <Link
                         href="/"
                         className="text-yellow-400 font-bold text-xl flex items-center gap-2"
@@ -91,13 +89,6 @@ export default function Navbar() {
                                 Resources
                             </Link>
                         </li>
-                        {user.isLoggedIn && (
-                            <li>
-                                <Link href={dashboardRoute} className="hover:text-orange-400">
-                                    Dashboard
-                                </Link>
-                            </li>
-                        )}
                     </ul>
 
                     {/* Mobile Menu */}
@@ -129,14 +120,14 @@ export default function Navbar() {
                                         Resources
                                     </Link>
                                 </DropdownMenuItem>
-                                {user.isLoggedIn && (
+                                {user && (
                                     <DropdownMenuItem>
-                                        <Link href={dashboardRoute} className="w-full block text-orange-400">
+                                        <Link hidden={!user} href={dashboardRoute} className="w-full block text-orange-400">
                                             Dashboard
                                         </Link>
                                     </DropdownMenuItem>
                                 )}
-                                {user.isLoggedIn ? (
+                                {user ? (
                                     <DropdownMenuItem className="text-red-400">
                                         <LogOut size={16} className="mr-2" />
                                         Logout
@@ -149,13 +140,15 @@ export default function Navbar() {
                                         </Link>
                                     </DropdownMenuItem>
                                 )}
+                                <DropdownMenuItem>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
 
-                    {/* 👤 Desktop Actions */}
+                    {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-4">
-                        {user.isLoggedIn ? (
+                        {user? (
                             <>
                                 <Link href={dashboardRoute}>
                                     <Button

@@ -7,9 +7,8 @@ import {
     Filter,
     DatabaseZap,
 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import Lottie from 'lottie-react';
-import animationData2 from '../../public/lottie/Financial charts and statistics on tab with up arrow.json';
 
 export default function RealTimeSection() {
     const features = [
@@ -37,7 +36,7 @@ export default function RealTimeSection() {
                     className="flex justify-center lg:justify-end "
                 >
                     <div className="relative">
-                        <Lottie animationData={animationData2} />
+                        {/* <Lottie animationData={animationData2} /> */}
                     </div>
                 </motion.div>
 

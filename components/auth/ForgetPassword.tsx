@@ -3,7 +3,6 @@
 
 import { Controller, useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -11,14 +10,22 @@ import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { useForgetPasswordMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type TForgotPassword = {
-  email: string;
-  acceptTerms?: boolean;
-};
+const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  acceptTerms: z
+    .boolean()
+    .refine((val) => val === true, {
+      message: "You must accept the terms and conditions",
+    })
+    .optional(),
+});
+
+export type TForgotPassword = z.infer<typeof forgotPasswordSchema>;
 
 const ForgetPassword = () => {
-  const router = useRouter();
   const [forgotPassword] = useForgetPasswordMutation();
   const {
     handleSubmit,
@@ -26,17 +33,16 @@ const ForgetPassword = () => {
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<TForgotPassword>();
+  } = useForm<TForgotPassword>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
 
   const onSubmit = async (data: TForgotPassword) => {
-    if (data?.acceptTerms) {
-      delete data.acceptTerms;
-    }
+    delete data.acceptTerms;
     try {
       const res = await forgotPassword(data).unwrap();
-      if (res?.data) {
-        toast.success("request sent successfully", { duration: 3000 });
-        router.push("/reset-password");
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
         reset();
       }
     } catch (error: any) {

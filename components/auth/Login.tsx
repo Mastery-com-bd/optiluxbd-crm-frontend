@@ -9,22 +9,27 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-import { useLoginMutation } from "@/redux/features/auth/authApi";
+// import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { decodeToken } from "@/utills/decodeToken";
 import { useAppDispatch } from "@/redux/hooks";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
+import { userLogin } from "@/service/auth";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type TLoginData = {
-  email: string;
-  password: string;
-  keepSignedIn?: boolean;
-};
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  keepSignedIn: z.boolean().optional(),
+});
+
+export type TLoginData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  const [login] = useLoginMutation();
+  // const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
@@ -35,26 +40,33 @@ const Login = () => {
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<TLoginData>();
+  } = useForm<TLoginData>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const onSubmit = async (data: TLoginData) => {
-    if (data?.keepSignedIn) {
-      delete data.keepSignedIn;
-    }
+    delete data.keepSignedIn;
     try {
-      const res = await login(data).unwrap();
-      if (res?.data) {
-        const user = decodeToken(res?.data);
-        dispatch(setUser({ user, token: res?.data }));
-        toast.success("successfully logged in", {
+      const res = await userLogin(data);
+      console.log(res);
+      // const res = await login(data).unwrap();
+      if (res?.success) {
+        const token = res?.data?.token;
+        const user = decodeToken(token);
+        dispatch(setUser({ user, token: res?.data?.token }));
+        toast.success(res?.message, {
           duration: 3000,
         });
-        router.push("/");
+        router.push("/dashboard/agent/profile");
         reset();
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
-        error?.data?.message || error?.error || "Something went wrong!";
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
     }
   };
@@ -108,7 +120,7 @@ const Login = () => {
               render={({ field }) => (
                 <Checkbox
                   id="keepSignedIn"
-                  checked={field.value || false} // only true when checked
+                  checked={field.value || false}
                   onCheckedChange={field.onChange}
                 />
               )}

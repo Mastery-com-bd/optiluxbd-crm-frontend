@@ -2,33 +2,56 @@
 "use client";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
-import { decodeToken } from "@/utills/decodeToken";
-import { useAppDispatch } from "@/redux/hooks";
-import { setUser } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type TRegisterForm = {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-  acceptTerms?: boolean;
-};
+const registerSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Please enter a valid email address"),
+    phone: z
+      .string()
+      .min(11, "Phone number must be at least 11 digits")
+      .regex(/^[0-9+]+$/, "Phone number must contain only numbers or +"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Must include at least one uppercase letter")
+      .regex(/[a-z]/, "Must include at least one lowercase letter")
+      .regex(/[0-9]/, "Must include at least one number")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Must include at least one special character"
+      ),
+    confirmPassword: z
+      .string()
+      .min(1, "Confirm password is required")
+      .optional(),
+    acceptTerms: z
+      .boolean()
+      .refine((val) => val === true, {
+        message: "You must accept the terms and conditions",
+      })
+      .optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type TRegisterForm = z.infer<typeof registerSchema>;
 
 const Registration = () => {
-  const router = useRouter();
   const [registration] = useRegisterMutation();
-  const dispatch = useAppDispatch();
   const { visible, toggle } = usePasswordToggle();
   const {
     handleSubmit,
@@ -36,25 +59,25 @@ const Registration = () => {
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<TRegisterForm>();
+  } = useForm<TRegisterForm>({
+    resolver: zodResolver(registerSchema),
+  });
   const passwordValue = useWatch({ control, name: "password" });
 
   const onSubmit = async (data: TRegisterForm) => {
-    if (data?.acceptTerms) {
-      delete data.acceptTerms;
-    }
+    delete data.acceptTerms;
+    delete data.confirmPassword;
     try {
       const res = await registration(data).unwrap();
-      const user = decodeToken(res?.data);
-      dispatch(setUser({ user, token: res?.data }));
-      reset();
-      router.push("/");
-      toast.success("successfully registered", { duration: 3000 });
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        reset();
+      }
     } catch (error: any) {
       const errorInfo =
-        error?.data?.errorSource[1]?.message ||
-        error?.data?.message ||
         error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
         "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
     }
@@ -117,7 +140,7 @@ const Registration = () => {
               pattern: {
                 value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
                 message:
-                  "Use at least 8 characters with letters, numbers, and symbols",
+                  "min 8 Character, 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character",
               },
             })}
           />
@@ -129,7 +152,8 @@ const Registration = () => {
             {visible ? <Eye size={18} /> : <EyeOff size={18} />}
           </button>
           <p className="text-gray-500 text-sm">
-            use min 8 character with letters numbers and symbols
+            min 8 Character, 1 Uppercase, 1 Lowercase, 1 Number, 1 Special
+            Character
           </p>
         </div>
         <div className="space-y-2">
@@ -155,8 +179,10 @@ const Registration = () => {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="acceptTerms"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  checked={!!field.value}
+                  onCheckedChange={(checked) =>
+                    field.onChange(checked === true)
+                  }
                 />
                 <Label htmlFor="acceptTerms" className="text-sm text-gray-600">
                   Agree to the Terms and Policy

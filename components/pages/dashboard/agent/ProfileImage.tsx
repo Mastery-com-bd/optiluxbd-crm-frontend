@@ -1,29 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { Camera } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAppDispatch } from "@/redux/hooks";
-import { setProfileImage } from "@/redux/features/agent/agentProfileSlice";
+import UploadImage from "./UploadImage";
+import { useUserImageUploadMutation } from "@/redux/features/user/userApi";
+import { toast } from "sonner";
 
-const ProfileImage = ({ profileImage }: { profileImage: string | null }) => {
+const ProfileImage = ({
+  profileImage,
+  id,
+}: {
+  profileImage: string | null;
+  id: number;
+}) => {
   const [hovered, setHovered] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dispatch = useAppDispatch();
+  const [imageUpload] = useUserImageUploadMutation();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const imageFile = e.target.files[0];
-      const previewUrl = URL.createObjectURL(imageFile);
-      dispatch(setProfileImage(previewUrl));
+  const handleChange = async (imageFile: File) => {
+    console.log(imageFile);
+    const formData = new FormData();
+    formData.append("avatar", imageFile);
+    try {
+      const res = await imageUpload({ id, formData }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+      }
+    } catch (error: any) {
+      console.log(error);
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
     }
   };
 
   return (
     <div
-      className="relative rounded-full"
+      className="relative rounded-full border border-red-600"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);
@@ -37,15 +56,9 @@ const ProfileImage = ({ profileImage }: { profileImage: string | null }) => {
         alt="Agent Avatar"
         width={500}
         height={500}
-        className="rounded-full h-56 w-56 object-cover border-4 border-yellow-400 shadow-md"
+        className="rounded-full h-56 w-56 object-cover border-2 border-yellow-400 shadow-md"
       />
-      <input
-        type="file"
-        accept="image/*"
-        className="hidden"
-        ref={fileInputRef}
-        onChange={(e) => handleFileChange(e)}
-      />
+      <UploadImage fileInputRef={fileInputRef} handleChange={handleChange} />
       <AnimatePresence>
         {hovered && (
           <motion.button

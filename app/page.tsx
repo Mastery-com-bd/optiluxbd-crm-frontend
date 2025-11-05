@@ -1,10 +1,10 @@
-import HeroBanner from "@/components/HomeComponents/HeroBanner";
-import KeyFeatures from "@/components/HomeComponents/KeyFeatures";
-import PricingSection from "@/components/HomeComponents/PricingSection";
-import RealTimeSection from "@/components/HomeComponents/RealTimeSection";
-import StatsSection from "@/components/HomeComponents/StatsSection";
-import TestimonialsSection from "@/components/HomeComponents/TestimonialsSection";
-import WhyChooseUs from "@/components/HomeComponents/WhyChooseUs";
+import HeroBanner from "@/components/pages/home/HeroBanner";
+import KeyFeatures from "@/components/pages/home/KeyFeatures";
+import PricingSection from "@/components/pages/home/PricingSection";
+import RealTimeSection from "@/components/pages/home/RealTimeSection";
+import StatsSection from "@/components/pages/home/StatsSection";
+import TestimonialsSection from "@/components/pages/home/TestimonialsSection";
+import WhyChooseUs from "@/components/pages/home/WhyChooseUs";
 
 const Home: React.FC = () => {
   return (

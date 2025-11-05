@@ -26,6 +26,7 @@ import { Eye, Edit, Trash2, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import CreateUser from "./CreateUser";
 
 const users = [
   {
@@ -163,10 +164,15 @@ const ManageUsers = () => {
     }
   };
   return (
-    <div className="w-full bg-white rounded-2xl shadow p-6 space-y-6">
+    <section className="w-full bg-white rounded-2xl shadow p-6 space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold text-gray-800">All Users List</h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-800">
+            All Users List
+          </h2>
+          <CreateUser />
+        </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <div className="w-full sm:w-1/2">
             <Input
@@ -349,7 +355,7 @@ const ManageUsers = () => {
           </PaginationContent>
         </Pagination>
       </div>
-    </div>
+    </section>
   );
 };
 

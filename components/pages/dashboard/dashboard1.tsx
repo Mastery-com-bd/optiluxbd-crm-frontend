@@ -1,37 +1,29 @@
 "use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
-  Package,
-  ShoppingCart,
-  TrendingUp,
-  Users,
-  Phone,
-  DollarSign,
   ArrowUp,
-  ArrowDown,
   CreditCard,
-  RefreshCw,
   Download,
   Plus,
+  RefreshCw,
+  ShoppingCart,
+  Users
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
-  LineChart,
-  Line,
-  BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
+  Cell,
   ComposedChart,
+  Line,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const HomePage1 = () => {
   // Mock Data
@@ -55,14 +47,6 @@ const HomePage1 = () => {
     { name: "Retail Stores", value: 28, color: "#8b5cf6" },
     { name: "B2B Revenue", value: 22, color: "#10b981" },
     { name: "Marketplace", value: 15, color: "#e5e7eb" },
-  ];
-
-  const productPerformance = [
-    { name: "Laptop", sales: 340, revenue: 340000 },
-    { name: "Smartphone", sales: 520, revenue: 260000 },
-    { name: "Tablet", sales: 280, revenue: 140000 },
-    { name: "Headphones", sales: 450, revenue: 45000 },
-    { name: "Smartwatch", sales: 380, revenue: 95000 },
   ];
 
   const recentOrders = [
@@ -137,16 +121,16 @@ const HomePage1 = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
               Dashboard
             </h1>
-            <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
-              <span className="font-medium text-gray-900">Optilux</span>
+            <div className="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-medium text-gray-900 dark:text-gray-100">Optilux</span>
               <span>›</span>
               <span>Dashboard</span>
             </div>
@@ -155,50 +139,50 @@ const HomePage1 = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
-          <Card className="bg-white border-0 shadow-sm p-5">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-3xl font-bold text-gray-900 mb-1">$125K</h3>
-                <p className="text-sm text-gray-500">Total Sales</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">$125K</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Sales</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                <CreditCard className="w-6 h-6 text-indigo-600" />
+              <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-indigo-600 dark:text-indigo-300" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-white border-0 shadow-sm p-5">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-3xl font-bold text-gray-900 mb-1">2,358</h3>
-                <p className="text-sm text-gray-500">Orders Placed</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">2,358</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Orders Placed</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
-                <ShoppingCart className="w-6 h-6 text-teal-600" />
+              <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+                <ShoppingCart className="w-6 h-6 text-teal-600 dark:text-teal-300" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-white border-0 shadow-sm p-5">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-3xl font-bold text-gray-900 mb-1">839</h3>
-                <p className="text-sm text-gray-500">Active Customers</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">839</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Active Customers</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-300" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-white border-0 shadow-sm p-5">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h3 className="text-3xl font-bold text-gray-900 mb-1">41</h3>
-                <p className="text-sm text-gray-500">Refund Requests</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">41</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Refund Requests</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
-                <RefreshCw className="w-6 h-6 text-amber-600" />
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
+                <RefreshCw className="w-6 h-6 text-amber-600 dark:text-amber-300" />
               </div>
             </div>
           </Card>
@@ -207,11 +191,11 @@ const HomePage1 = () => {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
           {/* Sales Distribution Pie Chart */}
-          <Card className="bg-white border-0 shadow-sm p-6">
-            <h2 className="text-base font-semibold text-gray-900 mb-1">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">
               Total Sales
             </h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               You have 21 pending orders awaiting fulfillment.
             </p>
 
@@ -243,9 +227,9 @@ const HomePage1 = () => {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: item.color }}
                     ></div>
-                    <span className="text-sm text-gray-600">{item.name}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">{item.name}</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {item.value}%
                   </span>
                 </div>
@@ -254,12 +238,12 @@ const HomePage1 = () => {
           </Card>
 
           {/* Sales Analytics Chart */}
-          <Card className="bg-white border-0 shadow-sm p-6 lg:col-span-2">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-base font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 Sales Analytics
               </h2>
-              <button className="text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
+              <button className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1">
                 View Reports
                 <ArrowUp className="w-4 h-4 rotate-45" />
               </button>
@@ -268,15 +252,15 @@ const HomePage1 = () => {
             <div className="flex items-center gap-6 mb-4 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-indigo-600"></div>
-                <span className="text-gray-600">Online Sales</span>
+                <span className="text-gray-600 dark:text-gray-300">Online Sales</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                <span className="text-gray-600">In-store Sales</span>
+                <div className="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                <span className="text-gray-600 dark:text-gray-300">In-store Sales</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-                <span className="text-gray-600">Projected Sales</span>
+                <span className="text-gray-600 dark:text-gray-300">Projected Sales</span>
               </div>
             </div>
 
@@ -284,7 +268,7 @@ const HomePage1 = () => {
               <ComposedChart data={salesData}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="#f0f0f0"
+                  stroke="#f0f0f0 dark:#374151"
                   vertical={false}
                 />
                 <XAxis
@@ -300,7 +284,7 @@ const HomePage1 = () => {
                 />
                 <Tooltip />
                 <Bar dataKey="online" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="instore" fill="#e5e7eb" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="instore" fill="#e5e7eb dark:#4b5563" radius={[4, 4, 0, 0]} />
                 <Line
                   type="monotone"
                   dataKey="projected"
@@ -315,12 +299,12 @@ const HomePage1 = () => {
         </div>
 
         {/* Call Center Executives */}
-        <Card className="bg-white border-0 shadow-sm p-6 mb-6 rounded-2xl">
+        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 mb-6 rounded-2xl">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
               Top Call Center Executives
             </h2>
-            <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
               Live Performance
             </span>
           </div>
@@ -329,7 +313,7 @@ const HomePage1 = () => {
             {topExecutives.map((exec, index) => (
               <div
                 key={index}
-                className="group relative p-5 bg-linear-to-br from-indigo-50 via-white to-purple-50 rounded-xl border border-indigo-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                className="group relative p-5 bg-linear-to-br from-indigo-50 dark:from-indigo-950 via-white dark:via-gray-800 to-purple-50 dark:to-purple-950 rounded-xl border border-indigo-100 dark:border-indigo-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
@@ -338,44 +322,44 @@ const HomePage1 = () => {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className="text-right">
-                    <p className="text-xs text-gray-500">Rank</p>
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Rank</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                       #{index + 1}
                     </p>
                   </div>
                 </div>
 
                 {/* Name */}
-                <h3 className="font-semibold text-gray-900 mb-4 text-sm truncate">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 text-sm truncate">
                   {exec.name}
                 </h3>
 
                 {/* Metrics */}
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Calls</span>
-                    <span className="font-semibold text-gray-900">
+                    <span className="text-gray-600 dark:text-gray-400">Calls</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
                       {exec.calls}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Conversions</span>
-                    <span className="font-semibold text-green-600">
+                    <span className="text-gray-600 dark:text-gray-400">Conversions</span>
+                    <span className="font-semibold text-green-600 dark:text-green-400">
                       {exec.conversions}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Conv. Rate</span>
-                    <span className="font-semibold text-purple-600">
+                    <span className="text-gray-600 dark:text-gray-400">Conv. Rate</span>
+                    <span className="font-semibold text-purple-600 dark:text-purple-400">
                       {exec.rate}
                     </span>
                   </div>
                 </div>
 
                 {/* Progress bar */}
-                <div className="mt-4 h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
                     style={{ width: `${parseInt(exec.rate)}%` }}
@@ -389,16 +373,16 @@ const HomePage1 = () => {
         {/* Tables Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Product Inventory */}
-          <Card className="bg-white border-0 shadow-sm p-6">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 Product Inventory
               </h2>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                  className="text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
                 >
                   <Plus className="w-4 h-4 mr-1" />
                   Add Product
@@ -406,7 +390,7 @@ const HomePage1 = () => {
                 <Button
                   variant="default"
                   size="sm"
-                  className="bg-indigo-600 hover:bg-indigo-700"
+                  className="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600"
                 >
                   <Download className="w-4 h-4 mr-1" />
                   Export CSV
@@ -417,17 +401,17 @@ const HomePage1 = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-2 text-xs font-semibold text-gray-600 uppercase">
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
                       Product
                     </th>
-                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 uppercase">
+                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
                       Stock
                     </th>
-                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 uppercase">
+                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
                       Ratings
                     </th>
-                    <th className="text-right py-3 px-2 text-xs font-semibold text-gray-600 uppercase">
+                    <th className="text-right py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
                       Price
                     </th>
                   </tr>
@@ -436,23 +420,23 @@ const HomePage1 = () => {
                   {productInventory.map((product, index) => (
                     <tr
                       key={index}
-                      className="border-b border-gray-100 hover:bg-gray-50"
+                      className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                     >
-                      <td className="py-3 px-2 text-sm font-medium text-gray-900">
+                      <td className="py-3 px-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                         {product.name}
                       </td>
-                      <td className="py-3 px-2 text-sm text-gray-600 text-center">
+                      <td className="py-3 px-2 text-sm text-gray-600 dark:text-gray-400 text-center">
                         {product.stock}
                       </td>
                       <td className="py-3 px-2 text-sm text-center">
                         <span className="inline-flex items-center gap-1">
                           <span className="text-amber-500">★</span>
-                          <span className="text-gray-900 font-medium">
+                          <span className="text-gray-900 dark:text-gray-100 font-medium">
                             {product.ratings}
                           </span>
                         </span>
                       </td>
-                      <td className="py-3 px-2 text-sm font-semibold text-gray-900 text-right">
+                      <td className="py-3 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">
                         {product.price}
                       </td>
                     </tr>
@@ -463,16 +447,16 @@ const HomePage1 = () => {
           </Card>
 
           {/* Recent Orders */}
-          <Card className="bg-white border-0 shadow-sm p-6">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 Recent Orders
               </h2>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                  className="text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
                 >
                   <Plus className="w-4 h-4 mr-1" />
                   Add Order
@@ -480,7 +464,7 @@ const HomePage1 = () => {
                 <Button
                   variant="default"
                   size="sm"
-                  className="bg-indigo-600 hover:bg-indigo-700"
+                  className="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600"
                 >
                   <Download className="w-4 h-4 mr-1" />
                   Export CSV
@@ -492,11 +476,11 @@ const HomePage1 = () => {
               {recentOrders.map((order, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {order.id}
                       </span>
                       <span
@@ -507,13 +491,13 @@ const HomePage1 = () => {
                         {order.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                       {order.customer}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">{order.date}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">{order.date}</p>
                   </div>
                   <div className="text-right ml-4">
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                       {order.amount}
                     </p>
                   </div>
