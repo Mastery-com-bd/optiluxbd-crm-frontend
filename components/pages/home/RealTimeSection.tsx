@@ -36,7 +36,7 @@ export default function RealTimeSection() {
                     className="flex justify-center lg:justify-end "
                 >
                     <div className="relative">
-                        <Lottie animationData={animationData2} />
+                        {/* <Lottie animationData={animationData2} /> */}
                     </div>
                 </motion.div>
 

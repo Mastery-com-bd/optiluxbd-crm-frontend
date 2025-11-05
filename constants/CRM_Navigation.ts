@@ -107,11 +107,11 @@ export const crmRoutes: NavRoute[] = [
     title: "Customers",
     icon: Users,
     children: [
-      { title: "All Customers", path: "/customers", icon: Users },
-      { title: "Add Customer", path: "/customers/add", icon: UserPlus },
-      { title: "Groups", path: "/customers/groups", icon: UserCog },
-      { title: "Feedback", path: "/customers/feedback", icon: MessageCircle },
-      { title: "Support Tickets", path: "/customers/tickets", icon: MessageSquare },
+      { title: "All Customers", path: "/dashboard/customers", icon: Users },
+      { title: "Add Customer", path: "/dashboard/customers/add", icon: UserPlus },
+      { title: "Groups", path: "/dashboard/customers/groups", icon: UserCog },
+      { title: "Feedback", path: "/dashboard/customers/feedback", icon: MessageCircle },
+      { title: "Support Tickets", path: "/dashboard/customers/tickets", icon: MessageSquare },
     ],
   },
   {
