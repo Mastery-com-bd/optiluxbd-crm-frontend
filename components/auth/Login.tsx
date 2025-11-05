@@ -53,6 +53,7 @@ const Login = () => {
         reset();
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
         error?.data?.message || error?.error || "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });

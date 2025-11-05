@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const user = {
-    isLoggedIn: true,
-    role: "admin", 
+    isLoggedIn: false,
+    role: "admin",
     name: "John Doe",
 };
 
@@ -49,7 +49,7 @@ export default function Navbar() {
         >
             <div className="mx-auto px-4 sm:px-6 lg:px-20">
                 <div className="flex items-center justify-between h-16">
-                    {/* 🔰 Logo */}
+                    {/* Logo */}
                     <Link
                         href="/"
                         className="text-yellow-400 font-bold text-xl flex items-center gap-2"
@@ -91,13 +91,6 @@ export default function Navbar() {
                                 Resources
                             </Link>
                         </li>
-                        {user.isLoggedIn && (
-                            <li>
-                                <Link href={dashboardRoute} className="hover:text-orange-400">
-                                    Dashboard
-                                </Link>
-                            </li>
-                        )}
                     </ul>
 
                     {/* Mobile Menu */}
@@ -131,7 +124,7 @@ export default function Navbar() {
                                 </DropdownMenuItem>
                                 {user.isLoggedIn && (
                                     <DropdownMenuItem>
-                                        <Link href={dashboardRoute} className="w-full block text-orange-400">
+                                        <Link hidden={!user} href={dashboardRoute} className="w-full block text-orange-400">
                                             Dashboard
                                         </Link>
                                     </DropdownMenuItem>
@@ -149,11 +142,13 @@ export default function Navbar() {
                                         </Link>
                                     </DropdownMenuItem>
                                 )}
+                                <DropdownMenuItem>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
 
-                    {/* 👤 Desktop Actions */}
+                    {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-4">
                         {user.isLoggedIn ? (
                             <>
