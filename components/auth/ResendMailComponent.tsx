@@ -10,19 +10,24 @@ import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { useResendVerificationEmailMutation } from "@/redux/features/auth/authApi";
 import Link from "next/link";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type TVerifyEmail = {
-  email: string;
-};
+const resendMailSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+export type TVerifyEmail = z.infer<typeof resendMailSchema>;
+
 const ResendMailComponent = () => {
+  const [resendEmail] = useResendVerificationEmailMutation();
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<TVerifyEmail>();
-
-  const [resendEmail] = useResendVerificationEmailMutation();
+  } = useForm<TVerifyEmail>({
+    resolver: zodResolver(resendMailSchema),
+  });
 
   const onSubmit = async (data: TVerifyEmail) => {
     try {

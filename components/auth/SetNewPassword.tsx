@@ -17,34 +17,60 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export type TSetNewPass = {
-  password: string;
-  confirmPass?: string;
-  acceptTerms?: boolean;
-};
+const setPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Must include at least one uppercase letter")
+      .regex(/[a-z]/, "Must include at least one lowercase letter")
+      .regex(/[0-9]/, "Must include at least one number")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Must include at least one special character"
+      ),
+    confirmPassword: z
+      .string()
+      .min(1, "Confirm password is required")
+      .optional(),
+    acceptTerms: z
+      .boolean()
+      .refine((val) => val === true, {
+        message: "You must accept the terms and conditions",
+      })
+      .optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type TSetNewPass = z.infer<typeof setPasswordSchema>;
 
 const SetNewPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  console.log(token);
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
   const [resetPassword] = useResetPasswordMutation();
   const { data, isLoading } = useValidateresetTokenQuery(token);
-  console.log(data);
   const {
     handleSubmit,
     register,
     reset,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<TSetNewPass>();
+  } = useForm<TSetNewPass>({
+    resolver: zodResolver(setPasswordSchema),
+  });
   const passwordValue = useWatch({ control, name: "password" });
 
   const onSubmit = async (data: TSetNewPass) => {
     delete data.acceptTerms;
-    delete data.confirmPass;
+    delete data.confirmPassword;
     try {
       const res = await resetPassword({ data, token }).unwrap();
       if (res?.success) {
@@ -127,7 +153,7 @@ const SetNewPassword = () => {
                   pattern: {
                     value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
                     message:
-                      "Use at least 8 characters with letters, numbers, and symbols",
+                      "min 8 Character, 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character",
                   },
                 })}
               />
@@ -139,7 +165,8 @@ const SetNewPassword = () => {
                 {visible ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
               <p className="text-gray-500 text-sm">
-                use min 8 character with letters numbers and symbols
+                min 8 Character, 1 Uppercase, 1 Lowercase, 1 Number, 1 Special
+                Character
               </p>
             </div>
             <div className="space-y-2">
@@ -148,8 +175,8 @@ const SetNewPassword = () => {
                 id="confirmPass"
                 type="password"
                 placeholder="********"
-                className={errors.confirmPass ? "border-red-500" : ""}
-                {...register("confirmPass", {
+                className={errors.confirmPassword ? "border-red-500" : ""}
+                {...register("confirmPassword", {
                   required: "Confirm password is required",
                   validate: (value) =>
                     value === passwordValue || "Passwords do not match",
@@ -235,7 +262,7 @@ const SetNewPassword = () => {
                 className="border-b border-[#ffc500] text-yellow-600"
                 href="/login"
               >
-                Go to Login
+                Back to Login
               </Link>
             </p>
           </div>

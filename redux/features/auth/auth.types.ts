@@ -1,6 +1,6 @@
 export type TAuthUser = {
   userId: string;
-  userRole: "Admin" | "Agent" | "SuperAdmin";
+  role: "ADMIN" | "AGENT" | "CUSTOMER" | "SUPER-ADMIN";
   iat: number;
   exp: number;
 };
