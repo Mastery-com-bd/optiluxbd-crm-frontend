@@ -10,9 +10,10 @@ const authRoutes = [
 ];
 
 const rolebasedPrivateUser = {
-  admin: [/^\/admin(\/.*)?$/],
-  superAdmin: [/^\/admin(\/.*)?$/],
+  ADMIN: [/^\/dashboard\/admin(\/.*)?$/],
+  "SUPER-ADMIN": [/^\/dashboard\/admin(\/.*)?$/],
   CUSTOMER: [/^\/dashboard\/agent(\/.*)?$/],
+  AGENT: [/^\/dashboard\/agent(\/.*)?$/],
 };
 
 type TRole = keyof typeof rolebasedPrivateUser;
