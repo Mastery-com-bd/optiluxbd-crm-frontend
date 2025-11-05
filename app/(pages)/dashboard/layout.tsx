@@ -1,8 +1,5 @@
 import { AppSidebar } from "@/components/pages/shared/dashboard/sidebar/app-sidebar";
-import {
-    SidebarInset,
-    SidebarProvider
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
@@ -29,20 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <Navbar />
-            <div className="flex flex-1 flex-col gap-4 pt-0">
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </body>
-    </html>
+    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <Navbar />
+          <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }

@@ -2,33 +2,27 @@
 "use client";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
-import { decodeToken } from "@/utills/decodeToken";
-import { useAppDispatch } from "@/redux/hooks";
-import { setUser } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
 
-type TRegisterForm = {
+export type TRegisterForm = {
   name: string;
   email: string;
   phone: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   acceptTerms?: boolean;
 };
 
 const Registration = () => {
-  const router = useRouter();
   const [registration] = useRegisterMutation();
-  const dispatch = useAppDispatch();
   const { visible, toggle } = usePasswordToggle();
   const {
     handleSubmit,
@@ -43,18 +37,18 @@ const Registration = () => {
     if (data?.acceptTerms) {
       delete data.acceptTerms;
     }
+    delete data.confirmPassword;
     try {
       const res = await registration(data).unwrap();
-      const user = decodeToken(res?.data);
-      dispatch(setUser({ user, token: res?.data }));
-      reset();
-      router.push("/");
-      toast.success("successfully registered", { duration: 3000 });
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        reset();
+      }
     } catch (error: any) {
       const errorInfo =
-        error?.data?.errorSource[1]?.message ||
-        error?.data?.message ||
         error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
         "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
     }

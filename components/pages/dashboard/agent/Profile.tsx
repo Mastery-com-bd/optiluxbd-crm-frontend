@@ -18,6 +18,7 @@ import {
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
 import ProfileStats from "./ProfileStats";
+import { useGetProfileQuery } from "@/redux/features/user/userApi";
 // import ChangePassword from "./ChangePassword";
 
 interface IProfileInfo {
@@ -50,6 +51,8 @@ const userInfo = {
 };
 
 const Profile = () => {
+  const { data, isLoading } = useGetProfileQuery(undefined);
+  console.log(data);
   const nameSplit = userInfo?.name.split(" ");
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<IProfileInfo | null>(
@@ -74,7 +77,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center space-y-10 ">
-      <div className="w-full lg:max-w-4xl bg-white rounded-2xl shadow p-8">
+      <div className="w-full lg:w-[60vw] bg-white rounded-2xl shadow p-8">
         <h2 className="text-2xl font-semibold text-black mb-8 border-b pb-4 border-gray-200">
           My Profile
         </h2>

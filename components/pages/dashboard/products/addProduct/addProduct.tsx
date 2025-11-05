@@ -68,9 +68,9 @@ const AddProduct = () => {
   })
 
   const [image, setImage] = useState<File | null>(null)
-  const[ addProduct, isLoading, isSuccess, isError, error] = useAddProductMutation();
+  const[ addProduct, isLoading, ] = useAddProductMutation();
+
   const onSubmit = async (data: FormData) => {
-    let imageUrl = "";
     const productInfo = {
       name: data.productName,
       description: data.description,
@@ -80,9 +80,9 @@ const AddProduct = () => {
       category: data.category,
       brand: data.brand,
       isActive: data.status === "published",
-      imageUrl: "",
+      imageUrl:"",
     }
-    const res = await addProduct(productInfo);
+    const res = await addProduct(productInfo).unwrap();
     console.log(res);
 
   }

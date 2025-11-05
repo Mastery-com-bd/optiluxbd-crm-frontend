@@ -18,20 +18,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser } from "@/redux/features/auth/authSlice";
 
-const user = {
-    isLoggedIn: false,
-    role: "admin",
-    name: "John Doe",
-};
+
 
 export default function Navbar() {
+    const user = useAppSelector(currentUser);
     const pathname = usePathname();
-
     const dashboardRoute =
-        user.role === "admin"
+        user?.role === "ADMIN"
             ? "/dashboard/admin/landing"
-            : user.role === "agent"
+            : user?.role === "AGENT"
                 ? "/dashboard/agent"
                 : "/dashboard/user";
 
@@ -122,14 +120,14 @@ export default function Navbar() {
                                         Resources
                                     </Link>
                                 </DropdownMenuItem>
-                                {user.isLoggedIn && (
+                                {user && (
                                     <DropdownMenuItem>
                                         <Link hidden={!user} href={dashboardRoute} className="w-full block text-orange-400">
                                             Dashboard
                                         </Link>
                                     </DropdownMenuItem>
                                 )}
-                                {user.isLoggedIn ? (
+                                {user ? (
                                     <DropdownMenuItem className="text-red-400">
                                         <LogOut size={16} className="mr-2" />
                                         Logout
@@ -150,7 +148,7 @@ export default function Navbar() {
 
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-4">
-                        {user.isLoggedIn ? (
+                        {user ? (
                             <>
                                 <Link href={dashboardRoute}>
                                     <Button
