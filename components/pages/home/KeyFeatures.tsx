@@ -68,7 +68,7 @@ export default function KeyFeatures() {
                             visible: { opacity: 1, y: 0 },
                         }}
                         transition={{ duration: 0.6, ease: 'easeOut' }}
-                        className="bg-gradient-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
+                        className="bg-linear-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
                     >
                         <div className="w-10 h-10 bg-yellow-400 text-white flex items-center justify-center rounded-md mb-4">
                             {card.icon}

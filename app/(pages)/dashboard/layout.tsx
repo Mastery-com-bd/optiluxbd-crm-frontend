@@ -3,7 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
-import Navbar from "@/components/pages/shared/navbar";
+import Navbar from "@/components/pages/shared/dashboard/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

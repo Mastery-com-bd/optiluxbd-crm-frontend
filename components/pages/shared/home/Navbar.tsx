@@ -148,7 +148,7 @@ export default function Navbar() {
 
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-4">
-                        {user ? (
+                        {user? (
                             <>
                                 <Link href={dashboardRoute}>
                                     <Button
