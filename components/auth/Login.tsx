@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-// import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { decodeToken } from "@/utills/decodeToken";
 import { useAppDispatch } from "@/redux/hooks";
@@ -19,6 +19,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { userLogin } from "@/service/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -29,10 +30,11 @@ const loginSchema = z.object({
 export type TLoginData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  // const [login] = useLoginMutation();
+  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
+  const [redirect, setRedirect] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -44,11 +46,20 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const redirectParam = params.get("redirectPath");
+    if (redirectParam) {
+      Promise.resolve().then(() => {
+        setRedirect(redirectParam);
+      });
+    }
+  }, []);
+
   const onSubmit = async (data: TLoginData) => {
     delete data.keepSignedIn;
     try {
       const res = await userLogin(data);
-      console.log(res);
       // const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
@@ -57,11 +68,14 @@ const Login = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.push("/dashboard/agent/profile");
         reset();
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (error: any) {
-      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.message ||
