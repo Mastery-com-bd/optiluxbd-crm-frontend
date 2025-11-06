@@ -1,11 +1,11 @@
+import Footer from "@/components/pages/shared/home/Footer";
+import Navbar from "@/components/pages/shared/home/Navbar";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import ReactProvider from "@/provider/ReactProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ReactProvider from "@/provider/ReactProvider";
-import { Toaster } from "@/components/ui/sonner";
-import Navbar from "@/components/pages/shared/home/Navbar";
-import Footer from "@/components/pages/shared/home/Footer";
-import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ReactProvider >
+      <ReactProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
@@ -42,7 +42,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
-            <Toaster />
+            <Toaster richColors position="top-center" />
           </ThemeProvider>
         </body>
       </ReactProvider>

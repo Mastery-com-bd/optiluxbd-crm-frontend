@@ -10,10 +10,10 @@ const authRoutes = [
 ];
 
 const rolebasedPrivateUser = {
-  ADMIN: [/^\/dashboard\/admin(\/.*)?$/],
-  "SUPER-ADMIN": [/^\/dashboard\/admin(\/.*)?$/],
-  CUSTOMER: [/^\/dashboard\/agent(\/.*)?$/],
-  AGENT: [/^\/dashboard\/agent(\/.*)?$/],
+  ADMIN: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/admin(\/.*)?$/],
+  "SUPER-ADMIN": [/^\/dashboard(\/.*)?$/, /^\/dashboard\/admin(\/.*)?$/],
+  CUSTOMER: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/agent(\/.*)?$/],
+  AGENT: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/agent(\/.*)?$/],
 };
 
 type TRole = keyof typeof rolebasedPrivateUser;
@@ -36,7 +36,6 @@ export const middleware = async (request: NextRequest) => {
       const match = pathname.match(route);
       return match !== null;
     });
-    console.log(isAllowed);
     if (!isAllowed) {
       await logout();
       return NextResponse.redirect(new URL("/login", request.url));
@@ -49,5 +48,5 @@ export const middleware = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/dashboard/(.*)"],
+  matcher: ["/dashboard/:path*"],
 };
