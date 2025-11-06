@@ -9,6 +9,13 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    getAllUsers: builder.query({
+      query: () => ({
+        url: `/users`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+    }),
     userImageUpload: builder.mutation({
       query: (data) => ({
         url: `/images/users/${data.id}/avatar`,
@@ -25,9 +32,27 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    createUserByAdmin: builder.mutation({
+      query: (data) => ({
+        url: `/users`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["user"],
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
 export const { useGetProfileQuery } = authApi;
+export const { useGetAllUsersQuery } = authApi;
 export const { useUserImageUploadMutation } = authApi;
 export const { useUpdateUserInfoMutation } = authApi;
+export const { useCreateUserByAdminMutation } = authApi;
+export const { useDeleteUserMutation } = authApi;

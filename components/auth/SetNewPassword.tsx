@@ -94,7 +94,7 @@ const SetNewPassword = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-white p-8 lg:w-[30vw] space-y-6 rounded-xl w-full max-w-md mx-auto">
+      <div className="bg-white dark:bg-gray-800 p-8 lg:w-[30vw] space-y-6 rounded-xl w-full max-w-md mx-auto">
         <div className="w-[40vw] lg:w-[8vw] mx-auto flex justify-center">
           <Skeleton className="h-12 w-32 rounded-md" />
         </div>
@@ -286,7 +286,7 @@ const SetNewPassword = () => {
           </p>
         </div>
       ) : (
-        <div className="bg-[#ffffff] p-8 lg:w-[30vw] space-y-6 rounded-xl text-center">
+        <div className="bg-[#ffffff] dark:bg-gray-800 p-8 lg:w-[30vw] space-y-6 text-center rounded-xl shadow-md dark:shadow-none">
           <div className="w-[30vw] lg:w-[8vw] mx-auto">
             <Image
               src={`https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png`}
@@ -300,7 +300,7 @@ const SetNewPassword = () => {
             <h2 className="text-xl font-semibold text-red-600">
               Verification Failed
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400">
               Sorry, your verification link is invalid or expired.
             </p>
           </div>
@@ -312,7 +312,7 @@ const SetNewPassword = () => {
               <Link href="/forgot-password">Return</Link>
             </Button>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-400 text-sm">
               or{" "}
               <Link
                 className="border-b border-[#ffc500] text-yellow-600"
