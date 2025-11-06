@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-// import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { decodeToken } from "@/utills/decodeToken";
 import { useAppDispatch } from "@/redux/hooks";
@@ -30,7 +30,7 @@ const loginSchema = z.object({
 export type TLoginData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  // const [login] = useLoginMutation();
+  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
