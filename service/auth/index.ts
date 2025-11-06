@@ -18,8 +18,8 @@ export const userLogin = async (data: TLoginData) => {
     const result = await res.json();
     if (result?.success) {
       (await cookies()).set("accessToken", result?.data?.token);
+      return result;
     }
-    return result;
   } catch (error: any) {
     return Error(error);
   }
@@ -37,5 +37,36 @@ export const getCurrentUser = async () => {
 };
 
 export const logout = async () => {
-  (await cookies()).delete("accessToken");
+  try {
+    // const res = await fetch(`${config.next_public_base_api}/auth/logout`, {
+    //   method: "POST",
+    // });
+    // const result = await res.json();
+    // console.log(result);
+    // if (result?.success) {
+    //   (await cookies()).set("accessToken", result?.data?.token);
+    //   return result;
+    // }
+    (await cookies()).delete("accessToken");
+    const cookieStore = await cookies();
+    cookieStore.delete("accessToken");
+    const token = cookieStore.get("accessToken");
+    if (!token || !token.value) {
+      return {
+        success: true,
+        message: "Logged out successfully",
+      };
+    } else {
+      return {
+        success: false,
+        message: "logout faild",
+      };
+    }
+  } catch (error: any) {
+    // return Error(error);
+    return {
+      success: false,
+      message: error?.message || "An unexpected error occurred",
+    };
+  }
 };
