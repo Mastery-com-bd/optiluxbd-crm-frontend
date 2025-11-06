@@ -18,12 +18,14 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { currentUser, logOut } from "@/redux/features/auth/authSlice";
 import { logout } from "@/service/auth";
 import { toast } from "sonner";
+import { useLogoutMutation } from "@/redux/features/auth/authApi";
 
 export default function Navbar() {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  // const [logout] = useLogoutMutation();
 
   const dashboardRoute =
     user?.role === "ADMIN"
@@ -35,6 +37,7 @@ export default function Navbar() {
   const handleLogOut = async () => {
     try {
       const res = await logout();
+      // const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
         toast.success(res?.message, {
