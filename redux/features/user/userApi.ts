@@ -10,10 +10,10 @@ const authApi = baseApi.injectEndpoints({
       providesTags: ["user"],
     }),
     userImageUpload: builder.mutation({
-      query: ({ id, formData }) => ({
-        url: `/users/${id}/avatar`,
+      query: (data) => ({
+        url: `/images/users/${data.id}/avatar`,
         method: "POST",
-        body: formData,
+        body: data.formData,
       }),
       invalidatesTags: ["user"],
     }),

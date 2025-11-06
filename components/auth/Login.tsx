@@ -86,46 +86,68 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-[#ffffff] p-8 lg:w-[30vw] space-y-6 rounded-xl">
+    <div className="bg-white dark:bg-gray-800 p-8 lg:w-[30vw] space-y-6 rounded-xl shadow-md dark:shadow-none">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
         <Image
-          src={`https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png`}
+          src="https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png"
           height={500}
           width={500}
           alt="brand logo"
         />
       </div>
-      <p className="flex items-center justify-center text-center text-sm px-6 lg:px-16 text-[#a2b1ca]">
+
+      <p className="text-center text-sm px-6 lg:px-16 text-gray-500 dark:text-gray-400">
         Lets get you signed in. Enter your email and password to continue
       </p>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Email */}
         <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="email" className="text-gray-700 dark:text-gray-200">
+            Email address
+          </Label>
           <Input
             id="email"
             type="email"
             placeholder="you@example.com"
-            className={errors.email ? "border-red-500" : ""}
+            className={`${
+              errors.email
+                ? "border-red-500 dark:border-red-400"
+                : "border-gray-300 dark:border-gray-700"
+            } bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200`}
             {...register("email", { required: "Email is required" })}
           />
         </div>
+
+        {/* Password */}
         <div className="space-y-2 relative">
-          <Label htmlFor="password">Password</Label>
+          <Label
+            htmlFor="password"
+            className="text-gray-700 dark:text-gray-200"
+          >
+            Password
+          </Label>
           <Input
             id="password"
             type={visible ? "text" : "password"}
             placeholder="********"
-            className={errors.password ? "border-red-500" : ""}
+            className={`${
+              errors.password
+                ? "border-red-500 dark:border-red-400"
+                : "border-gray-300 dark:border-gray-700"
+            } bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200`}
             {...register("password", { required: "Password is required" })}
           />
           <button
             type="button"
             onClick={toggle}
-            className="absolute right-2 top-8 text-gray-400 hover:text-gray-600"
+            className="absolute right-2 top-8 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
           >
             {visible ? <Eye size={18} /> : <EyeOff size={18} />}
           </button>
         </div>
+
+        {/* Keep Signed In & Forgot Password */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Controller
@@ -139,27 +161,36 @@ const Login = () => {
                 />
               )}
             />
-            <Label htmlFor="keepSignedIn">Keep me signed in</Label>
+            <Label
+              htmlFor="keepSignedIn"
+              className="text-gray-700 dark:text-gray-200"
+            >
+              Keep me signed in
+            </Label>
           </div>
           <Link
             href="/forgot-password"
-            className=" border-b border-gray-500 text-gray-400 text-sm"
+            className="border-b border-gray-500 text-gray-400 text-sm dark:border-gray-600 dark:text-gray-300"
           >
             Forgot Password?
           </Link>
         </div>
+
+        {/* Submit Button */}
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-yellow-500 hover:bg-[#ffc500] text-white cursor-pointer"
+          className="w-full bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
         >
           {isSubmitting ? "Logging in..." : "Login"}
         </Button>
       </form>
-      <p className=" flex justify-center gap-1 text-gray-500 text-sm">
+
+      {/* Registration Link */}
+      <p className="flex justify-center gap-1 text-gray-500 dark:text-gray-400 text-sm">
         New here ?
         <Link
-          className="border-b border-[#ffc500] text-yellow-600"
+          className="border-b border-yellow-500 dark:border-yellow-400 text-yellow-600 dark:text-yellow-400"
           href="/register"
         >
           Create an account

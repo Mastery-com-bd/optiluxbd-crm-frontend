@@ -47,7 +47,7 @@ const ResendMailComponent = () => {
   };
 
   return (
-    <div className="bg-[#ffffff] p-8 lg:w-[25vw] w-[90vw] mx-auto space-y-6 rounded-xl shadow-sm">
+    <div className="bg-[#ffffff] dark:bg-gray-800 rounded-xl shadow-md dark:shadow-none  p-8 lg:w-[25vw] w-[90vw] mx-auto space-y-6 ">
       <div className="w-[30vw] lg:w-[8vw] mx-auto">
         <Image
           src="https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png"
@@ -70,12 +70,21 @@ const ResendMailComponent = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+          <Label
+            htmlFor="email"
+            className="text-gray-700 dark:text-gray-300 transition-colors"
+          >
+            Email address
+          </Label>
           <Input
             id="email"
             type="email"
             placeholder="you@example.com"
-            className={errors.email ? "border-red-500" : ""}
+            className={`${
+              errors.email
+                ? "border-red-500 dark:border-red-400"
+                : "border-gray-300 dark:border-gray-700"
+            } bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200`}
             {...register("email", { required: "Email is required" })}
           />
         </div>
