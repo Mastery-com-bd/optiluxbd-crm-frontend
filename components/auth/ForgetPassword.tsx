@@ -15,12 +15,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  acceptTerms: z
-    .boolean()
-    .refine((val) => val === true, {
-      message: "You must accept the terms and conditions",
-    })
-    .optional(),
+  acceptTerms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
 });
 
 export type TForgotPassword = z.infer<typeof forgotPasswordSchema>;
@@ -38,9 +35,9 @@ const ForgetPassword = () => {
   });
 
   const onSubmit = async (data: TForgotPassword) => {
-    delete data.acceptTerms;
+    const { acceptTerms, ...payload } = data;
     try {
-      const res = await forgotPassword(data).unwrap();
+      const res = await forgotPassword(payload).unwrap();
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();
