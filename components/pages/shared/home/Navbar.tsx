@@ -1,29 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LogIn, LogOut, LayoutDashboard, Menu } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { cn } from "@/lib/utils";
 import { currentUser, logOut } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/service/auth";
+import { motion } from "framer-motion";
+import {
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Menu,
+  MoonIcon,
+  SunIcon,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
 
 export default function Navbar() {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
+  const { setTheme } = useTheme();
   const dispatch = useAppDispatch();
   // const [logout] = useLogoutMutation();
 
@@ -114,7 +122,29 @@ export default function Navbar() {
           </ul>
 
           {/* Mobile Menu */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center">
+            <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
+              <button
+                onClick={() => {
+                  setTheme("light");
+                  console.log("clicked sun");
+                }}
+                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                aria-label="Switch to light mode"
+              >
+                <SunIcon className="w-6 h-6" />
+              </button>
+              <button
+                onClick={() => {
+                  setTheme("dark");
+                  console.log("clicked moon");
+                }}
+                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
+                aria-label="Switch to dark mode"
+              >
+                <MoonIcon className="w-6 h-6" />
+              </button>
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-yellow-400">
@@ -179,6 +209,28 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
+            <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
+              <button
+                onClick={() => {
+                  setTheme("light");
+                  console.log("clicked sun");
+                }}
+                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                aria-label="Switch to light mode"
+              >
+                <SunIcon className="w-6 h-6" />
+              </button>
+              <button
+                onClick={() => {
+                  setTheme("dark");
+                  console.log("clicked moon");
+                }}
+                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
+                aria-label="Switch to dark mode"
+              >
+                <MoonIcon className="w-6 h-6" />
+              </button>
+            </div>
             {user ? (
               <>
                 <Link href={dashboardRoute}>
