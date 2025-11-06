@@ -57,7 +57,7 @@ const Login = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.push("/dashboard/agent/profile");
+        router.push("/dashboard");
         reset();
       }
     } catch (error: any) {

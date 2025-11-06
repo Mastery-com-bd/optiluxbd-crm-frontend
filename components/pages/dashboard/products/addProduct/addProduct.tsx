@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -26,7 +25,11 @@ import {
   ImageIcon,
 } from "lucide-react"
 import Link from "next/link"
-import { useAddProductMutation } from "@/redux/features/products/productsApi"
+import { toast } from "sonner"
+import {
+  useAddProductImageMutation,
+  useAddProductMutation,
+} from "@/redux/features/products/productsApi"
 
 type FormData = {
   productName: string
@@ -68,7 +71,10 @@ const AddProduct = () => {
   })
 
   const [image, setImage] = useState<File | null>(null)
-  const[ addProduct, isLoading, ] = useAddProductMutation();
+  const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation()
+  const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation()
+
+  const isSubmitting = isAddingProduct || isAddingImage
 
   const onSubmit = async (data: FormData) => {
     const productInfo = {
@@ -79,12 +85,32 @@ const AddProduct = () => {
       quantity: data.stock,
       category: data.category,
       brand: data.brand,
-      isActive: data.status === "published",
-      imageUrl:"",
+      public_id: "",
+      secure_url: "",
+      isActive: true,
     }
-    const res = await addProduct(productInfo).unwrap();
-    console.log(res);
 
+    try {
+      const res = await addProduct(productInfo).unwrap()
+      if (res.success) {
+        if (image) {
+          const result = await addImage({ id: res?.data?.id, image }).unwrap()
+          if (result.success) {
+            toast.success("Product added successfully")
+          } else {
+            toast.error("Image upload failed ")
+          }
+        } else {
+          toast.success("Product added successfully")
+        }
+        reset()
+        setImage(null)
+      } else {
+        toast.error("Failed to add product ❌")
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Something went wrong ❌")
+    }
   }
 
   const onDiscard = () => {
@@ -93,27 +119,18 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white p-4 lg:p-8">
+      <div className="max-w-6xl w-full mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Add Product</h1>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/" className="hover:text-foreground">UBold</Link>
-            <span>›</span>
-            <Link href="/products" className="hover:text-foreground">Ecommerce</Link>
-            <span>›</span>
-            <span>Add Product</span>
-          </div>
         </div>
-
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-3 gap-8">
-            {/* MAIN SECTION */}
-            <div className="col-span-2 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT Section */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Product Information */}
               <Card className="p-6 space-y-6">
                 <h2 className="text-lg font-semibold">Product Information</h2>
-
-                {/* Product Name */}
                 <div>
                   <Label htmlFor="productName">Product Name *</Label>
                   <Input
@@ -126,9 +143,7 @@ const AddProduct = () => {
                     <p className="text-red-500 text-sm">Required</p>
                   )}
                 </div>
-
-                {/* SKU + Stock */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
@@ -151,12 +166,10 @@ const AddProduct = () => {
                     )}
                   </div>
                 </div>
-
-                {/* Text Editor & Description */}
                 <div>
                   <Label htmlFor="description">Product Description</Label>
                   <div className="mt-2 border rounded">
-                    <div className="flex gap-2 border-b p-2 bg-gray-50">
+                    <div className="flex gap-2 border-b p-2 bg-gray-50 overflow-auto">
                       <Bold className="w-4 h-4" />
                       <Italic className="w-4 h-4" />
                       <Underline className="w-4 h-4" />
@@ -177,12 +190,14 @@ const AddProduct = () => {
                 </div>
               </Card>
 
-              {/* Image Upload */}
+              {/* Product Image */}
               <Card className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Product Image</h2>
                 <div className="border-2 border-dashed px-4 py-8 rounded text-center">
                   <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground mb-2">Upload an image</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Upload an image
+                  </p>
                   <Input
                     type="file"
                     accept="image/*"
@@ -201,12 +216,11 @@ const AddProduct = () => {
               </Card>
             </div>
 
-            {/* Sidebar Section */}
+            {/* RIGHT Sidebar Section */}
             <div className="space-y-6">
               {/* Pricing */}
               <Card className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Pricing</h2>
-
                 <div>
                   <Label>Base Price *</Label>
                   <Input
@@ -216,8 +230,6 @@ const AddProduct = () => {
                     placeholder="e.g., 199.99"
                   />
                 </div>
-
-                {/* Discount */}
                 <div>
                   <Label>Discount Type</Label>
                   <Controller
@@ -236,7 +248,6 @@ const AddProduct = () => {
                     )}
                   />
                 </div>
-
                 <div>
                   <Label>Discount Value</Label>
                   <Input
@@ -248,15 +259,15 @@ const AddProduct = () => {
                 </div>
               </Card>
 
-              {/* Organize */}
+              {/* Organize Section */}
               <Card className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Organize</h2>
-
                 <div>
                   <Label>Brand</Label>
                   <Input {...register("brand")} className="mt-2" />
                 </div>
 
+                {/* Category */}
                 <div>
                   <Label>Category *</Label>
                   <Controller
@@ -279,6 +290,7 @@ const AddProduct = () => {
                   />
                 </div>
 
+                {/* Subcategory */}
                 <div>
                   <Label>Subcategory *</Label>
                   <Controller
@@ -299,6 +311,7 @@ const AddProduct = () => {
                   />
                 </div>
 
+                {/* Status */}
                 <div>
                   <Label>Status *</Label>
                   <Controller
@@ -320,6 +333,7 @@ const AddProduct = () => {
                   />
                 </div>
 
+                {/* Tags */}
                 <div>
                   <Label>Tags</Label>
                   <Input {...register("tags")} className="mt-2" placeholder="chair,wood" />
@@ -328,36 +342,26 @@ const AddProduct = () => {
             </div>
           </div>
 
-          {/* Buttons */}
-          {/* Action buttons below form */}
-          <div className="flex justify-center gap-4 mt-8">
-            {/* Discard */}
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
             <Button
               type="button"
               variant="outline"
               className="text-red-500 bg-transparent hover:bg-red-50"
-              onClick={() => {
-                reset()
-                setImage(null)
-              }}
+              onClick={onDiscard}
+              disabled={isSubmitting}
             >
               Discard
             </Button>
-
-            {/* Save as Draft (skip validation) */}
-            <Button
-              type="button"
-              variant="outline"
-            >
+            <Button type="button" variant="outline" disabled={isSubmitting}>
               Save as Draft
             </Button>
-
-            {/* Publish (runs full validation) */}
             <Button
               type="submit"
               className="bg-teal-600 text-white hover:bg-teal-700"
+              disabled={isSubmitting}
             >
-              Publish
+              {isSubmitting ? "Publishing..." : "Publish"}
             </Button>
           </div>
         </form>
