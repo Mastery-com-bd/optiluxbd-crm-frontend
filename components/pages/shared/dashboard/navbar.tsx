@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
   const { setTheme } = useTheme();
   return (
     <div>
-      <header className="sticky top-0 z-999 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
+      <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
         <div className="w-full flex items-center justify-between gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <div className="w-full flex items-center justify-between gap-2">
