@@ -2,16 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import type { Customer } from "../allCustomers"
-import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import type { Customer } from "../allCustomers"
 
 interface CustomerFormProps {
   customer?: Customer
@@ -42,12 +41,31 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/customers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(formData),
+      })
 
-    console.log("Form submitted:", formData)
-    setIsLoading(false)
-    router.push("/")
+      if (!response.ok) {
+        throw new Error("Failed to save customer")
+      }
+
+      console.log("With Json", response)
+
+      const result = await response.json()
+      console.log("Customer saved:", result)
+      router.push("/")
+    } catch (error) {
+      console.error("Error saving customer:", error)
+      // Optionally show a toast or alert to the user
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
