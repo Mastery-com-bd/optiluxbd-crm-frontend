@@ -9,46 +9,28 @@ const productsApi = baseApi.injectEndpoints({
                 body: productInfo,
             }),
         }),
-        // login: builder.mutation({
-        //     query: (data) => ({
-        //         url: "/auth/login",
-        //         method: "POST",
-        //         body: data,
-        //     }),
-        // }),
-        // logout: builder.mutation({
-        //     query: () => ({
-        //         url: "/auth/logout",
-        //         method: "POST",
-        //     }),
-        // }),
-        // forgetPassword: builder.mutation({
-        //     query: (data) => ({
-        //         url: "/auth/forgot-password",
-        //         method: "POST",
-        //         body: data,
-        //     }),
-        // }),
-        // validateresetToken: builder.query({
-        //     query: (token) => ({
-        //         url: `auth/reset-password/${token}/validate`,
-        //         method: "GET",
-        //     }),
-        // }),
-        // resetPassword: builder.mutation({
-        //     query: (args) => ({
-        //         url: `/auth/reset-password/${args.token}`,
-        //         method: "POST",
-        //         body: args.data,
-        //     }),
-        // }),
-        // updatePassword: builder.mutation({
-        //     query: (data) => ({
-        //         url: "/auth/update-password",
-        //         method: "POST",
-        //         body: data,
-        //     }),
-        // }),
+        addProductImage: builder.mutation({
+            query: ({ id, image }) => {
+                const formData = new FormData()
+                formData.append("product_image", image)
+
+                return {
+                    url: `/images/products/${id}/image`,
+                    method: "POST",
+                    body: formData,
+                }
+            },
+        }),
+        updateProduct: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/products/${id}`,
+                method: "PATCH",
+                body: data,
+            })
+        })
     }),
 });
-export const { useAddProductMutation } = productsApi;
+export const {
+    useAddProductMutation,
+    useAddProductImageMutation,
+    useUpdateProductMutation } = productsApi;

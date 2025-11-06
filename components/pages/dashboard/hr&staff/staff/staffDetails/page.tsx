@@ -17,7 +17,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   Bar,
@@ -129,6 +129,7 @@ const newOrderData = {
 export default function StaffDetailPage() {
   const params = useParams();
   const [message, setMessage] = useState("");
+  const router = useRouter();
   const [newOrderPopup, setNewOrderPopup] = useState(false); // Start with popup open for demo
   const id = params.id;
 
@@ -158,7 +159,7 @@ export default function StaffDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white p-4 md:p-8">
+    <div className="min-h-screen bg-white dark:bg-background p-4 md:p-8">
       {/* New Order Modal/Popup */}
       {newOrderPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
@@ -244,17 +245,17 @@ export default function StaffDetailPage() {
                   {newOrderData.items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
                     >
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground">
+                        <p className="font-semibold text-foreground dark:text-gray-100">
                           {item.name}
                         </p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground dark:text-gray-400">
                           Quantity: {item.quantity}
                         </p>
                       </div>
-                      <p className="font-semibold text-foreground">
+                      <p className="font-semibold text-foreground dark:text-gray-100">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -289,15 +290,15 @@ export default function StaffDetailPage() {
               </div>
 
               {/* Total */}
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+              <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-blue-600" />
-                    <span className="text-lg font-semibold text-foreground">
+                    <DollarSign className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <span className="text-lg font-semibold text-foreground dark:text-gray-100">
                       Total Amount
                     </span>
                   </div>
-                  <span className="text-2xl font-bold text-blue-600">
+                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     ${newOrderData.total.toFixed(2)}
                   </span>
                 </div>
@@ -336,9 +337,23 @@ export default function StaffDetailPage() {
                 {executive.designation}
               </p>
             </div>
-            <div className="text-sm text-muted-foreground">
-              UBold <span className="mx-2">›</span> Ecommerce{" "}
-              <span className="mx-2">›</span> Call Executive Details
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setNewOrderPopup(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              >
+                <Package className="w-4 h-4" />
+                <span className="hidden sm:inline">Popup</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => router.push(`/dashboard/hr&staff/staff/${id}/orderProcess`)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                <Eye className="w-4 h-4" />
+                <span className="hidden sm:inline">New Route</span>
+              </Button>
             </div>
           </div>
         </div>
