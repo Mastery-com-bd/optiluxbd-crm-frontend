@@ -42,7 +42,6 @@ export const logout = async () => {
     //   method: "POST",
     // });
     // const result = await res.json();
-    // console.log(result);
     // if (result?.success) {
     //   (await cookies()).set("accessToken", result?.data?.token);
     //   return result;

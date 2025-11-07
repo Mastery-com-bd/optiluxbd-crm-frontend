@@ -15,7 +15,6 @@ const ResetPassowrd = () => {
     const data = {
       otp: otpNum.join(""),
     };
-    console.log(data);
     setLoading(false);
   };
 
