@@ -16,11 +16,9 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
-import { userLogin } from "@/service/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useGetProfileQuery } from "@/redux/features/user/userApi";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -60,8 +58,8 @@ const Login = () => {
   const onSubmit = async (data: TLoginData) => {
     delete data.keepSignedIn;
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -92,8 +90,8 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -101,12 +99,12 @@ const Login = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        reset();
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          router.push("/dashboard");
-        }
+        // reset();
+        // if (redirect) {
+        //   router.push(redirect);
+        // } else {
+        //   router.push("/dashboard");
+        // }
       }
     } catch (error: any) {
       const errorInfo =
@@ -124,8 +122,8 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -156,8 +154,8 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);

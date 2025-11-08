@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
+import AuthGuard from "@/provider/AuthGuardProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,8 @@ export default function RootLayout({
           <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
         </SidebarInset>
       </SidebarProvider>
+      {/* <AuthGuard>
+      </AuthGuard> */}
     </div>
   );
 }

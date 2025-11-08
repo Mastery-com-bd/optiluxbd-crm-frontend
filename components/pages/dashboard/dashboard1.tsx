@@ -2,7 +2,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import {
   ArrowUp,
   CreditCard,
@@ -27,8 +26,6 @@ import {
 } from "recharts";
 
 const HomePage1 = () => {
-  const { data, isLoading } = useGetProfileQuery(undefined);
-  console.log(data);
   // Mock Data
   const salesData = [
     { month: "Jan", online: 1200, instore: 2100, projected: 3100 },

@@ -23,7 +23,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Eye, Edit, Trash2, ChevronDown } from "lucide-react";
+import { Eye, Edit, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -54,7 +54,6 @@ export type TUser = {
 };
 
 const ManageUsers = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "createdAt",
@@ -218,7 +217,7 @@ const ManageUsers = () => {
             <Input
               type="text"
               placeholder="Search by name, email, or phone..."
-              value={searchValue}
+              value={filters.search}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }

@@ -18,6 +18,6 @@ const Home: React.FC = () => {
       <RealTimeSection />
     </div>
   );
-}
+};
 
-export default Home
+export default Home;
