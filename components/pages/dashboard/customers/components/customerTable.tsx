@@ -1,30 +1,33 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import Link from "next/link";
 
 export interface Customer {
   id: number;
-  name?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  district?: string;
-  thana?: string;
-  date_of_birth?: string;
-  profession?: string;
-  isMarried?: boolean;
-  gender?: string;
+  name: string;
+  phone: string;
+  address: string;
+  district?: string | null;
+  thana?: string | null;
+  date_of_birth?: string | null;
+  profession?: string | null;
+  isMarried?: boolean | null;
+  gender?: string | null;
   customerLevel: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 interface CustomerTableProps {
@@ -68,136 +71,118 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
   return (
     <div>
       <div className="rounded-lg border border-border bg-card overflow-hidden">
+        
         {/* Desktop Table */}
-        <div className="hidden md:block overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted/50 border-b border-border">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Contact
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Location
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Profession
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Level
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Joined
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-foreground uppercase tracking-wide">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {customers.map((customer) => (
-                <tr
-                  key={customer.id}
-                  className="hover:bg-muted/30 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {customer.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {customer.gender?.replace(/_/g, " ")}
-                      </p>
+        <div className="hidden md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Name</TableHead>
+                <TableHead>Contact</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Profession</TableHead>
+                <TableHead className="text-center">Level</TableHead>
+                <TableHead className="text-right">Joined</TableHead>
+                <TableHead className="text-right w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {customers.map((customer, idx) => (
+                <TableRow key={customer.id} className="group">
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="h-6 w-6 flex items-center justify-center rounded-sm border text-primary font-semibold text-sm">
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{customer.name}</p>
+                        {customer.gender && (
+                          <p className="text-xs text-muted-foreground capitalize">
+                            {customer.gender.replace(/_/g, " ").toLowerCase()}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="text-sm">
-                      <p className="text-foreground">{customer.phone}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {customer.email}
-                      </p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-foreground">
-                    {customer.district && customer.thana ? (
-                      <>
-                        <p>{customer.district}</p>
+                      <p className="font-medium">{customer.phone}</p>
+                      {customer.isMarried !== null && (
                         <p className="text-xs text-muted-foreground">
-                          {customer.thana}
+                          {customer.isMarried ? "Married" : "Single"}
                         </p>
-                      </>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {customer.district || customer.thana ? (
+                      <div className="text-sm">
+                        <p className="font-medium">{customer.district || "—"}</p>
+                        {customer.thana && (
+                          <p className="text-xs text-muted-foreground">{customer.thana}</p>
+                        )}
+                      </div>
                     ) : (
                       <span className="text-muted-foreground">—</span>
                     )}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-foreground">
-                    {customer.profession || "—"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getLevelColor(
-                        customer.customerLevel
-                      )}`}
-                    >
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{customer.profession || "—"}</span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge className={`${getLevelColor(customer.customerLevel)} border-0`}>
                       {customer.customerLevel.replace(/_/g, " ")}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">
-                    {formatDate(customer.created_at)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="gap-1">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href={`/dashboard/customers/id/${customer.id}`}
-                              className="cursor-pointer flex items-center"
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              Details
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href={`/dashboard/customers/id/${customer.id}`}
-                              className="cursor-pointer flex items-center"
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              if (
-                                confirm(
-                                  "Are you sure you want to delete this customer?"
-                                )
-                              ) {
-                                // Handle delete logic here
-                                console.log("Delete customer", customer.id);
-                              }
-                            }}
-                            className="cursor-pointer text-red-600 focus:text-red-600 flex items-center"
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right text-sm text-muted-foreground">
+                    {customer.created_at ? formatDate(customer.created_at) : "—"}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-[180px]">
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/dashboard/customers/id/${customer.id}`}
+                            className="flex items-center cursor-pointer"
                           >
-                            <Trash className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </td>
-                </tr>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/dashboard/customers/id/${customer.id}`}
+                            className="flex items-center cursor-pointer"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit Customer
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            if (confirm("Are you sure you want to delete this customer?")) {
+                              console.log("Delete customer", customer.id);
+                            }
+                          }}
+                          className="text-red-600 focus:text-red-600 flex items-center cursor-pointer"
+                        >
+                          <Trash className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Mobile Cards */}
@@ -227,7 +212,6 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
 
               <div className="space-y-2 text-sm mb-4">
                 <p className="text-foreground">📞 {customer.phone}</p>
-                <p className="text-foreground">📧 {customer.email}</p>
                 {customer.district && (
                   <p className="text-foreground">
                     📍 {customer.district}, {customer.thana}
@@ -237,12 +221,15 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   <p className="text-foreground">💼 {customer.profession}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Joined {formatDate(customer.created_at)}
+                  Joined {customer.created_at ? formatDate(customer.created_at) : "—"}
                 </p>
               </div>
 
               <div className="flex gap-2">
-                <Link href={`/dashboard/customers/${customer.id}`} className="flex-1">
+                <Link
+                  href={`/dashboard/customers/${customer.id}`}
+                  className="flex-1"
+                >
                   <Button
                     variant="outline"
                     size="sm"
@@ -257,7 +244,6 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
           ))}
         </div>
       </div>
-     
     </div>
   );
 }

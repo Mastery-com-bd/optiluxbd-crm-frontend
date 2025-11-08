@@ -18,7 +18,7 @@ const rolebasedPrivateUser = {
 
 type TRole = keyof typeof rolebasedPrivateUser;
 export const middleware = async (request: NextRequest) => {
-  const { pathname } = request.nextUrl;
+ const { pathname } = request.nextUrl;
   const userInfo = await getCurrentUser();
   if (!userInfo) {
     if (authRoutes.includes(pathname)) {
