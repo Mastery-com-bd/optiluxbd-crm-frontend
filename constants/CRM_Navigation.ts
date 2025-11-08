@@ -153,7 +153,7 @@ export const crmRoutes: NavRoute[] = [
     children: [
       { title: "All Employees", path: "/dashboard/hr&staff/staff", icon: Users },
       { title: "Add Employee", path: "/dashboard/hr&staff/staff/add", icon: UserPlus },
-      { title: "Roles & Permissions", path: "/dashboard/hr&staff/staff/roles", icon: Shield },
+      { title: "Roles & Permissions", path: "/dashboard/hr&staff/roles", icon: Shield },
       { title: "Attendance", path: "/dashboard/hr&staff/staff/attendance", icon: Clock },
       { title: "Payroll", path: "/dashboard/hr&staff/staff/payroll", icon: Wallet },
       { title: "Performance Review", path: "/dashboard/hr&staff/staff/performance", icon: BarChart2 },

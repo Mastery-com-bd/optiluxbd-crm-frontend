@@ -4,16 +4,24 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
-        protocol: 'https',
+        protocol: "https",
         hostname: "optilux.com.bd",
       },
       {
-        protocol: 'https',
+        protocol: "https",
         hostname: "i.ibb.co.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.jsdelivr.net",
       },
     ],
   },

@@ -38,7 +38,7 @@ const SuccessMail = () => {
   return (
     <>
       {data?.success ? (
-        <div className="bg-[#ffffff] p-8 lg:w-[25vw] space-y-6 rounded-xl">
+        <div className="bg-[#ffffff] dark:bg-gray-800 p-8 lg:w-[25vw] space-y-6 rounded-xl shadow-md dark:shadow-none">
           <div className="w-[30vw] lg:w-[8vw] mx-auto">
             <Image
               src={`https://optilux.com.bd/OptiluxImage/OptiluxBD-Png%20(logo).png`}
@@ -57,12 +57,14 @@ const SuccessMail = () => {
           <div className="flex justify-center">
             <VerifyEmailIcon />
           </div>
-          <Link
-            href="login"
-            className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 "
-          >
-            Back to login
-          </Link>
+          <div className="flex items-center justify-center">
+            <Link
+              href="login"
+              className="w-full p-2 rounded-lg transition bg-yellow-500 text-white hover:bg-[#ffc500] duration-300 text-center"
+            >
+              Back to login
+            </Link>
+          </div>
         </div>
       ) : (
         <ResendMailComponent />
