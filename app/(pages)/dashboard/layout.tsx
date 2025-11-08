@@ -28,15 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <Navbar />
-          <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
-      {/* <AuthGuard>
-      </AuthGuard> */}
+      <AuthGuard>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <Navbar />
+            <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
+          </SidebarInset>
+        </SidebarProvider>
+      </AuthGuard>
     </div>
   );
 }

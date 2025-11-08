@@ -99,12 +99,12 @@ const Login = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        // reset();
-        // if (redirect) {
-        //   router.push(redirect);
-        // } else {
-        //   router.push("/dashboard");
-        // }
+        reset();
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (error: any) {
       const errorInfo =

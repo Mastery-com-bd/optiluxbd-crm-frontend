@@ -5,24 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const roleBasedRoutes: Record<string, RegExp[]> = {
-  user: [
-    /^\/dashboard$/,
-    /^\/dashboard\/order-history/,
-    /^\/dashboard\/cart/,
-    /^\/dashboard\/wishlist/,
-  ],
-  staff: [
-    /^\/dashboard$/,
-    /^\/dashboard\/order-history/,
-    /^\/dashboard\/cart/,
-    /^\/dashboard\/wishlist/,
-    /^\/dashboard\/admin\/product-managment/,
-    /^\/dashboard\/admin\/order-managment/,
-    /^\/dashboard\/admin\/blog-managment/,
-  ],
-  admin: [/.*/],
+  admin: [/^\/dashboard(\/.*)?$/],
 };
-
 const publicRoutes = ["/login", "/register"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -45,8 +29,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const role = user.roles?.[0]?.role?.name?.toLowerCase();
+    const role = user?.roles[0]?.role?.name.toLowerCase();
+
     if (!role) {
+      console.log(role);
       router.replace("/login");
       return;
     }
