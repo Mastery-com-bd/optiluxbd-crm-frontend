@@ -9,9 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { currentUser, logOut } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logout } from "@/service/auth";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
@@ -33,7 +33,7 @@ export default function Navbar() {
   const router = useRouter();
   const { setTheme } = useTheme();
   const dispatch = useAppDispatch();
-  // const [logout] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
 
   const dashboardRoute =
     user?.role === "ADMIN"
@@ -44,8 +44,8 @@ export default function Navbar() {
 
   const handleLogOut = async () => {
     try {
-      const res = await logout();
-      // const res = await logout(undefined).unwrap();
+      // const res = await logout();
+      const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
         toast.success(res?.message, {
