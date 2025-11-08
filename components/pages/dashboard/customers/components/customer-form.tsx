@@ -1,28 +1,33 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import type { Customer } from "../allCustomers"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import type { Customer } from "../allCustomers";
 
 interface CustomerFormProps {
-  customer?: Customer
+  customer?: Customer;
 }
 
 export default function CustomerForm({ customer }: CustomerFormProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: customer?.name || "",
     phone: customer?.phone || "",
-    email: customer?.email || "",
     address: customer?.address || "",
     district: customer?.district || "",
     thana: customer?.thana || "",
@@ -31,48 +36,56 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
     gender: customer?.gender || "NOT_SPECIFIED",
     isMarried: customer?.isMarried || false,
     customerLevel: customer?.customerLevel || "BRONZE_PENDING",
-  })
+  });
 
   const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/customers`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(formData),
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/customers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to save customer")
+        throw new Error("Failed to save customer");
       }
 
-      console.log("With Json", response)
+      console.log("With Json", response);
 
-      const result = await response.json()
-      console.log("Customer saved:", result)
-      router.push("/")
+      const result = await response.json();
+      console.log("Customer saved:", result);
+      router.push("/");
     } catch (error) {
-      console.error("Error saving customer:", error)
+      console.error("Error saving customer:", error);
       // Optionally show a toast or alert to the user
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-border bg-card p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 rounded-lg border border-border bg-card p-6"
+    >
       {/* Personal Information Section */}
       <div>
-        <h2 className="text-lg font-semibold text-foreground mb-4">Personal Information</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">
+          Personal Information
+        </h2>
         <div className="space-y-4">
           <div>
             <Label htmlFor="name" className="text-sm font-medium">
@@ -102,19 +115,6 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
                 className="mt-2"
               />
             </div>
-            <div>
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email Address
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                placeholder="Enter email address"
-                className="mt-2"
-              />
-            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -134,7 +134,10 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
               <Label htmlFor="gender" className="text-sm font-medium">
                 Gender
               </Label>
-              <Select value={formData.gender} onValueChange={(value) => handleChange("gender", value)}>
+              <Select
+                value={formData.gender}
+                onValueChange={(value) => handleChange("gender", value)}
+              >
                 <SelectTrigger id="gender" className="mt-2 w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -165,14 +168,21 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Marital Status</Label>
-            <p className="text-xs text-muted-foreground">Indicate whether the customer is currently married</p>
+            <p className="text-xs text-muted-foreground">
+              Indicate whether the customer is currently married
+            </p>
             <div className="flex items-center gap-3">
               <Switch
                 id="married"
                 checked={formData.isMarried}
-                onCheckedChange={(checked) => handleChange("isMarried", checked)}
+                onCheckedChange={(checked) =>
+                  handleChange("isMarried", checked)
+                }
               />
-              <Label htmlFor="married" className="text-sm font-medium cursor-pointer select-none">
+              <Label
+                htmlFor="married"
+                className="text-sm font-medium cursor-pointer select-none"
+              >
                 Married
               </Label>
             </div>
@@ -182,7 +192,9 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
 
       {/* Address Information Section */}
       <div className="border-t border-border pt-6">
-        <h2 className="text-lg font-semibold text-foreground mb-4">Address Information</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">
+          Address Information
+        </h2>
         <div className="space-y-4">
           <div>
             <Label htmlFor="address" className="text-sm font-medium">
@@ -228,12 +240,17 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
 
       {/* Customer Classification Section */}
       <div className="border-t border-border pt-6">
-        <h2 className="text-lg font-semibold text-foreground mb-4">Customer Classification</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">
+          Customer Classification
+        </h2>
         <div>
           <Label htmlFor="level" className="text-sm font-medium">
             Customer Level
           </Label>
-          <Select value={formData.customerLevel} onValueChange={(value) => handleChange("customerLevel", value)}>
+          <Select
+            value={formData.customerLevel}
+            onValueChange={(value) => handleChange("customerLevel", value)}
+          >
             <SelectTrigger id="level" className="mt-2">
               <SelectValue />
             </SelectTrigger>
@@ -250,13 +267,22 @@ export default function CustomerForm({ customer }: CustomerFormProps) {
 
       {/* Form Actions */}
       <div className="border-t border-border pt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
-        <Button type="button" variant="outline" onClick={() => router.push("/")} disabled={isLoading}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.push("/")}
+          disabled={isLoading}
+        >
           Cancel
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Saving..." : customer ? "Update Customer" : "Create Customer"}
+          {isLoading
+            ? "Saving..."
+            : customer
+            ? "Update Customer"
+            : "Create Customer"}
         </Button>
       </div>
     </form>
-  )
+  );
 }
