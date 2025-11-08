@@ -26,132 +26,22 @@ import CustomerPagination from "./components/pagination";
 // Define the customer type
 export interface Customer {
   id: number;
-  name?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  district?: string;
-  thana?: string;
-  date_of_birth?: string;
-  profession?: string;
-  isMarried?: boolean;
-  gender?: string;
+  name: string;
+  phone: string;
+  address: string;
+  district?: string | null;
+  thana?: string | null;
+  date_of_birth?: string | null;
+  profession?: string | null;
+  isMarried?: boolean | null;
+  gender?: string | null;
   customerLevel: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
-export const mockCustomers: Customer[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    created_at: "2023-10-01",
-    isMarried: true,
-    customerLevel: "BRONZE",
-    profession: "Engineer",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Male",
-    phone: "01712345678",
-    email: "john@example.com",
-    address: "123 Gulshan Ave",
-    updated_at: "2023-10-01",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    created_at: "2023-10-02",
-    isMarried: false,
-    customerLevel: "SILVER",
-    profession: "Teacher",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Female",
-    phone: "01712345679",
-    email: "jane@example.com",
-    address: "456 Gulshan Ave",
-    updated_at: "2023-10-02",
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    created_at: "2023-10-03",
-    isMarried: true,
-    customerLevel: "GOLD",
-    profession: "Doctor",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Female",
-    phone: "01712345680",
-    email: "alice@example.com",
-    address: "789 Gulshan Ave",
-    updated_at: "2023-10-03",
-  },
-  {
-    id: 4,
-    name: "Bob Brown",
-    created_at: "2023-10-04",
-    isMarried: false,
-    customerLevel: "PLATINUM",
-    profession: "Lawyer",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Male",
-    phone: "01712345681",
-    email: "bob@example.com",
-    address: "101 Gulshan Ave",
-    updated_at: "2023-10-04",
-  },
-  {
-    id: 5,
-    name: "Charlie Davis",
-    created_at: "2023-10-05",
-    isMarried: true,
-    customerLevel: "PLATINUM",
-    profession: "Engineer",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Male",
-    phone: "01712345682",
-    email: "charlie@example.com",
-    address: "102 Gulshan Ave",
-    updated_at: "2023-10-05",
-  },
-  {
-    id: 6,
-    name: "David Wilson",
-    created_at: "2023-10-06",
-    isMarried: true,
-    customerLevel: "PLATINUM",
-    profession: "Lawyer",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Male",
-    phone: "01712345683",
-    email: "david@example.com",
-    address: "103 Gulshan Ave",
-    updated_at: "2023-10-06",
-  },
-  {
-    id: 7,
-    name: "Eve Martinez",
-    created_at: "2023-10-07",
-    isMarried: false,
-    customerLevel: "PLATINUM",
-    profession: "Artist",
-    district: "Dhaka",
-    thana: "Gulshan",
-    gender: "Female",
-    phone: "01712345684",
-    email: "eve@example.com",
-    address: "104 Gulshan Ave",
-    updated_at: "2023-10-07",
-  },
 
-  // Add more mock customers as needed
-];
-
-export default function AllCustomersPage() {
+export default function AllCustomersPage( { AllCustomers }: { AllCustomers: Customer[] }) {
   return (
     <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -349,7 +239,7 @@ export default function AllCustomersPage() {
         {/* Customer Table */}
         <Card className="border-0 bg-transparent shadow-none">
           <CardContent className="p-0">
-            <CustomerTable customers={mockCustomers} />
+            <CustomerTable customers={AllCustomers} />
           </CardContent>
         </Card>
         {/* Pagination */}

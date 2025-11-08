@@ -23,20 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Users, Shield, Trash2, UserPlus } from "lucide-react";
 import { debounce } from "@/utills/debounce";
+import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import Link from "next/link";
 
-interface Permission {
-  id: number;
-  key: string;
-  name: string;
-  description: string;
-}
 
-interface RolePermission {
-  id: number;
-  roleId: number;
-  permissionId: number;
-  permission: Permission;
-}
 
 interface User {
   id: number;
@@ -51,10 +41,30 @@ interface RoleUser {
   user: User;
 }
 
+interface Permission {
+  id: number;
+  key: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+
+interface RolePermission {
+  id: number;
+  roleId: number;
+  permissionId: number;
+  created_at: string;
+  permission: Permission;
+}
+
 interface Role {
   id: number;
   name: string;
   description: string;
+  created_at: string;
+  updated_at: string;
   permissions: RolePermission[];
   users: RoleUser[];
 }
@@ -66,6 +76,8 @@ interface Props {
 const AccessManagement: React.FC<Props> = ({ roles }) => {
   const [openRoleId, setOpenRoleId] = useState<number | null>(null);
   const [newUser, setNewUser] = useState({ name: "", email: "" });
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
+  const { data, isLoading, error } = useGetAllUsersQuery(searchQuery);
 
   const handleAddUser = (roleId: number) => {
     console.log("Add user to role", roleId, newUser);
@@ -73,10 +85,10 @@ const AccessManagement: React.FC<Props> = ({ roles }) => {
     setOpenRoleId(null);
   };
 
-  const handleSearch = (query: string) => {
-    console.log(query)
-  }
-  const debouncedLog = debounce(handleSearch, 5000, { leading: false });
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+  };
+  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
   return (
     <div className="p-6 space-y-6">
@@ -85,9 +97,9 @@ const AccessManagement: React.FC<Props> = ({ roles }) => {
           Access Management
         </h1>
         <Button asChild className="flex items-center gap-2">
-          <a href="/dashboard/hr&staff/roles/add">
+          <Link href="/dashboard/hr&staff/roles/add">
             <Plus className="h-4 w-4" /> New Role
-          </a>
+          </Link>
         </Button>
       </div>
 
@@ -152,7 +164,10 @@ const AccessManagement: React.FC<Props> = ({ roles }) => {
                       <DialogTitle>Add User to {role.name}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-3 py-2">
-                      <Input onChange={(e) => debouncedLog(e.target.value)} placeholder="Search by Name, mail or Phone Number" />
+                      <Input
+                        onChange={(e) => debouncedLog(e.target.value)}
+                        placeholder="Search by Name, mail or Phone Number"
+                      />
 
                       <Button
                         className="w-full"

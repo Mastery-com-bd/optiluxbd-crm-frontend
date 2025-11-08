@@ -12,87 +12,96 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Users {
+  id: number;
+  userId: number;
+  roleId: number;
+  user: User;
+}
+
 interface Permission {
-  id: string;
+  id: number;
+  key: string;
   name: string;
   description?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Permissions {
+  id: number;
+  roleId: number;
+  permissionId: number;
+  created_at: string;
+  permission: Permission;
+}
+
+interface ExistingRolePermission {
+  id: number;
+  name: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+  permissions: Permissions[];
+  users: Users[];
 }
 
 interface RoleFormProps {
   mode?: "create" | "edit";
-  roleId?: string;
-  existingData?: {
-    name: string;
-    permissions: string[];
-  };
+  existingRole?: ExistingRolePermission;
   allPermissions: Permission[];
 }
 
 export default function RoleForm({
   mode = "create",
-  roleId,
-  existingData,
+  existingRole,
   allPermissions,
 }: RoleFormProps) {
-  const router = useRouter();
 
-  const [name, setName] = useState(existingData?.name || "");
+  const [name, setName] = useState(existingRole?.name || "");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
-    existingData?.permissions || []
+    existingRole?.permissions.map((p) => p.permission.key) || []
   );
+
   const [loading, setLoading] = useState(false);
   const [level, setLevel] = useState("3");
 
   // Toggle permission checkbox
-  const handlePermissionToggle = (permissionId: string) => {
+  const handlePermissionToggle = (permission: string) => {
     setSelectedPermissions((prev) =>
-      prev.includes(permissionId)
-        ? prev.filter((id) => id !== permissionId)
-        : [...prev, permissionId]
+      prev.includes(permission)
+        ? prev.filter((p) => p !== permission)
+        : [...prev, permission]
     );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     const payload = {
       name,
       permissions: selectedPermissions,
     };
 
-    try {
-      const res = await fetch(
-        mode === "create" ? "/api/roles" : `/api/roles/${roleId}`,
-        {
-          method: mode === "create" ? "POST" : "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to save role");
-
-      toast.success(
-        mode === "create"
-          ? "Role created successfully"
-          : "Role updated successfully"
-      );
-
-      router.push("/dashboard/roles");
-      router.refresh();
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    console.log(payload);
   };
 
   return (
@@ -117,7 +126,6 @@ export default function RoleForm({
               <SelectContent>
                 <SelectItem value="2">2 Column Layout</SelectItem>
                 <SelectItem value="3">3 Column Layout</SelectItem>
-                <SelectItem value="4">4 Column Layout</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -144,7 +152,7 @@ export default function RoleForm({
                 <span className="px-2 py-1 rounded-full bg-primary/10 text-primary">
                   {selectedPermissions.length} / {allPermissions.length}
                 </span>
-                
+
                 <Button
                   type="button"
                   variant="outline"
@@ -153,7 +161,7 @@ export default function RoleForm({
                     setSelectedPermissions(
                       selectedPermissions.length === allPermissions.length
                         ? []
-                        : allPermissions.map((p) => p.id)
+                        : allPermissions.map((p) => p.key)
                     )
                   }
                 >
@@ -170,14 +178,17 @@ export default function RoleForm({
                   className="flex items-start space-x-2 border p-2 rounded-lg hover:bg-muted/40"
                 >
                   <Checkbox
-                    id={permission.id}
-                    checked={selectedPermissions.includes(permission.id)}
-                    onCheckedChange={() =>
-                      handlePermissionToggle(permission.id)
-                    }
+                    id={permission.id.toString()}
+                    checked={selectedPermissions.includes(
+                      permission.key
+                    )}
+                    onCheckedChange={() => handlePermissionToggle(permission.key)}
                   />
                   <div>
-                    <Label htmlFor={permission.id} className="font-medium">
+                    <Label
+                      htmlFor={permission.id.toString()}
+                      className="font-medium"
+                    >
                       {permission.name}
                     </Label>
                     {permission.description && (
