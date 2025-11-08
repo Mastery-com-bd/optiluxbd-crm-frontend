@@ -1,10 +1,13 @@
 import AllCustomersPage from "@/components/pages/dashboard/customers/allCustomers";
-import React from "react";
+import { Customers } from "@/constants/customers";
+
+
+const customers = Customers;
 
 const Page = () => {
   return (
     <div>
-      <AllCustomersPage />
+      <AllCustomersPage AllCustomers={customers} />
     </div>
   );
 };

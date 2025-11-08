@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import UploadImage from "./UploadImage";
 import { useUserImageUploadMutation } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
+import { userImageUpload } from "@/service/user/imageUpload";
 
 const ProfileImage = ({
   profileImage,
@@ -21,16 +22,15 @@ const ProfileImage = ({
   const [imageUpload] = useUserImageUploadMutation();
 
   const handleChange = async (imageFile: File) => {
-    console.log(imageFile);
     const formData = new FormData();
-    formData.append("avatar", imageFile);
+    formData.append("avatar", imageFile as File);
     try {
+      // const res = await userImageUpload(id, imageFile);
       const res = await imageUpload({ id, formData }).unwrap();
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
       }
     } catch (error: any) {
-      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.message ||
