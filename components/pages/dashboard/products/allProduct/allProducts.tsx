@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useState } from "react"
 import Image from "next/image"
@@ -42,7 +43,7 @@ const AllProducts = () => {
   const PRODUCTS = productRes?.data || []
 
   // Filtering
-  const filteredProducts = PRODUCTS.filter((product) => {
+  const filteredProducts = PRODUCTS.filter((product: any) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -105,7 +106,7 @@ const AllProducts = () => {
     if (selectedProducts.length === paginatedProducts.length) {
       setSelectedProducts([])
     } else {
-      setSelectedProducts(paginatedProducts.map((p) => p.id))
+      setSelectedProducts(paginatedProducts.map((p: any) => p.id))
     }
   }
 
@@ -243,7 +244,7 @@ const AllProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedProducts.map((product) => (
+                {paginatedProducts.map((product: any) => (
                   <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3">
                       <input
