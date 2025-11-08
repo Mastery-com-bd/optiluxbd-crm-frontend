@@ -106,10 +106,11 @@ const AddProduct = () => {
         reset()
         setImage(null)
       } else {
-        toast.error("Failed to add product ❌")
+        toast.error("Failed to add product ")
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err?.message || "Something went wrong ❌")
+      toast.error(err?.message || "Something went wrong")
     }
   }
 
