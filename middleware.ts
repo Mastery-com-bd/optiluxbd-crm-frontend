@@ -10,7 +10,7 @@ const authRoutes = [
 ];
 
 const rolebasedPrivateUser = {
-  ADMIN: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/admin(\/.*)?$/],
+  ADMIN: [/^\/dashboard\/admin(\/.*)?$/],
   "SUPER-ADMIN": [/^\/dashboard(\/.*)?$/, /^\/dashboard\/admin(\/.*)?$/],
   CUSTOMER: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/agent(\/.*)?$/],
   AGENT: [/^\/dashboard(\/.*)?$/, /^\/dashboard\/agent(\/.*)?$/],
@@ -48,5 +48,5 @@ export const middleware = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/(.*)"],
 };

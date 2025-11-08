@@ -20,6 +20,7 @@ import { userLogin } from "@/service/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { useGetProfileQuery } from "@/redux/features/user/userApi";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -87,7 +88,7 @@ const Login = () => {
 
   const handleAdmin = async () => {
     const data = {
-      email: "thohanur143@gmail.com",
+      email: "admin@gmail.com",
       password: "Password@123",
     };
     try {

@@ -17,7 +17,7 @@ export const userLogin = async (data: TLoginData) => {
     });
     const result = await res.json();
     if (result?.success) {
-      (await cookies()).set("accessToken", result?.data?.token);
+      (await cookies()).set("refreshToken", result?.data?.token);
       return result;
     }
   } catch (error: any) {

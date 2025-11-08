@@ -35,6 +35,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import DeleteUSerModal from "./DeleteUSerModal";
 import { toast } from "sonner";
+import PaginationControls from "@/components/ui/paginationComponent";
 
 export type TUser = {
   id: number;
@@ -54,9 +55,18 @@ export type TUser = {
 
 const ManageUsers = () => {
   const [searchValue, setSearchValue] = useState("");
-  const { data, isLoading } = useGetAllUsersQuery(undefined);
+  const [filters, setFilters] = useState({
+    search: "",
+    sortBy: "createdAt",
+    order: "desc",
+    limit: 10,
+    page: 1,
+  });
+
+  const { data, isLoading } = useGetAllUsersQuery(filters);
+
   const users = data?.data as TUser[];
-  const meta = data?.pagination;
+  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   const [deleteUser] = useDeleteUserMutation();
   const [selectedStatus, setSelectedStatus] = useState("All");
   const options = ["Today", "This Week", "This Month", "This Year"];
@@ -209,7 +219,9 @@ const ManageUsers = () => {
               type="text"
               placeholder="Search by name, email, or phone..."
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) =>
+                setFilters({ ...filters, search: e.target.value })
+              }
               className="w-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
             />
           </div>
@@ -391,7 +403,11 @@ const ManageUsers = () => {
           </TableBody>
         </Table>
       </div>
-
+      <PaginationControls
+        pagination={pagination}
+        onPrev={() => setPage((p) => p - 1)}
+        onNext={() => setPage((p) => p + 1)}
+      />
       {/* Pagination */}
       {/* <div className="flex justify-end">
         <Pagination>
