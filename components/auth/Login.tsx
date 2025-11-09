@@ -11,9 +11,8 @@ import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
-import { decodeToken } from "@/utills/decodeToken";
 import { useAppDispatch } from "@/redux/hooks";
-import { setUser } from "@/redux/features/auth/authSlice";
+import { setToken, setUser, TUSerRole } from "@/redux/features/auth/authSlice";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
@@ -62,8 +61,19 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user = decodeToken(token);
-        dispatch(setUser({ user, token: res?.data?.token }));
+        const user: TUSerRole[] =
+          res?.data?.userData?.roles?.map((r: any) => ({
+            userId: r.userId,
+            role: {
+              name: r.role.name,
+              permissions:
+                r.role.permissions?.map((p: any) => ({
+                  name: p.permission.name,
+                })) || [],
+            },
+          })) || [];
+        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
         });
@@ -92,10 +102,21 @@ const Login = () => {
     try {
       // const res = await userLogin(data);
       const res = await login(data).unwrap();
+      const user: TUSerRole[] =
+        res?.data?.userData?.roles?.map((r: any) => ({
+          userId: r.userId,
+          role: {
+            name: r.role.name,
+            permissions:
+              r.role.permissions?.map((p: any) => ({
+                name: p.permission.name,
+              })) || [],
+          },
+        })) || [];
       if (res?.success) {
         const token = res?.data?.token;
-        const user = decodeToken(token);
-        dispatch(setUser({ user, token: res?.data?.token }));
+        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
         });
@@ -118,7 +139,7 @@ const Login = () => {
 
   const handleAgent = async () => {
     const data = {
-      email: "absbashar04@gmail.com",
+      email: "agent@gmail.com",
       password: "Password@123",
     };
     try {
@@ -126,8 +147,19 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user = decodeToken(token);
-        dispatch(setUser({ user, token: res?.data?.token }));
+        const user: TUSerRole[] =
+          res?.data?.userData?.roles?.map((r: any) => ({
+            userId: r.userId,
+            role: {
+              name: r.role.name,
+              permissions:
+                r.role.permissions?.map((p: any) => ({
+                  name: p.permission.name,
+                })) || [],
+            },
+          })) || [];
+        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
         });
@@ -150,7 +182,7 @@ const Login = () => {
 
   const handleCustomer = async () => {
     const data = {
-      email: "absbashar04@gmail.com",
+      email: "customer@gmail.com",
       password: "Password@123",
     };
     try {
@@ -158,8 +190,19 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user = decodeToken(token);
-        dispatch(setUser({ user, token: res?.data?.token }));
+        const user: TUSerRole[] =
+          res?.data?.userData?.roles?.map((r: any) => ({
+            userId: r.userId,
+            role: {
+              name: r.role.name,
+              permissions:
+                r.role.permissions?.map((p: any) => ({
+                  name: p.permission.name,
+                })) || [],
+            },
+          })) || [];
+        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
         });

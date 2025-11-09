@@ -28,6 +28,7 @@ export interface Customer {
   id: number;
   name: string;
   phone: string;
+  email: string;
   address: string;
   district?: string | null;
   thana?: string | null;
@@ -40,8 +41,11 @@ export interface Customer {
   updated_at?: string | null;
 }
 
-
-export default function AllCustomersPage( { AllCustomers }: { AllCustomers: Customer[] }) {
+export default function AllCustomersPage({
+  AllCustomers,
+}: {
+  AllCustomers: Customer[];
+}) {
   return (
     <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">

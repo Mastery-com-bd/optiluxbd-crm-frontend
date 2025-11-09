@@ -35,16 +35,16 @@ export default function Navbar() {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
 
+  const role = user?.[0]?.role?.name;
   const dashboardRoute =
-    user?.role === "ADMIN"
+    role === "ADMIN"
       ? "/dashboard/admin/landing"
-      : user?.role === "AGENT"
+      : role === "AGENT"
       ? "/dashboard/agent"
       : "/dashboard/user";
 
   const handleLogOut = async () => {
     try {
-      // const res = await logout();
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());

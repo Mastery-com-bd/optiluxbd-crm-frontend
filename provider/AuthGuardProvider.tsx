@@ -1,23 +1,28 @@
 "use client";
+import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { currentUser, logOut } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const roleBasedRoutes: Record<string, RegExp[]> = {
-  admin: [/^\/dashboard(\/.*)?$/],
-};
 const publicRoutes = ["/login", "/register"];
+const alwaysAllowedRoutes = ["/dashboard/profile"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [logout] = useLogoutMutation();
-  const { data, isLoading } = useGetProfileQuery(undefined);
-  const user = data?.data;
+  const user = useAppSelector(currentUser);
+  const dispatch = useAppDispatch();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (isLoading) return; // wait until profile is fetched
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
 
     // ---- Guest user ----
     if (!user) {
@@ -29,10 +34,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const role = user?.roles[0]?.role?.name.toLowerCase();
-
-    if (!role) {
-      console.log(role);
+    const permissions = user?.[0]?.role?.permissions?.map((p) => p.name) || [];
+    const roleName = user?.[0]?.role?.name;
+    if (!permissions.length) {
       router.replace("/login");
       return;
     }
@@ -43,24 +47,68 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Check role-based access
-    const allowedRoutes = roleBasedRoutes[role] ?? [];
-    const isAllowed = allowedRoutes.some((r) => r.test(pathname));
+    // ---- Role-based default redirection ----
+    if (alwaysAllowedRoutes.includes(pathname)) {
+      return;
+    }
 
-    if (!isAllowed) {
-      (async () => {
+    // Admin can access these directly
+    if (roleName === "ADMIN") {
+      const adminAllowedRoutes = [
+        "/dashboard",
+        "/dashboard/admin/landing",
+        "/dashboard/profile",
+      ];
+      // If current path is explicitly allowed for admin → allow
+      if (adminAllowedRoutes.includes(pathname)) {
+        return;
+      }
+
+      const requiredPerms = Object.entries(routePermissions).find(([route]) =>
+        pathname.startsWith(route)
+      )?.[1];
+
+      if (
+        requiredPerms &&
+        !requiredPerms.some((p) => permissions.includes(p))
+      ) {
+        // 🚫 Admin lacks permission → redirect
+        router.replace("/dashboard/admin/landing");
+        return;
+      }
+      return;
+    }
+
+    if (pathname === "/dashboard" && roleName !== "ADMIN") {
+      router.replace("/dashboard/profile");
+      return;
+    }
+
+    const requiredPerms =
+      routePermissions[pathname] ||
+      Object.entries(routePermissions).find(([route]) =>
+        pathname.startsWith(route)
+      )?.[1];
+
+    if (requiredPerms && !requiredPerms.some((p) => permissions.includes(p))) {
+      const handleUnauthorized = async () => {
         try {
-          await logout(undefined).unwrap();
+          const res = await logout(undefined).unwrap();
+          if (res?.success) {
+            dispatch(logOut());
+            router.push("/login");
+          }
         } catch (err) {
           console.error("Logout failed:", err);
         } finally {
           router.replace("/login");
         }
-      })();
+      };
+      handleUnauthorized();
     }
-  }, [user, isLoading, pathname, router, logout]);
+  }, [dispatch, hydrated, logout, pathname, router, user]);
 
-  if (isLoading) {
+  if (!hydrated || !user) {
     return (
       <div className="flex items-center justify-center h-screen">
         Loading...
