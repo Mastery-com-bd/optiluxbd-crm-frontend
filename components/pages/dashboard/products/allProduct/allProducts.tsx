@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
+
 import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -13,10 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  ChevronLeft,
-  ChevronRight,
   Download,
-  Eye,
   Grid3x3,
   List,
   Pencil,
@@ -24,34 +22,47 @@ import {
   Search,
   Trash2,
 } from "lucide-react"
-import { useDeleteProductMutation, useGetAllProductQuery } from "@/redux/features/products/productsApi"
+import {
+  useDeleteProductMutation,
+  useGetAllProductQuery,
+} from "@/redux/features/products/productsApi"
 import { toast } from "sonner"
+import PaginationControls from "@/components/ui/paginationComponent"
+import Link from "next/link"
+import { debounce } from "@/utills/debounce"
+import ProductDetails from "../productDetails/ProductDetails"
+import { Product } from "@/types/product"
+import UpdateProduct from "../updateProduct/UpdateProduct"
+
 
 const AllProducts = () => {
-  const [searchTerm, setSearchTerm] = useState("")
+
+  const [filters, setFilters] = useState({
+    search: "",
+    sortBy: "created_at",
+    order: "desc",
+    limit: 10,
+    page: 1,
+  });
+
   const [category, setCategory] = useState("all")
   const [status, setStatus] = useState("all")
   const [viewMode, setViewMode] = useState("list")
-  const [currentPage, setCurrentPage] = useState(1)
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
-  const itemsPerPage = 8
-  const [deleteProduct] = useDeleteProductMutation();
-  const { data: productRes, refetch } = useGetAllProductQuery({
-    page: currentPage,
-    limit: itemsPerPage
-  })
+  const [page, setPage] = useState(1)
+  const [deleteProduct] = useDeleteProductMutation()
+  const { data: productRes, refetch } = useGetAllProductQuery(filters);
   const PRODUCTS = productRes?.data || []
+  const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
+  const [inputValue, setInputValue] = useState("")
 
-  // Filtering
-  const filteredProducts = PRODUCTS.filter((product: any) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = category === "all" || product.category === category
-    const matchesStatus = status === "all" || product.status === status
-    return matchesSearch && matchesCategory && matchesStatus
-  })
-  //handle delete
+  console.log(PRODUCTS);
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
+
   const handleDelete = async (id: number) => {
     toast(`Are you sure you want to delete this product?`, {
       action: {
@@ -71,31 +82,28 @@ const AllProducts = () => {
       },
     })
   }
-  // Pagination
-  const totalFilteredProducts = filteredProducts.length
-  const totalPages = Math.ceil(totalFilteredProducts / itemsPerPage)
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Published":
-        return "bg-teal-50 text-teal-700 border-teal-200"
+        return "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-700"
       case "Pending":
-        return "bg-amber-50 text-amber-700 border-amber-200"
+        return "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-700"
       case "Rejected":
-        return "bg-red-50 text-red-700 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700"
       default:
-        return "bg-gray-50 text-gray-700 border-gray-200"
+        return "bg-muted text-muted-foreground border-border"
     }
   }
 
   const renderStars = (rating: number) => (
     <div className="flex gap-0.5">
       {[...Array(5)].map((_, i) => (
-        <span key={i} className={i < rating ? "text-amber-400" : "text-gray-300"}>
+        <span
+          key={i}
+          className={i < rating ? "text-amber-400" : "text-muted-foreground opacity-40"}
+        >
           ★
         </span>
       ))}
@@ -103,10 +111,10 @@ const AllProducts = () => {
   )
 
   const toggleSelectAll = () => {
-    if (selectedProducts.length === paginatedProducts.length) {
+    if (selectedProducts.length === PRODUCTS.length) {
       setSelectedProducts([])
     } else {
-      setSelectedProducts(paginatedProducts.map((p: any) => p.id))
+      setSelectedProducts(PRODUCTS.map((p: any) => p.id))
     }
   }
 
@@ -119,50 +127,52 @@ const AllProducts = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">All Products</h1>
-            <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
-              <span className="font-medium text-gray-900">CRM</span>
+            <h1 className="text-2xl md:text-3xl font-bold">All Products</h1>
+            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">CRM</span>
               <span>›</span>
               <span>Dashboard</span>
               <span>›</span>
               <span>All Products</span>
             </div>
           </div>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Product
-          </Button>
+          <Link href={'/dashboard/admin/products/add'}>
+            <Button className="bg-primary hover:bg-primary/90">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Product
+            </Button>
+          </Link>
         </div>
 
-        {/* Search and Filters */}
-        <Card className="bg-white border-0 shadow-sm p-4 md:p-5 mb-5">
+        {/* Filters */}
+        <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground " />
               <Input
-                placeholder="Search by product name or SKU..."
-                className="pl-10 border-gray-200"
-                value={searchTerm}
+                value={inputValue}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value)
-                  setCurrentPage(1)
-                }}
+                  debouncedLog(e.target.value)
+                  setInputValue(e.target.value)
+                }
+
+                }
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select
                 value={category}
                 onValueChange={(value) => {
+                  debouncedLog(value);
                   setCategory(value)
-                  setCurrentPage(1)
                 }}
               >
-                <SelectTrigger className="w-40 border-gray-200">
+                <SelectTrigger className="w-40" aria-label="Category Filter">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -176,14 +186,15 @@ const AllProducts = () => {
                   <SelectItem value="Toys">Toys</SelectItem>
                 </SelectContent>
               </Select>
+
               <Select
                 value={status}
                 onValueChange={(value) => {
+                  debouncedLog(value);
                   setStatus(value)
-                  setCurrentPage(1)
                 }}
               >
-                <SelectTrigger className="w-36 border-gray-200">
+                <SelectTrigger className="w-36" aria-label="Status Filter">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -193,12 +204,12 @@ const AllProducts = () => {
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="flex items-center gap-2 border-l border-gray-200 pl-3">
+
+              <div className="flex items-center gap-2 border-l pl-3">
                 <Button
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("grid")}
-                  className={viewMode === "grid" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
                 >
                   <Grid3x3 className="w-4 h-4" />
                 </Button>
@@ -206,11 +217,11 @@ const AllProducts = () => {
                   variant={viewMode === "list" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("list")}
-                  className={viewMode === "list" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
                 >
                   <List className="w-4 h-4" />
                 </Button>
               </div>
+
               <Button variant="outline" size="icon">
                 <Download className="w-4 h-4" />
               </Button>
@@ -218,38 +229,45 @@ const AllProducts = () => {
           </div>
         </Card>
 
-        {/* Table View */}
-        <Card className="bg-white border-0 shadow-sm overflow-hidden mb-5">
+        {/* Product Table */}
+        <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
+                <tr className="border-b border-border bg-muted">
                   <th className="px-4 py-3 text-left">
                     <input
                       type="checkbox"
-                      className="rounded border-gray-300"
-                      checked={selectedProducts.length === paginatedProducts.length && paginatedProducts.length > 0}
+                      className="rounded border-border"
+                      checked={
+                        selectedProducts.length === PRODUCTS.length &&
+                        PRODUCTS.length > 0
+                      }
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Product</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">SKU</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Category</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Stock</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Sold</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Rating</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                  {["Product", "SKU", "Category", "Stock", "Price", "Sold", "Rating", "Status", "Actions"].map(
+                    (label) => (
+                      <th
+                        key={label}
+                        className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase"
+                      >
+                        {label}
+                      </th>
+                    )
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {paginatedProducts.map((product: any) => (
-                  <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                {PRODUCTS.map((product: Product) => (
+                  <tr
+                    key={product.id}
+                    className="border-b border-muted hover:bg-muted/50 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300"
+                        className="rounded border-border"
                         checked={selectedProducts.includes(product.id)}
                         onChange={() => toggleSelectProduct(product.id)}
                       />
@@ -257,44 +275,51 @@ const AllProducts = () => {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <Image
-                          src={product.image_url || "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"}
+                          src={product?.image_url || "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"}
                           alt={product.name}
                           width={48}
                           height={48}
                           className="w-12 h-12 rounded-lg object-cover"
                         />
                         <div>
-                          <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-                          <p className="text-xs text-gray-500">by {product.by}</p>
+                          <p className="font-medium">{product.name}</p>
+                          <p className="text-xs text-muted-foreground">by {product.by}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{product.sku}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{product.category}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">{product.stock}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 font-semibold">${product.price}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{product.sold}</td>
+                    <td className="px-4 py-3 text-sm">{product.sku}</td>
+                    <td className="px-4 py-3 text-sm">{product.category}</td>
+                    <td className="px-4 py-3 text-sm font-medium">{product.stock}</td>
+                    <td className="px-4 py-3 text-sm font-semibold">${product.price}</td>
+                    <td className="px-4 py-3 text-sm">{product.sold}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         {renderStars(product.rating)}
-                        <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
+                        {/* <span className="text-xs text-muted-foreground ml-1">
+                          ({product.reviews})
+                        </span> */}
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(product.status)}`}>
+                      <span
+                        className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
+                          product.status
+                        )}`}
+                      >
                         {product.status}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-blue-50 hover:text-blue-600">
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-indigo-50 hover:text-indigo-600">
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-red-50 hover:text-red-600" onClick={() => handleDelete(product.id)}>
-                          <Trash2 className="w-4 h-4" />
+                        <ProductDetails product={product} />
+                        <UpdateProduct product={product} refetch={refetch} />
+                        <Button
+                          className="cursor-pointer"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(product.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive " />
                         </Button>
                       </div>
                     </td>
@@ -305,50 +330,12 @@ const AllProducts = () => {
           </div>
         </Card>
 
-        {/* Pagination */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-600">
-            Showing {totalFilteredProducts === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, totalFilteredProducts)} of {totalFilteredProducts} products
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-              disabled={currentPage === 1}
-              className="border-gray-200"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-
-            {[...Array(totalPages)].map((_, i) => (
-              <Button
-                key={i}
-                size="sm"
-                onClick={() => setCurrentPage(i + 1)}
-                variant={currentPage === i + 1 ? "default" : "outline"}
-                className={
-                  currentPage === i + 1
-                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                    : "border-gray-200"
-                }
-              >
-                {i + 1}
-              </Button>
-            ))}
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-              disabled={currentPage === totalPages || totalPages === 0}
-              className="border-gray-200"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+        {/* Pagination Controls */}
+        <PaginationControls
+          pagination={pagination}
+          onPrev={() => setPage((p) => Math.max(p - 1, 1))}
+          onNext={() => setPage((p) => p + 1)}
+        />
       </div>
     </div>
   )
