@@ -17,11 +17,6 @@ import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 import CustomerTable from "./components/customerTable";
 import CustomerPagination from "./components/pagination";
-// import CustomerMetrics from "@/components/customer-metrics"
-// import CustomerTable from "@/components/customer-table"
-// import { CustomerFilterPanel } from "@/components/customer-filter-panel"
-// import { useCustomerFilter } from "@/hooks/use-customer-filter"
-// import { getUniqueProfessions, getUniqueDistricts, getUniqueThanas } from "@/lib/filter-utils"
 
 // Define the customer type
 export interface Customer {

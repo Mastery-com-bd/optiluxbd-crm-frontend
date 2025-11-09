@@ -1,7 +1,7 @@
 "use client";
 import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { currentUser, logOut } from "@/redux/features/auth/authSlice";
+import { currentUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,7 +18,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setHydrated(true);
+    Promise.resolve().then(() => {
+      setHydrated(true);
+    });
   }, []);
 
   useEffect(() => {
@@ -53,58 +55,48 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // Admin can access these directly
+    // Admin logic
     if (roleName === "ADMIN") {
       const adminAllowedRoutes = [
         "/dashboard",
         "/dashboard/admin/landing",
         "/dashboard/profile",
       ];
-      // If current path is explicitly allowed for admin → allow
-      if (adminAllowedRoutes.includes(pathname)) {
-        return;
-      }
+      if (adminAllowedRoutes.includes(pathname)) return;
 
       const requiredPerms = Object.entries(routePermissions).find(([route]) =>
         pathname.startsWith(route)
       )?.[1];
 
+      if (!requiredPerms) {
+        router.replace("/dashboard/admin/landing");
+        return;
+      }
       if (
         requiredPerms &&
         !requiredPerms.some((p) => permissions.includes(p))
       ) {
-        // 🚫 Admin lacks permission → redirect
         router.replace("/dashboard/admin/landing");
         return;
       }
+
       return;
     }
+    // Non-admin logic
+    const matchedRoute = Object.entries(routePermissions).find(([route]) =>
+      pathname.startsWith(route)
+    )?.[1];
 
-    if (pathname === "/dashboard" && roleName !== "ADMIN") {
+    if (!matchedRoute) {
+      router.replace("/");
+      return;
+    }
+    if (matchedRoute && !matchedRoute.some((p) => permissions.includes(p))) {
+      router.replace("/");
+      return;
+    } else if (!alwaysAllowedRoutes.includes(pathname)) {
       router.replace("/dashboard/profile");
       return;
-    }
-
-    const requiredPerms =
-      routePermissions[pathname] ||
-      Object.entries(routePermissions).find(([route]) =>
-        pathname.startsWith(route)
-      )?.[1];
-
-    if (requiredPerms && !requiredPerms.some((p) => permissions.includes(p))) {
-      const handleUnauthorized = async () => {
-        try {
-          const res = await logout(undefined).unwrap();
-          if (res?.success) {
-            dispatch(logOut());
-            router.push("/login");
-          }
-        } catch (err) {
-          console.error("Logout failed:", err);
-        } finally {
-          router.replace("/login");
-        }
-      };
-      handleUnauthorized();
     }
   }, [dispatch, hydrated, logout, pathname, router, user]);
 
