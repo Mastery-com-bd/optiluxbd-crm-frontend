@@ -24,7 +24,6 @@ import {
   LinkIcon,
   ImageIcon,
 } from "lucide-react"
-import Link from "next/link"
 import { toast } from "sonner"
 import {
   useAddProductImageMutation,
@@ -71,6 +70,8 @@ const AddProduct = () => {
   })
 
   const [image, setImage] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
   const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation()
   const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation()
 
@@ -98,15 +99,16 @@ const AddProduct = () => {
           if (result.success) {
             toast.success("Product added successfully")
           } else {
-            toast.error("Image upload failed ")
+            toast.error("Image upload failed")
           }
         } else {
           toast.success("Product added successfully")
         }
         reset()
         setImage(null)
+        setPreviewUrl(null)
       } else {
-        toast.error("Failed to add product ")
+        toast.error("Failed to add product")
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -117,19 +119,20 @@ const AddProduct = () => {
   const onDiscard = () => {
     reset()
     setImage(null)
+    setPreviewUrl(null)
   }
 
   return (
-    <div className="min-h-screen bg-white p-4 lg:p-8">
+    <div className="min-h-screen bg-background text-foreground p-4 lg:p-8">
       <div className="max-w-6xl w-full mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Add Product</h1>
+          <h1 className="text-3xl font-bold mb-2">Add Product</h1>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* LEFT Section */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Product Information */}
+              {/* Product Info */}
               <Card className="p-6 space-y-6">
                 <h2 className="text-lg font-semibold">Product Information</h2>
                 <div>
@@ -141,7 +144,7 @@ const AddProduct = () => {
                     className="mt-2"
                   />
                   {errors.productName && (
-                    <p className="text-red-500 text-sm">Required</p>
+                    <p className="text-destructive text-sm">Required</p>
                   )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -152,25 +155,28 @@ const AddProduct = () => {
                       {...register("sku", { required: true })}
                       className="mt-2"
                     />
-                    {errors.sku && <p className="text-red-500 text-sm">Required</p>}
+                    {errors.sku && <p className="text-destructive text-sm">Required</p>}
                   </div>
                   <div>
                     <Label htmlFor="stock">Stock *</Label>
                     <Input
                       id="stock"
                       type="number"
-                      {...register("stock", { required: true, valueAsNumber: true })}
+                      {...register("stock", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
                       className="mt-2"
                     />
                     {errors.stock && (
-                      <p className="text-red-500 text-sm">Required</p>
+                      <p className="text-destructive text-sm">Required</p>
                     )}
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="description">Product Description</Label>
                   <div className="mt-2 border rounded">
-                    <div className="flex gap-2 border-b p-2 bg-gray-50 overflow-auto">
+                    <div className="flex gap-2 border-b p-2 bg-muted overflow-auto">
                       <Bold className="w-4 h-4" />
                       <Italic className="w-4 h-4" />
                       <Underline className="w-4 h-4" />
@@ -204,7 +210,9 @@ const AddProduct = () => {
                     accept="image/*"
                     onChange={(e) => {
                       if (e.target.files?.[0]) {
-                        setImage(e.target.files[0])
+                        const file = e.target.files[0]
+                        setImage(file)
+                        setPreviewUrl(URL.createObjectURL(file))
                       }
                     }}
                   />
@@ -212,6 +220,15 @@ const AddProduct = () => {
                     <p className="text-sm mt-2 text-green-600 font-medium">
                       Selected: {image.name}
                     </p>
+                  )}
+                  {previewUrl && (
+                    <div className="mt-4">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="mx-auto rounded-md border w-32 h-32 object-cover"
+                      />
+                    </div>
                   )}
                 </div>
               </Card>
@@ -226,7 +243,10 @@ const AddProduct = () => {
                   <Label>Base Price *</Label>
                   <Input
                     type="number"
-                    {...register("basePrice", { required: true, valueAsNumber: true })}
+                    {...register("basePrice", {
+                      required: true,
+                      valueAsNumber: true,
+                    })}
                     className="mt-2"
                     placeholder="e.g., 199.99"
                   />
@@ -260,7 +280,7 @@ const AddProduct = () => {
                 </div>
               </Card>
 
-              {/* Organize Section */}
+              {/* Organize */}
               <Card className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Organize</h2>
                 <div>
@@ -268,7 +288,6 @@ const AddProduct = () => {
                   <Input {...register("brand")} className="mt-2" />
                 </div>
 
-                {/* Category */}
                 <div>
                   <Label>Category *</Label>
                   <Controller
@@ -291,7 +310,6 @@ const AddProduct = () => {
                   />
                 </div>
 
-                {/* Subcategory */}
                 <div>
                   <Label>Subcategory *</Label>
                   <Controller
@@ -312,7 +330,6 @@ const AddProduct = () => {
                   />
                 </div>
 
-                {/* Status */}
                 <div>
                   <Label>Status *</Label>
                   <Controller
@@ -334,7 +351,6 @@ const AddProduct = () => {
                   />
                 </div>
 
-                {/* Tags */}
                 <div>
                   <Label>Tags</Label>
                   <Input {...register("tags")} className="mt-2" placeholder="chair,wood" />
@@ -348,18 +364,18 @@ const AddProduct = () => {
             <Button
               type="button"
               variant="outline"
-              className="text-red-500 bg-transparent hover:bg-red-50"
+              className="text-destructive border-destructive hover:bg-destructive/10"
               onClick={onDiscard}
               disabled={isSubmitting}
             >
               Discard
             </Button>
-            <Button type="button" variant="outline" disabled={isSubmitting}>
+            <Button variant="outline" disabled={isSubmitting}>
               Save as Draft
             </Button>
             <Button
               type="submit"
-              className="bg-teal-600 text-white hover:bg-teal-700"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Publishing..." : "Publish"}
