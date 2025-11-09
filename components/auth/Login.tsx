@@ -16,7 +16,6 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
-import { userLogin } from "@/service/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -59,8 +58,8 @@ const Login = () => {
   const onSubmit = async (data: TLoginData) => {
     delete data.keepSignedIn;
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -87,12 +86,12 @@ const Login = () => {
 
   const handleAdmin = async () => {
     const data = {
-      email: "thohanur143@gmail.com",
+      email: "admin@gmail.com",
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -123,8 +122,8 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);
@@ -155,8 +154,8 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      const res = await userLogin(data);
-      // const res = await login(data).unwrap();
+      // const res = await userLogin(data);
+      const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
         const user = decodeToken(token);

@@ -1,17 +1,10 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
-  
   const pathname = usePathname();
 
   if (pathname?.startsWith("/dashboard")) return null;
@@ -21,7 +14,7 @@ export default function Footer() {
       {/* CTA Section */}
       <div className="bg-black text-center py-12 px-6 border-b border-orange-500">
         <h2 className="text-2xl sm:text-3xl font-semibold leading-relaxed">
-          <span className="text-yellow-400">Discover</span> How Our CRM <br />
+          <span className="text-yellow-500">Discover</span> How Our CRM <br />
           Can <span className="text-orange-400">Transform Your Sales</span>
         </h2>
         <div className="mt-6 flex justify-center">
@@ -39,7 +32,8 @@ export default function Footer() {
             <Sparkles size={16} /> SalesSync
           </h3>
           <p className="text-gray-300">
-            Manage your sales in one place. Automate tasks, get real-time insights, and boost your conversion.
+            Manage your sales in one place. Automate tasks, get real-time
+            insights, and boost your conversion.
           </p>
         </div>
 
@@ -88,8 +82,12 @@ export default function Footer() {
       <div className="border-t border-gray-700 py-4 px-6 text-center text-xs sm:flex sm:items-center sm:justify-between text-gray-400">
         <p>© {new Date().getFullYear()} SalesSync. All rights reserved.</p>
         <div className="flex gap-4 justify-center sm:justify-end mt-2 sm:mt-0">
-          <a href="#" className="hover:underline">Terms of Service</a>
-          <a href="#" className="hover:underline">Privacy Policy</a>
+          <a href="#" className="hover:underline">
+            Terms of Service
+          </a>
+          <a href="#" className="hover:underline">
+            Privacy Policy
+          </a>
         </div>
       </div>
     </footer>
