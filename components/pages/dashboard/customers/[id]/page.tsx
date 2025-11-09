@@ -4,13 +4,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { mockCustomers } from "../allCustomers";
 import CustomerForm from "../components/customer-form";
 
 export default function EditCustomerPage() {
   const params = useParams();
-  const customerId = Number.parseInt(params.id as string);
-  const customer = mockCustomers.find((c) => c.id === customerId);
 
   if (!customer) {
     return (

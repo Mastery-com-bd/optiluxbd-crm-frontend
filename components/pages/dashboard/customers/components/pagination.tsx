@@ -21,7 +21,7 @@ const CustomerPagination = ({
 }: PaginationProps) => {
   const renderPages = () => {
     const pages = [];
-    const maxVisible = 5;
+    const maxVisible = 3;
     const half = Math.floor(maxVisible / 2);
 
     let start = Math.max(1, currentPage - half);

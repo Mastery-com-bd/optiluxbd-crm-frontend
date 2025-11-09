@@ -19,6 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useGetRoleByIdQuery,
+  useUpdateRoleInfoMutation,
+} from "@/redux/features/roles/roleApi";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -65,24 +69,38 @@ interface ExistingRolePermission {
 }
 
 interface RoleFormProps {
+  roleId: string;
   mode?: "create" | "edit";
   existingRole?: ExistingRolePermission;
   allPermissions: Permission[];
 }
 
 export default function RoleForm({
+  roleId,
   mode = "create",
-  existingRole,
   allPermissions,
 }: RoleFormProps) {
+  const { data: roleData, isLoading } = useGetRoleByIdQuery(roleId);
+  const existingRole: ExistingRolePermission = roleData?.data;
 
+  console.log(existingRole);
   const [name, setName] = useState(existingRole?.name || "");
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
-    existingRole?.permissions.map((p) => p.permission.key) || []
-  );
-
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [updateInfo] = useUpdateRoleInfoMutation();
+  const router = useRouter();
+
   const [level, setLevel] = useState("3");
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (roleData) {
+    setSelectedPermissions(
+      existingRole?.permissions?.map((p) => p.permission.key)
+    );
+  }
 
   // Toggle permission checkbox
   const handlePermissionToggle = (permission: string) => {
@@ -95,14 +113,49 @@ export default function RoleForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    toast.loading("Updating role...");
 
     const payload = {
-      name,
-      permissions: selectedPermissions,
+      id: existingRole?.id || 0,
+      permissions: {
+        permissions: selectedPermissions,
+      },
     };
-
-    console.log(payload);
+    try {
+      const res = await updateInfo(payload).unwrap();
+      console.log("Upgrade Response", res);
+      if (res?.success) {
+        toast.dismiss();
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        router.refresh();
+        setLoading(false);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.dismiss();
+      toast.dismiss();
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
   };
+
+  if (isLoading)
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[60vh]">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="text-sm">Loading role...</span>
+        </div>
+      </div>
+    );
 
   return (
     <Card className="m-10 shadow-sm border">
@@ -179,10 +232,10 @@ export default function RoleForm({
                 >
                   <Checkbox
                     id={permission.id.toString()}
-                    checked={selectedPermissions.includes(
-                      permission.key
-                    )}
-                    onCheckedChange={() => handlePermissionToggle(permission.key)}
+                    checked={selectedPermissions.includes(permission.key)}
+                    onCheckedChange={() =>
+                      handlePermissionToggle(permission.key)
+                    }
                   />
                   <div>
                     <Label
