@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/components/pages/dashboard/hr&staff/staff/loading";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { useGetProfileQuery } from "@/redux/features/user/userApi";
 import { usePathname, useRouter } from "next/navigation";
@@ -62,9 +63,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
+      <Loading />
     );
   }
 

@@ -33,7 +33,8 @@ const productsApi = baseApi.injectEndpoints({
             query: (params) => ({
                 url: `/products?${buildParams(params)}`,
                 method: "GET",
-            })
+            }),
+            providesTags:["products"]
         }),
         deleteProduct: builder.mutation({
             query: (id) => ({
