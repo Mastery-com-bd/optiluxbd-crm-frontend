@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -221,7 +220,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   <p className="text-foreground">💼 {customer.profession}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Joined {customer.created_at ? formatDate(customer.created_at) : "—"}
+                  Joined {customer.created_at ? customer.created_at : "—"}
                 </p>
               </div>
 
