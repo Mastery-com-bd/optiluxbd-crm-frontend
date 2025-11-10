@@ -1,23 +1,31 @@
 "use client";
+import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { useGetProfileQuery } from "@/redux/features/user/userApi";
+import { currentUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const roleBasedRoutes: Record<string, RegExp[]> = {
-  admin: [/^\/dashboard(\/.*)?$/],
-};
 const publicRoutes = ["/login", "/register"];
+const alwaysAllowedRoutes = ["/dashboard/profile"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [logout] = useLogoutMutation();
-  const { data, isLoading } = useGetProfileQuery(undefined);
-  const user = data?.data;
+  const user = useAppSelector(currentUser);
+  const dispatch = useAppDispatch();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (isLoading) return; // wait until profile is fetched
+    Promise.resolve().then(() => {
+      setHydrated(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
 
     // ---- Guest user ----
     if (!user) {
@@ -29,10 +37,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const role = user?.roles[0]?.role?.name.toLowerCase();
+    const { permissions, role } = getPermissions(user);
 
-    if (!role) {
-      console.log(role);
+    if (!permissions.length) {
       router.replace("/login");
       return;
     }
@@ -43,24 +50,58 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Check role-based access
-    const allowedRoutes = roleBasedRoutes[role] ?? [];
-    const isAllowed = allowedRoutes.some((r) => r.test(pathname));
-
-    if (!isAllowed) {
-      (async () => {
-        try {
-          await logout(undefined).unwrap();
-        } catch (err) {
-          console.error("Logout failed:", err);
-        } finally {
-          router.replace("/login");
-        }
-      })();
+    // ---- Role-based default redirection ----
+    if (alwaysAllowedRoutes.includes(pathname)) {
+      return;
     }
-  }, [user, isLoading, pathname, router, logout]);
 
-  if (isLoading) {
+    // Admin can access these directly
+    // Admin logic
+    if (role === "ADMIN") {
+      const adminAllowedRoutes = [
+        "/dashboard",
+        "/dashboard/admin/landing",
+        "/dashboard/profile",
+      ];
+      if (adminAllowedRoutes.includes(pathname)) return;
+
+      const requiredPerms = Object.entries(routePermissions).find(([route]) =>
+        pathname.startsWith(route)
+      )?.[1];
+
+      if (!requiredPerms) {
+        router.replace("/dashboard/admin/landing");
+        return;
+      }
+      if (
+        requiredPerms &&
+        !requiredPerms.some((p) => permissions.includes(p))
+      ) {
+        router.replace("/dashboard/admin/landing");
+        return;
+      }
+
+      return;
+    }
+    // Non-admin logic
+    const matchedRoute = Object.entries(routePermissions).find(([route]) =>
+      pathname.startsWith(route)
+    )?.[1];
+
+    if (!matchedRoute) {
+      router.replace("/");
+      return;
+    }
+    if (matchedRoute && !matchedRoute.some((p) => permissions.includes(p))) {
+      router.replace("/");
+      return;
+    } else if (!alwaysAllowedRoutes.includes(pathname)) {
+      router.replace("/dashboard/profile");
+      return;
+    }
+  }, [dispatch, hydrated, logout, pathname, router, user]);
+
+  if (!hydrated || !user) {
     return (
       <div className="flex items-center justify-center h-screen">
         Loading...

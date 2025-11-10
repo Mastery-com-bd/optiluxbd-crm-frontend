@@ -1,15 +1,20 @@
 import { RootState } from "@/redux/store";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type TAuthUser = {
-  userId: string;
-  role: "ADMIN" | "AGENT" | "CUSTOMER" | "SUPER-ADMIN";
-  iat: number;
-  exp: number;
+export type TPermission = {
+  name: string;
+};
+
+export type TUSerRole = {
+  userId: number;
+  role: {
+    name: string;
+    permissions: TPermission[];
+  };
 };
 
 export type TAuthState = {
-  user: null | TAuthUser;
+  user: null | TUSerRole[];
   token: null | string;
 };
 
@@ -22,10 +27,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      const { user, token } = action.payload;
-      state.user = user;
-      state.token = token as string;
+    setUser: (state, action: PayloadAction<TUSerRole[]>) => {
+      state.user = action.payload;
+    },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
     },
     logOut: (state) => {
       state.user = null;
@@ -34,7 +40,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logOut } = authSlice.actions;
+export const { setUser, setToken, logOut } = authSlice.actions;
 export default authSlice.reducer;
 export const currentToken = (state: RootState) => state.auth.token;
 export const currentUser = (state: RootState) => state.auth.user;

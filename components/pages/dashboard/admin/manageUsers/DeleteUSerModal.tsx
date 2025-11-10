@@ -12,40 +12,66 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { LucideIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 
-const DeleteUSerModal = ({
-  handleConfirm,
-  id,
-}: {
+type TDeleteModal = {
   handleConfirm: (
     setLoading: Dispatch<SetStateAction<boolean>>,
     id: number
   ) => Promise<void>;
   id: number;
-}) => {
+  icon: LucideIcon;
+  className: string;
+  buttonClass: string;
+  level: string;
+  content: string;
+  tooltip?: string;
+  disabeButton?: boolean;
+};
+
+const DeleteUSerModal = ({
+  handleConfirm,
+  id,
+  icon: Icon,
+  className,
+  buttonClass,
+  level,
+  content,
+  tooltip = "Delete",
+  disabeButton = false,
+}: TDeleteModal) => {
   const [loading, setLoading] = useState(false);
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600"
-        >
-          <Trash2 size={16} className="text-red-600 dark:text-red-300" />
-        </Button>
-      </AlertDialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <AlertDialogTrigger asChild>
+            <Button
+              disabled={disabeButton}
+              variant="outline"
+              size="icon"
+              className={className}
+            >
+              <Icon size={16} className={buttonClass} />
+            </Button>
+          </AlertDialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+      </Tooltip>
 
       <AlertDialogContent className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-lg font-semibold">
-            Delete user?
+            {level}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
-            This action cannot be undone. It will permanently remove the user’s
-            account and all associated data from the system.
+            {content}
           </AlertDialogDescription>
         </AlertDialogHeader>
 

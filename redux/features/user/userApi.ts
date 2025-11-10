@@ -16,6 +16,15 @@ const authApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["user"],
+      keepUnusedDataFor: 3000,
+    }),
+    getASingleUser: builder.query({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      keepUnusedDataFor: 3000,
     }),
     userImageUpload: builder.mutation({
       query: (data) => ({
@@ -30,6 +39,28 @@ const authApi = baseApi.injectEndpoints({
         url: `/users/${data.id}`,
         method: "PUT",
         body: data.currentUser,
+      }),
+      invalidatesTags: ["user"],
+    }),
+    updateUSerStatus: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `/auth/users/${id}/status`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["user"],
+    }),
+    suspendUser: builder.mutation({
+      query: (id) => ({
+        url: `/auth/users/${id}/suspend`,
+        method: "POST",
+      }),
+      invalidatesTags: ["user"],
+    }),
+    activateUser: builder.mutation({
+      query: (id) => ({
+        url: `/auth/users/${id}/activate`,
+        method: "POST",
       }),
       invalidatesTags: ["user"],
     }),
@@ -51,9 +82,15 @@ const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetProfileQuery } = authApi;
-export const { useGetAllUsersQuery } = authApi;
-export const { useUserImageUploadMutation } = authApi;
-export const { useUpdateUserInfoMutation } = authApi;
-export const { useCreateUserByAdminMutation } = authApi;
-export const { useDeleteUserMutation } = authApi;
+export const {
+  useGetProfileQuery,
+  useGetAllUsersQuery,
+  useGetASingleUserQuery,
+  useUserImageUploadMutation,
+  useUpdateUserInfoMutation,
+  useUpdateUSerStatusMutation,
+  useCreateUserByAdminMutation,
+  useDeleteUserMutation,
+  useSuspendUserMutation,
+  useActivateUserMutation,
+} = authApi;
