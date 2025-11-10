@@ -23,7 +23,6 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Users, Shield, Trash2, UserPlus } from "lucide-react";
 import { debounce } from "@/utills/debounce";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import Link from "next/link";
 import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
 

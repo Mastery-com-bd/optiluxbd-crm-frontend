@@ -25,7 +25,7 @@ import {
 } from "@/redux/features/roles/roleApi";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 interface User {
@@ -83,32 +83,45 @@ export default function RoleForm({
   const { data: roleData, isLoading } = useGetRoleByIdQuery(roleId);
   const existingRole: ExistingRolePermission = roleData?.data;
 
-  console.log(existingRole);
-  const [name, setName] = useState(existingRole?.name || "");
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  // Local state is null until user edits; before that we derive from existingRole
+  const [localName, setLocalName] = useState<string | null>(
+    mode === "create" ? "" : null,
+  );
+  const [localSelectedPermissions, setLocalSelectedPermissions] = useState<
+    string[] | null
+  >(mode === "create" ? [] : null);
   const [loading, setLoading] = useState(false);
   const [updateInfo] = useUpdateRoleInfoMutation();
   const router = useRouter();
 
   const [level, setLevel] = useState("3");
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // Derived values shown until user interacts
+  const derivedName = useMemo(() => {
+    if (mode === "edit" && existingRole) return existingRole?.name || "";
+    return "";
+  }, [mode, existingRole]);
 
-  if (roleData) {
-    setSelectedPermissions(
-      existingRole?.permissions?.map((p) => p.permission.key)
-    );
-  }
+  const derivedSelected = useMemo(() => {
+    if (mode === "edit" && existingRole) {
+      return (existingRole?.permissions
+        ?.map((p) => p?.permission?.key)
+        .filter(Boolean) || []) as string[];
+    }
+    return [] as string[];
+  }, [mode, existingRole]);
 
-  // Toggle permission checkbox
+  const name = localName ?? derivedName;
+  const selectedPermissions = localSelectedPermissions ?? derivedSelected;
+
+  // Toggle permission checkbox (derive current if user hasn't interacted)
   const handlePermissionToggle = (permission: string) => {
-    setSelectedPermissions((prev) =>
-      prev.includes(permission)
-        ? prev.filter((p) => p !== permission)
-        : [...prev, permission]
-    );
+    setLocalSelectedPermissions((prev) => {
+      const base = (prev ?? derivedSelected) as string[];
+      return base.includes(permission)
+        ? base.filter((p) => p !== permission)
+        : [...base, permission];
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -193,7 +206,7 @@ export default function RoleForm({
               id="roleName"
               placeholder="e.g. Admin, Editor, Manager"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setLocalName(e.target.value)}
               required
             />
           </div>
@@ -211,13 +224,12 @@ export default function RoleForm({
                   variant="outline"
                   size="sm"
                   onClick={() =>
-                    setSelectedPermissions(
+                    setLocalSelectedPermissions(
                       selectedPermissions.length === allPermissions.length
                         ? []
-                        : allPermissions.map((p) => p.key)
+                        : allPermissions.map((p) => p.key),
                     )
-                  }
-                >
+                  }>
                   {selectedPermissions.length === allPermissions.length
                     ? "Deselect All"
                     : "Select All"}
@@ -228,8 +240,7 @@ export default function RoleForm({
               {allPermissions.map((permission) => (
                 <div
                   key={permission.id}
-                  className="flex items-start space-x-2 border p-2 rounded-lg hover:bg-muted/40"
-                >
+                  className="flex items-start space-x-2 border p-2 rounded-lg hover:bg-muted/40">
                   <Checkbox
                     id={permission.id.toString()}
                     checked={selectedPermissions.includes(permission.key)}
@@ -240,8 +251,7 @@ export default function RoleForm({
                   <div>
                     <Label
                       htmlFor={permission.id.toString()}
-                      className="font-medium"
-                    >
+                      className="font-medium">
                       {permission.name}
                     </Label>
                     {permission.description && (

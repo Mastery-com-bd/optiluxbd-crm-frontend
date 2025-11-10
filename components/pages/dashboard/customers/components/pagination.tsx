@@ -36,7 +36,11 @@ const CustomerPagination = ({
         <PaginationItem key={1}>
           <PaginationLink
             isActive={currentPage === 1}
-            onClick={() => onPageChange(1)}
+            onClick={(e) => {
+              e.preventDefault();
+              onPageChange(1);
+            }}
+            href="#"
           >
             1
           </PaginationLink>
@@ -52,7 +56,11 @@ const CustomerPagination = ({
         <PaginationItem key={i}>
           <PaginationLink
             isActive={i === currentPage}
-            onClick={() => onPageChange(i)}
+            onClick={(e) => {
+              e.preventDefault();
+              onPageChange(i);
+            }}
+            href={`/dashboard/customers/${i}`}
           >
             {i}
           </PaginationLink>
@@ -68,7 +76,11 @@ const CustomerPagination = ({
         <PaginationItem key={totalPages}>
           <PaginationLink
             isActive={currentPage === totalPages}
-            onClick={() => onPageChange(totalPages)}
+            onClick={(e) => {
+              e.preventDefault();
+              onPageChange(totalPages);
+            }}
+            href="#"
           >
             {totalPages}
           </PaginationLink>
@@ -84,7 +96,11 @@ const CustomerPagination = ({
       <PaginationContent className="flex-wrap justify-center gap-1">
         <PaginationItem>
           <PaginationPrevious
-            onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+            onClick={(e) => {
+              e.preventDefault();
+              if (currentPage > 1) onPageChange(currentPage - 1);
+            }}
+            href="#"
             className={
               currentPage === 1 ? "pointer-events-none opacity-50" : ""
             }
@@ -93,9 +109,11 @@ const CustomerPagination = ({
         {renderPages()}
         <PaginationItem>
           <PaginationNext
-            onClick={() =>
-              currentPage < totalPages && onPageChange(currentPage + 1)
-            }
+            onClick={(e) => {
+              e.preventDefault();
+              if (currentPage < totalPages) onPageChange(currentPage + 1);
+            }}
+            href="#"
             className={
               currentPage === totalPages ? "pointer-events-none opacity-50" : ""
             }

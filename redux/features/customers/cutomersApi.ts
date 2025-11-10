@@ -16,6 +16,12 @@ const customersApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        getCustomerById: builder.query({
+            query: (id) => ({
+                url: `/customers/${id}`,
+                method: "GET",
+            }),
+        }),
         addCustomer: builder.mutation({
             query: (data) => ({
                 url: `/customers`,
@@ -33,4 +39,4 @@ const customersApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetAllCustomerQuery, useAddCustomerMutation, useUpdateCustomerInfoMutation } = customersApi;
+export const { useGetAllCustomerQuery, useGetCustomerByIdQuery, useAddCustomerMutation, useUpdateCustomerInfoMutation } = customersApi;
