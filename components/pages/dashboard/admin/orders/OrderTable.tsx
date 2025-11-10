@@ -1,9 +1,7 @@
 "use client"
 
-import { Eye, Edit, Trash } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
     Select,
@@ -14,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import PaginationControls from "@/components/ui/paginationComponent"
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi"
+import { debounce } from "@/utills/debounce"
 
 export function OrderTable() {
     const [filters, setFilters] = useState({
@@ -22,19 +21,28 @@ export function OrderTable() {
         page: 1,
     });
     const [page, setPage] = useState(1);
-    const { data: orders } = useGetAllOrdersQuery(filters);
-    const pagination = { page: 1, totalPages: 1, total: 0 }
-    console.log(orders);
+    const { data } = useGetAllOrdersQuery(filters);
+    const [search, setSearch] = useState("");
+    const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+    console.log(data);
+
+
+    const handleSearch = (val: string) => {
+        setFilters({ ...filters });
+    }
+    const debouncedLog = debounce(handleSearch, 100, { leading: false });
+
+
     return (
         <div className="p-4 bg-white dark:bg-muted rounded-xl border shadow-sm mt-5 transition-all">
             {/* Header */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                {/* <Input
+                <Input
                     placeholder="Search order..."
                     className="max-w-sm"
                     value={search}
-                    onChange={(e) => setFilters(e.target.value)}
-                /> */}
+                    onChange={(e) => { setSearch(e.target.value); debouncedLog(e.target.value) }}
+                />
                 <div className="flex flex-wrap items-center gap-2">
                     {/* Payment Status Filter */}
                     {/* <Select onValueChange={setPaymentFilter} defaultValue="">

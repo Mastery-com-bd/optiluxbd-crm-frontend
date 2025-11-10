@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export default function StatsSection() {
     return (
         <section className="w-full py-16 bg-white">
-            <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20">
+            <div className="max-w-[1444px] mx-auto px-6 md:px-12 lg:px-20">
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center"
                     initial="hidden"

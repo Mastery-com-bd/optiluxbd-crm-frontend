@@ -138,7 +138,11 @@ export const crmRoutes: NavRoute[] = [
     title: "Orders",
     icon: ShoppingCart,
     children: [
-      { title: "All Orders", path: "/orders", icon: ClipboardList },
+      {
+        title: "All Orders",
+        path: "/dashboard/admin/orders",
+        icon: ClipboardList,
+      },
       { title: "Processing", path: "/orders/processing", icon: RefreshCcw },
       { title: "Completed", path: "/orders/completed", icon: CheckCircle },
       { title: "Cancelled", path: "/orders/cancelled", icon: XCircle },

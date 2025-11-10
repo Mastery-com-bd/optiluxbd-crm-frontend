@@ -63,7 +63,7 @@ export default function Navbar() {
     }
   };
 
-  if (pathname.startsWith("/dashboard")) return null;
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/login") || pathname?.startsWith("/register")) return null;
 
   return (
     <motion.nav
@@ -71,11 +71,11 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
-        "fixed max-w-full w-full z-50 backdrop-blur-md bg-black/40 border-b border-white/10",
+        "fixed max-w-full w-full z-50 backdrop-blur-md bg-black/40 border-b border-white/10 ",
         "text-white"
       )}
     >
-      <div className="mx-auto px-4 sm:px-6 lg:px-20">
+      <div className="max-w-[1444px] mx-auto px-4 ">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
