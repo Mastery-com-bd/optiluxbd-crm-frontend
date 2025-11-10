@@ -16,42 +16,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { Eye, Edit, ChevronDown } from "lucide-react";
+import { ChevronDown, Slash, XCircle, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useState } from "react";
 import CreateUser from "./CreateUser";
 import {
+  useActivateUserMutation,
   useDeleteUserMutation,
   useGetAllUsersQuery,
+  useSuspendUserMutation,
 } from "@/redux/features/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import DeleteUSerModal from "./DeleteUSerModal";
 import { toast } from "sonner";
 import PaginationControls from "@/components/ui/paginationComponent";
-
-export type TUser = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: "ADMIN" | "SUPER-ADMIN" | "AGENT" | "USER";
-  is_active: boolean;
-  status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
-  email_verified: boolean;
-  phone_verified: boolean;
-  avatar_secure_url: string | null;
-  created_at: string;
-  updated_at: string;
-  last_login: string | null;
-};
+import { TStatus, TUser } from "@/types/user/user.types";
+import UserStatusDropdown from "./StatusDropdown";
+import Link from "next/link";
+import { debounce } from "@/utills/debounce";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -61,29 +44,19 @@ const ManageUsers = () => {
     limit: 10,
     page: 1,
   });
-
-  const { data, isLoading } = useGetAllUsersQuery(filters);
+  console.log(filters);
+  const { data, isLoading } = useGetAllUsersQuery(filters, {
+    refetchOnMountOrArgChange: false,
+  });
 
   const users = data?.data as TUser[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   const [deleteUser] = useDeleteUserMutation();
+  const [activateUser] = useActivateUserMutation();
+  const [suspendUser] = useSuspendUserMutation();
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const options = ["Today", "This Week", "This Month", "This Year"];
-  const [selected, setSelected] = useState("This Month");
-  const [page, setPage] = useState(1);
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "bg-green-100 text-green-700";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-700";
-      case "Inactive":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  const [is_active, setIs_active] = useState("All");
+  const [selectedRole, setSelectedRole] = useState("All");
 
   const handleConfirm = async (
     setLoading: Dispatch<SetStateAction<boolean>>,
@@ -105,6 +78,54 @@ const ManageUsers = () => {
       setLoading(false);
     }
   };
+
+  const handleInactive = async (
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    id: number
+  ) => {
+    try {
+      const res = await activateUser(id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  const handleSuspend = async (
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    id: number
+  ) => {
+    try {
+      const res = await suspendUser(id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   if (isLoading) {
     return (
@@ -216,11 +237,9 @@ const ManageUsers = () => {
           <div className="w-full sm:w-1/2">
             <Input
               type="text"
-              placeholder="Search by name, email, or phone..."
+              placeholder="Search by name"
               value={filters.search}
-              onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value })
-              }
+              onChange={(e) => debouncedLog(e.target.value)}
               className="w-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
             />
           </div>
@@ -238,36 +257,87 @@ const ManageUsers = () => {
               align="end"
               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
-              {["All", "Active", "Pending", "Inactive"].map((status) => (
-                <DropdownMenuItem
-                  key={status}
-                  className={status === selectedStatus ? "font-medium" : ""}
-                >
-                  {status}
-                </DropdownMenuItem>
-              ))}
+              {["All", "Active", "Inactive", "Suspend", "Disabled"].map(
+                (status) => (
+                  <DropdownMenuItem
+                    key={status}
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setFilters((prev) => ({
+                        ...prev,
+                        status:
+                          status === "All" ? undefined : status.toUpperCase(),
+                        page: 1,
+                      }));
+                    }}
+                    className={status === selectedStatus ? "font-medium" : ""}
+                  >
+                    {status}
+                  </DropdownMenuItem>
+                )
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+                className="flex items-center gap-2 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
               >
-                {selected} <ChevronDown size={16} />
+                {is_active === "All" ? "Filter by activity" : is_active}
+                <ChevronDown size={16} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
-              {options.map((option) => (
+              {["All", "Yes", "No"].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setIs_active(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      is_active: item === "All" ? undefined : item === "Yes",
+                      page: 1,
+                    }));
+                  }}
+                  className={item === is_active ? "font-medium" : ""}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+              >
+                {selectedRole === "All" ? "Filter by role" : selectedRole}{" "}
+                <ChevronDown size={14} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            >
+              {["All", "Inspector", "Sales", "Agent", "Admin"].map((option) => (
                 <DropdownMenuItem
                   key={option}
-                  onClick={() => setSelected(option)}
-                  className={`${
-                    selected === option ? "font-semibold text-primary" : ""
-                  }`}
+                  onClick={() => {
+                    setSelectedRole(option);
+                    setFilters((prev) => ({
+                      ...prev,
+                      is_active:
+                        option === "All" ? undefined : option.toUpperCase(),
+                      page: 1,
+                    }));
+                  }}
+                  className={option === selectedRole ? "font-medium" : ""}
                 >
                   {option}
                 </DropdownMenuItem>
@@ -314,143 +384,117 @@ const ManageUsers = () => {
           </TableHeader>
 
           <TableBody>
-            {users?.map((user, index) => (
-              <TableRow
-                key={index}
-                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <TableCell>
-                  <Image
-                    src={
-                      user?.avatar_secure_url ??
-                      "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
-                    }
-                    alt={user.name}
-                    width={500}
-                    height={500}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                </TableCell>
-                <TableCell className="font-medium text-gray-900 dark:text-gray-200">
-                  {user?.name}
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {user?.role}
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {user?.email}
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {user?.phone}
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {user?.is_active ? "Yes" : "No"}
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(
-                      user?.status
-                    )}`}
-                  >
-                    {user.status}
-                  </span>
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {new Date(user?.created_at).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-200">
-                  {user?.last_login
-                    ? new Date(user?.last_login).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })
-                    : "not yet"}
-                </TableCell>
-                <TableCell className="flex gap-2 justify-center">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  >
-                    <Eye
-                      size={16}
-                      className="text-gray-600 dark:text-gray-200"
+            {users?.map((user, index) => {
+              const role = user?.roles.map((r) => r?.role?.name);
+              return (
+                <TableRow
+                  key={index}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <TableCell>
+                    <Image
+                      src={
+                        user?.avatar_secure_url ??
+                        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                      }
+                      alt={user.name}
+                      width={500}
+                      height={500}
+                      className="w-10 h-10 rounded-full object-cover"
                     />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-yellow-100 dark:bg-yellow-700 hover:bg-yellow-200 dark:hover:bg-yellow-600"
-                  >
-                    <Edit
-                      size={16}
-                      className="text-yellow-600 dark:text-yellow-300"
+                  </TableCell>
+                  <TableCell className="font-medium text-gray-900 dark:text-gray-200">
+                    <Link
+                      href={`/dashboard/admin/manage-users/${user?.id}`}
+                      className="text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      {user?.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {role}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {user?.email}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {user?.phone}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {user?.is_active ? "Yes" : "No"}
+                  </TableCell>
+                  <TableCell>
+                    <UserStatusDropdown
+                      id={user?.id}
+                      status={user?.status as TStatus}
                     />
-                  </Button>
-                  <DeleteUSerModal
-                    handleConfirm={handleConfirm}
-                    id={user?.id}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {new Date(user?.created_at).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {user?.last_login
+                      ? new Date(user?.last_login).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "not yet"}
+                  </TableCell>
+                  <TableCell className="flex gap-2 justify-center">
+                    {/* Suspend */}
+                    <DeleteUSerModal
+                      handleConfirm={handleSuspend}
+                      id={user?.id}
+                      icon={Slash}
+                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+                      buttonClass="text-red-600 dark:text-red-300"
+                      level=" Suspend user?"
+                      content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
+                      tooltip="Suspend"
+                      disabeButton={user?.status === "SUSPENDED"}
+                    />
+
+                    {/* inactive */}
+                    <DeleteUSerModal
+                      handleConfirm={handleInactive}
+                      id={user?.id}
+                      icon={XCircle}
+                      className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
+                      buttonClass="text-gray-600 dark:text-gray-300"
+                      level=" Inactive user?"
+                      content="This action cannot be undone. It will inactive the user activity from the system from this time’s"
+                      tooltip="Inactive"
+                      disabeButton={user?.status === "SUSPENDED"}
+                    />
+
+                    {/* Delete */}
+                    <DeleteUSerModal
+                      handleConfirm={handleConfirm}
+                      id={user?.id}
+                      icon={Trash2}
+                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+                      buttonClass="text-red-600 dark:text-red-300"
+                      level=" Delete user?"
+                      content="This action cannot be undone. It will permanently remove the user’s
+            account and all associated data from the system."
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
       <PaginationControls
         pagination={pagination}
-        onPrev={() => setPage((p) => p - 1)}
-        onNext={() => setPage((p) => p + 1)}
+        onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
+        onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
       />
-      {/* Pagination */}
-      {/* <div className="flex justify-end">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                aria-disabled={page === 1}
-                className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-200 ${
-                  page === 1
-                    ? "border-gray-200 text-gray-400 cursor-not-allowed dark:border-gray-600 dark:text-gray-500"
-                    : "border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white cursor-pointer"
-                }`}
-              />
-            </PaginationItem>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <PaginationItem
-                key={p}
-                onClick={() => setPage(p)}
-                className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-200 cursor-pointer ${
-                  p === page
-                    ? "border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                {p}
-              </PaginationItem>
-            ))}
-
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                aria-disabled={page === totalPages}
-                className={`px-3 py-1.5 text-sm rounded-md border transition-all duration-200 ${
-                  page === totalPages
-                    ? "border-gray-200 text-gray-400 cursor-not-allowed dark:border-gray-600 dark:text-gray-500"
-                    : "border-yellow-400 text-yellow-600 hover:bg-yellow-400 hover:text-white cursor-pointer"
-                }`}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div> */}
     </section>
   );
 };

@@ -18,6 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -57,7 +58,6 @@ const Login = () => {
   const onSubmit = async (data: TLoginData) => {
     delete data.keepSignedIn;
     try {
-      // const res = await userLogin(data);
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
@@ -72,6 +72,7 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
+        const { role } = getPermissions(res?.data?.userData?.roles);
         dispatch(setUser(user as TUSerRole[]));
         dispatch(setToken(token));
         toast.success(res?.message, {
@@ -81,7 +82,11 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          router.push("/dashboard");
+          if (role === "ADMIN") {
+            router.push("/dashboard");
+          } else {
+            router.push("/dashboard/profile");
+          }
         }
       }
     } catch (error: any) {
@@ -100,20 +105,19 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      // const res = await userLogin(data);
       const res = await login(data).unwrap();
-      const user: TUSerRole[] =
-        res?.data?.userData?.roles?.map((r: any) => ({
-          userId: r.userId,
-          role: {
-            name: r.role.name,
-            permissions:
-              r.role.permissions?.map((p: any) => ({
-                name: p.permission.name,
-              })) || [],
-          },
-        })) || [];
       if (res?.success) {
+        const user: TUSerRole[] =
+          res?.data?.userData?.roles?.map((r: any) => ({
+            userId: r.userId,
+            role: {
+              name: r.role.name,
+              permissions:
+                r.role.permissions?.map((p: any) => ({
+                  name: p.permission.name,
+                })) || [],
+            },
+          })) || [];
         const token = res?.data?.token;
         dispatch(setUser(user as TUSerRole[]));
         dispatch(setToken(token));
@@ -167,7 +171,7 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          router.push("/dashboard");
+          router.push("/dashboard/profile");
         }
       }
     } catch (error: any) {
@@ -186,7 +190,6 @@ const Login = () => {
       password: "Password@123",
     };
     try {
-      // const res = await userLogin(data);
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
@@ -210,7 +213,7 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          router.push("/dashboard");
+          router.push("/dashboard/profile");
         }
       }
     } catch (error: any) {

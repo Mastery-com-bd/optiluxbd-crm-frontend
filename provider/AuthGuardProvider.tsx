@@ -3,6 +3,7 @@ import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -36,8 +37,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const permissions = user?.[0]?.role?.permissions?.map((p) => p.name) || [];
-    const roleName = user?.[0]?.role?.name;
+    const { permissions, role } = getPermissions(user);
+
     if (!permissions.length) {
       router.replace("/login");
       return;
@@ -56,7 +57,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // Admin can access these directly
     // Admin logic
-    if (roleName === "ADMIN") {
+    if (role === "ADMIN") {
       const adminAllowedRoutes = [
         "/dashboard",
         "/dashboard/admin/landing",
