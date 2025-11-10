@@ -13,13 +13,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
+import { debounce } from "@/utills/debounce";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import CustomerTable from "./components/customerTable";
 import CustomerPagination from "./components/pagination";
+import TableSkeleton from "./tableSchaliton";
 
 // Define the customer type
-export interface Customer {
+export interface TCustomer {
   id: number;
   name: string;
   phone: string;
@@ -36,11 +40,36 @@ export interface Customer {
   updated_at?: string | null;
 }
 
-export default function AllCustomersPage({
-  AllCustomers,
-}: {
-  AllCustomers: Customer[];
-}) {
+export default function AllCustomersPage() {
+  const [filters, setFilters] = useState({
+    search: "",
+    customerLevel: "",
+    gender: "",
+    isMarried: "",
+    thana: "",
+    district: "",
+    sortBy: "createdAt",
+    order: "desc",
+    limit: 10,
+    page: 1,
+  });
+
+  const { data, isLoading } = useGetAllCustomerQuery(filters);
+
+  // Derive customers directly from data
+  const customers: TCustomer[] = (data?.data as TCustomer[]) ?? [];
+
+  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+
+  const handleSearch = (query: string) => {
+    setFilters((prev) => ({ ...prev, search: query, page: 1 }));
+  };
+  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+
+  const HandlePageChange = (page: number) => {
+    setFilters({ ...filters, page });
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -73,10 +102,10 @@ export default function AllCustomersPage({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search by name, phone, email, address, profession, or location..."
+                placeholder="Search by name, phone, address, profession, or address"
                 // value={searchTerm}
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  debouncedLog(e.target.value);
                 }}
                 className="pl-10"
               />
@@ -91,12 +120,16 @@ export default function AllCustomersPage({
               {/* Customer Level Filter */}
               <div className="sm:col-span-1">
                 <Label className="text-md font-semibold mb-1">Level</Label>
-                <Select>
+                <Select
+                  value={filters.customerLevel}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, customerLevel: value })
+                  }
+                >
                   <SelectTrigger className="min-w-[100px] w-full h-8 text-xs">
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
                     <SelectItem value="BRONZE_PENDING">
                       Bronze Pending
                     </SelectItem>
@@ -122,15 +155,20 @@ export default function AllCustomersPage({
               {/* Gender Filter */}
               <div className="sm:col-span-1">
                 <Label className="text-md font-semibold mb-1">Gender</Label>
-                <Select>
+                <Select
+                  value={filters.gender}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, gender: value })
+                  }
+                >
                   <SelectTrigger className="min-w-[100px] w-full h-8 text-xs">
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    <SelectItem value="MALE">Male</SelectItem>
+                    <SelectItem value="FEMALE">Female</SelectItem>
+                    <SelectItem value="OTHER">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -138,7 +176,12 @@ export default function AllCustomersPage({
               {/* Marital Status Filter */}
               <div className="sm:col-span-1">
                 <Label className="text-md font-semibold mb-1">Married</Label>
-                <Select>
+                <Select
+                  value={filters.isMarried}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, isMarried: value })
+                  }
+                >
                   <SelectTrigger className="min-w-[100px] w-full h-8 text-xs">
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
@@ -209,43 +252,50 @@ export default function AllCustomersPage({
         {/* Active Filters Display */}
         <div className="border-0.5 mb-4 flex flex-wrap items-center gap-3 rounded-xl bg-muted/40 px-4 py-3 text-sm shadow-sm backdrop-blur-sm">
           <span className="text-muted-foreground">
-            Showing 10 of 100 customers
+            Showing {data?.pagination.limit} of {data?.pagination.total}{" "}
+            customers
           </span>
 
           <Separator orientation="vertical" className="h-4" />
 
           <Badge variant="outline" className="h-6 px-2 text-xs font-medium">
-            Gender: Male
+            Level:{" "}
+            {filters.customerLevel === "" ? "All" : filters.customerLevel}
           </Badge>
 
           <Badge variant="outline" className="h-6 px-2 text-xs font-medium">
-            Level: Platinum
+            Gender: {filters.gender === "" ? "All" : filters.gender}
           </Badge>
 
           <Badge variant="outline" className="h-6 px-2 text-xs font-medium">
-            Profession: Artist
+            Is Married: {filters.isMarried === "" ? "All" : filters.isMarried}
           </Badge>
 
           <Badge variant="outline" className="h-6 px-2 text-xs font-medium">
-            District: Dhaka
+            District: {filters.district === "" ? "All" : filters.district}
           </Badge>
 
           <Badge variant="outline" className="h-6 px-2 text-xs font-medium">
-            Thana: Dhaka
+            Thana: {filters.thana === "" ? "All" : filters.thana}
           </Badge>
         </div>
 
         {/* Customer Table */}
-        <Card className="border-0 bg-transparent shadow-none">
-          <CardContent className="p-0">
-            <CustomerTable customers={AllCustomers} />
-          </CardContent>
-        </Card>
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <Card className="border-0 bg-transparent shadow-none">
+            <CardContent className="p-0">
+              <CustomerTable customers={customers} />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Pagination */}
         <CustomerPagination
-          currentPage={1}
-          totalPages={10}
-          onPageChange={() => console.log("Page Changed")}
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={HandlePageChange}
         />
       </div>
     </div>

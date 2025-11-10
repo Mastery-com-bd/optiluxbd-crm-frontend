@@ -89,10 +89,10 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
     };
 
     const onSubmit = async (values: FormValues) => {
-        // 👇 Close the modal FIRST
+        // Close the modal FIRST
         setSheetOpen(false);
 
-        // 👇 Delay toast render to prevent z-index/focus issue
+        // Delay toast render to prevent z-index/focus issue
         setTimeout(() => {
             toast("Are you sure you want to update this product?", {
                 description: "This change will be saved permanently.",
@@ -108,7 +108,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                 }
 
                                 refetch();
-                                setHasImageChanged(false); // Reset image change state
+                                setHasImageChanged(false); 
                             })(),
                             {
                                 loading: "Updating...",
@@ -143,7 +143,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                     <SheetHeader>
                         <SheetTitle>Edit Product</SheetTitle>
                         <SheetDescription>
-                            Update the product details. Click save when you're done.
+                            Update the product details. Click save when you&apos;re done.
                         </SheetDescription>
                     </SheetHeader>
 

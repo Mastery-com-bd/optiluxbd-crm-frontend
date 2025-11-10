@@ -33,6 +33,7 @@ import { debounce } from "@/utills/debounce"
 import ProductDetails from "../productDetails/ProductDetails"
 import { Product } from "@/types/product"
 import UpdateProduct from "../updateProduct/UpdateProduct"
+import Loading from "../../hr&staff/staff/loading"
 
 
 const AllProducts = () => {
@@ -51,12 +52,11 @@ const AllProducts = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
   const [page, setPage] = useState(1)
   const [deleteProduct] = useDeleteProductMutation()
-  const { data: productRes, refetch } = useGetAllProductQuery(filters);
+  const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, {refetchOnMountOrArgChange:false});
   const PRODUCTS = productRes?.data || []
   const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
   const [inputValue, setInputValue] = useState("")
 
-  console.log(PRODUCTS);
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };
@@ -125,7 +125,8 @@ const AllProducts = () => {
       setSelectedProducts([...selectedProducts, id])
     }
   }
-
+  if (isLoading)
+    return <Loading />
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">

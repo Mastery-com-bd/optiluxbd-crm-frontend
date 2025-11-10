@@ -26,11 +26,8 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "name": "Name6",
-  "phone": "01712345676",
-  "address": "123 Main St, Dhaka, Bangladesh",
-  "district": "jessore",
-  "thana": "Jessore Sadar"
+  "name": "Test Customers",
+  "phone": "01777777777"
 }
 
 
