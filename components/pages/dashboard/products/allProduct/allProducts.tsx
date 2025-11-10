@@ -33,7 +33,7 @@ import { debounce } from "@/utills/debounce"
 import ProductDetails from "../productDetails/ProductDetails"
 import { Product } from "@/types/product"
 import UpdateProduct from "../updateProduct/UpdateProduct"
-import Loading from "../../hr&staff/staff/loading"
+import Loading from "@/components/pages/shared/Loading"
 
 
 const AllProducts = () => {
@@ -52,7 +52,7 @@ const AllProducts = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
   const [page, setPage] = useState(1)
   const [deleteProduct] = useDeleteProductMutation()
-  const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, {refetchOnMountOrArgChange:false});
+  const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, { refetchOnMountOrArgChange: false });
   const PRODUCTS = productRes?.data || []
   const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
   const [inputValue, setInputValue] = useState("")
@@ -125,8 +125,6 @@ const AllProducts = () => {
       setSelectedProducts([...selectedProducts, id])
     }
   }
-  if (isLoading)
-    return <Loading />
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -142,7 +140,7 @@ const AllProducts = () => {
               <span>All Products</span>
             </div>
           </div>
-          <Link href={'/dashboard/admin/products/add'}>
+          <Link href={'/dashboard/admin/products/add-product'}>
             <Button className="bg-primary hover:bg-primary/90">
               <Plus className="w-4 h-4 mr-2" />
               Add Product
@@ -231,105 +229,108 @@ const AllProducts = () => {
         </Card>
 
         {/* Product Table */}
-        <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-muted">
-                  <th className="px-4 py-3 text-left">
-                    <input
-                      type="checkbox"
-                      className="rounded border-border"
-                      checked={
-                        selectedProducts.length === PRODUCTS.length &&
-                        PRODUCTS.length > 0
-                      }
-                      onChange={toggleSelectAll}
-                    />
-                  </th>
-                  {["Product", "SKU", "Category", "Stock", "Price", "Sold", "Rating", "Status", "Actions"].map(
-                    (label) => (
-                      <th
-                        key={label}
-                        className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase"
-                      >
-                        {label}
-                      </th>
-                    )
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {PRODUCTS.map((product: Product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b border-muted hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-4 py-3">
+        {isLoading ? <div className="mx-auto border w-screen"><Loading /></div> :
+          <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border bg-muted">
+                    <th className="px-4 py-3 text-left">
                       <input
                         type="checkbox"
                         className="rounded border-border"
-                        checked={selectedProducts.includes(product.id)}
-                        onChange={() => toggleSelectProduct(product.id)}
+                        checked={
+                          selectedProducts.length === PRODUCTS.length &&
+                          PRODUCTS.length > 0
+                        }
+                        onChange={toggleSelectAll}
                       />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={product?.image_url || "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"}
-                          alt={product.name}
-                          width={48}
-                          height={48}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <div>
-                          <p className="font-medium">{product.name}</p>
-                          <p className="text-xs text-muted-foreground">by {product.by}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm">{product.sku}</td>
-                    <td className="px-4 py-3 text-sm">{product.category}</td>
-                    <td className="px-4 py-3 text-sm font-medium">{product.stock}</td>
-                    <td className="px-4 py-3 text-sm font-semibold">${product.price}</td>
-                    <td className="px-4 py-3 text-sm">{product.sold}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        {renderStars(product.rating)}
-                        {/* <span className="text-xs text-muted-foreground ml-1">
+                    </th>
+                    {["Product", "SKU", "Category", "Stock", "Price", "Sold", "Rating", "Status", "Actions"].map(
+                      (label) => (
+                        <th
+                          key={label}
+                          className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase"
+                        >
+                          {label}
+                        </th>
+                      )
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    PRODUCTS.map((product: Product) => (
+                      <tr
+                        key={product.id}
+                        className="border-b border-muted hover:bg-muted/50 transition-colors"
+                      >
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            className="rounded border-border"
+                            checked={selectedProducts.includes(product.id)}
+                            onChange={() => toggleSelectProduct(product.id)}
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={product?.image_url || "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"}
+                              alt={product.name}
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                            <div>
+                              <p className="font-medium">{product.name}</p>
+                              <p className="text-xs text-muted-foreground">by {product.by}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm">{product.sku}</td>
+                        <td className="px-4 py-3 text-sm">{product.category}</td>
+                        <td className="px-4 py-3 text-sm font-medium">{product.stock}</td>
+                        <td className="px-4 py-3 text-sm font-semibold">${product.price}</td>
+                        <td className="px-4 py-3 text-sm">{product.sold}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            {renderStars(product.rating)}
+                            {/* <span className="text-xs text-muted-foreground ml-1">
                           ({product.reviews})
                         </span> */}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
-                          product.status
-                        )}`}
-                      >
-                        {product.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <ProductDetails product={product} />
-                        <UpdateProduct product={product} refetch={refetch} />
-                        <Button
-                          className="cursor-pointer"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="w-4 h-4 text-destructive " />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
+                              product.status
+                            )}`}
+                          >
+                            {product.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            <ProductDetails product={product} />
+                            <UpdateProduct product={product} refetch={refetch} />
+                            <Button
+                              className="cursor-pointer"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(product.id)}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive " />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        }
 
         {/* Pagination Controls */}
         <PaginationControls
