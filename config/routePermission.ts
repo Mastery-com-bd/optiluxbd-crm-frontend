@@ -8,12 +8,18 @@ export const routePermissions: Record<string, string[]> = {
   ],
 
   // 🛍️ Product Management
-  "/dashboard/admin/products": [
-    "PRODUCTS VIEW",
-    "PRODUCTS CREATE",
-    "PRODUCTS UPDATE",
-    "PRODUCTS DELETE",
-  ],
+  // "/dashboard/admin/products": [
+  //   "PRODUCTS VIEW",
+  //   "PRODUCTS CREATE",
+  //   "PRODUCTS UPDATE",
+  //   "PRODUCTS DELETE",
+  // ],
+  "/dashboard/admin/products/inventory": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
+  "/dashboard/admin/products/reviews": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
+  "/dashboard/admin/products/all": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
+  "/dashboard/admin/products/drafts": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
+  "/dashboard/admin/products/add": ["PRODUCTS CREATE"],
+  "/dashboard/admin/products/deleted": ["PRODUCTS DELETE"],
 
   // 🧾 Customer Management
   "/dashboard/customers/page": ["CUSTOMERS VIEW"],
@@ -41,7 +47,7 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/roles": ["ROLES MANAGE"],
 
   // 💰 Sales Management
-  "/dashboard/admin/sales": [
+  "/dashboard/admin/orders": [
     "SALES CREATE",
     "SALES VIEW",
     "SALES VIEW OWN",

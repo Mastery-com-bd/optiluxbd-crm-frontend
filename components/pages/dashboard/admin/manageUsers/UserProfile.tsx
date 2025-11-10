@@ -2,49 +2,57 @@
 "use client";
 
 import {
+  useDeleteUserMutation,
   useGetASingleUserQuery,
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import { motion } from "framer-motion";
 import ProfileImage from "../../agent/ProfileImage";
 import {
-  FileText,
-  Info,
+  Calendar,
+  ChevronDown,
+  Clock,
   Mail,
-  MapPin,
   Phone,
-  ShieldUser,
   UserCheck,
 } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { IProfileInfo } from "../../agent/Profile";
 import {
   resetProfile,
-  setBio,
-  setCity,
-  setCountry,
-  setDateOfBirth,
-  setGender,
   setname,
   setPhone,
+  setRole,
+  setStatus,
 } from "@/redux/features/agent/agentProfileSlice";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
+import DeleteUSerModal from "./DeleteUSerModal";
+import ProfileLoader from "../../agent/ProfileLoader";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { TStatus } from "@/types/user/user.types";
 const UserProfile = ({ id }: { id: string }) => {
   const { data, isLoading } = useGetASingleUserQuery(id, {
     refetchOnMountOrArgChange: false,
   });
   const userInfo = data?.data;
-
-  const nameSplit = userInfo?.name?.split(" ") ?? [];
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
-
+  const [deleteUser] = useDeleteUserMutation();
+  const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
+  const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
   const handleCancel = () => {
     setFormData(userInfo);
     setIsEditing(false);
@@ -78,6 +86,31 @@ const UserProfile = ({ id }: { id: string }) => {
     }
   };
 
+  const handleConfirm = async (
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    id: number
+  ) => {
+    try {
+      const res = await deleteUser(id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <ProfileLoader />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10">
       <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8">
@@ -89,90 +122,111 @@ const UserProfile = ({ id }: { id: string }) => {
                 profileImage={userInfo?.avatar_secure_url}
                 id={userInfo?.id}
               />
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h4 className="text-xl font-semibold text-black dark:text-gray-100">
                   {userInfo?.name}
                 </h4>
-                <p className="text-gray-500 dark:text-gray-300 text-sm flex items-center gap-1">
-                  <ShieldUser size={15} /> {userInfo?.role}
-                </p>
-                <p className="text-gray-500 dark:text-gray-300 text-sm flex items-center gap-1">
-                  <MapPin size={16} /> {userInfo?.city ?? "no city added"},{" "}
-                  {userInfo?.country ?? "no country added"}
-                </p>
-                <p className="text-gray-500 dark:text-gray-300 text-sm lg:w-[30vw] flex items-start gap-1">
-                  <FileText size={15} /> {userInfo?.bio ?? "no bio"}
-                </p>
-                <div className="flex flex-wrap gap-4 mt-2">
-                  <div className="flex items-center gap-1">
-                    <Mail
-                      size={16}
-                      className={
-                        userInfo?.email_verified
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Email Verified: {userInfo?.email_verified ? "Yes" : "No"}
-                    </span>
-                  </div>
 
-                  <div className="flex items-center gap-1">
-                    <Phone
-                      size={16}
-                      className={
-                        userInfo?.phone_verified
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Phone Verified: {userInfo?.phone_verified ? "Yes" : "No"}
+                {/* Email Verification */}
+                <div className="flex items-center gap-2 text-sm">
+                  <Mail
+                    size={16}
+                    className={
+                      userInfo?.email_verified
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  />
+                  <span
+                    className={`font-medium ${
+                      userInfo?.email_verified
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    Email Verified:{" "}
+                    <span className="font-normal text-gray-700 dark:text-gray-300">
+                      {userInfo?.email_verified ? "Yes" : "No"}
                     </span>
-                  </div>
+                  </span>
+                </div>
 
-                  <div className="flex items-center gap-1">
-                    <UserCheck
-                      size={16}
-                      className={
-                        userInfo?.is_active ? "text-green-500" : "text-red-500"
-                      }
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Active: {userInfo?.is_active ? "Yes" : "No"}
+                {/* Phone Verification */}
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone
+                    size={16}
+                    className={
+                      userInfo?.phone_verified
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  />
+                  <span
+                    className={`font-medium ${
+                      userInfo?.phone_verified
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    Phone Verified:{" "}
+                    <span className="font-normal text-gray-700 dark:text-gray-300">
+                      {userInfo?.phone_verified ? "Yes" : "No"}
                     </span>
-                  </div>
+                  </span>
+                </div>
 
-                  <div className="flex items-center gap-1">
-                    <Info
-                      size={16}
-                      className={
-                        userInfo?.status === "active"
-                          ? "text-green-500"
-                          : "text-yellow-500"
-                      }
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Status: {userInfo?.status}
+                {/* Account Activity */}
+                <div className="flex items-center gap-2 text-sm">
+                  <UserCheck
+                    size={16}
+                    className={
+                      userInfo?.is_active ? "text-green-500" : "text-gray-400"
+                    }
+                  />
+                  <span className="text-gray-700 dark:text-gray-300">
+                    Account Status:{" "}
+                    <span
+                      className={`font-medium ${
+                        userInfo?.is_active
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      {userInfo?.is_active ? "Active" : "Inactive"}
                     </span>
-                  </div>
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Calendar size={15} className="text-yellow-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Joined:{" "}
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {convertDate(new Date(userInfo?.created_at)).creationDate}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Clock size={15} className="text-purple-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Last Login:{" "}
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {userInfo?.last_login
+                        ? new Date(userInfo?.last_login).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          )
+                        : "Not yet"}
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Since {convertDate(new Date(userInfo?.created_at)).creationDate}
-            </p>
-            <p className="text-gray-600 dark:text-gray-400">
-              last Login{" "}
-              {userInfo?.last_login
-                ? new Date(userInfo?.last_login).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                : "not yet"}
-            </p>
           </section>
 
           {/* Profile Details Section */}
@@ -217,33 +271,27 @@ const UserProfile = ({ id }: { id: string }) => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Gender
+                    Role
                   </p>
                   <p className="font-medium capitalize">
-                    {userInfo?.gender ?? "no gender added"}
+                    {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Date of Birth
+                    Active
                   </p>
                   <p className="font-medium">
-                    {userInfo?.dateOfBirth || "no date"}
+                    {userInfo?.is_active ? "Yes" : "No"}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Country
+                    Address
                   </p>
                   <p className="font-medium">
-                    {userInfo?.country ?? "no country"}
+                    {userInfo?.address ?? "no address"}
                   </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    City
-                  </p>
-                  <p className="font-medium">{userInfo?.city ?? "no city"}</p>
                 </div>
               </div>
             ) : (
@@ -261,7 +309,12 @@ const UserProfile = ({ id }: { id: string }) => {
                     name="firstName"
                     value={formData?.name.split(" ")[0]}
                     onChange={(e) => {
-                      /* your logic */
+                      const value = e.target.value;
+                      const name = `${value} ${
+                        formData?.name.split(" ")[1] &&
+                        formData?.name.split(" ")[1]
+                      }`;
+                      dispatch(setname(name));
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -276,7 +329,9 @@ const UserProfile = ({ id }: { id: string }) => {
                     name="lastName"
                     value={formData?.name.split(" ")[1] ?? ""}
                     onChange={(e) => {
-                      /* your logic */
+                      const value = e.target.value;
+                      const name = `${formData?.name.split(" ")[0]} ${value}`;
+                      dispatch(setname(name));
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -291,7 +346,8 @@ const UserProfile = ({ id }: { id: string }) => {
                     name="phone"
                     value={formData?.phone ?? ""}
                     onChange={(e) => {
-                      /* your logic */
+                      const value = e.target.value;
+                      dispatch(setPhone(value));
                     }}
                     placeholder="Phone"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -300,81 +356,95 @@ const UserProfile = ({ id }: { id: string }) => {
 
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
-                    Gender
+                    Role
                   </label>
-                  <select
-                    name="gender"
-                    value={formData?.gender ?? ""}
-                    onChange={(e) => {
-                      /* your logic */
-                    }}
-                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="others">Others</option>
-                  </select>
-                </div>
 
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {role || "select role"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={role}
+                        onValueChange={(value) => setRole(value)}
+                      >
+                        {roleOptions.map((item) => (
+                          <DropdownMenuRadioItem key={item} value={item}>
+                            {item}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
-                    Date of Birth
+                    Status
                   </label>
-                  <input
-                    name="dateOfBirth"
-                    type="date"
-                    value={formData?.dateOfBirth ?? ""}
-                    onChange={(e) => {
-                      /* your logic */
-                    }}
-                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
-                  />
-                </div>
 
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {formData?.status || "select status"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={"active"}
+                        onValueChange={(value) => setStatus(value as TStatus)}
+                      >
+                        {["ACTIVE", "INACTIVE", "SUSPENDED", "DISABLED"].map(
+                          (item) => (
+                            <DropdownMenuRadioItem key={item} value={item}>
+                              {item}
+                            </DropdownMenuRadioItem>
+                          )
+                        )}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
-                    Country
+                    Activity
                   </label>
-                  <input
-                    name="country"
-                    value={formData?.country ?? ""}
-                    onChange={(e) => {
-                      /* your logic */
-                    }}
-                    placeholder="Country"
-                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
-                  />
-                </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-gray-700 dark:text-gray-200">
-                    City
-                  </label>
-                  <input
-                    name="city"
-                    value={formData?.city ?? ""}
-                    onChange={(e) => {
-                      /* your logic */
-                    }}
-                    placeholder="City"
-                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
-                  />
-                </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {userInfo?.is_active ? "Yes" : "No"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
 
-                <div className="sm:col-span-2 flex flex-col gap-1">
-                  <label className="text-gray-700 dark:text-gray-200">
-                    Bio
-                  </label>
-                  <textarea
-                    name="bio"
-                    value={formData?.bio ?? ""}
-                    onChange={(e) => {
-                      /* your logic */
-                    }}
-                    placeholder="Write your bio..."
-                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none min-h-[100px]"
-                  />
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={userInfo?.is_active ? "Yes" : "No"}
+                        onValueChange={(value) => setStatus(value as TStatus)}
+                      >
+                        {["Yes", "No"].map((item) => (
+                          <DropdownMenuRadioItem key={item} value={item}>
+                            {item}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
@@ -396,6 +466,18 @@ const UserProfile = ({ id }: { id: string }) => {
               </motion.div>
             )}
           </section>
+          <div>
+            <DeleteUSerModal
+              handleConfirm={handleConfirm}
+              id={userInfo?.id}
+              className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+              buttonClass="text-red-600 dark:text-red-300"
+              level=" Delete user?"
+              content="This action cannot be undone. It will permanently remove the user’s
+            account and all associated data from the system."
+              buttonName="Delete"
+            />
+          </div>
         </div>
       </div>
     </div>

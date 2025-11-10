@@ -101,7 +101,7 @@ const Login = () => {
 
   const handleAdmin = async () => {
     const data = {
-      email: "admin@gmail.com",
+      email: "thohanur143@gmail.com",
       password: "Password@123",
     };
     try {
