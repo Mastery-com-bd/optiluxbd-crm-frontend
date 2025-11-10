@@ -34,7 +34,8 @@ const productsApi = baseApi.injectEndpoints({
                 url: `/products?${buildParams(params)}`,
                 method: "GET",
             }),
-            providesTags:["products"]
+            providesTags:["products"],
+            keepUnusedDataFor:3000
         }),
         deleteProduct: builder.mutation({
             query: (id) => ({
