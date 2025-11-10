@@ -6,5 +6,6 @@ export const buildParams = (paramsObj: any) => {
       params.append(key, value as any);
     }
   });
+  console.log(params.toString());
   return params.toString();
 };

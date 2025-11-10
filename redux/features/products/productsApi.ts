@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { buildParams } from "@/utills/paramsBuilder";
 
 const productsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -24,13 +25,13 @@ const productsApi = baseApi.injectEndpoints({
         updateProduct: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/products/${id}`,
-                method: "PATCH",
+                method: "PUT",
                 body: data,
             })
         }),
         getAllProduct: builder.query({
-            query: ({ page, limit }) => ({
-                url: `/products?page=${page}&limit=${limit}`,
+            query: (params) => ({
+                url: `/products?${buildParams(params)}`,
                 method: "GET",
             })
         }),
@@ -39,7 +40,7 @@ const productsApi = baseApi.injectEndpoints({
                 url: `/products/${id}`,
                 method: "DELETE",
             })
-        })
+        }),
     }),
 });
 export const {

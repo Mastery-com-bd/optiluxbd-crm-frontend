@@ -27,6 +27,7 @@ export interface TCustomer {
   id: number;
   name: string;
   phone: string;
+  email: string;
   address: string;
   district?: string | null;
   thana?: string | null;
