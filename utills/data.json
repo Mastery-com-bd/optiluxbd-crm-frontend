@@ -15,6 +15,7 @@
           "id": 1,
           "name": "ADMIN",
           "description": "ADMIN role",
+          "description1": "ADMIN role",
           "permissions": [
             {
               "id": 1,

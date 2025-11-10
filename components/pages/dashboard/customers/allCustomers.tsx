@@ -27,6 +27,7 @@ export interface TCustomer {
   id: number;
   name: string;
   phone: string;
+  email: string;
   address: string;
   district?: string | null;
   thana?: string | null;
@@ -39,31 +40,11 @@ export interface TCustomer {
   updated_at?: string | null;
 }
 
-export default function AllCustomersPage() {
-  const [filters, setFilters] = useState({
-    search: "",
-    customerLevel: "",
-    gender: "",
-    isMarried: "",
-    thana: "",
-    district: "",
-    sortBy: "createdAt",
-    order: "desc",
-    limit: 10,
-    page: 1,
-  });
-
-  const { data, isLoading } = useGetAllCustomerQuery(filters);
-  console.log(data);
-
-  const customers = (data?.data as TCustomer[]) || [];
-  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-
-  const handleSearch = async (query: string) => {
-      setFilters({ ...filters, search: query });
-    };
-    const debouncedLog = debounce(handleSearch, 1000, { leading: false });
-
+export default function AllCustomersPage({
+  AllCustomers,
+}: {
+  AllCustomers: Customer[];
+}) {
   return (
     <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
