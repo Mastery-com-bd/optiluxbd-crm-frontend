@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/components/pages/shared/Loading";
 import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { currentUser } from "@/redux/features/auth/authSlice";
@@ -103,9 +104,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!hydrated || !user) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        Loading...
-      </div>
+      <Loading />
     );
   }
 

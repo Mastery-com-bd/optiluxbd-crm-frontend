@@ -108,7 +108,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                 }
 
                                 refetch();
-                                setHasImageChanged(false); 
+                                setHasImageChanged(false);
                             })(),
                             {
                                 loading: "Updating...",
@@ -175,39 +175,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
 
                     {/* Toggles + Image */}
                     <div className="flex gap-4">
-                        {/* Visibility */}
-                        <section className="border rounded-md p-4 bg-muted/10 w-1/2 space-y-4">
-                            <h3 className="text-md font-semibold">Visibility</h3>
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="is_active">Active</Label>
-                                <Controller
-                                    control={control}
-                                    name="is_active"
-                                    render={({ field }) => (
-                                        <Switch
-                                            id="is_active"
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="is_featured">Featured</Label>
-                                <Controller
-                                    control={control}
-                                    name="is_featured"
-                                    render={({ field }) => (
-                                        <Switch
-                                            id="is_featured"
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    )}
-                                />
-                            </div>
-                        </section>
-
                         {/* Image Upload */}
                         <section className="border rounded-md p-4 bg-muted/10 w-1/2">
                             <h3 className="text-md font-semibold mb-2">Product Image</h3>
@@ -243,6 +210,39 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                     ref={fileInputRef}
                                     onChange={handleImageChange}
                                     className="hidden"
+                                />
+                            </div>
+                        </section>
+
+                        {/* Visibility */}
+                        <section className="border rounded-md p-4 bg-muted/10 w-1/2 space-y-4">
+                            <h3 className="text-md font-semibold">Visibility</h3>
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="is_active">Active</Label>
+                                <Controller
+                                    control={control}
+                                    name="is_active"
+                                    render={({ field }) => (
+                                        <Switch
+                                            id="is_active"
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    )}
+                                />
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="is_featured">Featured</Label>
+                                <Controller
+                                    control={control}
+                                    name="is_featured"
+                                    render={({ field }) => (
+                                        <Switch
+                                            id="is_featured"
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    )}
                                 />
                             </div>
                         </section>

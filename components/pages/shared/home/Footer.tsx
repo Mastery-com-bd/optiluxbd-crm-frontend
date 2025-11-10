@@ -7,25 +7,27 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname?.startsWith("/dashboard")) return null;
+  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/login") || pathname?.startsWith("/register")) return null;
 
   return (
     <footer className="bg-black text-white">
       {/* CTA Section */}
       <div className="bg-black text-center py-12 px-6 border-b border-orange-500">
-        <h2 className="text-2xl sm:text-3xl font-semibold leading-relaxed">
-          <span className="text-yellow-500">Discover</span> How Our CRM <br />
-          Can <span className="text-orange-400">Transform Your Sales</span>
-        </h2>
-        <div className="mt-6 flex justify-center">
-          <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 flex gap-2 items-center">
-            Start Free Trial <ArrowRight size={16} />
-          </Button>
+        <div className="max-w-[1444px] mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-semibold leading-relaxed">
+            <span className="text-yellow-500">Discover</span> How Our CRM <br />
+            Can <span className="text-orange-400">Transform Your Sales</span>
+          </h2>
+          <div className="mt-6 flex justify-center">
+            <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 flex gap-2 items-center">
+              Start Free Trial <ArrowRight size={16} />
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Grid & Contact Section */}
-      <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
+      <div className="max-w-[1444px] mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
         {/* Brand */}
         <div>
           <h3 className="flex items-center gap-2 font-semibold text-yellow-400 mb-2">

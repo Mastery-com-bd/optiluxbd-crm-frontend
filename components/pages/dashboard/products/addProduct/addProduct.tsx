@@ -110,9 +110,12 @@ const AddProduct = () => {
       } else {
         toast.error("Failed to add product")
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err?.message || "Something went wrong")
+      console.log(err.data.errors[0].message);
+      const errorMessage = err.data.errors[0].message ||
+        err?.data?.message || "Something went wrong";
+      toast.error(errorMessage);
     }
   }
 
@@ -152,10 +155,18 @@ const AddProduct = () => {
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
                       id="sku"
-                      {...register("sku", { required: true })}
+                      {...register("sku", {
+                        required: "SKU is required",
+                        pattern: {
+                          value: /^[a-zA-Z0-9_-]+$/,
+                          message: "SKU can only contain letters, numbers, hyphens, and underscores",
+                        },
+                      })}
                       className="mt-2"
                     />
-                    {errors.sku && <p className="text-destructive text-sm">Required</p>}
+                    {errors.sku && (
+                      <p className="text-destructive text-sm">{errors.sku.message}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="stock">Stock *</Label>
