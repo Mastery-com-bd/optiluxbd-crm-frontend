@@ -12,192 +12,32 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import PaginationControls from "@/components/ui/paginationComponent"
+import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi"
 
 export function OrderTable() {
-    const [search, setSearch] = useState("")
-    const [paymentFilter, setPaymentFilter] = useState<string>("")
-    const [perPage, setPerPage] = useState<number>(8)
-    const [currentPage, setCurrentPage] = useState(1)
-
-    type OrderType = {
-        id: string
-        date: string
-        customer: {
-            name: string
-            email: string
-            avatar: string
-        }
-        amount: string
-        paymentStatus: "Paid" | "Failed" | "Pending"
-        orderStatus: "Delivered" | "Processing" | "Cancelled" | "Shipped"
-        paymentMethod: string
-    }
-
-    const dummyOrders: OrderType[] = [
-        {
-            id: "#WB20101",
-            date: "7 May, 2025 11:45 AM",
-            customer: {
-                name: "Ava Martin",
-                email: "ava.martin@marketplace.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$87",
-            paymentStatus: "Pending",
-            orderStatus: "Processing",
-            paymentMethod: "MasterCard xxxx 5487",
-        },
-        {
-            id: "#WB20102",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Paid",
-            orderStatus: "Delivered",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20103",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20104",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20105",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20106",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20107",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20108",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB20109",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Paid",
-            orderStatus: "Delivered",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-        {
-            id: "#WB201010",
-            date: "26 Apr, 2025 1:20 PM",
-            customer: {
-                name: "Noah Wilson",
-                email: "noah.wilson@ecomsite.com",
-                avatar: "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png",
-            },
-            amount: "$59.9",
-            paymentStatus: "Failed",
-            orderStatus: "Cancelled",
-            paymentMethod: "Paypal xxx@email.com",
-        },
-    ]
-
-    // Filtered & paginated data
-    const filteredOrders = dummyOrders
-        .filter(
-            (order) =>
-                order.customer.name.toLowerCase().includes(search.toLowerCase()) ||
-                order.id.toLowerCase().includes(search.toLowerCase())
-        )
-        .filter((order) => {
-            if (paymentFilter === "All" || !paymentFilter) return true
-            return order.paymentStatus === paymentFilter
-        })
-
-    const totalPages = Math.ceil(filteredOrders.length / perPage)
-
-    const paginatedOrders = filteredOrders.slice(
-        (currentPage - 1) * perPage,
-        currentPage * perPage
-    )
-
+    const [filters, setFilters] = useState({
+        sortBy: "created_at",
+        limit: 10,
+        page: 1,
+    });
+    const [page, setPage] = useState(1);
+    const { data: orders } = useGetAllOrdersQuery(filters);
+    const pagination = { page: 1, totalPages: 1, total: 0 }
+    console.log(orders);
     return (
         <div className="p-4 bg-white dark:bg-muted rounded-xl border shadow-sm mt-5 transition-all">
             {/* Header */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                <Input
+                {/* <Input
                     placeholder="Search order..."
                     className="max-w-sm"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                    onChange={(e) => setFilters(e.target.value)}
+                /> */}
                 <div className="flex flex-wrap items-center gap-2">
                     {/* Payment Status Filter */}
-                    <Select onValueChange={setPaymentFilter} defaultValue="">
+                    {/* <Select onValueChange={setPaymentFilter} defaultValue="">
                         <SelectTrigger className="w-40">
                             <SelectValue placeholder="Payment Status" />
                         </SelectTrigger>
@@ -207,10 +47,10 @@ export function OrderTable() {
                             <SelectItem value="Pending">Pending</SelectItem>
                             <SelectItem value="Failed">Failed</SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
 
                     {/* Items per page */}
-                    <Select onValueChange={(val) => setPerPage(Number(val))} defaultValue="8">
+                    <Select onValueChange={(val) => { console.log(val) }} defaultValue="8">
                         <SelectTrigger className="w-20">
                             <SelectValue placeholder="8" />
                         </SelectTrigger>
@@ -240,7 +80,7 @@ export function OrderTable() {
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                         {paginatedOrders.length === 0 ? (
                             <tr>
                                 <td colSpan={8} className="text-center py-6 text-muted-foreground">
@@ -309,57 +149,16 @@ export function OrderTable() {
                                 </tr>
                             ))
                         )}
-                    </tbody>
+                    </tbody> */}
                 </table>
             </div>
 
             {/* Pagination */}
-            {/* Pagination */}
-            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-                <p>
-                    Showing {(currentPage - 1) * perPage + 1} to{" "}
-                    {Math.min(currentPage * perPage, filteredOrders.length)} of{" "}
-                    {filteredOrders.length} orders
-                </p>
-                <div className="flex gap-1">
-                    {/* Prev Button */}
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        disabled={currentPage <= 1}
-                        onClick={() => setCurrentPage((p) => p - 1)}
-                        className="rounded-md"
-                    >
-                        {"<"}
-                    </Button>
-
-                    {/* Page Numbers */}
-                    {Array.from({ length: totalPages }, (_, idx) => (
-                        <button
-                            key={idx + 1}
-                            className={`w-8 h-8 text-sm font-medium rounded-md border 
-          ${currentPage === idx + 1
-                                    ? "bg-orange-600 text-white"
-                                    : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-muted dark:text-muted-foreground"
-                                }`}
-                            onClick={() => setCurrentPage(idx + 1)}
-                        >
-                            {idx + 1}
-                        </button>
-                    ))}
-
-                    {/* Next Button */}
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        disabled={currentPage >= totalPages}
-                        onClick={() => setCurrentPage((p) => p + 1)}
-                        className="rounded-md"
-                    >
-                        {">"}
-                    </Button>
-                </div>
-            </div>
+            <PaginationControls
+                pagination={pagination}
+                onPrev={() => setPage((p) => Math.max(p - 1, 1))}
+                onNext={() => setPage((p) => p + 1)}
+            />
         </div>
     )
 }
