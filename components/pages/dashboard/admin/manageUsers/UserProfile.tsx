@@ -1,13 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { convertDate } from "@/utills/dateConverter";
-import ProfileImage from "./ProfileImage";
-import { FileText, MapPin, ShieldUser } from "lucide-react";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+
 import {
-  currentuserInfo,
+  useGetASingleUserQuery,
+  useUpdateUserInfoMutation,
+} from "@/redux/features/user/userApi";
+import { motion } from "framer-motion";
+import ProfileImage from "../../agent/ProfileImage";
+import {
+  FileText,
+  Info,
+  Mail,
+  MapPin,
+  Phone,
+  ShieldUser,
+  UserCheck,
+} from "lucide-react";
+import { convertDate } from "@/utills/dateConverter";
+import { useState } from "react";
+import { useAppDispatch } from "@/redux/hooks";
+import { IProfileInfo } from "../../agent/Profile";
+import {
   resetProfile,
   setBio,
   setCity,
@@ -17,48 +30,20 @@ import {
   setname,
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
-import ProfileStats from "./ProfileStats";
-import {
-  useGetProfileQuery,
-  useUpdateUserInfoMutation,
-} from "@/redux/features/user/userApi";
-import ProfileLoader from "./ProfileLoader";
+import { currentUser } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
-// import ChangePassword from "./ChangePassword";
-
-export interface IProfileInfo {
-  id: number;
-  avatar_secure_url: string;
-  name: string;
-  role: string;
-  city?: string;
-  country?: string;
-  email: string;
-  phone: string;
-  dateOfBirth?: string;
-  gender?: string;
-  bio?: string;
-  created_at: string;
-}
-
-const Profile = () => {
-  const { data, isLoading } = useGetProfileQuery(undefined);
+const UserProfile = ({ id }: { id: string }) => {
+  const { data, isLoading } = useGetASingleUserQuery(id, {
+    refetchOnMountOrArgChange: false,
+  });
   const userInfo = data?.data;
+
   const nameSplit = userInfo?.name?.split(" ") ?? [];
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const currentUser = useAppSelector(currentuserInfo);
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
-
-  useEffect(() => {
-    if (userInfo) {
-      Promise.resolve().then(() => {
-        setFormData(userInfo as IProfileInfo);
-      });
-    }
-  }, [userInfo]);
 
   const handleCancel = () => {
     setFormData(userInfo);
@@ -93,17 +78,9 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) {
-    return <ProfileLoader />;
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10">
       <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-gray-100 mb-8 border-b pb-4 border-gray-200 dark:border-gray-700">
-          My Profile
-        </h2>
-
         <div className="space-y-6">
           {/* Profile Header Section */}
           <section className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 border border-gray-100 dark:border-gray-600 space-y-2">
@@ -126,14 +103,79 @@ const Profile = () => {
                 <p className="text-gray-500 dark:text-gray-300 text-sm lg:w-[30vw] flex items-start gap-1">
                   <FileText size={15} /> {userInfo?.bio ?? "no bio"}
                 </p>
+                <div className="flex flex-wrap gap-4 mt-2">
+                  <div className="flex items-center gap-1">
+                    <Mail
+                      size={16}
+                      className={
+                        userInfo?.email_verified
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Email Verified: {userInfo?.email_verified ? "Yes" : "No"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Phone
+                      size={16}
+                      className={
+                        userInfo?.phone_verified
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Phone Verified: {userInfo?.phone_verified ? "Yes" : "No"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <UserCheck
+                      size={16}
+                      className={
+                        userInfo?.is_active ? "text-green-500" : "text-red-500"
+                      }
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Active: {userInfo?.is_active ? "Yes" : "No"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Info
+                      size={16}
+                      className={
+                        userInfo?.status === "active"
+                          ? "text-green-500"
+                          : "text-yellow-500"
+                      }
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Status: {userInfo?.status}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
             <p className="text-gray-600 dark:text-gray-400">
               Since {convertDate(new Date(userInfo?.created_at)).creationDate}
             </p>
+            <p className="text-gray-600 dark:text-gray-400">
+              last Login{" "}
+              {userInfo?.last_login
+                ? new Date(userInfo?.last_login).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "not yet"}
+            </p>
           </section>
 
-          {/* Profile Details / Edit Section */}
+          {/* Profile Details Section */}
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
@@ -144,14 +186,13 @@ const Profile = () => {
                   Edit
                 </button>
 
-                {/* Static Info */}
+                {/* Static info */}
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     First Name
                   </p>
                   <p className="font-medium">{userInfo?.name?.split(" ")[0]}</p>
                 </div>
-
                 {userInfo?.name?.split(" ")[1] && (
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -162,21 +203,18 @@ const Profile = () => {
                     </p>
                   </div>
                 )}
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Email address
                   </p>
                   <p className="font-medium">{userInfo?.email}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Phone
                   </p>
                   <p className="font-medium">{userInfo?.phone}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Gender
@@ -185,7 +223,6 @@ const Profile = () => {
                     {userInfo?.gender ?? "no gender added"}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Date of Birth
@@ -194,7 +231,6 @@ const Profile = () => {
                     {userInfo?.dateOfBirth || "no date"}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Country
@@ -203,7 +239,6 @@ const Profile = () => {
                     {userInfo?.country ?? "no country"}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     City
@@ -217,7 +252,7 @@ const Profile = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300"
               >
-                {/* Editable Inputs */}
+                {/* Editable inputs */}
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
                     First Name
@@ -226,7 +261,7 @@ const Profile = () => {
                     name="firstName"
                     value={formData?.name.split(" ")[0]}
                     onChange={(e) => {
-                      /* update logic */
+                      /* your logic */
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -241,15 +276,106 @@ const Profile = () => {
                     name="lastName"
                     value={formData?.name.split(" ")[1] ?? ""}
                     onChange={(e) => {
-                      /* update logic */
+                      /* your logic */
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
                   />
                 </div>
 
-                {/* Other fields like Phone, Gender, Country, City, Bio */}
-                {/* Ensure inputs and selects use dark mode classes: dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Phone Number
+                  </label>
+                  <input
+                    name="phone"
+                    value={formData?.phone ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    placeholder="Phone"
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Gender
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData?.gender ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Date of Birth
+                  </label>
+                  <input
+                    name="dateOfBirth"
+                    type="date"
+                    value={formData?.dateOfBirth ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Country
+                  </label>
+                  <input
+                    name="country"
+                    value={formData?.country ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    placeholder="Country"
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    City
+                  </label>
+                  <input
+                    name="city"
+                    value={formData?.city ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    placeholder="City"
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Bio
+                  </label>
+                  <textarea
+                    name="bio"
+                    value={formData?.bio ?? ""}
+                    onChange={(e) => {
+                      /* your logic */
+                    }}
+                    placeholder="Write your bio..."
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none min-h-[100px]"
+                  />
+                </div>
 
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
                   <button
@@ -276,4 +402,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

@@ -9,7 +9,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
-import { logOut, setUser } from "../features/auth/authSlice";
+import { logOut, setUser, TUSerRole } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: config.next_public_base_api,
@@ -39,13 +39,13 @@ const baseQueryWithRefreshToken: BaseQueryFn<
     );
     const data = await res.json();
     if (data?.data) {
-      const user = (api.getState() as RootState).auth.user;
-      api.dispatch(
-        setUser({
-          user,
-          token: data.data,
-        })
-      );
+      // const user = (api.getState() as RootState).auth.user;
+      // api.dispatch(
+      //   setUser({
+      //     // user,
+      //     token: data.data,
+      //   })
+      // );
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(logOut());

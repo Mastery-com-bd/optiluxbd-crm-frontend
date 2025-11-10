@@ -40,8 +40,8 @@ export default function Navbar() {
     role === "ADMIN"
       ? "/dashboard/admin/landing"
       : role === "AGENT"
-        ? "/dashboard/agent"
-        : "/dashboard/user";
+      ? "/dashboard/agent"
+      : "/dashboard";
 
   const handleLogOut = async () => {
     try {

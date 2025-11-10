@@ -1,5 +1,5 @@
-"use client";
 
+"use client";
 import React, { useState } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,8 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Users, Shield, Trash2, UserPlus } from "lucide-react";
 import { debounce } from "@/utills/debounce";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import Link from "next/link";
+import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
 
 
 
@@ -73,22 +73,39 @@ interface Props {
   roles: Role[];
 }
 
-const AccessManagement: React.FC<Props> = ({ roles }) => {
-  const [openRoleId, setOpenRoleId] = useState<number | null>(null);
+const AccessManagement: React.FC<Props> = () => {
+
+    const { data: roleData, isLoading: roleIsLoading } = useGetAllRolesQuery(undefined);
+    console.log(roleData);
+
+const roles: Role[] = roleData?.data || [];
+
   const [newUser, setNewUser] = useState({ name: "", email: "" });
   const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
-  const { data, isLoading, error } = useGetAllUsersQuery(searchQuery);
 
   const handleAddUser = (roleId: number) => {
     console.log("Add user to role", roleId, newUser);
-    setNewUser({ name: "", email: "" });
-    setOpenRoleId(null);
   };
-
+  
   const handleSearch = async (query: string) => {
+    // search the users by query
     setSearchQuery(query);
+    // set the user details
+    setNewUser({ name: "", email: "" });
+    // add the user to the role
+    console.log(searchQuery)
   };
   const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+
+  if (roleIsLoading)
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[60vh]">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Shield className="h-5 w-5 animate-pulse" />
+          <span className="text-sm">Loading roles…</span>
+        </div>
+      </div>
+    );
 
   return (
     <div className="p-6 space-y-6">
@@ -154,7 +171,6 @@ const AccessManagement: React.FC<Props> = ({ roles }) => {
                       variant="outline"
                       size="sm"
                       className="mt-3 flex items-center gap-2"
-                      onClick={() => setOpenRoleId(role.id)}
                     >
                       <UserPlus className="h-4 w-4" /> Add User
                     </Button>

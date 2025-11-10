@@ -6,14 +6,14 @@ const Page = async ({ params }: { params: Promise<{ roleId: string }> }) => {
 
   const existingRole = roles.find((role) => role.id === Number(roleId));
 
-  console.log("existingRole :", existingRole);
 
     return (
     <div>
       <RoleForm
         mode={`${roleId === "add" ? "create" : "edit"}`}
+        roleId={roleId}
         allPermissions={allPermissions}
-        existingRole={existingRole}
+        // existingRole={existingRole}
       />
     </div>
   );
