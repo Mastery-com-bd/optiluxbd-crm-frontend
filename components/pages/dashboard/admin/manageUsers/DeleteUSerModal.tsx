@@ -26,13 +26,14 @@ type TDeleteModal = {
     id: number
   ) => Promise<void>;
   id: number;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   className: string;
   buttonClass: string;
   level: string;
   content: string;
   tooltip?: string;
   disabeButton?: boolean;
+  buttonName?: string;
 };
 
 const DeleteUSerModal = ({
@@ -45,25 +46,39 @@ const DeleteUSerModal = ({
   content,
   tooltip = "Delete",
   disabeButton = false,
+  buttonName,
 }: TDeleteModal) => {
   const [loading, setLoading] = useState(false);
   return (
     <AlertDialog>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <AlertDialogTrigger asChild>
-            <Button
-              disabled={disabeButton}
-              variant="outline"
-              size="icon"
-              className={className}
-            >
-              <Icon size={16} className={buttonClass} />
-            </Button>
-          </AlertDialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent>{tooltip}</TooltipContent>
-      </Tooltip>
+      {buttonName && (
+        <AlertDialogTrigger asChild>
+          <Button
+            disabled={disabeButton}
+            variant="outline"
+            className={className}
+          >
+            {buttonName}{" "}
+          </Button>
+        </AlertDialogTrigger>
+      )}
+      {Icon && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <AlertDialogTrigger asChild>
+              <Button
+                disabled={disabeButton}
+                variant="outline"
+                size="icon"
+                className={className}
+              >
+                <Icon size={16} className={buttonClass} />
+              </Button>
+            </AlertDialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>{tooltip}</TooltipContent>
+        </Tooltip>
+      )}
 
       <AlertDialogContent className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
         <AlertDialogHeader>
