@@ -35,11 +35,14 @@ const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["user"],
     }),
     updateUserInfo: builder.mutation({
-      query: (data) => ({
-        url: `/users/${data.id}`,
-        method: "PUT",
-        body: data.currentUser,
-      }),
+      query: (data) => (
+        console.log(data),
+        {
+          url: `/users/${data.id}`,
+          method: "PUT",
+          body: data.currentUser,
+        }
+      ),
       invalidatesTags: ["user"],
     }),
     updateUSerStatus: builder.mutation({

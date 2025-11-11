@@ -35,6 +35,7 @@ import { TStatus, TUser } from "@/types/user/user.types";
 import UserStatusDropdown from "./StatusDropdown";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
+import RoleDropdown from "./RoleDropdown";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -44,7 +45,6 @@ const ManageUsers = () => {
     limit: 10,
     page: 1,
   });
-  console.log(filters);
   const { data, isLoading } = useGetAllUsersQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
@@ -385,7 +385,7 @@ const ManageUsers = () => {
 
           <TableBody>
             {users?.map((user, index) => {
-              const role = user?.roles.map((r) => r?.role?.name);
+              const role = user?.roles.map((r) => r?.role?.name)[0];
               return (
                 <TableRow
                   key={index}
@@ -412,7 +412,7 @@ const ManageUsers = () => {
                     </Link>
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
-                    {role}
+                    <RoleDropdown id={user?.id} role={role} />
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.email}
