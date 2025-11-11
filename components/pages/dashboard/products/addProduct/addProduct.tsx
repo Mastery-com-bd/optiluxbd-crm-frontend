@@ -1,6 +1,8 @@
 "use client"
 import React, { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,20 +32,36 @@ import {
   useAddProductMutation,
 } from "@/redux/features/products/productsApi"
 
-type FormData = {
-  productName: string
-  sku: string
-  stock: number
-  description: string
-  basePrice: number
-  discountType: "percentage" | "fixed"
-  discountValue: string
-  brand: string
-  category: string
-  subCategory: string
-  status: string
-  tags: string
-}
+const productSchema = z.object({
+  productName: z.string().min(1, { message: "Product name is required" }),
+  sku: z
+    .string()
+    .min(1, { message: "SKU is required" })
+    .regex(/^[a-zA-Z0-9_-]+$/, {
+      message: "SKU can only contain letters, numbers, hyphens, and underscores",
+    }),
+  stock: z
+    .int()
+    .min(0, { message: "Stock must be 0 or greater" }),
+  description: z.string().optional(),
+  basePrice: z
+    .int()
+    .min(0, { message: "Base Price must be non-negative" }),
+  discountType: z.enum(["percentage", "fixed"]),
+  discountValue: z
+    .string()
+    .optional()
+    .refine((v) => v === "" || /^\d+(\.\d+)?$/.test(v), {
+      message: "Discount value must be a number",
+    }),
+  brand: z.string().optional(),
+  category: z.string().min(1, { message: "Category is required" }),
+  subCategory: z.string().min(1, { message: "Subcategory is required" }),
+  status: z.string().min(1, { message: "Status is required" }),
+  tags: z.string().optional(),
+})
+
+type InferedFormData = z.infer<typeof productSchema>
 
 const AddProduct = () => {
   const {
@@ -51,8 +69,12 @@ const AddProduct = () => {
     handleSubmit,
     control,
     reset,
+    // setError is not needed for real-time validation approach
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<InferedFormData>({
+    resolver: zodResolver(productSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       productName: "",
       sku: "",
@@ -71,16 +93,14 @@ const AddProduct = () => {
 
   const [image, setImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-
   const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation()
   const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation()
-
   const isSubmitting = isAddingProduct || isAddingImage
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: InferedFormData) => {
     const productInfo = {
       name: data.productName,
-      description: data.description,
+      description: data.description ?? "",
       sku: data.sku,
       price: data.basePrice,
       quantity: data.stock,
@@ -90,7 +110,6 @@ const AddProduct = () => {
       secure_url: "",
       isActive: true,
     }
-
     try {
       const res = await addProduct(productInfo).unwrap()
       if (res.success) {
@@ -110,12 +129,14 @@ const AddProduct = () => {
       } else {
         toast.error("Failed to add product")
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err.data.errors[0].message);
-      const errorMessage = err.data.errors[0].message ||
-        err?.data?.message || "Something went wrong";
-      toast.error(errorMessage);
+      console.log(err?.data?.errors?.[0]?.message)
+      const errorMessage =
+        err?.data?.errors?.[0]?.message ||
+        err?.data?.message ||
+        "Something went wrong"
+      toast.error(errorMessage)
     }
   }
 
@@ -142,12 +163,14 @@ const AddProduct = () => {
                   <Label htmlFor="productName">Product Name *</Label>
                   <Input
                     id="productName"
-                    {...register("productName", { required: true })}
+                    {...register("productName")}
                     placeholder="Product name"
                     className="mt-2"
                   />
                   {errors.productName && (
-                    <p className="text-destructive text-sm">Required</p>
+                    <p className="text-destructive text-sm">
+                      {errors.productName?.message}
+                    </p>
                   )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,17 +178,11 @@ const AddProduct = () => {
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
                       id="sku"
-                      {...register("sku", {
-                        required: "SKU is required",
-                        pattern: {
-                          value: /^[a-zA-Z0-9_-]+$/,
-                          message: "SKU can only contain letters, numbers, hyphens, and underscores",
-                        },
-                      })}
+                      {...register("sku")}
                       className="mt-2"
                     />
                     {errors.sku && (
-                      <p className="text-destructive text-sm">{errors.sku.message}</p>
+                      <p className="text-destructive text-sm">{errors.sku?.message}</p>
                     )}
                   </div>
                   <div>
@@ -173,14 +190,11 @@ const AddProduct = () => {
                     <Input
                       id="stock"
                       type="number"
-                      {...register("stock", {
-                        required: true,
-                        valueAsNumber: true,
-                      })}
+                      {...register("stock", { valueAsNumber: true })}
                       className="mt-2"
                     />
                     {errors.stock && (
-                      <p className="text-destructive text-sm">Required</p>
+                      <p className="text-destructive text-sm">{errors.stock?.message}</p>
                     )}
                   </div>
                 </div>
@@ -207,7 +221,6 @@ const AddProduct = () => {
                   </div>
                 </div>
               </Card>
-
               {/* Product Image */}
               <Card className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Product Image</h2>
@@ -254,13 +267,13 @@ const AddProduct = () => {
                   <Label>Base Price *</Label>
                   <Input
                     type="number"
-                    {...register("basePrice", {
-                      required: true,
-                      valueAsNumber: true,
-                    })}
+                    {...register("basePrice", { valueAsNumber: true })}
                     className="mt-2"
                     placeholder="e.g., 199.99"
                   />
+                  {errors.basePrice && (
+                    <p className="text-destructive text-sm">{errors.basePrice?.message}</p>
+                  )}
                 </div>
                 <div>
                   <Label>Discount Type</Label>
@@ -288,6 +301,9 @@ const AddProduct = () => {
                     className="mt-2"
                     placeholder="10 or 50"
                   />
+                  {errors.discountValue && (
+                    <p className="text-destructive text-sm">{errors.discountValue?.message}</p>
+                  )}
                 </div>
               </Card>
 
@@ -298,7 +314,6 @@ const AddProduct = () => {
                   <Label>Brand</Label>
                   <Input {...register("brand")} className="mt-2" />
                 </div>
-
                 <div>
                   <Label>Category *</Label>
                   <Controller
@@ -319,8 +334,10 @@ const AddProduct = () => {
                       </Select>
                     )}
                   />
+                  {errors.category && (
+                    <p className="text-destructive text-sm">{errors.category?.message}</p>
+                  )}
                 </div>
-
                 <div>
                   <Label>Subcategory *</Label>
                   <Controller
@@ -339,8 +356,10 @@ const AddProduct = () => {
                       </Select>
                     )}
                   />
+                  {errors.subCategory && (
+                    <p className="text-destructive text-sm">{errors.subCategory?.message}</p>
+                  )}
                 </div>
-
                 <div>
                   <Label>Status *</Label>
                   <Controller
@@ -360,8 +379,10 @@ const AddProduct = () => {
                       </Select>
                     )}
                   />
+                  {errors.status && (
+                    <p className="text-destructive text-sm">{errors.status?.message}</p>
+                  )}
                 </div>
-
                 <div>
                   <Label>Tags</Label>
                   <Input {...register("tags")} className="mt-2" placeholder="chair,wood" />
@@ -397,5 +418,4 @@ const AddProduct = () => {
     </div>
   )
 }
-
-export default AddProduct
+export default AddProduct;

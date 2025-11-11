@@ -65,18 +65,19 @@ const AllProducts = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await deleteProduct(id).unwrap();
-      if (res.success) {
-        toast.success("Product deleted successfully!");
-        refetch();
-      } else {
-        toast.error("Failed to delete product.");
-      }
+      await toast.promise(
+        deleteProduct(id).unwrap(),
+        {
+          loading: "Deleting product...",
+          success: "Product deleted successfully!",
+          error: "Failed to delete product.",
+        }
+      );
+      refetch();
     } catch (error) {
       console.error("Error deleting product:", error);
-      toast.error("An error occurred while deleting the product.");
     }
-  }
+  };
 
 
   const getStatusColor = (status: string) => {

@@ -88,37 +88,22 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
     };
 
     const onSubmit = async (values: FormValues) => {
-        // Close the modal FIRST
         setSheetOpen(false);
 
-        // Delay toast render to prevent z-index/focus issue
-        setTimeout(() => {
-            toast("Are you sure you want to update this product?", {
-                description: "This change will be saved permanently.",
-                action: {
-                    label: "Update",
-                    onClick: async () => {
-                        toast.promise(
-                            (async () => {
-                                await updateProduct({ id: product.id, data: values }).unwrap();
+        const updateAndUpload = (async () => {
+            await updateProduct({ id: product.id, data: values }).unwrap();
+            if (imageFile) {
+                await addImage({ id: product.id, image: imageFile }).unwrap();
+            }
+            refetch();
+        })();
 
-                                if (imageFile) {
-                                    await addImage({ id: product.id, image: imageFile }).unwrap();
-                                }
-
-                                refetch();
-                            })(),
-                            {
-                                loading: "Updating...",
-                                success: "Product updated successfully!",
-                                error: "Failed to update product.",
-                            }
-                        );
-                    },
-                },
-            });
-        }, 50);
-    };
+        toast.promise(updateAndUpload, {
+            loading: "Updating product...",
+            success: "Product updated successfully!",
+            error: "Failed to update product.",
+        });
+    }
 
     return (
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -248,7 +233,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                     <SheetFooter className="pt-4">
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button type="submit" disabled={!(isDirty || imageFile)}>
+                                <Button disabled={!(isDirty || imageFile)}>
                                     Save Changes
                                 </Button>
                             </AlertDialogTrigger>
@@ -262,10 +247,19 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction >Continue</AlertDialogAction>
+                                    <AlertDialogAction asChild>
+                                        <button
+                                            onClick={() => void handleSubmit(onSubmit)()}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded"
+                                            disabled={!(isDirty || imageFile)}
+                                        >
+                                            Continue
+                                        </button>
+                                    </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
+
                         <SheetClose asChild>
                             <Button variant="outline">Close</Button>
                         </SheetClose>
