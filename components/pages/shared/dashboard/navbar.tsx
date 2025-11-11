@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,12 +8,47 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useLogoutMutation } from "@/redux/features/auth/authApi";
+import {
+  currentUser,
+  logOut,
+  TUSerRole,
+} from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 import { BellDotIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "sonner";
 
 const Navbar: React.FC = () => {
   const { setTheme } = useTheme();
+  const user = useAppSelector(currentUser);
+  const dispatch = useAppDispatch();
+  const [logout] = useLogoutMutation();
+  const router = useRouter();
+
+  const handleLogOut = async () => {
+    try {
+      const res = await logout(undefined).unwrap();
+      if (res?.success) {
+        dispatch(logOut());
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        router.push("/login");
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+    }
+  };
   return (
     <div>
       <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
@@ -24,7 +60,7 @@ const Navbar: React.FC = () => {
                 Good afternoon
               </span>
               <span className="text-lg font-semibold text-foreground">
-                Welcome back, Bishal
+                Welcome back, {user?.name}
               </span>
             </div>
             <div className="flex items-center gap-4">
@@ -67,7 +103,7 @@ const Navbar: React.FC = () => {
                   <div className="p-4 border-b">
                     <h4 className="font-semibold text-sm">Notifications</h4>
                   </div>
-                  <div className="max-h-[320px] overflow-y-auto">
+                  <div className="max-h-80 overflow-y-auto">
                     {/* Mock CRM notifications */}
                     <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
                       <div className="mt-1 w-2 h-2 rounded-full bg-blue-500 shrink-0" />
@@ -124,10 +160,10 @@ const Navbar: React.FC = () => {
                     </Avatar>
                     <div className="hidden md:flex flex-col items-start">
                       <span className="text-sm font-semibold text-foreground">
-                        Bishal
+                        {user?.name}
                       </span>
                       <span className="text-xs text-muted-foreground/70">
-                        Developer
+                        {getPermissions(user?.roles as TUSerRole[]).role}
                       </span>
                     </div>
                   </button>
@@ -139,27 +175,30 @@ const Navbar: React.FC = () => {
                       <AvatarFallback>BI</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-semibold">Bishal</p>
+                      <p className="text-sm font-semibold"> {user?.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        bishal@example.com
+                        {user?.email}
                       </p>
                     </div>
                   </div>
                   <hr className="my-2" />
-                  <a
-                    href="/profile"
+                  <Link
+                    href="/dashboard/profile"
                     className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     Profile
-                  </a>
-                  <a
-                    href="/settings"
+                  </Link>
+                  <Link
+                    href="/dashboard/admin/settings"
                     className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     Settings
-                  </a>
+                  </Link>
                   <hr className="my-2" />
-                  <button className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <button
+                    onClick={handleLogOut}
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+                  >
                     Log out
                   </button>
                 </PopoverContent>

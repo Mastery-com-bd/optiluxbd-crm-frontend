@@ -2,23 +2,23 @@
 import Loading from "@/components/pages/shared/Loading";
 import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { currentUser } from "@/redux/features/auth/authSlice";
+import { currentUser, TUSerRole } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/admin/settings"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [logout] = useLogoutMutation();
   const user = useAppSelector(currentUser);
+  const roles = user?.roles;
   const dispatch = useAppDispatch();
   const [hydrated, setHydrated] = useState(false);
-
   useEffect(() => {
     Promise.resolve().then(() => {
       setHydrated(true);
@@ -38,8 +38,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const { permissions, role } = getPermissions(user);
-
+    const { permissions, role } = getPermissions(roles as TUSerRole[]);
     if (!permissions.length) {
       router.replace("/login");
       return;
@@ -50,7 +49,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       router.replace("/dashboard");
       return;
     }
-
     // ---- Role-based default redirection ----
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
@@ -63,6 +61,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         "/dashboard",
         "/dashboard/admin/landing",
         "/dashboard/profile",
+        "/dashboard/admin/settings",
       ];
       if (adminAllowedRoutes.includes(pathname)) return;
 
@@ -100,12 +99,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       router.replace("/dashboard/profile");
       return;
     }
-  }, [dispatch, hydrated, logout, pathname, router, user]);
+  }, [dispatch, hydrated, logout, pathname, roles, router, user]);
 
   if (!hydrated || !user) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
   // Render children when authenticated and authorized

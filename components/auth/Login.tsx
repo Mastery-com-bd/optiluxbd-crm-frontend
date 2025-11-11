@@ -12,7 +12,12 @@ import { Button } from "../ui/button";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/hooks";
-import { setToken, setUser, TUSerRole } from "@/redux/features/auth/authSlice";
+import {
+  setToken,
+  setUser,
+  TAuthUSer,
+  TUSerRole,
+} from "@/redux/features/auth/authSlice";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
@@ -61,7 +66,7 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user: TUSerRole[] =
+        const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,
             role: {
@@ -72,8 +77,14 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
+        const user: TAuthUSer = {
+          id: res?.data?.userData?.id,
+          name: res?.data?.userData?.name,
+          email: res?.data?.userData?.email,
+          roles: roles,
+        };
         const { role } = getPermissions(res?.data?.userData?.roles);
-        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
@@ -107,7 +118,7 @@ const Login = () => {
     try {
       const res = await login(data).unwrap();
       if (res?.success) {
-        const user: TUSerRole[] =
+        const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,
             role: {
@@ -118,8 +129,14 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
+        const user: TAuthUSer = {
+          id: res?.data?.userData?.id,
+          name: res?.data?.userData?.name,
+          email: res?.data?.userData?.email,
+          roles: roles,
+        };
         const token = res?.data?.token;
-        dispatch(setUser(user as TUSerRole[]));
+        dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
@@ -151,7 +168,7 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user: TUSerRole[] =
+        const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,
             role: {
@@ -162,7 +179,13 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
-        dispatch(setUser(user as TUSerRole[]));
+        const user: TAuthUSer = {
+          id: res?.data?.userData?.id,
+          name: res?.data?.userData?.name,
+          email: res?.data?.userData?.email,
+          roles: roles,
+        };
+        dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
@@ -193,7 +216,7 @@ const Login = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
-        const user: TUSerRole[] =
+        const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,
             role: {
@@ -204,7 +227,13 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
-        dispatch(setUser(user as TUSerRole[]));
+        const user: TAuthUSer = {
+          id: res?.data?.userData?.id,
+          name: res?.data?.userData?.name,
+          email: res?.data?.userData?.email,
+          roles: roles,
+        };
+        dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
           duration: 3000,
