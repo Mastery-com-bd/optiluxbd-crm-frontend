@@ -1,26 +1,26 @@
-"use client"
+"use client";
 import {
   Frame,
   GalleryVerticalEnd,
   PieChart,
   Map as MapIcon,
-} from "lucide-react"
-import * as React from "react"
+} from "lucide-react";
+import * as React from "react";
 
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavUser } from "./nav-user"
-import { TeamSwitcher } from "./team-switcher"
+import { NavMain } from "./nav-main";
+import { NavProjects } from "./nav-projects";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { crmRoutes } from "@/constants/CRM_Navigation"
+} from "@/components/ui/sidebar";
+import { crmRoutes } from "@/constants/CRM_Navigation";
 import Optilux from "../../../../../public/images/OptiluxBD.png";
-import Image from "next/image"
+import Image from "next/image";
 // This is sample data.
 const data = {
   user: {
@@ -37,9 +37,8 @@ const data = {
     },
   ],
   navMain: crmRoutes,
-  projects: [
-  ],
-}
+  projects: [],
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -56,5 +55,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
