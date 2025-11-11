@@ -23,6 +23,7 @@ import {
     useUpdateProductMutation,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface UpdateProductProps {
     product: Product;
@@ -45,7 +46,6 @@ type FormValues = {
 const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
     const [imagePreview, setImagePreview] = useState(product.image_url);
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [hasImageChanged, setHasImageChanged] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [sheetOpen, setSheetOpen] = useState(false);
@@ -77,7 +77,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
         const file = event.target.files?.[0];
         if (file) {
             setImageFile(file);
-            setHasImageChanged(true); // Mark image as changed
             const reader = new FileReader();
             reader.onloadend = () => {
                 if (typeof reader.result === "string") {
@@ -108,7 +107,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                 }
 
                                 refetch();
-                                setHasImageChanged(false);
                             })(),
                             {
                                 loading: "Updating...",
@@ -198,7 +196,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                     onClick={() => {
                                         setImagePreview(product.image_url);
                                         setImageFile(null);
-                                        setHasImageChanged(true); // flag image "removal" as change
                                         if (fileInputRef.current) fileInputRef.current.value = "";
                                     }}
                                 >
@@ -249,9 +246,26 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                     </div>
 
                     <SheetFooter className="pt-4">
-                        <Button type="submit" disabled={!(isDirty || hasImageChanged)}>
-                            Save Changes
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button type="submit" disabled={!(isDirty || imageFile)}>
+                                    Save Changes
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your
+                                        account and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction >Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                         <SheetClose asChild>
                             <Button variant="outline">Close</Button>
                         </SheetClose>
