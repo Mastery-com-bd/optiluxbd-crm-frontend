@@ -105,6 +105,17 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
+              <Link
+                href="/all-user"
+                className={cn(
+                  "hover:text-yellow-400 transition",
+                  pathname === "/products" && "text-yellow-400"
+                )}
+              >
+                Products
+              </Link>
+            </li>
+            <li>
               <Link href="/solutions" className="hover:text-yellow-400">
                 Solutions
               </Link>

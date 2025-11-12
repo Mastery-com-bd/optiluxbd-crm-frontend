@@ -2,55 +2,56 @@
 "use client";
 import { convertDate } from "@/utills/dateConverter";
 import ProfileImage from "./ProfileImage";
-import { FileText, MapPin, ShieldUser } from "lucide-react";
+import { Calendar, Clock, Mail, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   currentuserInfo,
   resetProfile,
-  setBio,
-  setCity,
-  setCountry,
-  setDateOfBirth,
-  setGender,
   setname,
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
-import ProfileStats from "./ProfileStats";
 import {
   useGetProfileQuery,
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import ProfileLoader from "./ProfileLoader";
 import { toast } from "sonner";
+import { TStatus } from "@/types/user/user.types";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuRadioGroup,
+//   DropdownMenuRadioItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { Button } from "@/components/ui/button";
 // import ChangePassword from "./ChangePassword";
 
 export interface IProfileInfo {
   id: number;
   avatar_secure_url: string;
   name: string;
-  role: string;
-  city?: string;
-  country?: string;
   email: string;
   phone: string;
-  dateOfBirth?: string;
-  gender?: string;
-  bio?: string;
   created_at: string;
+  role: string;
+  active: boolean;
+  address: string;
+  status: TStatus;
 }
 
 const Profile = () => {
   const { data, isLoading } = useGetProfileQuery(undefined);
   const userInfo = data?.data;
-  const nameSplit = userInfo?.name?.split(" ") ?? [];
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(currentuserInfo);
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
+  const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
 
   useEffect(() => {
     if (userInfo) {
@@ -112,28 +113,91 @@ const Profile = () => {
                 profileImage={userInfo?.avatar_secure_url}
                 id={userInfo?.id}
               />
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h4 className="text-xl font-semibold text-black dark:text-gray-100">
                   {userInfo?.name}
                 </h4>
-                <p className="text-gray-500 dark:text-gray-300 text-sm flex items-center gap-1">
-                  <ShieldUser size={15} /> {userInfo?.role}
-                </p>
-                <p className="text-gray-500 dark:text-gray-300 text-sm flex items-center gap-1">
-                  <MapPin size={16} /> {userInfo?.city ?? "no city added"},{" "}
-                  {userInfo?.country ?? "no country added"}
-                </p>
-                <p className="text-gray-500 dark:text-gray-300 text-sm lg:w-[30vw] flex items-start gap-1">
-                  <FileText size={15} /> {userInfo?.bio ?? "no bio"}
-                </p>
+
+                {/* Email Verification */}
+                <div className="flex items-center gap-2 text-sm">
+                  <Mail
+                    size={16}
+                    className={
+                      userInfo?.email_verified
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  />
+                  <span
+                    className={`font-medium ${
+                      userInfo?.email_verified
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    Email Verified:{" "}
+                    <span className="font-normal text-gray-700 dark:text-gray-300">
+                      {userInfo?.email_verified ? "Yes" : "No"}
+                    </span>
+                  </span>
+                </div>
+
+                {/* Phone Verification */}
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone
+                    size={16}
+                    className={
+                      userInfo?.phone_verified
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  />
+                  <span
+                    className={`font-medium ${
+                      userInfo?.phone_verified
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    Phone Verified:{" "}
+                    <span className="font-normal text-gray-700 dark:text-gray-300">
+                      {userInfo?.phone_verified ? "Yes" : "No"}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Calendar size={15} className="text-yellow-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Joined:{" "}
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {convertDate(new Date(userInfo?.created_at)).creationDate}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Clock size={15} className="text-purple-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Last Login:{" "}
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {userInfo?.last_login
+                        ? new Date(userInfo?.last_login).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          )
+                        : "Not yet"}
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Since {convertDate(new Date(userInfo?.created_at)).creationDate}
-            </p>
           </section>
 
-          {/* Profile Details / Edit Section */}
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
@@ -144,14 +208,13 @@ const Profile = () => {
                   Edit
                 </button>
 
-                {/* Static Info */}
+                {/* Static info */}
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     First Name
                   </p>
                   <p className="font-medium">{userInfo?.name?.split(" ")[0]}</p>
                 </div>
-
                 {userInfo?.name?.split(" ")[1] && (
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -162,53 +225,41 @@ const Profile = () => {
                     </p>
                   </div>
                 )}
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Email address
                   </p>
                   <p className="font-medium">{userInfo?.email}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Phone
                   </p>
                   <p className="font-medium">{userInfo?.phone}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Gender
+                    Role
                   </p>
                   <p className="font-medium capitalize">
-                    {userInfo?.gender ?? "no gender added"}
+                    {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Date of Birth
+                    Active
                   </p>
                   <p className="font-medium">
-                    {userInfo?.dateOfBirth || "no date"}
+                    {userInfo?.is_active ? "Yes" : "No"}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Country
+                    Address
                   </p>
                   <p className="font-medium">
-                    {userInfo?.country ?? "no country"}
+                    {userInfo?.address ?? "no address"}
                   </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    City
-                  </p>
-                  <p className="font-medium">{userInfo?.city ?? "no city"}</p>
                 </div>
               </div>
             ) : (
@@ -217,7 +268,7 @@ const Profile = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300"
               >
-                {/* Editable Inputs */}
+                {/* Editable inputs */}
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
                     First Name
@@ -226,7 +277,12 @@ const Profile = () => {
                     name="firstName"
                     value={formData?.name.split(" ")[0]}
                     onChange={(e) => {
-                      /* update logic */
+                      const value = e.target.value;
+                      const name = `${value} ${
+                        formData?.name.split(" ")[1] &&
+                        formData?.name.split(" ")[1]
+                      }`;
+                      dispatch(setname(name));
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -241,15 +297,30 @@ const Profile = () => {
                     name="lastName"
                     value={formData?.name.split(" ")[1] ?? ""}
                     onChange={(e) => {
-                      /* update logic */
+                      const value = e.target.value;
+                      const name = `${formData?.name.split(" ")[0]} ${value}`;
+                      dispatch(setname(name));
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
                   />
                 </div>
 
-                {/* Other fields like Phone, Gender, Country, City, Bio */}
-                {/* Ensure inputs and selects use dark mode classes: dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Phone Number
+                  </label>
+                  <input
+                    name="phone"
+                    value={formData?.phone ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      dispatch(setPhone(value));
+                    }}
+                    placeholder="Phone"
+                    className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
+                  />
+                </div>
 
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
                   <button
@@ -272,6 +343,7 @@ const Profile = () => {
           </section>
         </div>
       </div>
+      {/* <ProfileStats/> */}
     </div>
   );
 };

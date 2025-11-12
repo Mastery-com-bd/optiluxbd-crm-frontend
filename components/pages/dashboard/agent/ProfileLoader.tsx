@@ -2,13 +2,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ProfileLoader = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center space-y-10 animate-pulse">
-      <div className="w-full lg:w-[60vw] bg-white rounded-2xl shadow p-8 space-y-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10 animate-pulse">
+      <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8 space-y-6">
         <div className="flex justify-between items-center border-b pb-4 border-gray-200">
           <Skeleton className="h-7 w-40" />
           <Skeleton className="h-8 w-20 rounded-md" />
         </div>
-        <section className="bg-gray-50 rounded-xl p-6 border border-gray-100 space-y-4">
+        <section className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 border border-gray-100 space-y-4">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <Skeleton className="h-56 w-56 rounded-full border-2 border-yellow-400" />
             <div className="space-y-3 w-full sm:w-auto">

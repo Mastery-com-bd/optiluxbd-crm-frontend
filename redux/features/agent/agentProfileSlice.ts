@@ -1,15 +1,15 @@
 import { RootState } from "@/redux/store";
+import { TStatus } from "@/types/user/user.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-type TGender = "male" | "female" | "others";
+// type TGender = "male" | "female" | "others";
 type TProfileInitialState = {
   name: string;
   phone: string;
-  city: string;
-  country: string;
   profileImage: string | File;
-  dateOfBirth: string;
-  gender: TGender;
-  bio: string;
+  role: string;
+  active: boolean;
+  address: string;
+  status: TStatus;
 };
 
 const initialState: Partial<TProfileInitialState> = {};
@@ -24,23 +24,20 @@ const agentProfileSlice = createSlice({
     setPhone: (state, action: PayloadAction<string>) => {
       state.phone = action.payload;
     },
-    setCity: (state, action: PayloadAction<string>) => {
-      state.city = action.payload;
+    setRole: (state, action: PayloadAction<string>) => {
+      state.role = action.payload;
     },
-    setCountry: (state, action: PayloadAction<string>) => {
-      state.country = action.payload;
+    setActive: (state, action: PayloadAction<boolean>) => {
+      state.active = action.payload;
     },
     setProfileImage: (state, action: PayloadAction<string | File>) => {
       state.profileImage = action.payload;
     },
-    setDateOfBirth: (state, action: PayloadAction<string>) => {
-      state.dateOfBirth = action.payload;
+    setStatus: (state, action: PayloadAction<TStatus>) => {
+      state.status = action.payload;
     },
-    setGender: (state, action: PayloadAction<TGender>) => {
-      state.gender = action.payload;
-    },
-    setBio: (state, action: PayloadAction<string>) => {
-      state.bio = action.payload;
+    setAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
     },
     resetProfile: () => initialState,
   },
@@ -49,12 +46,11 @@ const agentProfileSlice = createSlice({
 export const {
   setname,
   setPhone,
-  setCity,
-  setCountry,
+  setRole,
+  setActive,
   setProfileImage,
-  setDateOfBirth,
-  setGender,
-  setBio,
+  setStatus,
+  setAddress,
   resetProfile,
 } = agentProfileSlice.actions;
 export default agentProfileSlice.reducer;
