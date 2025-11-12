@@ -40,7 +40,7 @@ import RoleDropdown from "./RoleDropdown";
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
     search: "",
-    sortBy: "createdAt",
+    sortBy: "created_at",
     order: "desc",
     limit: 10,
     page: 1,
