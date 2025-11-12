@@ -72,17 +72,17 @@ export const crmRoutes: NavRoute[] = [
     children: [
       {
         title: "All Products",
-        path: "/dashboard/products/all",
+        path: "/dashboard/admin/products/all-products",
         icon: ListOrdered,
       },
       {
         title: "Add Product",
-        path: "/dashboard/products/add",
+        path: "/dashboard/admin/products/add-product",
         icon: PlusSquare,
       },
       {
         title: "Draft Products",
-        path: "/dashboard/products/drafts",
+        path: "/dashboard/admin/products/drafts",
         icon: FileMinus,
       },
       {

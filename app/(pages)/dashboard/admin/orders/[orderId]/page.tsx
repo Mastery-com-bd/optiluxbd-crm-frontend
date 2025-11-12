@@ -1,10 +1,16 @@
+'use client'
 import { BillingDetailsCard } from "@/components/pages/dashboard/admin/orders/signleOrder/BillingDetailsCard";
 import { CustomerDetailsCard } from "@/components/pages/dashboard/admin/orders/signleOrder/CustomerDetailsCard";
 import { OrderSummarySection } from "@/components/pages/dashboard/admin/orders/signleOrder/OrderSummarySection";
 import { ShippingActivity } from "@/components/pages/dashboard/admin/orders/signleOrder/ShippingActivity";
 import { ShippingAddressCard } from "@/components/pages/dashboard/admin/orders/signleOrder/ShippingAddressCard";
+import { useGetSingleOrderQuery } from "@/redux/features/orders/ordersApi";
+import { useParams } from "next/navigation";
 
-const page = () => {
+const SingleProductPage = () => {
+    const { orderId } = useParams();
+    const { data: orderData } = useGetSingleOrderQuery(orderId);
+    console.log(orderData);
     return (
         <div className=" m-4 lg:m-8">
             <h3 className="mb-3 text-xl font-bold">Orders Details</h3>
@@ -14,7 +20,7 @@ const page = () => {
                     <ShippingActivity />
                 </div>
                 <div className="lg:w-[30%] flex flex-col lg:gap-6 ">
-                    <CustomerDetailsCard />
+                    <CustomerDetailsCard customer={orderData?.customer} />
                     <ShippingAddressCard />
                     <BillingDetailsCard />
                 </div>
@@ -24,4 +30,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default SingleProductPage;

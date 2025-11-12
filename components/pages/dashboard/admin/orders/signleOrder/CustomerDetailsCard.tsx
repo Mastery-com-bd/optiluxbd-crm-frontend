@@ -1,18 +1,22 @@
 "use client"
 
-import { Pencil, MoreVertical, Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { Customer } from "@/types/orders";
+import Link from "next/link";
 
-export function CustomerDetailsCard() {
+type Props = {
+    customer: Customer;
+};
+
+export function CustomerDetailsCard({ customer }: Props) {
+    console.log(customer);
     return (
         <div className="bg-white dark:bg-muted p-6 rounded-xl shadow-md w-full ">
             {/* Title */}
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-md font-medium text-foreground">Customer Details</h3>
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
-                    <Pencil className="w-4 h-4" />
-                </Button>
             </div>
 
             {/* Customer Info */}
@@ -33,11 +37,6 @@ export function CustomerDetailsCard() {
                         <p className="text-sm text-muted-foreground">Since 2020</p>
                     </div>
                 </div>
-
-                {/* Actions (e.g. menu) */}
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
-                    <MoreVertical className="w-4 h-4" />
-                </Button>
             </div>
 
             {/* Contact Info */}
@@ -54,6 +53,9 @@ export function CustomerDetailsCard() {
                     <MapPin className="w-4 h-4" />
                     <span>London, UK</span>
                 </div>
+                <Link href={`/dashboard/admin/orders/3/${customer?.id}`}>
+                    <Button>See Customer Order Details</Button>
+                </Link>
             </div>
         </div>
     )

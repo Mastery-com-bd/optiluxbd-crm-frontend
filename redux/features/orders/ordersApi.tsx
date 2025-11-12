@@ -15,9 +15,16 @@ const ordersApi = baseApi.injectEndpoints({
                 method: "DELETE",
             })
         }),
+        getSingleOrder: builder.query({
+            query: (id) => ({
+                url: `/orders/${id}`,
+                method: "GET",
+            })
+        })
     }),
 });
 export const {
     useGetAllOrdersQuery,
     useDeleteOrderMutation,
+    useGetSingleOrderQuery,
 } = ordersApi;
