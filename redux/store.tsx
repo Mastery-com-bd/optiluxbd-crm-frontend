@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import agentProfileSlice from "./features/agent/agentProfileSlice";
 import authReducer from "./features/auth/authSlice";
+import settingReducer from "./features/settings/settingsSlice";
 import {
   persistReducer,
   persistStore,
@@ -25,6 +26,7 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistAuthReducer,
     agentProfile: agentProfileSlice,
+    settings: settingReducer,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

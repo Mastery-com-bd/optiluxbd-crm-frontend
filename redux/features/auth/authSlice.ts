@@ -6,15 +6,21 @@ export type TPermission = {
 };
 
 export type TUSerRole = {
-  userId: number;
   role: {
     name: string;
     permissions: TPermission[];
   };
 };
 
+export type TAuthUSer = {
+  id: number;
+  name: string;
+  email: string;
+  roles: TUSerRole[];
+};
+
 export type TAuthState = {
-  user: null | TUSerRole[];
+  user: null | TAuthUSer;
   token: null | string;
 };
 
@@ -27,7 +33,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<TUSerRole[]>) => {
+    setUser: (state, action: PayloadAction<TAuthUSer>) => {
       state.user = action.payload;
     },
     setToken: (state, action: PayloadAction<string>) => {
