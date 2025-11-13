@@ -294,7 +294,7 @@ const AddProduct = () => {
                   <Label>Discount Value</Label>
                   <Input
                     type="number"
-                    {...register("discountValue")}
+                    {...register("discountValue", { valueAsNumber: true })}
                     className="mt-2"
                     placeholder="10 or 50"
                   />
