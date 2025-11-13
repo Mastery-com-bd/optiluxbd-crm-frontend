@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import Loading from "@/components/pages/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -88,16 +87,22 @@ const CreateCombo = () => {
           const newQty =
             type === "increase"
               ? item.quantity + 1
-              : Math.max(1, item.quantity - 1);
+              : Math.max(1, item.quantity - 1); // ensure minimum 1
           return { ...item, quantity: newQty };
         }
         return item;
       })
     );
   };
+  console.log(filters);
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-end mb-6">
+          <CreateComboModal selectedProducts={selectedProducts} />
+        </div>
+
         {/* Filters */}
         <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
           <div className="flex items-center justify-between">
@@ -144,7 +149,9 @@ const CreateCombo = () => {
 
         {/* Product Table */}
         {isLoading ? (
-          <ComboTableSkeleton />
+          <div className="mx-auto border w-screen">
+            <ComboTableSkeleton />
+          </div>
         ) : (
           <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
             <div className="overflow-x-auto">

@@ -17,10 +17,11 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   useGetSettingsdataQuery,
   useUpdateSettingsMutation,
+  useUploadFaviconMutation,
+  useUploadLogoMutation,
 } from "@/redux/features/settings/settingsApi";
 import { Pencil, Save, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import { TSettings } from "./settings.types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
@@ -28,25 +29,33 @@ import {
   resetSettings,
   setAddress,
   setEmail,
-  setFavIcon,
   setLogoId,
-  setLogoUrl,
+  setMaintenanceMode,
   setPhone,
   setSiteName,
 } from "@/redux/features/settings/settingsSlice";
 import SettingsSkeleton from "./SettingsSkeleton";
 import { toast } from "sonner";
+import SettingsImageUploader from "./SettingsImageUploader";
+import SocialSettings from "./SocialSettings";
+import { convertDate } from "@/utills/dateConverter";
 
 export default function DashboardSettings() {
   const { data, isLoading } = useGetSettingsdataQuery(undefined, {
     refetchOnMountOrArgChange: false,
   });
   const settings = data?.data as TSettings;
-  const [editing, setEditing] = useState<"brand" | "contact" | "">("");
+  const [editing, setEditing] = useState<"brand" | "contact" | "social" | "">(
+    ""
+  );
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<Partial<TSettings> | null>(null);
   const dispatch = useAppDispatch();
   const currentSetting = useAppSelector(currentSettings);
   const [updateSettings] = useUpdateSettingsMutation();
+  const [logoUpload] = useUploadLogoMutation();
+  const [faviconUpload] = useUploadFaviconMutation();
+  const id = settings?.id;
 
   useEffect(() => {
     if (settings) {
@@ -57,15 +66,29 @@ export default function DashboardSettings() {
   }, [settings]);
 
   const handleSubmit = async () => {
-    const id = settings?.id;
+    setLoading(true);
+
+    const { facebook_url, twitter_url, instagram_url, linkedin_url, ...data } =
+      currentSetting;
+    if (!data || Object.keys(data).length === 0) {
+      toast.error("Nothing to update!", { duration: 3000 });
+      setLoading(false);
+      return;
+    }
+    const settingsdata = {
+      id,
+      data,
+    };
+    const toastId = toast.loading("updateing settings information", {
+      duration: 3000,
+    });
     try {
-      const res = await updateSettings({ id, currentSetting }).unwrap();
+      const res = await updateSettings(settingsdata).unwrap();
       if (res?.success) {
-        toast.success(res?.message, {
-          duration: 3000,
-        });
+        toast.success(res?.message, { id: toastId, duration: 3000 });
         dispatch(resetSettings());
         setEditing("");
+        setLoading(false);
       }
     } catch (error: any) {
       const errorInfo =
@@ -73,7 +96,51 @@ export default function DashboardSettings() {
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  const handleLogoUpload = async (imageFile: File) => {
+    const formData = new FormData();
+    formData.append("settings_logo", imageFile as File);
+
+    const toastId = toast.loading("site logo uploading", {
+      duration: 3000,
+    });
+    try {
+      const res = await logoUpload(formData).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
+    }
+  };
+
+  const handleFaviconUpload = async (imageFile: File) => {
+    const formData = new FormData();
+    formData.append("settings_favicon", imageFile as File);
+    const toastId = toast.loading("site favicon uploading", {
+      duration: 3000,
+    });
+    try {
+      const res = await faviconUpload(formData).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
 
@@ -87,14 +154,30 @@ export default function DashboardSettings() {
         <h1 className="text-2xl font-semibold">Dashboard Settings</h1>
         {settings?.updated_at && (
           <Badge variant="secondary" className="hidden sm:inline-flex">
-            Last updated: {new Date(settings?.updated_at).toLocaleString()}
+            Last updated:{" "}
+            {convertDate(new Date(settings?.updated_at)).creationTime} ,{" "}
+            {convertDate(new Date(settings?.updated_at)).creationDate}
           </Badge>
         )}
       </div>
 
       <Separator />
 
+      {/* brand */}
       <Card className="shadow-sm">
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <SettingsImageUploader
+            label="Site Logo"
+            imageUrl={settings?.site_logo_url}
+            onUpload={handleLogoUpload}
+          />
+
+          <SettingsImageUploader
+            label="Site Favicon"
+            imageUrl={settings?.site_favicon_url}
+            onUpload={handleFaviconUpload}
+          />
+        </CardContent>
         <CardHeader className="flex items-center justify-between">
           <CardTitle>Branding</CardTitle>
           {editing !== "brand" && (
@@ -122,6 +205,7 @@ export default function DashboardSettings() {
             </Button>
           )}
         </CardHeader>
+
         {editing === "brand" ? (
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -136,18 +220,7 @@ export default function DashboardSettings() {
                 className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
               />
             </div>
-            <div>
-              <label className="font-semibold text-sm">Logo URL</label>
-              <Input
-                value={formData?.site_logo_url}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormData({ ...formData, site_logo_url: value });
-                  dispatch(setLogoUrl(value));
-                }}
-                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              />
-            </div>
+
             <div>
               <label className="font-semibold text-sm">Logo Public ID</label>
               <Input
@@ -156,18 +229,6 @@ export default function DashboardSettings() {
                   const value = e.target.value;
                   setFormData({ ...formData, site_logo_public_id: value });
                   dispatch(setLogoId(value));
-                }}
-                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              />
-            </div>
-            <div>
-              <label className="font-semibold text-sm">Favicon URL</label>
-              <Input
-                value={formData?.site_favicon_url}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormData({ ...formData, site_favicon_url: value });
-                  dispatch(setFavIcon(value));
                 }}
                 className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
               />
@@ -189,18 +250,6 @@ export default function DashboardSettings() {
 
             <div>
               <label className="font-semibold text-sm mb-1 block">
-                Logo URL
-              </label>
-              <div
-                className="w-full rounded-md border px-3 py-2 text-sm bg-white dark:bg-gray-800 
-                       border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200"
-              >
-                {settings?.site_logo_url || "—"}
-              </div>
-            </div>
-
-            <div>
-              <label className="font-semibold text-sm mb-1 block">
                 Logo Public ID
               </label>
               <div
@@ -210,23 +259,11 @@ export default function DashboardSettings() {
                 {settings?.site_logo_public_id || "—"}
               </div>
             </div>
-
-            {/* Favicon URL */}
-            <div>
-              <label className="font-semibold text-sm mb-1 block">
-                Favicon URL
-              </label>
-              <div
-                className="w-full rounded-md border px-3 py-2 text-sm bg-white dark:bg-gray-800 
-                       border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200"
-              >
-                {settings?.site_favicon_url || "—"}
-              </div>
-            </div>
           </CardContent>
         )}
       </Card>
 
+      {/* contact */}
       <Card className="shadow-sm">
         <CardHeader className="flex items-center justify-between">
           <CardTitle>Contact</CardTitle>
@@ -337,41 +374,14 @@ export default function DashboardSettings() {
         )}
       </Card>
 
-      {/* Social Links */}
-      {/* <Card className="shadow-lg rounded-2xl">
-        <CardHeader>
-          <CardTitle>Social Links</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {(
-            [
-              "facebook_url",
-              "twitter_url",
-              "instagram_url",
-              "linkedin_url",
-            ] as const
-          ).map((social) => (
-            <div key={social} className="space-y-2 p-4 border rounded-xl">
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-semibold">
-                  {social.replace("_url", "").toUpperCase()} URLs
-                </span>
-                <Button type="button" variant="outline" size="sm">
-                  <Plus className="mr-1 h-4 w-4" /> Add
-                </Button>
-              </div>
-              {(settings[social] || []).map((url: string, idx: number) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <Input value={url} readOnly />
-                  <Button type="button" variant="destructive" size="icon">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ))}
-        </CardContent>
-      </Card> */}
+      {/* social */}
+      <SocialSettings
+        editing={editing}
+        setEditing={setEditing}
+        formData={formData}
+        setFormData={setFormData}
+        settings={settings}
+      />
 
       {/* System */}
       <Card className="shadow-sm">
@@ -381,12 +391,31 @@ export default function DashboardSettings() {
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="flex items-center justify-between p-3 border rounded-md">
             <span className="font-semibold text-sm">Maintenance Mode</span>
-            <Switch checked={settings?.maintenance_mode || false} />
+
+            <Switch
+              checked={formData?.maintenance_mode ?? false}
+              onCheckedChange={(value) => {
+                setFormData((prev) => ({
+                  ...prev!,
+                  maintenance_mode: value,
+                }));
+
+                dispatch(setMaintenanceMode(value));
+              }}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex items-center justify-end gap-2">
-          <Button disabled onClick={handleSubmit}>
-            <Save className="mr-2 h-4 w-4" /> Save Changes
+          <Button
+            disabled={loading}
+            onClick={() => {
+              dispatch(resetSettings());
+            }}
+          >
+            Reset Chnages
+          </Button>
+          <Button disabled={loading} onClick={handleSubmit}>
+            <Save className="mr-2 h-4 w-4 cursor-pointer" /> Save Changes
           </Button>
         </CardFooter>
       </Card>

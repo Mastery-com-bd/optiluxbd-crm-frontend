@@ -2,7 +2,7 @@
 import Loading from "@/components/pages/shared/Loading";
 import { routePermissions } from "@/config/routePermission";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { currentUser, TUSerRole } from "@/redux/features/auth/authSlice";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const { permissions, role } = getPermissions(roles as TUSerRole[]);
+    const { permissions, role } = getPermissions(user as TAuthUSer);
     if (!permissions.length) {
       router.replace("/login");
       return;
