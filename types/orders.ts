@@ -8,6 +8,8 @@ export interface Customer {
     id: number;
     name: string;
     phone: string;
+    email: string;
+    location: string;
 }
 
 export interface Product {
@@ -36,6 +38,14 @@ export interface OrderData {
     totalAmount: number;
     commissionRate: number;
     commission: number;
+    addressId: string | null;
+    shipping_address_tag: string | null;
+    shipping_address_line1: string | null;
+    shipping_address_line2: string | null;
+    shipping_address_city: string | null;
+    shipping_address_postcode: string | null;
+    shipping_address_geo_lat: string | null;
+    shipping_address_geo_lng: string | null;
 
     agentId: number;
     customerId: number;

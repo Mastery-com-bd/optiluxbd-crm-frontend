@@ -53,7 +53,7 @@ const AllProducts = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
   const [deleteProduct] = useDeleteProductMutation()
   const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, { refetchOnMountOrArgChange: false });
-  const PRODUCTS = productRes?.data || []
+  const PRODUCTS = productRes?.data || [];
   const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
   const [inputValue, setInputValue] = useState("")
 
@@ -246,8 +246,8 @@ const AllProducts = () => {
                         type="checkbox"
                         className="rounded border-border"
                         checked={
-                          selectedProducts.length === PRODUCTS.length &&
-                          PRODUCTS.length > 0
+                          selectedProducts.length === PRODUCTS?.length &&
+                          PRODUCTS?.length > 0
                         }
                         onChange={toggleSelectAll}
                       />
@@ -266,7 +266,7 @@ const AllProducts = () => {
                 </thead>
                 <tbody>
                   {
-                    PRODUCTS.map((product: Product) => (
+                    PRODUCTS?.map((product: Product) => (
                       <tr
                         key={product.id}
                         className="border-b border-muted hover:bg-muted/50 transition-colors"

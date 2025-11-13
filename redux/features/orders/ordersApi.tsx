@@ -28,11 +28,11 @@ const ordersApi = baseApi.injectEndpoints({
             })
         }),
         getCustomerAllOrders: builder.query({
-            query: (customerId) => ({
-                url: `/orders/customer/${customerId}`,
-                method: "GET",
-            })
-        })
+            query: (params) => ({
+                url: `/orders/customer/${params?.customerId}?${buildParams(params)}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 export const {

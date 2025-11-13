@@ -10,18 +10,19 @@ import { useParams } from "next/navigation";
 const SingleProductPage = () => {
     const { orderId } = useParams();
     const { data: orderData } = useGetSingleOrderQuery(orderId);
-    const customer = orderData?.data?.customer;
+    const order = orderData?.data;
+    const customer = order?.customer;
     return (
         <div className=" m-4 lg:m-8">
             <h3 className="mb-3 text-xl font-bold">Orders Details</h3>
             <div className="flex flex-col lg:flex-row w-full justify-between gap-6">
                 <div className="lg:w-[70%] ">
-                    <OrderSummarySection />
-                    <ShippingActivity />
+                    <OrderSummarySection order={order} />
+                    {/* <ShippingActivity /> */}
                 </div>
                 <div className="lg:w-[30%] flex flex-col lg:gap-6 ">
                     <CustomerDetailsCard customer={customer} />
-                    <ShippingAddressCard />
+                    <ShippingAddressCard order={order} />
                     <BillingDetailsCard />
                 </div>
 

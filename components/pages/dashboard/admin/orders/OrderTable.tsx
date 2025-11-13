@@ -247,9 +247,8 @@ export function OrderTable() {
                                             <div className="flex items-center justify-center gap-1">
                                                 <Link
                                                     href={`/dashboard/admin/orders/${order.id}`}
-                                                    className="cursor-pointer"
                                                 >
-                                                    <Button variant="ghost" size="icon" title="View">
+                                                    <Button variant="ghost" className="cursor-pointer" size="icon" title="View">
                                                         <Eye className="w-4 h-4" />
                                                     </Button>
                                                 </Link>
