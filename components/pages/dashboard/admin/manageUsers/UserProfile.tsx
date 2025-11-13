@@ -17,7 +17,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { IProfileInfo } from "../../agent/Profile";
 import {
@@ -53,6 +53,15 @@ const UserProfile = ({ id }: { id: string }) => {
   const [deleteUser] = useDeleteUserMutation();
   const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
   const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
+
+  useEffect(() => {
+    if (userInfo) {
+      Promise.resolve().then(() => {
+        setFormData(userInfo);
+      });
+    }
+  }, [userInfo]);
+
   const handleCancel = () => {
     setFormData(userInfo);
     setIsEditing(false);
@@ -233,12 +242,12 @@ const UserProfile = ({ id }: { id: string }) => {
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
-                <button
+                <Button
                   onClick={() => setIsEditing(true)}
                   className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
                 >
                   Edit
-                </button>
+                </Button>
 
                 {/* Static info */}
                 <div>
@@ -448,20 +457,20 @@ const UserProfile = ({ id }: { id: string }) => {
                 </div>
 
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
-                  <button
+                  <Button
                     disabled={loading}
                     onClick={handleCancel}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     disabled={loading}
                     onClick={handleSave}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-400 text-black font-medium hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
                   >
                     {loading ? "Saving" : "Save Change"}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             )}

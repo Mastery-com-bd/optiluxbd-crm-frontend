@@ -493,10 +493,14 @@ const SocialSettings = ({
             dispatch(resetSettings());
           }}
         >
-          Reset Chnages
+          Reset
         </Button>
-        <Button disabled={loading} onClick={handleSubmit}>
-          <Save className="mr-2 h-4 w-4 cursor-pointer" /> Save Changes
+        <Button
+          disabled={loading}
+          onClick={handleSubmit}
+          className="bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
+        >
+          Update Social
         </Button>
       </CardFooter>
     </Card>

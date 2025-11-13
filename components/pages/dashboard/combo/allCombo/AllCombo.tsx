@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { TComboPackage } from "@/types/comboPackage";
+import ComboDropdown from "./ComboDropdown";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -29,13 +31,17 @@ const AllCombo = () => {
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-  const comboPackages = data?.package;
-  console.log(comboPackages);
-  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+  const comboPackages = data?.data?.packages as TComboPackage[];
+  const pagination = data?.data?.pagination || {
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  };
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };
+
   const handleTag = async (val: any) => {
     const cleaned = val
       .split(",")
@@ -125,7 +131,7 @@ const AllCombo = () => {
                   variant="outline"
                   className="flex items-center gap-2 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
                 >
-                  {is_featured === "All" ? "Filter by publish" : is_featured}
+                  {is_featured === "All" ? "Filter by featured" : is_featured}
                   <ChevronDown size={16} />
                 </Button>
               </DropdownMenuTrigger>
@@ -205,64 +211,54 @@ const AllCombo = () => {
                     ))}
                   </tr>
                 </thead>
-                {/* <tbody>
-                  {comboPackages.map((packages: any) => (
+                <tbody>
+                  {comboPackages?.map((item: TComboPackage) => (
                     <tr
-                      key={packages?.id}
+                      key={item?.id}
                       className="border-b border-muted hover:bg-muted/50 transition-colors"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3 ">
-                          <Image
-                            src={
-                              product?.image_url ||
-                              "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                            }
-                            alt={product.name}
-                            width={200}
-                            height={200}
-                            className=" object-cover w-12 h-12 rounded-full"
-                          />
                           <div>
-                            <p className="font-medium">{product.name}</p>
+                            <p className="font-medium">{item?.name}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm">{product.sku}</td>
-                      <td className="px-4 py-3 text-sm">{product.category}</td>
+                      <td className="px-4 py-3 text-sm">{item?.sku}</td>
+                      <td className="px-4 py-3 text-sm">{item?.totalPrice}</td>
                       <td className="px-4 py-3 text-sm font-medium">
-                        {product.stock}
+                        {item?.discountPrice}
                       </td>
                       <td className="px-4 py-3 text-sm font-semibold">
-                        ${product.price}
+                        {item?.savingsAmount} {item?.savingsPercent}
                       </td>
-
-                      <td className="px-4 py-3">
-                        <span
-                          className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
-                            product.status
-                          )}`}
-                        >
-                          {product.status}
-                        </span>
+                      <td className="px-4 py-3 text-sm font-semibold">
+                        {item?.is_active === true ? "Yes" : "No"}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          <ProductDetails product={product} />
-                          <UpdateProduct product={product} refetch={refetch} />
-                          <Button
-                            className="cursor-pointer"
-                            variant="ghost"
-                            size="icon"
-                            // onClick={() => handleDelete(product.id)}
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive " />
-                          </Button>
+                      <td className="px-4 py-3 text-sm font-semibold">
+                        {item?.is_featured === true ? "Yes" : "No"}
+                      </td>
+                      <td className=" py-3 text-sm font-semibold w-8">
+                        <div className="flex flex-wrap">
+                          {item?.tags?.map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="text-gray-700 dark:text-gray-200"
+                            >
+                              #{tag}
+                              {idx < (item?.tags as string[]).length - 1
+                                ? ","
+                                : ""}
+                            </span>
+                          ))}
                         </div>
+                      </td>
+                      <td className=" py-3 text-sm font-semibold w-8">
+                        <ComboDropdown id={item?.id} />
                       </td>
                     </tr>
                   ))}
-                </tbody> */}
+                </tbody>
               </table>
             </div>
           </Card>

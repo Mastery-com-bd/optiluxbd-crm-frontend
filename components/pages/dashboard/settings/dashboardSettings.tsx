@@ -56,7 +56,7 @@ export default function DashboardSettings() {
   const [logoUpload] = useUploadLogoMutation();
   const [faviconUpload] = useUploadFaviconMutation();
   const id = settings?.id;
-
+  console.log(settings);
   useEffect(() => {
     if (settings) {
       Promise.resolve().then(() => {
@@ -79,6 +79,7 @@ export default function DashboardSettings() {
       id,
       data,
     };
+    console.log(settingsdata);
     const toastId = toast.loading("updateing settings information", {
       duration: 3000,
     });
