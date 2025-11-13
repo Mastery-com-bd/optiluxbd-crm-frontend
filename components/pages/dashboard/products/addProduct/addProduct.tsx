@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -49,11 +49,9 @@ const productSchema = z.object({
     .min(0, { message: "Base Price must be non-negative" }),
   discountType: z.enum(["percentage", "fixed"]),
   discountValue: z
-    .string()
-    .optional()
-    .refine((v) => v === "" || /^\d+(\.\d+)?$/.test(v), {
-      message: "Discount value must be a number",
-    }),
+    .number()
+    .min(0, { message: "Discount value must be 0 or greater" })
+    .optional(),
   brand: z.string().optional(),
   category: z.string().min(1, { message: "Category is required" }),
   subCategory: z.string().min(1, { message: "Subcategory is required" }),
@@ -69,7 +67,6 @@ const AddProduct = () => {
     handleSubmit,
     control,
     reset,
-    // setError is not needed for real-time validation approach
     formState: { errors },
   } = useForm<InferedFormData>({
     resolver: zodResolver(productSchema),
@@ -82,7 +79,7 @@ const AddProduct = () => {
       description: "",
       basePrice: 0,
       discountType: "percentage",
-      discountValue: "",
+      discountValue: 0,
       brand: "",
       category: "",
       subCategory: "",
@@ -129,7 +126,7 @@ const AddProduct = () => {
       } else {
         toast.error("Failed to add product")
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err?.data?.errors?.[0]?.message)
       const errorMessage =
@@ -296,7 +293,7 @@ const AddProduct = () => {
                 <div>
                   <Label>Discount Value</Label>
                   <Input
-                    type="text"
+                    type="number"
                     {...register("discountValue")}
                     className="mt-2"
                     placeholder="10 or 50"

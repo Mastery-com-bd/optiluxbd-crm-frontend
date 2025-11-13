@@ -20,6 +20,18 @@ const ordersApi = baseApi.injectEndpoints({
                 url: `/orders/${id}`,
                 method: "GET",
             })
+        }),
+        getCustomerSummary: builder.query({
+            query: (customerId) => ({
+                url: `/orders/customer/${customerId}/summary`,
+                method: "GET",
+            })
+        }),
+        getCustomerAllOrders: builder.query({
+            query: (customerId) => ({
+                url: `/orders/customer/${customerId}`,
+                method: "GET",
+            })
         })
     }),
 });
@@ -27,4 +39,7 @@ export const {
     useGetAllOrdersQuery,
     useDeleteOrderMutation,
     useGetSingleOrderQuery,
+    useGetCustomerSummaryQuery,
+    useGetCustomerAllOrdersQuery,
+
 } = ordersApi;

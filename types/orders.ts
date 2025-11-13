@@ -21,6 +21,14 @@ export interface Package {
     // Add more fields if needed
 }
 
+export interface TopProducts {
+    productId: number,
+    productName: string,
+    timesPurchased: number,
+    totalSpent: number,
+}
+
+
 export interface OrderData {
     id: number;
     orderDate: string;

@@ -1,12 +1,11 @@
 'use client'
-import { useParams } from "next/navigation";
+import { Summary } from "@/components/pages/dashboard/admin/orders/signleOrder/cusomerSummary/Summary";
 
 const CustomerStat = () => {
-    const {customerId} = useParams();
-    console.log(customerId);
+    
     return (
         <div>
-            customer stat for = { }
+            <Summary/>
         </div>
     );
 };
