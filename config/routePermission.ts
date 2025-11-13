@@ -59,13 +59,13 @@ export const routePermissions: Record<string, string[]> = {
   // 🧑‍💼 Role Management
   "/dashboard/admin/roles": ["ROLES MANAGE"],
 
-  // 💰 Sales Management
+  // 💰 ORDERS Management
   "/dashboard/admin/orders": [
-    "SALES CREATE",
-    "SALES VIEW",
-    "SALES VIEW OWN",
-    "SALES UPDATE",
-    "SALES DELETE",
+    "ORDERS CREATE",
+    "ORDERS VIEW",
+    "ORDERS VIEW OWN",
+    "ORDERS UPDATE",
+    "ORDERS DELETE",
   ],
 
   // 💸 Commissions Management

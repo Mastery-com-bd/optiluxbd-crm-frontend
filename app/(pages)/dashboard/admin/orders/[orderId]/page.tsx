@@ -10,7 +10,7 @@ import { useParams } from "next/navigation";
 const SingleProductPage = () => {
     const { orderId } = useParams();
     const { data: orderData } = useGetSingleOrderQuery(orderId);
-    console.log(orderData);
+    const customer = orderData?.data?.customer;
     return (
         <div className=" m-4 lg:m-8">
             <h3 className="mb-3 text-xl font-bold">Orders Details</h3>
@@ -20,7 +20,7 @@ const SingleProductPage = () => {
                     <ShippingActivity />
                 </div>
                 <div className="lg:w-[30%] flex flex-col lg:gap-6 ">
-                    <CustomerDetailsCard customer={orderData?.customer} />
+                    <CustomerDetailsCard customer={customer} />
                     <ShippingAddressCard />
                     <BillingDetailsCard />
                 </div>

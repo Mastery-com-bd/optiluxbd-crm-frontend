@@ -2,8 +2,8 @@
 import { useParams } from "next/navigation";
 
 const CustomerStat = () => {
-    const params = useParams();
-    console.log(params);
+    const {customerId} = useParams();
+    console.log(customerId);
     return (
         <div>
             customer stat for = { }

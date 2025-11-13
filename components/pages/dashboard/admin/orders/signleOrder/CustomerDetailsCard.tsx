@@ -11,7 +11,6 @@ type Props = {
 };
 
 export function CustomerDetailsCard({ customer }: Props) {
-    console.log(customer);
     return (
         <div className="bg-white dark:bg-muted p-6 rounded-xl shadow-md w-full ">
             {/* Title */}
