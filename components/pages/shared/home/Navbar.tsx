@@ -13,7 +13,7 @@ import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
   currentUser,
   logOut,
-  TUSerRole,
+  TAuthUSer,
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
@@ -40,7 +40,7 @@ export default function Navbar() {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
 
-  const { role } = getPermissions(user?.roles as TUSerRole[]);
+  const { role } = getPermissions(user as TAuthUSer);
 
   const dashboardRoute =
     role === "ADMIN"

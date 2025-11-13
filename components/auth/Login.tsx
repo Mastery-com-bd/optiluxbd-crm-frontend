@@ -81,6 +81,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         const { role } = getPermissions(res?.data?.userData?.roles);
@@ -133,6 +134,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         const token = res?.data?.token;
@@ -183,6 +185,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         dispatch(setUser(user as TAuthUSer));
@@ -231,6 +234,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         dispatch(setUser(user as TAuthUSer));

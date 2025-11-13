@@ -34,6 +34,13 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    deleteUserImage: builder.mutation({
+      query: (id) => ({
+        url: `/images/users/${id}/avatar`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"],
+    }),
     updateUserInfo: builder.mutation({
       query: (data) => (
         console.log(data),
@@ -96,4 +103,5 @@ export const {
   useDeleteUserMutation,
   useSuspendUserMutation,
   useActivateUserMutation,
+  useDeleteUserImageMutation,
 } = authApi;
