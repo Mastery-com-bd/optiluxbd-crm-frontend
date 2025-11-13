@@ -10,8 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { currentUser, logOut } from "@/redux/features/auth/authSlice";
+import {
+  currentUser,
+  logOut,
+  TUSerRole,
+} from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
@@ -35,7 +40,8 @@ export default function Navbar() {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
 
-  const role = user?.[0]?.role?.name;
+  const { role } = getPermissions(user?.roles as TUSerRole[]);
+
   const dashboardRoute =
     role === "ADMIN"
       ? "/dashboard/admin/landing"
@@ -63,7 +69,12 @@ export default function Navbar() {
     }
   };
 
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/login") || pathname?.startsWith("/register")) return null;
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/login") ||
+    pathname?.startsWith("/register")
+  )
+    return null;
 
   return (
     <motion.nav

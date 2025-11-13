@@ -49,6 +49,8 @@ import {
   MessageSquareQuoteIcon,
   PhoneCall,
   ThumbsUp,
+  Gift,
+  PackageSearch,
 } from "lucide-react";
 
 import { LucideIcon } from "lucide-react";
@@ -72,33 +74,37 @@ export const crmRoutes: NavRoute[] = [
     children: [
       {
         title: "All Products",
-        path: "/dashboard/products/all",
+        path: "/dashboard/admin/products/all-products",
         icon: ListOrdered,
       },
       {
         title: "Add Product",
-        path: "/dashboard/products/add",
+        path: "/dashboard/admin/products/add-product",
         icon: PlusSquare,
       },
       {
         title: "Draft Products",
-        path: "/dashboard/products/drafts",
+        path: "/dashboard/admin/products/drafts",
         icon: FileMinus,
       },
       {
         title: "Deleted Products",
-        path: "/dashboard/products/deleted",
+        path: "/dashboard/admin/products/deleted",
         icon: Trash2,
       },
-      { title: "Reviews", path: "/dashboard/products/reviews", icon: Star },
+      {
+        title: "Reviews",
+        path: "/dashboard/admin/products/reviews",
+        icon: Star,
+      },
       {
         title: "Inventory",
-        path: "/dashboard/products/inventory",
+        path: "/dashboard/admin/products/inventory",
         icon: Warehouse,
       },
       {
         title: "Bulk Upload",
-        path: "/dashboard/products/bulk-upload",
+        path: "/dashboard/admin/products/bulk-upload",
         icon: Upload,
       },
     ],
@@ -131,6 +137,22 @@ export const crmRoutes: NavRoute[] = [
         title: "Edit Sub Categories",
         path: "/dashboard/categories/sub/edit",
         icon: Tags,
+      },
+    ],
+  },
+  {
+    title: "Combo Pack",
+    icon: Gift,
+    children: [
+      {
+        title: "All Combo Pack",
+        path: "/dashboard/combo",
+        icon: Boxes,
+      },
+      {
+        title: "Create Combo",
+        path: "/dashboard/combo/create-combo",
+        icon: PackageSearch,
       },
     ],
   },
@@ -235,6 +257,11 @@ export const crmRoutes: NavRoute[] = [
         title: "Add Employee",
         path: "/dashboard/hr&staff/staff/add",
         icon: UserPlus,
+      },
+      {
+        title: "All Users",
+        path: "/dashboard/admin/manage-users",
+        icon: Users,
       },
       {
         title: "Roles & Permissions",
