@@ -35,7 +35,7 @@ export interface TProduct extends Product {
   discountPrice: string;
 }
 
-export interface ComboItem {
+export interface TComboPackageItem {
   id: number;
   packageId: number;
   productId: number;
@@ -59,5 +59,5 @@ export interface TCombo {
   image_public_id: string | null;
   created_at: string;
   updated_at: string;
-  items: ComboItem[];
+  items: TComboPackageItem[];
 }

@@ -45,6 +45,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ComboProductstable from "./ComboProductstable";
 
 const GetASingleCombo = ({ id }: { id: string }) => {
   const { data, isLoading: loading } = useGetASingleCOmboPackageQuery(id);
@@ -402,59 +403,7 @@ const GetASingleCombo = ({ id }: { id: string }) => {
       <Separator />
 
       {/* Items Table */}
-      <Card className="shadow-sm border dark:border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            Included Products
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>#</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Brand</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Discount Price</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Stock Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {ComboPackage?.items?.map((item: any, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell className="font-medium">
-                    {item.product?.name}
-                  </TableCell>
-                  <TableCell>{item.product?.brand}</TableCell>
-                  <TableCell>{item.product?.category}</TableCell>
-                  <TableCell>
-                    {parseFloat(item.product?.price).toLocaleString()} ৳
-                  </TableCell>
-                  <TableCell>
-                    {parseFloat(item.product?.discountPrice).toLocaleString()} ৳
-                  </TableCell>
-                  <TableCell>{item?.quantity}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        item?.product?.stock_status === "IN_STOCK"
-                          ? "default"
-                          : "destructive"
-                      }
-                    >
-                      {item.product?.stock_status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <ComboProductstable ComboPackage={ComboPackage} />
       <div className="flex items-center justify-end">
         <DeleteUSerModal
           handleConfirm={handleConfirm}
