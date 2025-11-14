@@ -25,13 +25,7 @@ const comboApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["combo-package", "products"],
     }),
-    deactiveAomboPackage: builder.mutation({
-      query: (id) => ({
-        url: `/packages/${id}`,
-        method: "POST",
-      }),
-      invalidatesTags: ["combo-package"],
-    }),
+
     updateComboPackage: builder.mutation({
       query: ({ currentComboPackage, id }) => ({
         url: `/packages/${id}`,
@@ -53,7 +47,6 @@ export const {
   useGetAllComboPackageQuery,
   useGetASingleCOmboPackageQuery,
   useCreateComboMutation,
-  useDeactiveAomboPackageMutation,
   useUpdateComboPackageMutation,
   useDeleteComboPackageMutation,
 } = comboApi;

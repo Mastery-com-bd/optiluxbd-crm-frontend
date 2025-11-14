@@ -8,14 +8,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Package, Calendar, DollarSign, ChevronDown } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
 import DeleteUSerModal from "../../admin/manageUsers/singleUSer/DeleteUSerModal";
@@ -108,7 +100,6 @@ const GetASingleCombo = ({ id }: { id: string }) => {
       id: ComboPackage?.id,
       currentComboPackage,
     };
-    console.log(data);
     try {
       const res = await updatePackage(data).unwrap();
       if (res?.success) {

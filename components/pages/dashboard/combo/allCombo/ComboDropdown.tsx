@@ -6,29 +6,42 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeactiveAomboPackageMutation } from "@/redux/features/combo/comboApi";
+
 import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import DeleteUSerModal from "../../admin/manageUsers/singleUSer/DeleteUSerModal";
 import { Button } from "@/components/ui/button";
+import { useUpdateComboPackageMutation } from "@/redux/features/combo/comboApi";
 
 const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
-  const [deactiveCombo] = useDeactiveAomboPackageMutation();
+  const [updatePackage] = useUpdateComboPackageMutation();
 
   const handleDeactive = async () => {
+    const currentComboPackage = {
+      is_active: !activity,
+    };
+    const data = {
+      id,
+      currentComboPackage,
+    };
+
+    const toastId = toast.loading(
+      `${activity ? "deactivating combo" : "activating combo"}`,
+      { duration: 3000 }
+    );
     try {
-      const res = await deactiveCombo(id).unwrap();
+      const res = await updatePackage(data).unwrap();
       if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
+        toast.success(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.errors[0]?.message ||
         error?.data?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
 
@@ -47,20 +60,14 @@ const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
             </Button>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={(e) => e.preventDefault()}
-          className="cursor-pointer"
-        >
-          <DeleteUSerModal
-            handleConfirm={handleDeactive}
-            id={id}
-            className="cursor-pointer"
-            buttonClass="text-left hover:bg-transparent"
-            level=" Deactive Combo?"
-            content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
-            disabeButton={activity === false}
-            buttonName="Deactive"
-          />
+        <DropdownMenuItem className="flex items-center gap-2">
+          <Button
+            onClick={() => handleDeactive()}
+            variant="ghost"
+            className="text-left hover:bg-transparent"
+          >
+            {activity ? "Deactivate" : "Inactive"}
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
