@@ -56,7 +56,7 @@ export default function DashboardSettings() {
   const [logoUpload] = useUploadLogoMutation();
   const [faviconUpload] = useUploadFaviconMutation();
   const id = settings?.id;
-  console.log(settings);
+
   useEffect(() => {
     if (settings) {
       Promise.resolve().then(() => {
@@ -67,7 +67,6 @@ export default function DashboardSettings() {
 
   const handleSubmit = async () => {
     setLoading(true);
-
     const { facebook_url, twitter_url, instagram_url, linkedin_url, ...data } =
       currentSetting;
     if (!data || Object.keys(data).length === 0) {
@@ -79,7 +78,6 @@ export default function DashboardSettings() {
       id,
       data,
     };
-    console.log(settingsdata);
     const toastId = toast.loading("updateing settings information", {
       duration: 3000,
     });
@@ -105,7 +103,6 @@ export default function DashboardSettings() {
   const handleLogoUpload = async (imageFile: File) => {
     const formData = new FormData();
     formData.append("settings_logo", imageFile as File);
-
     const toastId = toast.loading("site logo uploading", {
       duration: 3000,
     });

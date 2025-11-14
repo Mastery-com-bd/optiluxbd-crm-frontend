@@ -54,6 +54,7 @@ const UserProfile = ({ id }: { id: string }) => {
   const [deleteUser] = useDeleteUserMutation();
   const { role, permissions } = getPermissions(userInfo as TAuthUSer);
   const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
+
   useEffect(() => {
     if (userInfo) {
       Promise.resolve().then(() => {
@@ -286,7 +287,12 @@ const UserProfile = ({ id }: { id: string }) => {
                     Role
                   </p>
                   <p className="font-medium capitalize">
-                    {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+                    {role
+                      .map(
+                        (r) =>
+                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                      )
+                      .join(", ")}
                   </p>
                 </div>
                 <div>
@@ -394,7 +400,7 @@ const UserProfile = ({ id }: { id: string }) => {
 
                     <DropdownMenuContent className="w-full">
                       <DropdownMenuRadioGroup
-                        value={getPermissions(formData as TAuthUSer).role}
+                        value={getPermissions(formData as TAuthUSer).role[1]}
                         onValueChange={(value) => setRole(value)}
                       >
                         {roleOptions.map((item) => (

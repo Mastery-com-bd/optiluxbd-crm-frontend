@@ -22,15 +22,6 @@ import { TAuthUSer, TUSerRole } from "@/redux/features/auth/authSlice";
 import ProfileLoader from "./ProfileLoader";
 import ChangePassword from "@/components/auth/ChangePassword";
 import ProfileImage from "./ProfileImage";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuRadioGroup,
-//   DropdownMenuRadioItem,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { Button } from "@/components/ui/button";
-// import ChangePassword from "./ChangePassword";
 
 export interface IProfileInfo {
   id: number;
@@ -248,7 +239,12 @@ const Profile = () => {
                     Role
                   </p>
                   <p className="font-medium capitalize">
-                    {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+                    {role
+                      .map(
+                        (r) =>
+                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                      )
+                      .join(", ")}
                   </p>
                 </div>
                 {/* <div>

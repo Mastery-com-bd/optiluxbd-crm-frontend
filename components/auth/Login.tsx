@@ -94,7 +94,7 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          if (role === "ADMIN") {
+          if (role.includes("ADMIN")) {
             router.push("/dashboard");
           } else {
             router.push("/dashboard/profile");
