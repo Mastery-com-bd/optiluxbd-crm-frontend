@@ -7,7 +7,6 @@ import {
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import { motion } from "framer-motion";
-import ProfileImage from "../../agent/ProfileImage";
 import {
   Calendar,
   ChevronDown,
@@ -19,7 +18,6 @@ import {
 import { convertDate } from "@/utills/dateConverter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { IProfileInfo } from "../../agent/Profile";
 import {
   resetProfile,
   setname,
@@ -27,10 +25,10 @@ import {
   setRole,
   setStatus,
 } from "@/redux/features/agent/agentProfileSlice";
-import { currentUser } from "@/redux/features/auth/authSlice";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
 import DeleteUSerModal from "./DeleteUSerModal";
-import ProfileLoader from "../../agent/ProfileLoader";
+import ProfileLoader from "../../../profile/ProfileLoader";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +38,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { TStatus } from "@/types/user/user.types";
+import { IProfileInfo } from "../../../profile/Profile";
+import ProfileImage from "../../../profile/ProfileImage";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 const UserProfile = ({ id }: { id: string }) => {
   const { data, isLoading } = useGetASingleUserQuery(id, {
     refetchOnMountOrArgChange: false,
@@ -51,9 +52,8 @@ const UserProfile = ({ id }: { id: string }) => {
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
+  const { role, permissions } = getPermissions(userInfo as TAuthUSer);
   const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
-
   useEffect(() => {
     if (userInfo) {
       Promise.resolve().then(() => {
@@ -61,6 +61,9 @@ const UserProfile = ({ id }: { id: string }) => {
       });
     }
   }, [userInfo]);
+
+  const [first, ...rest] = (formData?.name || "").trim().split(" ");
+  const last = rest.join(" ");
 
   const handleCancel = () => {
     setFormData(userInfo);
@@ -316,14 +319,15 @@ const UserProfile = ({ id }: { id: string }) => {
                   </label>
                   <input
                     name="firstName"
-                    value={formData?.name.split(" ")[0]}
+                    value={first}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${value} ${
-                        formData?.name.split(" ")[1] &&
-                        formData?.name.split(" ")[1]
-                      }`;
-                      dispatch(setname(name));
+                      const newFirst = e.target.value;
+                      const newName = `${newFirst} ${last}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -336,11 +340,15 @@ const UserProfile = ({ id }: { id: string }) => {
                   </label>
                   <input
                     name="lastName"
-                    value={formData?.name.split(" ")[1] ?? ""}
+                    value={last}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${formData?.name.split(" ")[0]} ${value}`;
-                      dispatch(setname(name));
+                      const newLast = e.target.value;
+                      const newName = `${first} ${newLast}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -356,6 +364,10 @@ const UserProfile = ({ id }: { id: string }) => {
                     value={formData?.phone ?? ""}
                     onChange={(e) => {
                       const value = e.target.value;
+                      setFormData((prev) => ({
+                        ...prev!,
+                        phone: value,
+                      }));
                       dispatch(setPhone(value));
                     }}
                     placeholder="Phone"
@@ -374,14 +386,15 @@ const UserProfile = ({ id }: { id: string }) => {
                         variant="outline"
                         className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
                       >
-                        {role || "select role"}
+                        {getPermissions(formData as TAuthUSer).role ||
+                          "select role"}
                         <ChevronDown className="w-4 h-4 opacity-70" />
                       </Button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-full">
                       <DropdownMenuRadioGroup
-                        value={role}
+                        value={getPermissions(formData as TAuthUSer).role}
                         onValueChange={(value) => setRole(value)}
                       >
                         {roleOptions.map((item) => (
@@ -411,7 +424,7 @@ const UserProfile = ({ id }: { id: string }) => {
 
                     <DropdownMenuContent className="w-full">
                       <DropdownMenuRadioGroup
-                        value={"active"}
+                        value={formData?.status}
                         onValueChange={(value) => setStatus(value as TStatus)}
                       >
                         {["ACTIVE", "INACTIVE", "SUSPENDED", "DISABLED"].map(
@@ -436,14 +449,14 @@ const UserProfile = ({ id }: { id: string }) => {
                         variant="outline"
                         className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
                       >
-                        {userInfo?.is_active ? "Yes" : "No"}
+                        {formData?.is_active ? "Yes" : "No"}
                         <ChevronDown className="w-4 h-4 opacity-70" />
                       </Button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-full">
                       <DropdownMenuRadioGroup
-                        value={userInfo?.is_active ? "Yes" : "No"}
+                        value={formData?.is_active ? "Yes" : "No"}
                         onValueChange={(value) => setStatus(value as TStatus)}
                       >
                         {["Yes", "No"].map((item) => (

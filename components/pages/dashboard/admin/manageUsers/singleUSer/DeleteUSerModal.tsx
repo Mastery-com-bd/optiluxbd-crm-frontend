@@ -53,12 +53,8 @@ const DeleteUSerModal = ({
     <AlertDialog>
       {buttonName && (
         <AlertDialogTrigger asChild>
-          <Button
-            disabled={disabeButton}
-            variant="outline"
-            className={className}
-          >
-            {buttonName}{" "}
+          <Button variant="ghost" className={className}>
+            {buttonName}
           </Button>
         </AlertDialogTrigger>
       )}

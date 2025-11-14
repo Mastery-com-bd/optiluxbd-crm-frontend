@@ -254,7 +254,10 @@ const AllCombo = () => {
                         </div>
                       </td>
                       <td className=" py-3 text-sm font-semibold w-8">
-                        <ComboDropdown id={item?.id} />
+                        <ComboDropdown
+                          id={item?.id}
+                          activity={item?.is_active}
+                        />
                       </td>
                     </tr>
                   ))}

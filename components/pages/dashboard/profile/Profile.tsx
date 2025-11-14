@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { convertDate } from "@/utills/dateConverter";
-import ProfileImage from "./ProfileImage";
 import { Calendar, Clock, Mail, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -16,9 +15,13 @@ import {
   useGetProfileQuery,
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
-import ProfileLoader from "./ProfileLoader";
 import { toast } from "sonner";
 import { TStatus } from "@/types/user/user.types";
+import { getPermissions } from "@/utills/getPermissionAndRole";
+import { TAuthUSer, TUSerRole } from "@/redux/features/auth/authSlice";
+import ProfileLoader from "./ProfileLoader";
+import ChangePassword from "@/components/auth/ChangePassword";
+import ProfileImage from "./ProfileImage";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -36,8 +39,8 @@ export interface IProfileInfo {
   email: string;
   phone: string;
   created_at: string;
-  role: string;
-  active: boolean;
+  roles: TUSerRole[];
+  is_active: boolean;
   address: string;
   status: TStatus;
 }
@@ -51,7 +54,7 @@ const Profile = () => {
   const currentUser = useAppSelector(currentuserInfo);
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
-  const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
+  const { role } = getPermissions(userInfo as TAuthUSer);
 
   useEffect(() => {
     if (userInfo) {
@@ -60,6 +63,9 @@ const Profile = () => {
       });
     }
   }, [userInfo]);
+
+  const [first, ...rest] = (formData?.name || "").trim().split(" ");
+  const last = rest.join(" ");
 
   const handleCancel = () => {
     setFormData(userInfo);
@@ -245,22 +251,22 @@ const Profile = () => {
                     {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
                   </p>
                 </div>
-                <div>
+                {/* <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Active
                   </p>
                   <p className="font-medium">
                     {userInfo?.is_active ? "Yes" : "No"}
                   </p>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Address
                   </p>
                   <p className="font-medium">
                     {userInfo?.address ?? "no address"}
                   </p>
-                </div>
+                </div> */}
               </div>
             ) : (
               <motion.div
@@ -275,14 +281,15 @@ const Profile = () => {
                   </label>
                   <input
                     name="firstName"
-                    value={formData?.name.split(" ")[0]}
+                    value={first}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${value} ${
-                        formData?.name.split(" ")[1] &&
-                        formData?.name.split(" ")[1]
-                      }`;
-                      dispatch(setname(name));
+                      const newFirst = e.target.value;
+                      const newName = `${newFirst} ${last}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -295,11 +302,15 @@ const Profile = () => {
                   </label>
                   <input
                     name="lastName"
-                    value={formData?.name.split(" ")[1] ?? ""}
+                    value={last}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${formData?.name.split(" ")[0]} ${value}`;
-                      dispatch(setname(name));
+                      const newLast = e.target.value;
+                      const newName = `${first} ${newLast}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -315,6 +326,10 @@ const Profile = () => {
                     value={formData?.phone ?? ""}
                     onChange={(e) => {
                       const value = e.target.value;
+                      setFormData((prev) => ({
+                        ...prev!,
+                        phone: value,
+                      }));
                       dispatch(setPhone(value));
                     }}
                     placeholder="Phone"
@@ -341,6 +356,7 @@ const Profile = () => {
               </motion.div>
             )}
           </section>
+          <ChangePassword />
         </div>
       </div>
       {/* <ProfileStats/> */}

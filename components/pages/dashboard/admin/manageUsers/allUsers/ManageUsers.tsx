@@ -28,7 +28,7 @@ import {
   useSuspendUserMutation,
 } from "@/redux/features/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
-import DeleteUSerModal from "./DeleteUSerModal";
+import DeleteUSerModal from "../singleUSer/DeleteUSerModal";
 import { toast } from "sonner";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { TStatus, TUser } from "@/types/user/user.types";
@@ -36,6 +36,7 @@ import UserStatusDropdown from "./StatusDropdown";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
 import RoleDropdown from "./RoleDropdown";
+import UserActionDropdown from "./UserActionDropdown";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -446,42 +447,10 @@ const ManageUsers = () => {
                       : "not yet"}
                   </TableCell>
                   <TableCell className="flex gap-2 justify-center">
-                    {/* Suspend */}
-                    <DeleteUSerModal
-                      handleConfirm={handleSuspend}
+                    <UserActionDropdown
                       id={user?.id}
-                      icon={Slash}
-                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-                      buttonClass="text-red-600 dark:text-red-300"
-                      level=" Suspend user?"
-                      content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
-                      tooltip="Suspend"
-                      disabeButton={user?.status === "SUSPENDED"}
-                    />
-
-                    {/* inactive */}
-                    <DeleteUSerModal
-                      handleConfirm={handleInactive}
-                      id={user?.id}
-                      icon={XCircle}
-                      className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                      buttonClass="text-gray-600 dark:text-gray-300"
-                      level=" Inactive user?"
-                      content="This action cannot be undone. It will inactive the user activity from the system from this time’s"
-                      tooltip="Inactive"
-                      disabeButton={user?.status === "SUSPENDED"}
-                    />
-
-                    {/* Delete */}
-                    <DeleteUSerModal
-                      handleConfirm={handleConfirm}
-                      id={user?.id}
-                      icon={Trash2}
-                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-                      buttonClass="text-red-600 dark:text-red-300"
-                      level=" Delete user?"
-                      content="This action cannot be undone. It will permanently remove the user’s
-            account and all associated data from the system."
+                      status={user?.status}
+                      activity={user?.is_active}
                     />
                   </TableCell>
                 </TableRow>

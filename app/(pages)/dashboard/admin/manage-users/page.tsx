@@ -1,4 +1,4 @@
-import ManageUsers from "@/components/pages/dashboard/admin/manageUsers/ManageUsers";
+import ManageUsers from "@/components/pages/dashboard/admin/manageUsers/allUsers/ManageUsers";
 
 const ManageuserPage = () => {
   return (

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Package, Calendar, DollarSign, ChevronDown } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
-import DeleteUSerModal from "../../admin/manageUsers/DeleteUSerModal";
+import DeleteUSerModal from "../../admin/manageUsers/singleUSer/DeleteUSerModal";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import GetSingleComboSkeleton from "./GetSingleComboSkeleton";
 import { Button } from "@/components/ui/button";

@@ -10,9 +10,12 @@ import { useDeactiveAomboPackageMutation } from "@/redux/features/combo/comboApi
 import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import DeleteUSerModal from "../../admin/manageUsers/singleUSer/DeleteUSerModal";
+import { Button } from "@/components/ui/button";
 
-const ComboDropdown = ({ id }: { id: number }) => {
+const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
   const [deactiveCombo] = useDeactiveAomboPackageMutation();
+
   const handleDeactive = async () => {
     try {
       const res = await deactiveCombo(id).unwrap();
@@ -38,13 +41,26 @@ const ComboDropdown = ({ id }: { id: number }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem className="flex items-center gap-2">
-          <Link href={`/dashboard/combo/${id}`}>View</Link>
+          <Link href={`/dashboard/combo/${id}`}>
+            <Button variant="ghost" className="text-left hover:bg-transparent">
+              View Details
+            </Button>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={handleDeactive}
-          className="flex items-center gap-2"
+          onSelect={(e) => e.preventDefault()}
+          className="cursor-pointer"
         >
-          Deactive
+          <DeleteUSerModal
+            handleConfirm={handleDeactive}
+            id={id}
+            className="cursor-pointer"
+            buttonClass="text-left hover:bg-transparent"
+            level=" Deactive Combo?"
+            content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
+            disabeButton={activity === false}
+            buttonName="Deactive"
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
