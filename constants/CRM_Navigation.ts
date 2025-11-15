@@ -51,6 +51,9 @@ import {
   ThumbsUp,
   Gift,
   PackageSearch,
+  Crown,
+  UserCheck,
+  Group,
 } from "lucide-react";
 
 import { LucideIcon } from "lucide-react";
@@ -170,6 +173,21 @@ export const crmRoutes: NavRoute[] = [
       { title: "Cancelled", path: "/orders/cancelled", icon: XCircle },
       { title: "Returns", path: "/orders/returns", icon: RefreshCw },
       { title: "Invoices", path: "/orders/invoices", icon: FileText },
+    ],
+  },
+  {
+    title: "Leads Magement",
+    icon: Group,
+    children: [
+      {
+        title: "All Leads",
+        path: "/dashboard/admin/leads",
+        icon: ClipboardList,
+      },
+      { title: "Admin", path: "/dashboard/leads/admin", icon: Shield },
+      { title: "Leaders", path: "/dashboard/leads/leaders", icon: Crown },
+      { title: "Agents", path: "/dashboard/leads/agents", icon: UserCheck },
+      
     ],
   },
   {
