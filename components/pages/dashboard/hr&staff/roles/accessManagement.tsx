@@ -69,11 +69,7 @@ interface Role {
   users: RoleUser[];
 }
 
-interface Props {
-  roles: Role[];
-}
-
-const AccessManagement: React.FC<Props> = () => {
+const AccessManagement: React.FC = () => {
 
     const { data: roleData, isLoading: roleIsLoading } = useGetAllRolesQuery(undefined);
     console.log(roleData);
