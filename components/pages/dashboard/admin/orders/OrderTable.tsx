@@ -10,11 +10,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import PaginationControls from "@/components/ui/paginationComponent";
-import { useGetAllOrdersQuery, useDeleteOrderMutation } from "@/redux/features/orders/ordersApi";
-import { debounce } from "@/utills/debounce";
-import { Eye, Edit, Trash,  } from "lucide-react";
-// import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
+import { Eye } from "lucide-react";
 import Loading from "@/components/pages/shared/Loading";
 import Image from "next/image";
 import { OrderData } from "@/types/orders";
@@ -31,10 +28,9 @@ export function OrderTable() {
     });
 
     const { data, isLoading } = useGetAllOrdersQuery(filters);
-    const [deleteOrder] = useDeleteOrderMutation();
-    const [search, setSearch] = useState("");
     const orders = data?.data?.orders || [];
     const pagination = data?.data?.pagination || { page: 1, totalPages: 1, total: 0 };
+
     // Helpers
     const formatCurrency = (n: number) =>
         new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n);
@@ -45,38 +41,6 @@ export function OrderTable() {
             month: "short",
             day: "numeric",
         });
-
-    const handleSearch = (val: string) => {
-        setFilters((f) => ({
-            ...f,
-            search: val,
-            page: 1,
-        }));
-    };
-    const debouncedLog = debounce(handleSearch, 100, { leading: false });
-
-
-
-    // Search sync
-    const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const v = e.target.value;
-        setSearch(v);
-        debouncedLog(v);
-    };
-
-    // Delete handler (assuming API has deleteOrder mutation)
-    const handleDelete = async (id: number) => {
-        try {
-            await toast.promise(deleteOrder(id).unwrap(), {
-                loading: "Deleting order...",
-                success: "Order deleted successfully!",
-                error: "Failed to delete order.",
-            });
-            // Optional: refetch or update UI after delete
-        } catch (error) {
-            console.error("Error deleting order:", error);
-        }
-    };
 
     return (
         <div className="p-4 bg-white dark:bg-muted rounded-xl border shadow-sm mt-5 transition-all">
@@ -247,37 +211,11 @@ export function OrderTable() {
                                             <div className="flex items-center justify-center gap-1">
                                                 <Link
                                                     href={`/dashboard/admin/orders/${order.id}`}
-                                                    className="cursor-pointer"
                                                 >
-                                                    <Button variant="ghost" size="icon" title="View">
+                                                    <Button variant="ghost" className="cursor-pointer" size="icon" title="View">
                                                         <Eye className="w-4 h-4" />
                                                     </Button>
                                                 </Link>
-
-                                                {/* <Button variant="ghost" size="icon" title="Edit">
-                                                    <Edit className="w-4 h-4" />
-                                                </Button> */}
-                                                {/* <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="ghost" size="icon" className="text-red-500" title="Delete">
-                                                            <Trash className="w-4 h-4" />
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This will permanently delete the order.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => handleDelete(order.id)}>
-                                                                Continue
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog> */}
                                             </div>
                                         </td>
                                     </tr>

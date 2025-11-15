@@ -57,7 +57,7 @@ export const routePermissions: Record<string, string[]> = {
   ],
 
   // 💰 ORDERS Management
-  "/dashboard/admin/orders": [
+  "/dashboard/agent/orders/my-orders": [
     "ORDERS CREATE",
     "ORDERS VIEW",
     "ORDERS VIEW OWN",
