@@ -53,7 +53,7 @@ const AllProducts = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
   const [deleteProduct] = useDeleteProductMutation()
   const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, { refetchOnMountOrArgChange: false });
-  const PRODUCTS = productRes?.data || [];
+  const PRODUCTS = productRes?.data?.products || [];
   const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
   const [inputValue, setInputValue] = useState("")
 
