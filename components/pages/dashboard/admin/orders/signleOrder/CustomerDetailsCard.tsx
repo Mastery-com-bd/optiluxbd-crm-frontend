@@ -22,7 +22,7 @@ export function CustomerDetailsCard({ customer }: Props) {
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <Image
-                        src="https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"
+                        src="https://i.ibb.co.com/kJq7275/user6.png"
                         alt="Customer Avatar"
                         width={48}
                         height={48}
@@ -30,10 +30,10 @@ export function CustomerDetailsCard({ customer }: Props) {
                     />
                     <div>
                         <div className="flex items-center gap-2">
-                            <p className="font-semibold text-sm text-foreground">Sophia Carter</p>
+                            <p className="font-semibold text-sm text-foreground">{customer?.name}</p>
                             <span className="text-xl">BD</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">Since 2020</p>
+                        <p className="text-sm text-muted-foreground">ID: {customer?.id}</p>
                     </div>
                 </div>
             </div>
@@ -42,15 +42,15 @@ export function CustomerDetailsCard({ customer }: Props) {
             <div className="mt-6 space-y-3 text-sm">
                 <div className="flex items-center gap-3 text-muted-foreground">
                     <Mail className="w-4 h-4" />
-                    <span>sophia@designhub.com</span>
+                    <span>{customer?.email || "N/A"}</span>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                     <Phone className="w-4 h-4" />
-                    <span>+44 7911 123456</span>
+                    <span>{customer?.phone || "N/A"}</span>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                     <MapPin className="w-4 h-4" />
-                    <span>London, UK</span>
+                    <span>{customer?.location || "N/A"}</span>
                 </div>
                 <Link href={`/dashboard/admin/orders/3/${customer?.id}`}>
                     <Button>See Customer Order Details</Button>
