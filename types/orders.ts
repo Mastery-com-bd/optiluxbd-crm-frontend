@@ -89,3 +89,11 @@ export interface SummaryData {
         totalSpent: number
     }[]
 }
+
+export interface AgentOrderSummary {
+    totalOrders: number,
+    totalCommission: string,
+    averageOrderValue: string,
+    totalRevenue: string,
+    averageCommission: string
+}

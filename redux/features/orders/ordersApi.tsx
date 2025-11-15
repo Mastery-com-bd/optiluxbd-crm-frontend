@@ -1,6 +1,9 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { AgentOrderSummary } from "@/types/orders";
 import { buildParams } from "@/utills/paramsBuilder";
-
+interface AgentOrderSummaryResponse {
+    data: AgentOrderSummary;
+}
 const ordersApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllOrders: builder.query({
@@ -33,6 +36,12 @@ const ordersApi = baseApi.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getAgentOrderSummary: builder.query<AgentOrderSummaryResponse, void>({
+            query: () => ({
+                url: "/orders/stats/my",
+                method: "GET",
+            })
+        })
     }),
 });
 export const {
@@ -41,5 +50,6 @@ export const {
     useGetSingleOrderQuery,
     useGetCustomerSummaryQuery,
     useGetCustomerAllOrdersQuery,
+    useGetAgentOrderSummaryQuery,
 
 } = ordersApi;

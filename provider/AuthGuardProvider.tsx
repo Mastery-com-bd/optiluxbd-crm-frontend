@@ -39,6 +39,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // ---- Logged-in user ----
     const { permissions, role } = getPermissions(roles as TUSerRole[]);
+    console.log(permissions);
+    
     if (!permissions.length) {
       router.replace("/login");
       return;
