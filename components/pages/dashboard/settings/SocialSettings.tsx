@@ -30,7 +30,6 @@ import {
   Linkedin,
   Pencil,
   Plus,
-  Save,
   Trash2,
   Twitter,
   X,
@@ -487,18 +486,24 @@ const SocialSettings = ({
           </div>
         </CardContent>
       )}
-      <CardFooter className="flex items-center justify-end gap-2">
-        <Button
-          onClick={() => {
-            dispatch(resetSettings());
-          }}
-        >
-          Reset Chnages
-        </Button>
-        <Button disabled={loading} onClick={handleSubmit}>
-          <Save className="mr-2 h-4 w-4 cursor-pointer" /> Save Changes
-        </Button>
-      </CardFooter>
+      {editing === "social" && (
+        <CardFooter className="flex items-center justify-end gap-2">
+          <Button
+            onClick={() => {
+              dispatch(resetSettings());
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={handleSubmit}
+            className="bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
+          >
+            Update Social
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 };

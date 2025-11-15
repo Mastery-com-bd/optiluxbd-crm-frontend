@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/customers", "/dashboard/hr&staff/roles", "/dashboard/hr&staff/roles/add", "/dashboard/hr&staff/roles/1", "/dashboard/hr&staff/roles/2"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -56,9 +56,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // Admin can access these directly
     // Admin logic
-    if (role === "ADMIN") {
+    if (role.includes("ADMIN")) {
       const adminAllowedRoutes = [
         "/dashboard",
+        "/dashboard/leads/leaders",
         "/dashboard/settings",
         "/dashboard/profile",
         "/dashboard/admin/landing",

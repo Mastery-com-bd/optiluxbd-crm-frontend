@@ -1,4 +1,4 @@
-import Profile from "@/components/pages/dashboard/agent/Profile";
+import Profile from "@/components/pages/dashboard/profile/Profile";
 
 const AgentProfile = () => {
   return (

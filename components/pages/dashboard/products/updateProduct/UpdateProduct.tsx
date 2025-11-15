@@ -23,6 +23,7 @@ import {
     useUpdateProductMutation,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface UpdateProductProps {
     product: Product;
@@ -45,7 +46,6 @@ type FormValues = {
 const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
     const [imagePreview, setImagePreview] = useState(product.image_url);
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [hasImageChanged, setHasImageChanged] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [sheetOpen, setSheetOpen] = useState(false);
@@ -77,7 +77,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
         const file = event.target.files?.[0];
         if (file) {
             setImageFile(file);
-            setHasImageChanged(true); // Mark image as changed
             const reader = new FileReader();
             reader.onloadend = () => {
                 if (typeof reader.result === "string") {
@@ -89,38 +88,22 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
     };
 
     const onSubmit = async (values: FormValues) => {
-        // Close the modal FIRST
         setSheetOpen(false);
 
-        // Delay toast render to prevent z-index/focus issue
-        setTimeout(() => {
-            toast("Are you sure you want to update this product?", {
-                description: "This change will be saved permanently.",
-                action: {
-                    label: "Update",
-                    onClick: async () => {
-                        toast.promise(
-                            (async () => {
-                                await updateProduct({ id: product.id, data: values }).unwrap();
+        const updateAndUpload = (async () => {
+            await updateProduct({ id: product.id, data: values }).unwrap();
+            if (imageFile) {
+                await addImage({ id: product.id, image: imageFile }).unwrap();
+            }
+            refetch();
+        })();
 
-                                if (imageFile) {
-                                    await addImage({ id: product.id, image: imageFile }).unwrap();
-                                }
-
-                                refetch();
-                                setHasImageChanged(false);
-                            })(),
-                            {
-                                loading: "Updating...",
-                                success: "Product updated successfully!",
-                                error: "Failed to update product.",
-                            }
-                        );
-                    },
-                },
-            });
-        }, 50);
-    };
+        toast.promise(updateAndUpload, {
+            loading: "Updating product...",
+            success: "Product updated successfully!",
+            error: "Failed to update product.",
+        });
+    }
 
     return (
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -198,7 +181,6 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                                     onClick={() => {
                                         setImagePreview(product.image_url);
                                         setImageFile(null);
-                                        setHasImageChanged(true); // flag image "removal" as change
                                         if (fileInputRef.current) fileInputRef.current.value = "";
                                     }}
                                 >
@@ -249,9 +231,35 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product, refetch }) => {
                     </div>
 
                     <SheetFooter className="pt-4">
-                        <Button type="submit" disabled={!(isDirty || hasImageChanged)}>
-                            Save Changes
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button disabled={!(isDirty || imageFile)}>
+                                    Save Changes
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your
+                                        account and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <button
+                                            onClick={() => void handleSubmit(onSubmit)()}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded"
+                                            disabled={!(isDirty || imageFile)}
+                                        >
+                                            Continue
+                                        </button>
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+
                         <SheetClose asChild>
                             <Button variant="outline">Close</Button>
                         </SheetClose>

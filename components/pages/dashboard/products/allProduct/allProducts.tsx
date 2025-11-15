@@ -34,6 +34,7 @@ import ProductDetails from "../productDetails/ProductDetails"
 import { Product } from "@/types/product"
 import UpdateProduct from "../updateProduct/UpdateProduct"
 import Loading from "@/components/pages/shared/Loading"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 
 const AllProducts = () => {
@@ -50,10 +51,9 @@ const AllProducts = () => {
   const [status, setStatus] = useState("all")
   const [viewMode, setViewMode] = useState("list")
   const [selectedProducts, setSelectedProducts] = useState<number[]>([])
-  const [page, setPage] = useState(1)
   const [deleteProduct] = useDeleteProductMutation()
   const { data: productRes, refetch, isLoading } = useGetAllProductQuery(filters, { refetchOnMountOrArgChange: false });
-  const PRODUCTS = productRes?.data || []
+  const PRODUCTS = productRes?.data?.products || [];
   const pagination = productRes?.pagination || { page: 1, totalPages: 1, total: 0 }
   const [inputValue, setInputValue] = useState("")
 
@@ -64,24 +64,20 @@ const AllProducts = () => {
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   const handleDelete = async (id: number) => {
-    toast(`Are you sure you want to delete this product?`, {
-      action: {
-        label: "Delete",
-        onClick: async () => {
-          toast.promise(
-            deleteProduct(id)
-              .unwrap()
-              .then(() => refetch()),
-            {
-              loading: "Deleting...",
-              success: "Product deleted successfully!",
-              error: "Failed to delete product.",
-            }
-          )
-        },
-      },
-    })
-  }
+    try {
+      await toast.promise(
+        deleteProduct(id).unwrap(),
+        {
+          loading: "Deleting product...",
+          success: "Product deleted successfully!",
+          error: "Failed to delete product.",
+        }
+      );
+      refetch();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
 
 
   const getStatusColor = (status: string) => {
@@ -167,8 +163,13 @@ const AllProducts = () => {
               <Select
                 value={category}
                 onValueChange={(value) => {
-                  debouncedLog(value);
                   setCategory(value)
+                  setFilters((prev) => ({
+                    ...prev,
+                    category:
+                      value === "all" ? undefined : value,
+                    page: 1,
+                  }));
                 }}
               >
                 <SelectTrigger className="w-40" aria-label="Category Filter">
@@ -189,8 +190,13 @@ const AllProducts = () => {
               <Select
                 value={status}
                 onValueChange={(value) => {
-                  debouncedLog(value);
                   setStatus(value)
+                  setFilters((prev) => ({
+                    ...prev,
+                    status:
+                      value === "all" ? undefined : value,
+                    page: 1,
+                  }));
                 }}
               >
                 <SelectTrigger className="w-36" aria-label="Status Filter">
@@ -240,8 +246,8 @@ const AllProducts = () => {
                         type="checkbox"
                         className="rounded border-border"
                         checked={
-                          selectedProducts.length === PRODUCTS.length &&
-                          PRODUCTS.length > 0
+                          selectedProducts.length === PRODUCTS?.length &&
+                          PRODUCTS?.length > 0
                         }
                         onChange={toggleSelectAll}
                       />
@@ -260,7 +266,7 @@ const AllProducts = () => {
                 </thead>
                 <tbody>
                   {
-                    PRODUCTS.map((product: Product) => (
+                    PRODUCTS?.map((product: Product) => (
                       <tr
                         key={product.id}
                         className="border-b border-muted hover:bg-muted/50 transition-colors"
@@ -314,14 +320,30 @@ const AllProducts = () => {
                           <div className="flex items-center gap-1">
                             <ProductDetails product={product} />
                             <UpdateProduct product={product} refetch={refetch} />
-                            <Button
-                              className="cursor-pointer"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(product.id)}
-                            >
-                              <Trash2 className="w-4 h-4 text-destructive " />
-                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  className="cursor-pointer"
+                                  variant="ghost"
+                                  size="icon"
+                                >
+                                  <Trash2 className="w-4 h-4 text-destructive " />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your
+                                    account and remove your data from our servers.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(product.id)}>Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </td>
                       </tr>
@@ -335,8 +357,8 @@ const AllProducts = () => {
         {/* Pagination Controls */}
         <PaginationControls
           pagination={pagination}
-          onPrev={() => setPage((p) => Math.max(p - 1, 1))}
-          onNext={() => setPage((p) => p + 1)}
+          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
+          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
         />
       </div>
     </div>
