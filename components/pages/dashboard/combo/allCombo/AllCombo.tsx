@@ -4,8 +4,7 @@
 import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { useState } from "react";
-import ComboTableSkeleton from "../createCombo/ComboTableSkeleton";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/utills/debounce";
@@ -17,6 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { TComboPackage } from "@/types/comboPackage";
+import ComboDropdown from "./ComboDropdown";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import CombocardSkeleton from "./CombocardSkeleton";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -29,13 +33,18 @@ const AllCombo = () => {
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-  const comboPackages = data?.package;
-  console.log(comboPackages);
-  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+  const comboPackages = data?.data?.packages as TComboPackage[];
+
+  const pagination = data?.data?.pagination || {
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  };
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };
+
   const handleTag = async (val: any) => {
     const cleaned = val
       .split(",")
@@ -125,7 +134,7 @@ const AllCombo = () => {
                   variant="outline"
                   className="flex items-center gap-2 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
                 >
-                  {is_featured === "All" ? "Filter by publish" : is_featured}
+                  {is_featured === "All" ? "Filter by featured" : is_featured}
                   <ChevronDown size={16} />
                 </Button>
               </DropdownMenuTrigger>
@@ -178,94 +187,99 @@ const AllCombo = () => {
 
         {/* Product Table */}
         {isLoading ? (
-          <ComboTableSkeleton />
+          <CombocardSkeleton />
         ) : (
-          <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border bg-muted">
-                    {[
-                      "Name",
-                      "SKU",
-                      " Price",
-                      "Discount",
-                      "Savings ",
-                      "Active",
-                      "Featured",
-                      "Tags",
-                      "Actions",
-                    ].map((label) => (
-                      <th
-                        key={label}
-                        className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase"
-                      >
-                        {label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                {/* <tbody>
-                  {comboPackages.map((packages: any) => (
-                    <tr
-                      key={packages?.id}
-                      className="border-b border-muted hover:bg-muted/50 transition-colors"
-                    >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3 ">
-                          <Image
-                            src={
-                              product?.image_url ||
-                              "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                            }
-                            alt={product.name}
-                            width={200}
-                            height={200}
-                            className=" object-cover w-12 h-12 rounded-full"
-                          />
-                          <div>
-                            <p className="font-medium">{product.name}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm">{product.sku}</td>
-                      <td className="px-4 py-3 text-sm">{product.category}</td>
-                      <td className="px-4 py-3 text-sm font-medium">
-                        {product.stock}
-                      </td>
-                      <td className="px-4 py-3 text-sm font-semibold">
-                        ${product.price}
-                      </td>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-5">
+            {comboPackages?.map((item) => (
+              <Card
+                key={item?.id}
+                className="border border-muted bg-white dark:bg-gray-900 dark:border-gray-800 shadow-sm hover:shadow-md transition-all"
+              >
+                <CardHeader className="pb-2 flex flex-row justify-between items-start">
+                  <div>
+                    <CardTitle className="text-lg font-semibold">
+                      {item?.name}
+                    </CardTitle>
+                    <p className="text-xs text-muted-foreground">
+                      SKU: {item?.sku}
+                    </p>
+                  </div>
 
-                      <td className="px-4 py-3">
-                        <span
-                          className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
-                            product.status
-                          )}`}
+                  {/* Actions */}
+                  <ComboDropdown id={item?.id} activity={item?.is_active} />
+                </CardHeader>
+
+                <CardContent className="space-y-3 text-sm">
+                  {/* Price Section */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <p className="text-muted-foreground">Price</p>
+                      <p className="font-medium">
+                        {item?.totalPrice} <span className="text-xl">৳</span>
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-muted-foreground">Discount</p>
+                      <p className="font-medium">
+                        {item?.discountPrice} <span className="text-xl">৳</span>
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-muted-foreground">Savings</p>
+                      <p className="font-medium">
+                        {item.savingsAmount} <span className="text-xl">৳</span>{" "}
+                        ({item.savingsPercent}%)
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-muted-foreground">Total Products</p>
+                      <p className="font-medium">{item?.items.length}</p>
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div className="flex gap-2">
+                    <Badge
+                      className={cn(
+                        item?.is_active ? "bg-green-600" : "bg-red-600",
+                        "text-white"
+                      )}
+                    >
+                      {item?.is_active ? "Active" : "Inactive"}
+                    </Badge>
+
+                    <Badge
+                      className={cn(
+                        item?.is_featured ? "bg-blue-600" : "bg-gray-600",
+                        "text-white"
+                      )}
+                    >
+                      {item?.is_featured ? "Featured" : "Regular"}
+                    </Badge>
+                  </div>
+
+                  {/* Tags */}
+                  <div>
+                    <p className="text-muted-foreground mb-1">Tags</p>
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags?.map((tag, idx) => (
+                        <Badge
+                          key={idx}
+                          variant="secondary"
+                          className="text-xs px-2 py-0.5"
                         >
-                          {product.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          <ProductDetails product={product} />
-                          <UpdateProduct product={product} refetch={refetch} />
-                          <Button
-                            className="cursor-pointer"
-                            variant="ghost"
-                            size="icon"
-                            // onClick={() => handleDelete(product.id)}
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive " />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
-              </table>
-            </div>
-          </Card>
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
 
         {/* Pagination Controls */}

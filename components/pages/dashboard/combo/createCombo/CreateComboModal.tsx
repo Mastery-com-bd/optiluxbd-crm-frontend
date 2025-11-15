@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { TComboPack } from "@/types/product";
 import {
   Bold,
   Italic,
@@ -37,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateComboMutation } from "@/redux/features/combo/comboApi";
+import { TComboPack } from "@/types/comboPackage";
 
 const CreateComboModal = ({
   selectedProducts,

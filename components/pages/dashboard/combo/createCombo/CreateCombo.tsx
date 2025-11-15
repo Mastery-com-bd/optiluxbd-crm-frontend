@@ -34,7 +34,7 @@ const CreateCombo = () => {
   const { data, isLoading, refetch } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-  const products = data?.data || [];
+  const products = (data?.data as Product[]) || [];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
@@ -94,7 +94,7 @@ const CreateCombo = () => {
       })
     );
   };
-  console.log(filters);
+
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -188,101 +188,108 @@ const CreateCombo = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product: Product) => (
-                    <tr
-                      key={product?.id}
-                      className="border-b border-muted hover:bg-muted/50 transition-colors"
-                    >
-                      <td className="px-4 py-3">
-                        <input
-                          type="checkbox"
-                          className="rounded border-border"
-                          checked={selectedProducts.some(
-                            (p) => p.productId === product.id
-                          )}
-                          onChange={() => toggleSelectProduct(product.id)}
-                        />
-
-                        {/* Quantity Controls */}
-                        {selectedProducts.some(
-                          (p) => p.productId === product.id
-                        ) && (
-                          <div className="flex items-center gap-2 mt-2">
-                            <button
-                              className="px-2 py-1 border rounded"
-                              onClick={() =>
-                                updateQuantity(product.id, "decrease")
-                              }
-                            >
-                              -
-                            </button>
-                            <span className="text-sm">
-                              {selectedProducts.find(
-                                (p) => p.productId === product.id
-                              )?.quantity ?? 1}
-                            </span>
-                            <button
-                              className="px-2 py-1 border rounded"
-                              onClick={() =>
-                                updateQuantity(product.id, "increase")
-                              }
-                            >
-                              +
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3 ">
-                          <Image
-                            src={
-                              product?.image_url ||
-                              "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                            }
-                            alt={product.name}
-                            width={200}
-                            height={200}
-                            className=" object-cover w-12 h-12 rounded-full"
+                  {products &&
+                    products.length > 0 &&
+                    products.map((product: Product) => (
+                      <tr
+                        key={product?.id}
+                        className="border-b border-muted hover:bg-muted/50 transition-colors"
+                      >
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            className="rounded border-border"
+                            checked={selectedProducts.some(
+                              (p) => p.productId === product.id
+                            )}
+                            onChange={() => toggleSelectProduct(product.id)}
                           />
-                          <div>
-                            <p className="font-medium">{product.name}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm">{product.sku}</td>
-                      <td className="px-4 py-3 text-sm">{product.category}</td>
-                      <td className="px-4 py-3 text-sm font-medium">
-                        {product.stock}
-                      </td>
-                      <td className="px-4 py-3 text-sm font-semibold">
-                        ${product.price}
-                      </td>
 
-                      <td className="px-4 py-3">
-                        <span
-                          className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
-                            product.status
-                          )}`}
-                        >
-                          {product.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          <ProductDetails product={product} />
-                          <UpdateProduct product={product} refetch={refetch} />
-                          <Button
-                            className="cursor-pointer"
-                            variant="ghost"
-                            size="icon"
-                            // onClick={() => handleDelete(product.id)}
+                          {/* Quantity Controls */}
+                          {selectedProducts.some(
+                            (p) => p.productId === product.id
+                          ) && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                className="px-2 py-1 border rounded"
+                                onClick={() =>
+                                  updateQuantity(product.id, "decrease")
+                                }
+                              >
+                                -
+                              </button>
+                              <span className="text-sm">
+                                {selectedProducts.find(
+                                  (p) => p.productId === product.id
+                                )?.quantity ?? 1}
+                              </span>
+                              <button
+                                className="px-2 py-1 border rounded"
+                                onClick={() =>
+                                  updateQuantity(product.id, "increase")
+                                }
+                              >
+                                +
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3 ">
+                            <Image
+                              src={
+                                product?.image_url ||
+                                "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
+                              }
+                              alt={product.name}
+                              width={200}
+                              height={200}
+                              className=" object-cover w-12 h-12 rounded-full"
+                            />
+                            <div>
+                              <p className="font-medium">{product.name}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm">{product.sku}</td>
+                        <td className="px-4 py-3 text-sm">
+                          {product.category}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-medium">
+                          {product.stock}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-semibold">
+                          ${product.price}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          <span
+                            className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
+                              product.status
+                            )}`}
                           >
-                            <Trash2 className="w-4 h-4 text-destructive " />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {product.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            <ProductDetails product={product} />
+                            <UpdateProduct
+                              product={product}
+                              refetch={refetch}
+                            />
+                            <Button
+                              className="cursor-pointer"
+                              variant="ghost"
+                              size="icon"
+                              // onClick={() => handleDelete(product.id)}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive " />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
