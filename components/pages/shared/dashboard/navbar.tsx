@@ -12,7 +12,7 @@ import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
   currentUser,
   logOut,
-  TUSerRole,
+  TAuthUSer,
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
@@ -29,7 +29,6 @@ const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const router = useRouter();
-
   const handleLogOut = async () => {
     try {
       const res = await logout(undefined).unwrap();
@@ -153,7 +152,12 @@ const Navbar: React.FC = () => {
                 <PopoverTrigger asChild>
                   <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background">
                     <Avatar className="w-9 h-9 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage
+                        src={
+                          user?.avatar_secure_url ||
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                      />
                       <AvatarFallback className="bg-linear-to-br from-primary/20 to-primary/40 text-primary-foreground">
                         BI
                       </AvatarFallback>
@@ -163,7 +167,7 @@ const Navbar: React.FC = () => {
                         {user?.name}
                       </span>
                       <span className="text-xs text-muted-foreground/70">
-                        {getPermissions(user?.roles as TUSerRole[]).role}
+                        {getPermissions(user as TAuthUSer).role}
                       </span>
                     </div>
                   </button>
@@ -171,7 +175,12 @@ const Navbar: React.FC = () => {
                 <PopoverContent className="w-56 p-2" align="end">
                   <div className="flex items-center gap-3 px-2 py-2">
                     <Avatar className="w-10 h-10">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage
+                        src={
+                          user?.avatar_secure_url ||
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                      />
                       <AvatarFallback>BI</AvatarFallback>
                     </Avatar>
                     <div>

@@ -22,16 +22,16 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/products/deleted": ["PRODUCTS DELETE"],
   // combo management
   "/dashboard/combo": [
-    "PRODUCTS VIEW",
-    "PRODUCTS UPDATE",
-    "PRODUCTS DELETE",
-    "PRODUCTS UPDATE",
+    "PACKAGES VIEW",
+    "PACKAGES CREATE",
+    "PACKAGES UPDATE",
+    "PACKAGES DELETE",
   ],
   "/dashboard/combo/create-combo": [
-    "PRODUCTS VIEW",
-    "PRODUCTS UPDATE",
-    "PRODUCTS CREATE",
-    "PRODUCTS DELETE",
+    "PACKAGES CREATE",
+    "PACKAGES VIEW",
+    "PACKAGES DELETE",
+    "PACKAGES UPDATE",
   ],
 
   // 🧾 Customer Management
