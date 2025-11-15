@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import DeleteUSerModal from "../singleUSer/DeleteUSerModal";
 import { TStatus } from "@/types/user/user.types";
 import {
@@ -16,6 +16,7 @@ import {
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 const UserActionDropdown = ({
   id,
   status,
@@ -79,13 +80,20 @@ const UserActionDropdown = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem className="flex items-center gap-2">
-          <Link href={`/dashboard/admin/manage-users/${id}`}>
+          <Link
+            href={`/dashboard/admin/manage-users/${id}`}
+            className="flex w-full cursor-pointer items-center gap-2"
+          >
             <Button variant="ghost" className="text-left hover:bg-transparent">
               View Details
             </Button>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
+
+        <DropdownMenuItem
+          className="flex items-center gap-2"
+          onSelect={(e) => e.preventDefault()}
+        >
           <DeleteUSerModal
             handleConfirm={handleSuspend}
             id={id}
@@ -97,7 +105,10 @@ const UserActionDropdown = ({
             buttonName="Suspend"
           />
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
+        <DropdownMenuItem
+          className="flex items-center gap-2"
+          onSelect={(e) => e.preventDefault()}
+        >
           <DeleteUSerModal
             handleConfirm={handleInactive}
             id={id}

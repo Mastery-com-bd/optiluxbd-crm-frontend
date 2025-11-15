@@ -41,6 +41,7 @@ import { TStatus } from "@/types/user/user.types";
 import { IProfileInfo } from "../../../profile/Profile";
 import ProfileImage from "../../../profile/ProfileImage";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+
 const UserProfile = ({ id }: { id: string }) => {
   const { data, isLoading } = useGetASingleUserQuery(id, {
     refetchOnMountOrArgChange: false,
@@ -381,7 +382,7 @@ const UserProfile = ({ id }: { id: string }) => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
+                {/* <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
                     Role
                   </label>
@@ -411,7 +412,7 @@ const UserProfile = ({ id }: { id: string }) => {
                       </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </div>
+                </div> */}
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
                     Status

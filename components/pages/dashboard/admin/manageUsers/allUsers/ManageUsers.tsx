@@ -16,27 +16,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Slash, XCircle, Trash2 } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import CreateUser from "./CreateUser";
-import {
-  useActivateUserMutation,
-  useDeleteUserMutation,
-  useGetAllUsersQuery,
-  useSuspendUserMutation,
-} from "@/redux/features/user/userApi";
+import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
-import DeleteUSerModal from "../singleUSer/DeleteUSerModal";
-import { toast } from "sonner";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { TStatus, TUser } from "@/types/user/user.types";
 import UserStatusDropdown from "./StatusDropdown";
-import Link from "next/link";
 import { debounce } from "@/utills/debounce";
-import RoleDropdown from "./RoleDropdown";
 import UserActionDropdown from "./UserActionDropdown";
+import { getPermissions } from "@/utills/getPermissionAndRole";
+import { TAuthUSer } from "@/redux/features/auth/authSlice";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -52,75 +45,9 @@ const ManageUsers = () => {
 
   const users = data?.data as TUser[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-  const [deleteUser] = useDeleteUserMutation();
-  const [activateUser] = useActivateUserMutation();
-  const [suspendUser] = useSuspendUserMutation();
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [is_active, setIs_active] = useState("All");
   const [selectedRole, setSelectedRole] = useState("All");
-
-  const handleConfirm = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await deleteUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
-
-  const handleInactive = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await activateUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
-
-  const handleSuspend = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await suspendUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
@@ -386,7 +313,7 @@ const ManageUsers = () => {
 
           <TableBody>
             {users?.map((user, index) => {
-              const role = user?.roles.map((r) => r?.role?.name)[0];
+              const { role } = getPermissions(user as TAuthUSer);
               return (
                 <TableRow
                   key={index}
@@ -405,21 +332,22 @@ const ManageUsers = () => {
                     />
                   </TableCell>
                   <TableCell className="font-medium text-gray-900 dark:text-gray-200">
-                    <Link
-                      href={`/dashboard/admin/manage-users/${user?.id}`}
-                      className="text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                      {user?.name}
-                    </Link>
+                    {user?.name}
                   </TableCell>
-                  <TableCell className="text-gray-800 dark:text-gray-200">
-                    <RoleDropdown id={user?.id} role={role} />
-                  </TableCell>
+
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.email}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.phone}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {role
+                      .map(
+                        (r) =>
+                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                      )
+                      .join(", ") || "no role"}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.is_active ? "Yes" : "No"}

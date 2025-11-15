@@ -1,16 +1,11 @@
+import { TUSerRole } from "@/redux/features/auth/authSlice";
+
 export type TStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED" | "DISABLED";
 
 export type TRole = {
   id: number;
   name: string;
   description: string;
-};
-
-export type TUserRole = {
-  id: number;
-  userId: number;
-  roleId: number;
-  role: TRole;
 };
 
 export type TUser = {
@@ -26,6 +21,6 @@ export type TUser = {
   last_login: string | null;
   created_at: string;
   updated_at: string;
-  roles: TUserRole[];
+  roles: TUSerRole[];
   addresses: [];
 };
