@@ -1,9 +1,8 @@
 "use client";
 import Loading from "@/components/pages/shared/Loading";
 import { routePermissions } from "@/config/routePermission";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,11 +13,11 @@ const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [logout] = useLogoutMutation();
   const user = useAppSelector(currentUser);
-  const roles = user?.roles;
-  const dispatch = useAppDispatch();
+  const { role, permissions } = getPermissions(user as TAuthUSer);
+  console.log(permissions);
   const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
     Promise.resolve().then(() => {
       setHydrated(true);
@@ -30,7 +29,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // ---- Guest user ----
     if (!user) {
-      // Only redirect if they're on a private route
       if (!publicRoutes.includes(pathname)) {
         router.replace("/login");
       }
@@ -38,59 +36,32 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const { permissions, role } = getPermissions(user as TAuthUSer);
 
-    if (!permissions.length) {
-      router.replace("/login");
-      return;
-    }
-
-    // Prevent logged-in users from visiting login/register
-    if (publicRoutes.includes(pathname)) {
-      router.replace("/dashboard");
-      return;
-    }
-    // ---- Role-based default redirection ----
-    if (alwaysAllowedRoutes.includes(pathname)) {
-      router.replace("/dashboard/profile");
-      return;
-    }
-
-    // Admin can access these directly
-    // Admin logic
-    const isAdmin = role.includes("ADMIN");
-
-    if (isAdmin) {
-      const requiredPerms = Object.entries(routePermissions).find(([route]) =>
-        pathname.startsWith(route)
-      )?.[1];
-
-      if (!requiredPerms) {
-        router.replace("/dashboard/admin/landing");
-        return;
-      }
-      if (requiredPerms.some((p) => permissions.includes(p))) return;
-    }
-
-    // non admin user permission
+    // Always allowed pages for any logged-in user
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
     }
-    const matchedRoute = Object.entries(routePermissions).find(([route]) =>
+    if (pathname === "/dashboard" && role.includes("ADMIN")) {
+      return;
+    }
+
+    // Find required permission for current route
+    const requiredPerms = Object.entries(routePermissions).find(([route]) =>
       pathname.startsWith(route)
     )?.[1];
-    if (!matchedRoute) {
+
+    // If route not in permission map → redirect to profile
+    if (!requiredPerms) {
       router.replace("/dashboard/profile");
       return;
     }
-    const hasPermission = matchedRoute.some((p) => permissions.includes(p));
 
+    // Check if user has at least one required permission
+    const hasPermission = requiredPerms.some((p) => permissions.includes(p));
     if (!hasPermission) {
       router.replace("/dashboard/profile");
-      return;
     }
-    return;
-  }, [dispatch, hydrated, logout, pathname, roles, router, user]);
+  }, [hydrated, pathname, user, router, role, permissions]);
 
   if (!hydrated || !user) {
     return <Loading />;
