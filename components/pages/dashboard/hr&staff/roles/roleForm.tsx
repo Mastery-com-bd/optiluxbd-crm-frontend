@@ -23,6 +23,7 @@ import {
   useGetRoleByIdQuery,
   useUpdateRoleInfoMutation,
   useAddRoleMutation,
+  useGetAllPermissionsQuery,
 } from "@/redux/features/roles/roleApi";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -73,15 +74,13 @@ interface RoleFormProps {
   roleId: string;
   mode?: "create" | "edit";
   existingRole?: ExistingRolePermission;
-  allPermissions: Permission[];
 }
 
-export default function RoleForm({
-  roleId,
-  mode = "create",
-  allPermissions,
-}: RoleFormProps) {
+export default function RoleForm({ roleId, mode = "create" }: RoleFormProps) {
   const { data: roleData, isLoading } = useGetRoleByIdQuery(roleId);
+  const { data: allPermissionsData, isLoading: isLoadingPermissions } =
+    useGetAllPermissionsQuery(undefined);
+  const allPermissions: Permission[] = allPermissionsData?.data;
   const existingRole: ExistingRolePermission = roleData?.data;
 
   // Local state is null until user edits; before that we derive from existingRole
@@ -191,6 +190,16 @@ export default function RoleForm({
   };
 
   if (isLoading)
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[60vh]">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="text-sm">Loading role...</span>
+        </div>
+      </div>
+    );
+
+  if (isLoadingPermissions)
     return (
       <div className="p-6 flex items-center justify-center min-h-[60vh]">
         <div className="flex items-center gap-3 text-muted-foreground">

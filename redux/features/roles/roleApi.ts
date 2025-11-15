@@ -15,6 +15,12 @@ const rolesApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        getAllPermissions: builder.query({
+            query: () => ({
+                url: `/roles/permissions`,
+                method: "GET",
+            }),
+        }),
         getRoleById: builder.query({
             query: (id) => ({
                 url: `/roles/${id}`,
@@ -38,4 +44,4 @@ const rolesApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetAllRolesQuery, useGetRoleByIdQuery, useAddRoleMutation, useUpdateRoleInfoMutation } = rolesApi;
+export const { useGetAllRolesQuery, useGetAllPermissionsQuery, useGetRoleByIdQuery, useAddRoleMutation, useUpdateRoleInfoMutation } = rolesApi;
