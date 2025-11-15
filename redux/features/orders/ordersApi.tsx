@@ -41,6 +41,12 @@ const ordersApi = baseApi.injectEndpoints({
                 url: "/orders/stats/my",
                 method: "GET",
             })
+        }),
+        getAgentOrders: builder.query({
+            query: (params) => ({
+                url: `/orders/my?${buildParams(params)}`,
+                method: "GET"
+            })
         })
     }),
 });
@@ -51,5 +57,6 @@ export const {
     useGetCustomerSummaryQuery,
     useGetCustomerAllOrdersQuery,
     useGetAgentOrderSummaryQuery,
+    useGetAgentOrdersQuery,
 
 } = ordersApi;

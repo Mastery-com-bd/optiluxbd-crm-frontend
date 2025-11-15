@@ -97,3 +97,49 @@ export interface AgentOrderSummary {
     totalRevenue: string,
     averageCommission: string
 }
+
+export interface OrderItem {
+    id: number;
+    agentId: number;
+    customerId: number;
+    productId: number | null;
+    packageId: number | null;
+    quantity: number;
+    totalAmount: string;
+    commissionRate: string;
+    commission: string;
+    orderDate: string;
+    addressId: number | null;
+
+    // Shipping address fields
+    shipping_address_tag: string | null;
+    shipping_address_line1: string | null;
+    shipping_address_line2: string | null;
+    shipping_address_city: string | null;
+    shipping_address_postcode: string | null;
+    shipping_address_geo_lat: number | null;
+    shipping_address_geo_lng: number | null;
+
+    // Nested customer object
+    customer: {
+        id: number;
+        name: string;
+        phone: string;
+        email?: string | null;
+    };
+
+    // Nested product (nullable)
+    product: {
+        id: number;
+        name: string;
+        price: string;
+    } | null;
+
+    // Nested package (nullable)
+    package: {
+        id: number;
+        name: string;
+        sku: string;
+        discountPrice: string;
+    } | null;
+}
