@@ -59,6 +59,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (role === "ADMIN") {
       const adminAllowedRoutes = [
         "/dashboard",
+        "/dashboard/leads/leaders",
         "/dashboard/settings",
         "/dashboard/profile",
         "/dashboard/admin/landing",
