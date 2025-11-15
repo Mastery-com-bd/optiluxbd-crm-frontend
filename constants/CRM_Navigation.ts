@@ -184,10 +184,13 @@ export const crmRoutes: NavRoute[] = [
         path: "/dashboard/admin/leads",
         icon: ClipboardList,
       },
-      { title: "Admin", path: "/dashboard/leads/admin", icon: Shield },
+      {
+        title: "Admin",
+        path: "/dashboard/leads/admin/assign-agent",
+        icon: Shield,
+      },
       { title: "Leaders", path: "/dashboard/leads/leaders", icon: Crown },
       { title: "Agents", path: "/dashboard/leads/agents", icon: UserCheck },
-      
     ],
   },
   {

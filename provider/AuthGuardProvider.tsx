@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/customers", "/dashboard/hr&staff/roles", "/dashboard/hr&staff/roles/add", "/dashboard/hr&staff/roles/1", "/dashboard/hr&staff/roles/2"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -39,6 +39,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // ---- Logged-in user ----
     const { permissions, role } = getPermissions(user as TAuthUSer);
+
     if (!permissions.length) {
       router.replace("/login");
       return;
@@ -51,21 +52,15 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
     // ---- Role-based default redirection ----
     if (alwaysAllowedRoutes.includes(pathname)) {
+      router.replace("/dashboard/profile");
       return;
     }
 
     // Admin can access these directly
     // Admin logic
-    if (role.includes("ADMIN")) {
-      const adminAllowedRoutes = [
-        "/dashboard",
-        "/dashboard/leads/leaders",
-        "/dashboard/settings",
-        "/dashboard/profile",
-        "/dashboard/admin/landing",
-      ];
-      if (adminAllowedRoutes.includes(pathname)) return;
+    const isAdmin = role.includes("ADMIN");
 
+    if (isAdmin) {
       const requiredPerms = Object.entries(routePermissions).find(([route]) =>
         pathname.startsWith(route)
       )?.[1];
@@ -74,32 +69,27 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         router.replace("/dashboard/admin/landing");
         return;
       }
-      if (
-        requiredPerms &&
-        !requiredPerms.some((p) => permissions.includes(p))
-      ) {
-        router.replace("/dashboard/admin/landing");
-        return;
-      }
+      if (requiredPerms.some((p) => permissions.includes(p))) return;
+    }
 
+    // non admin user permission
+    if (alwaysAllowedRoutes.includes(pathname)) {
       return;
     }
-    // Non-admin logic
     const matchedRoute = Object.entries(routePermissions).find(([route]) =>
       pathname.startsWith(route)
     )?.[1];
-
     if (!matchedRoute) {
-      router.replace("/");
-      return;
-    }
-    if (matchedRoute && !matchedRoute.some((p) => permissions.includes(p))) {
-      router.replace("/");
-      return;
-    } else if (!alwaysAllowedRoutes.includes(pathname)) {
       router.replace("/dashboard/profile");
       return;
     }
+    const hasPermission = matchedRoute.some((p) => permissions.includes(p));
+
+    if (!hasPermission) {
+      router.replace("/dashboard/profile");
+      return;
+    }
+    return;
   }, [dispatch, hydrated, logout, pathname, roles, router, user]);
 
   if (!hydrated || !user) {
