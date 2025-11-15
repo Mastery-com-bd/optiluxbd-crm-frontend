@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/customers", "/dashboard/hr&staff/roles", "/dashboard/hr&staff/roles/add", "/dashboard/hr&staff/roles/1", "/dashboard/hr&staff/roles/2"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     // Admin logic
     if (role === "ADMIN") {
       const adminAllowedRoutes = [
-        "/dashboard/",
+        "/dashboard/hr&staff/roles",
         "/dashboard/settings",
         "/dashboard/admin/landing",
         "/dashboard/profile",
