@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { ChevronDown, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -89,7 +88,13 @@ const CreateUser = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(val) => {
+        setOpen(val);
+        if (!val) reset();
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="bg-yellow-500 hover:bg-[#ffc500] text-white">
           Create User

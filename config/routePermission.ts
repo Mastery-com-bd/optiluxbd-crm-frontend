@@ -20,9 +20,22 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/products/drafts": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/add": ["PRODUCTS CREATE"],
   "/dashboard/admin/products/deleted": ["PRODUCTS DELETE"],
+  // combo management
+  "/dashboard/combo": [
+    "PACKAGES VIEW",
+    "PACKAGES CREATE",
+    "PACKAGES UPDATE",
+    "PACKAGES DELETE",
+  ],
+  "/dashboard/combo/create-combo": [
+    "PACKAGES CREATE",
+    "PACKAGES VIEW",
+    "PACKAGES DELETE",
+    "PACKAGES UPDATE",
+  ],
 
   // 🧾 Customer Management
-  "/dashboard/customers/page": ["CUSTOMERS VIEW"],
+  "/dashboard/customers": ["CUSTOMERS VIEW"],
   "/dashboard/customers/add": ["CUSTOMERS CREATE"],
   "/dashboard/customers/id": ["CUSTOMERS VIEW"],
   "/dashboard/customers/edit": ["CUSTOMERS UPDATE"],
@@ -61,4 +74,6 @@ export const routePermissions: Record<string, string[]> = {
     "COMMISSIONS VIEW OWN",
     "COMMISSIONS VIEW ALL",
   ],
+  // 💸 role Management
+  "/dashboard/hr&staff/roles": ["ROLES MANAGE"],
 };

@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import UploadImage from "./UploadImage";
 import { useUserImageUploadMutation } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
-import { userImageUpload } from "@/service/user/imageUpload";
 
 const ProfileImage = ({
   profileImage,
@@ -24,11 +23,14 @@ const ProfileImage = ({
   const handleChange = async (imageFile: File) => {
     const formData = new FormData();
     formData.append("avatar", imageFile as File);
+    const toastId = toast.loading("profile picture uploading", {
+      duration: 3000,
+    });
     try {
       // const res = await userImageUpload(id, imageFile);
       const res = await imageUpload({ id, formData }).unwrap();
       if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
+        toast.success(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       const errorInfo =
@@ -36,13 +38,13 @@ const ProfileImage = ({
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
 
   return (
     <div
-      className="relative rounded-full border border-red-600"
+      className="relative rounded-full "
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);
