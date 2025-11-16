@@ -3,37 +3,71 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const LeaderAssignSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <Card key={index} className="shadow-sm border rounded-xl animate-pulse">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              <Skeleton className="h-5 w-32 rounded-md dark:bg-gray-700" />
-            </CardTitle>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              <Skeleton className="h-4 w-40 rounded-md dark:bg-gray-600" />
-            </p>
-          </CardHeader>
+    <div className="lg:p-6 space-y-6 animate-pulse">
+      {/* Header */}
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </div>
 
-          <CardContent className="text-sm">
-            <div className="grid grid-cols-2 gap-2">
-              <span className="font-medium">
-                <Skeleton className="h-4 w-20 rounded-md dark:bg-gray-700" />
-              </span>
-              <span>
-                <Skeleton className="h-4 w-10 rounded-md dark:bg-gray-600" />
-              </span>
+      {/* Summary Card */}
+      <Card className="shadow-sm border dark:border-gray-700">
+        <CardHeader>
+          <CardTitle>
+            <Skeleton className="h-6 w-32" />
+          </CardTitle>
+        </CardHeader>
 
-              <span className="font-medium">
-                <Skeleton className="h-4 w-20 rounded-md dark:bg-gray-700" />
-              </span>
-              <span>
-                <Skeleton className="h-4 w-10 rounded-md dark:bg-gray-600" />
-              </span>
+        <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
+          {/* Card 1 */}
+          <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <Skeleton className="h-4 w-20 mb-2" />
+            <Skeleton className="h-7 w-10" />
+          </div>
+
+          {/* Card 2 */}
+          <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <Skeleton className="h-4 w-28 mb-2" />
+            <Skeleton className="h-7 w-10" />
+          </div>
+
+          {/* Button Skeleton */}
+          <div className="flex items-center justify-center p-2">
+            <Skeleton className="h-10 w-28 rounded-md" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Team Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Card
+            key={i}
+            className="shadow-sm border rounded-xl p-4 dark:border-gray-700"
+          >
+            {/* Header */}
+            <div className="mb-4 space-y-2">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-4 w-48" />
             </div>
-          </CardContent>
-        </Card>
-      ))}
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-10" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-10" />
+            </div>
+
+            {/* Members Box */}
+            <div className="border rounded-md p-2 bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 space-y-2">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-3/4" />
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

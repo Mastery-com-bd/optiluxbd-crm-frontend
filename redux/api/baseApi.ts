@@ -64,6 +64,10 @@ export const baseApi = createApi({
     "settings",
     "leads",
     "unassigned-agents",
+    "customers for leaders",
+    "unassigned customers",
+    "team-members",
+    "team-report",
   ],
   endpoints: () => ({}),
 });

@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  useAutoDistributionCustomerToLeaderMutation,
-  useGetAllteamsQuery,
-} from "@/redux/features/leadsmanagement/leedsApi";
+import { useGetAllteamsQuery } from "@/redux/features/leadsmanagement/leedsApi";
 import { TTeam } from "@/types/teamleader.types";
 import { useState } from "react";
-import LeaderAssignSkeleton from "../leaderAssignment/LeaderAssignSkeleton";
-import { Check } from "lucide-react";
 import CustomerdataModal from "./CustomerdataModal";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import Leadercard from "../Leadercard";
+import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
+import LeaderAssignSkeleton from "../leaderAssignment/LeaderAssignSkeleton";
 
 const AssignCustomer = () => {
   const { data, isLoading } = useGetAllteamsQuery(undefined);
   const teams = (data?.data as TTeam[]) || [];
+  const totalTeams = teams.length;
+
+  const { data: unassignedAgentData } = useGetAllUnassignedAgentsQuery({
+    refetchOnMountOrArgChange: false,
+  });
+  const unassignedCount = unassignedAgentData?.pagination?.total || 0;
   const [selectedTeam, setSelectedTeam] = useState<TTeam | null>(null);
-  const [autoDistribute] = useAutoDistributionCustomerToLeaderMutation();
 
   const handleCardClick = (team: TTeam) => {
     if (selectedTeam?.leader.id === team.leader.id) {
@@ -28,26 +28,10 @@ const AssignCustomer = () => {
     }
   };
 
-  const handleAutoDistribute = async () => {
-    const toastId = toast.loading(
-      "automatic distributing customers to leaders",
-      { duration: 3000 }
-    );
-    try {
-      const res = await autoDistribute(undefined).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { id: toastId, duration: 3000 });
-        setSelectedTeam(null);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { id: toastId, duration: 3000 });
-    }
-  };
+  if (isLoading) {
+    return <LeaderAssignSkeleton />;
+  }
+
   return (
     <div className="p-2 lg:p-6 space-y-6">
       <div className="space-y-1">
@@ -59,61 +43,67 @@ const AssignCustomer = () => {
         </p>
       </div>
 
-      <Card>
-        <CardContent className="flex items-center justify-between">
-          <div>
-            <Button onClick={handleAutoDistribute}>
-              {" "}
-              Auto Distribute Customer
-            </Button>
+      <Card className="shadow-sm border dark:border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Team Summary</CardTitle>
+        </CardHeader>
+
+        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 ">
+          {/* Total Teams */}
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Total Teams
+            </p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {totalTeams}
+            </p>
           </div>
-          <div className="flex items-center justify-end">
-            <CustomerdataModal
-              setSelectedTeam={setSelectedTeam}
-              selectedTeam={selectedTeam}
-            />
+          {/* Total Unassigned Agents */}
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Unassigned Agents
+            </p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {unassignedCount}
+            </p>
+          </div>
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Total Customers
+            </p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {0}
+            </p>
+          </div>
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Unassigned Customers
+            </p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {0}
+            </p>
           </div>
         </CardContent>
+        <CardContent className="flex items-center justify-end ">
+          <CustomerdataModal
+            setSelectedTeam={setSelectedTeam}
+            selectedTeam={selectedTeam}
+          />
+        </CardContent>
       </Card>
-      {isLoading ? (
-        <LeaderAssignSkeleton />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {teams.map((team, index) => {
-            const isSelected = selectedTeam?.leader.id === team.leader.id;
-            console.log(team);
-            return (
-              <Card
-                key={index}
-                className={`shadow-sm border rounded-xl cursor-pointer transition-all relative ${
-                  isSelected
-                    ? "border-blue-500 ring-2 ring-blue-400"
-                    : "hover:ring-1 hover:ring-blue-300"
-                }`}
-                onClick={() => handleCardClick(team)}
-              >
-                {isSelected && (
-                  <Check className="absolute top-2 right-2 w-5 h-5 text-blue-500" />
-                )}
-
-                <CardHeader>
-                  <CardTitle className="text-lg font-semibold">
-                    {team.leader.name}
-                  </CardTitle>
-                  <p className="text-sm text-gray-600">{team.leader.email}</p>
-                </CardHeader>
-
-                <CardContent className="text-sm grid grid-cols-2 gap-2">
-                  <span className="font-medium">Team Size:</span>
-                  <span>{team.teamSize}</span>
-                  <span className="font-medium">Members:</span>
-                  <span>{team.members.length}</span>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {teams.map((team) => {
+          const isSelected = selectedTeam?.leader.id === team.leader.id;
+          return (
+            <Leadercard
+              key={team?.leader.id}
+              team={team}
+              isSelected={isSelected}
+              handleCardClick={handleCardClick}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

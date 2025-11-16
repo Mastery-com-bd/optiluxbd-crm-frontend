@@ -25,6 +25,7 @@ import { TCustomer } from "@/types/customer.types";
 import { TTeam } from "@/types/teamleader.types";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
+import ModalSkeleton from "../ModalSkeleton";
 
 const CustomerdataModal = ({
   setSelectedTeam,
@@ -64,33 +65,28 @@ const CustomerdataModal = ({
         leaderId: selectedTeam?.leader.id as number,
         customerIds: selectedCustomerIds,
       };
-    if (endDate) {
-      data.endDate = endDate;
-    }
 
-    const toastId = toast.loading("assigning customers to team", {
-      duration: 3000,
-    });
+    if (endDate) data.endDate = endDate;
+    // Show loading toast
+    const toastId = toast.loading("Assigning customers to team...");
     try {
       const res = await assignAgent(data).unwrap();
+      toast.dismiss(toastId);
       if (res?.success) {
-        toast.success(res?.message, { id: toastId, duration: 3000 });
+        toast.success(res?.message, { duration: 3000 });
         setOpenModal(false);
         setSelectedTeam(null);
       }
     } catch (error: any) {
+      toast.dismiss(toastId);
       const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
         error?.data?.message ||
+        error?.data?.error ||
+        error?.error ||
         "Something went wrong!";
-      toast.error(errorInfo, { id: toastId, duration: 3000 });
+      toast.error(errorInfo, { duration: 3000 });
     }
   };
-
-  if (isLoading) {
-    return <div>loading</div>;
-  }
 
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
@@ -99,94 +95,97 @@ const CustomerdataModal = ({
           Assign Customers
         </Button>
       </DialogTrigger>
+      {isLoading ? (
+        <ModalSkeleton />
+      ) : (
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Select Customers</DialogTitle>
+          </DialogHeader>
 
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Select Customers</DialogTitle>
-        </DialogHeader>
-
-        <div className="overflow-y-auto border rounded-md pb-4 max-h-96">
-          <Table>
-            <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
-              <TableRow>
-                <TableHead className="text-center">Select</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Level</TableHead>
-                <TableHead>Phone</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {customers.length === 0 ? (
+          <div className="overflow-y-auto border rounded-md pb-4 max-h-96">
+            <Table>
+              <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
                 <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center py-4 text-gray-500"
-                  >
-                    No customers available
-                  </TableCell>
+                  <TableHead className="text-center">Select</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Level</TableHead>
+                  <TableHead>Phone</TableHead>
                 </TableRow>
-              ) : (
-                customers.map((customer) => (
-                  <TableRow
-                    key={customer.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-                  >
-                    <TableCell className="text-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedCustomerIds.includes(customer.id)}
-                        onChange={() => toggleCustomerSelection(customer.id)}
-                      />
+              </TableHeader>
+              <TableBody>
+                {customers.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-center py-4 text-gray-500"
+                    >
+                      No customers available
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {customer.name}
-                    </TableCell>
-                    <TableCell>{customer.customerLevel}</TableCell>
-                    <TableCell>{customer.phone}</TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : (
+                  customers.map((customer) => (
+                    <TableRow
+                      key={customer.id}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                    >
+                      <TableCell className="text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedCustomerIds.includes(customer.id)}
+                          onChange={() => toggleCustomerSelection(customer.id)}
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {customer.name}
+                      </TableCell>
+                      <TableCell>{customer.customerLevel}</TableCell>
+                      <TableCell>{customer.phone}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
 
-          <PaginationControls
-            pagination={pagination}
-            onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-            onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
-          />
-        </div>
+            <PaginationControls
+              pagination={pagination}
+              onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
+              onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+            />
+          </div>
 
-        {/* End Date Field */}
-        <div className="mt-4">
-          <label className="text-sm font-medium">End Date (optional)</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-          />
-        </div>
+          {/* End Date Field */}
+          <div className="mt-4">
+            <label className="text-sm font-medium">End Date (optional)</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full mt-1 p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+            />
+          </div>
 
-        <DialogFooter className="mt-4 flex justify-end gap-2">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSelectedCustomerIds([]);
-              setEndDate("");
-              setOpenModal(false);
-            }}
-          >
-            Cancel
-          </Button>
+          <DialogFooter className="mt-4 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSelectedCustomerIds([]);
+                setEndDate("");
+                setOpenModal(false);
+              }}
+            >
+              Cancel
+            </Button>
 
-          <Button
-            disabled={selectedCustomerIds.length === 0}
-            onClick={handleConfirmAssign}
-          >
-            Assign
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+            <Button
+              disabled={selectedCustomerIds.length === 0}
+              onClick={handleConfirmAssign}
+            >
+              Assign
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      )}
     </Dialog>
   );
 };

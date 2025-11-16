@@ -13,7 +13,7 @@ type AssignedBy = {
   name: string;
   email: string;
   userId: string;
-}
+};
 
 type Agent = {
   id: string;
@@ -62,8 +62,7 @@ export default function UserCards({
             <CardHeader className="space-y-1">
               <CardTitle className="text-base flex items-center gap-2">
                 {u.name}
-                
-                
+
                 {selected && <Badge variant="default">Selected</Badge>}
               </CardTitle>
               <CardDescription className="text-xs">{u.email}</CardDescription>
