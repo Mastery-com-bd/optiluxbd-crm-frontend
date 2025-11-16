@@ -162,7 +162,7 @@ const Login = () => {
 
   const handleAgent = async () => {
     const data = {
-      email: "agent@gmail.com",
+      email: "agent1@gmail.com",
       password: "Password@123",
     };
     try {
@@ -212,7 +212,7 @@ const Login = () => {
 
   const handleteamLeader = async () => {
     const data = {
-      email: "customer@gmail.com",
+      email: "teamleader1@gmail.com",
       password: "Password@123",
     };
     try {
