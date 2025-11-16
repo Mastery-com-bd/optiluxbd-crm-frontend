@@ -1,13 +1,44 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
 import { SendIcon } from "lucide-react";
-import React from "react";
 import UserCards from "../UserCards";
+import { useState } from "react";
 import AssignModal from "../AssignModal";
+import { useGetAllInProgressLeadsQuery, useGetAllLeadsQuery, useGetAllTeamMembersQuery } from "@/redux/features/leads/leadsApi";
 
 const LeadsLeader = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedWorkers, setSelectedWorkers] = useState<string[]>([]);
+  const { data, isLoading: allLeadsLoading } = useGetAllLeadsQuery(undefined);
+  const { data: inProgressLeadsData, isLoading: inProgressLeadsLoading } = useGetAllInProgressLeadsQuery(undefined);
+  const { data: teamMembersData, isLoading: teamMembersLoading } = useGetAllTeamMembersQuery(undefined);
+  const allLeads = data?.data;
+  const inProgressLeads = inProgressLeadsData?.data;
+  const teamMembers = teamMembersData?.data;
+
+
+  console.log("All Leads: ", allLeads);
+  console.log("In Progress Leads: ", inProgressLeads);
+  console.log("Team Members: ", teamMembers?.members);
+
+  const toggleWorker = (id: string) => {
+    setSelectedWorkers((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  if (allLeadsLoading) {
+    return <div>Loading...</div>;
+  }
+  if (inProgressLeadsLoading) {
+    return <div>Loading...</div>;
+  }
+  if (teamMembersLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <div className="p-6 space-y-6">
@@ -21,15 +52,34 @@ const LeadsLeader = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <div className="font-semibold text-lg">In_Progress Leads</div>
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Leads held (not yet distributed)
+                All Leads
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">99</div>
+              <div className="text-3xl font-bold">{allLeads?.customers?.length}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Unassigned Leads
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">0</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Assign Leads
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">0</div>
             </CardContent>
           </Card>
         </div>
@@ -37,7 +87,7 @@ const LeadsLeader = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-2">
-              <Button>
+              <Button disabled={selectedWorkers.length === 0} onClick={() => setModalOpen(true)}>
                 <SendIcon className="mr-2 h-4 w-4" /> Assign to workers
               </Button>
             </div>
@@ -49,31 +99,21 @@ const LeadsLeader = () => {
             <CardTitle>Workers</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <UserCards role="agents" />
+            <UserCards
+              onToggle={toggleWorker}
+              selectedIds={selectedWorkers}
+              allMembers={teamMembers?.members}
+            />
           </CardContent>
         </Card>
 
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Leads held by team leader</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <LeadsTable
-              status="assigned"
-              assignedTo={effectiveLeaderId}
-              onLoadedCount={(c) => setAvailableHeld(c)}
-            />
-          </CardContent>
-        </Card> */}
-
-        {/* <AssignModal
+        <AssignModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           scope="team_leader"
-          assignerId={effectiveLeaderId!}
           assigneeIds={selectedWorkers}
-          available={availableHeld}
-        /> */}
+          customers={allLeads?.customers}
+        />
       </div>
     </div>
   );

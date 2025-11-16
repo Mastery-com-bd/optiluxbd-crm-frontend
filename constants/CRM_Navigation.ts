@@ -177,7 +177,7 @@ export const crmRoutes: NavRoute[] = [
   },
   {
     title: "Leads Magement",
-    icon: Group,
+    icon: Users2,
     children: [
       {
         title: "All Leads",

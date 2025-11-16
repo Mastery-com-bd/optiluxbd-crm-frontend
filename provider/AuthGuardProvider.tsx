@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/customers", "/dashboard/hr&staff/roles", "/dashboard/hr&staff/roles/add", "/dashboard/hr&staff/roles/1", "/dashboard/hr&staff/roles/2"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();

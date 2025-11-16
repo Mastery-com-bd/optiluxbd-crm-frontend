@@ -17,17 +17,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+
+type Address = {
+  id: number;
+  name: string;
+  city: string;
+  created_at: string;
+  customer_id: number;
+  geo_lat: number | null;
+  geo_lng: number | null;
+  line1: string;
+  line2: string | null;
+  postcode: string;
+  updated_at: string;
+  user_id: number | null;
+  zone_id: number | null;
+};
+type Customer = {
+  id: string;
+  phone: string;
+  email: string;
+  customerId: string;
+  addresses: Address[];
+  assignedAt: string;
+  cancelCount: number;
+  lastContactAt: string;
+  status: "ASSIGNED" | "DRAFT";
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
   scope: "admin" | "manager" | "team_leader";
-  assignerId: string;
   assigneeIds: string[];
-  available: number;
+  customers: Customer[];
 };
 
-export default function AssignModal({ open, onClose, assigneeIds }: Props) {
+export default function AssignModal({
+  open,
+  onClose,
+  assigneeIds,
+  customers,
+}: Props) {
+  const [count, setCount] = useState(0);
+
+  const handleAssign = () => {
+    const customerIds = customers.map((customer) => customer.id);
+
+    const payload = {
+      agentId: assigneeIds[0],
+      customerIds,
+    };
+    console.log("Final Submit Data:", payload);
+  };
+
   return (
     <Dialog
       open={open}
@@ -37,19 +81,31 @@ export default function AssignModal({ open, onClose, assigneeIds }: Props) {
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Assign Leads</DialogTitle>
+          <DialogTitle className="text-lg font-medium">
+            Assign Leads
+          </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <Input type="number" placeholder="Count" className="w-28" />
-            <Select>
+            <Input
+              type="number"
+              placeholder="Count"
+              className="w-28"
+              value={count}
+              max={customers.length}
+              onChange={(e) => setCount(Number(e.target.value))}
+            />
+            <Select
+              onValueChange={(v) => setCount(Number(v))}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Quick select…" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="demo1">demo 1</SelectItem>
-                <SelectItem value="demo2">demo 2</SelectItem>
-                <SelectItem value="demo3">demo 3</SelectItem>
+                <SelectItem value={`${Math.floor(customers.length / 3)}`}>30%</SelectItem>
+                <SelectItem value={`${Math.floor(customers.length / 2)}`}>50%</SelectItem>
+                <SelectItem value={`${Math.floor(customers.length / 4)}`}>80%</SelectItem>
+                <SelectItem value={`${customers.length}`}>100%</SelectItem>
               </SelectContent>
             </Select>
             <div className="ml-auto flex items-center gap-2">
@@ -78,7 +134,7 @@ export default function AssignModal({ open, onClose, assigneeIds }: Props) {
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button>Confirm</Button>
+          <Button onClick={() => handleAssign()}>Confirm</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
