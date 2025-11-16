@@ -67,7 +67,6 @@ export default function DashboardSettings() {
 
   const handleSubmit = async () => {
     setLoading(true);
-
     const { facebook_url, twitter_url, instagram_url, linkedin_url, ...data } =
       currentSetting;
     if (!data || Object.keys(data).length === 0) {
@@ -104,7 +103,6 @@ export default function DashboardSettings() {
   const handleLogoUpload = async (imageFile: File) => {
     const formData = new FormData();
     formData.append("settings_logo", imageFile as File);
-
     const toastId = toast.loading("site logo uploading", {
       duration: 3000,
     });

@@ -1,4 +1,4 @@
-import UserProfile from "@/components/pages/dashboard/admin/manageUsers/UserProfile";
+import UserProfile from "@/components/pages/dashboard/admin/manageUsers/singleUSer/UserProfile";
 
 const UserProfilePage = async ({
   params,

@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import agentProfileSlice from "./features/agent/agentProfileSlice";
 import authReducer from "./features/auth/authSlice";
 import settingReducer from "./features/settings/settingsSlice";
+import comboReducer from "./features/combo/comboSlice";
 import {
   persistReducer,
   persistStore,
@@ -27,6 +28,7 @@ export const store = configureStore({
     auth: persistAuthReducer,
     agentProfile: agentProfileSlice,
     settings: settingReducer,
+    combo: comboReducer,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

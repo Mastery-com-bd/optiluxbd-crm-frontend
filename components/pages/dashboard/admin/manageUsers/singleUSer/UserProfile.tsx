@@ -1,65 +1,71 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { convertDate } from "@/utills/dateConverter";
-import ProfileImage from "./ProfileImage";
-import { Calendar, Clock, Mail, Phone } from "lucide-react";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+
 import {
-  currentuserInfo,
+  useDeleteUserMutation,
+  useGetASingleUserQuery,
+  useUpdateUserInfoMutation,
+} from "@/redux/features/user/userApi";
+import { motion } from "framer-motion";
+import {
+  Calendar,
+  ChevronDown,
+  Clock,
+  Mail,
+  Phone,
+  UserCheck,
+} from "lucide-react";
+import { convertDate } from "@/utills/dateConverter";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useAppDispatch } from "@/redux/hooks";
+import {
   resetProfile,
   setname,
   setPhone,
+  setRole,
+  setStatus,
 } from "@/redux/features/agent/agentProfileSlice";
-import {
-  useGetProfileQuery,
-  useUpdateUserInfoMutation,
-} from "@/redux/features/user/userApi";
-import ProfileLoader from "./ProfileLoader";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
+import DeleteUSerModal from "./DeleteUSerModal";
+import ProfileLoader from "../../../profile/ProfileLoader";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { TStatus } from "@/types/user/user.types";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuRadioGroup,
-//   DropdownMenuRadioItem,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { Button } from "@/components/ui/button";
-// import ChangePassword from "./ChangePassword";
+import { IProfileInfo } from "../../../profile/Profile";
+import ProfileImage from "../../../profile/ProfileImage";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
-export interface IProfileInfo {
-  id: number;
-  avatar_secure_url: string;
-  name: string;
-  email: string;
-  phone: string;
-  created_at: string;
-  role: string;
-  active: boolean;
-  address: string;
-  status: TStatus;
-}
-
-const Profile = () => {
-  const { data, isLoading } = useGetProfileQuery(undefined);
+const UserProfile = ({ id }: { id: string }) => {
+  const { data, isLoading } = useGetASingleUserQuery(id, {
+    refetchOnMountOrArgChange: false,
+  });
   const userInfo = data?.data;
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const currentUser = useAppSelector(currentuserInfo);
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
-  const role = userInfo?.roles.map((r: any) => r?.role?.name)[0];
+  const [deleteUser] = useDeleteUserMutation();
+  const { role, permissions } = getPermissions(userInfo as TAuthUSer);
+  const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
 
   useEffect(() => {
     if (userInfo) {
       Promise.resolve().then(() => {
-        setFormData(userInfo as IProfileInfo);
+        setFormData(userInfo);
       });
     }
   }, [userInfo]);
+
+  const [first, ...rest] = (formData?.name || "").trim().split(" ");
+  const last = rest.join(" ");
 
   const handleCancel = () => {
     setFormData(userInfo);
@@ -94,6 +100,27 @@ const Profile = () => {
     }
   };
 
+  const handleConfirm = async (
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    id: number
+  ) => {
+    try {
+      const res = await deleteUser(id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
+  };
+
   if (isLoading) {
     return <ProfileLoader />;
   }
@@ -101,10 +128,6 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10">
       <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-gray-100 mb-8 border-b pb-4 border-gray-200 dark:border-gray-700">
-          My Profile
-        </h2>
-
         <div className="space-y-6">
           {/* Profile Header Section */}
           <section className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 border border-gray-100 dark:border-gray-600 space-y-2">
@@ -166,6 +189,28 @@ const Profile = () => {
                   </span>
                 </div>
 
+                {/* Account Activity */}
+                <div className="flex items-center gap-2 text-sm">
+                  <UserCheck
+                    size={16}
+                    className={
+                      userInfo?.is_active ? "text-green-500" : "text-gray-400"
+                    }
+                  />
+                  <span className="text-gray-700 dark:text-gray-300">
+                    Account Status:{" "}
+                    <span
+                      className={`font-medium ${
+                        userInfo?.is_active
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      {userInfo?.is_active ? "Active" : "Inactive"}
+                    </span>
+                  </span>
+                </div>
+
                 <div className="flex items-center gap-2">
                   <Calendar size={15} className="text-yellow-500" />
                   <span className="text-gray-600 dark:text-gray-400">
@@ -198,15 +243,16 @@ const Profile = () => {
             </div>
           </section>
 
+          {/* Profile Details Section */}
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
-                <button
+                <Button
                   onClick={() => setIsEditing(true)}
                   className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
                 >
                   Edit
-                </button>
+                </Button>
 
                 {/* Static info */}
                 <div>
@@ -242,7 +288,12 @@ const Profile = () => {
                     Role
                   </p>
                   <p className="font-medium capitalize">
-                    {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+                    {role
+                      .map(
+                        (r) =>
+                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                      )
+                      .join(", ")}
                   </p>
                 </div>
                 <div>
@@ -275,14 +326,15 @@ const Profile = () => {
                   </label>
                   <input
                     name="firstName"
-                    value={formData?.name.split(" ")[0]}
+                    value={first}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${value} ${
-                        formData?.name.split(" ")[1] &&
-                        formData?.name.split(" ")[1]
-                      }`;
-                      dispatch(setname(name));
+                      const newFirst = e.target.value;
+                      const newName = `${newFirst} ${last}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="First Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -295,11 +347,15 @@ const Profile = () => {
                   </label>
                   <input
                     name="lastName"
-                    value={formData?.name.split(" ")[1] ?? ""}
+                    value={last}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      const name = `${formData?.name.split(" ")[0]} ${value}`;
-                      dispatch(setname(name));
+                      const newLast = e.target.value;
+                      const newName = `${first} ${newLast}`.trim();
+                      setFormData((prev) => ({
+                        ...prev!,
+                        name: newName,
+                      }));
+                      dispatch(setname(newName));
                     }}
                     placeholder="Last Name"
                     className="p-2 border rounded-lg focus:ring-2 focus:ring-yellow-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 outline-none"
@@ -315,6 +371,10 @@ const Profile = () => {
                     value={formData?.phone ?? ""}
                     onChange={(e) => {
                       const value = e.target.value;
+                      setFormData((prev) => ({
+                        ...prev!,
+                        phone: value,
+                      }));
                       dispatch(setPhone(value));
                     }}
                     placeholder="Phone"
@@ -322,30 +382,135 @@ const Profile = () => {
                   />
                 </div>
 
+                {/* <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Role
+                  </label>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {getPermissions(formData as TAuthUSer).role ||
+                          "select role"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={getPermissions(formData as TAuthUSer).role[1]}
+                        onValueChange={(value) => setRole(value)}
+                      >
+                        {roleOptions.map((item) => (
+                          <DropdownMenuRadioItem key={item} value={item}>
+                            {item}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div> */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Status
+                  </label>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {formData?.status || "select status"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={formData?.status}
+                        onValueChange={(value) => setStatus(value as TStatus)}
+                      >
+                        {["ACTIVE", "INACTIVE", "SUSPENDED", "DISABLED"].map(
+                          (item) => (
+                            <DropdownMenuRadioItem key={item} value={item}>
+                              {item}
+                            </DropdownMenuRadioItem>
+                          )
+                        )}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-700 dark:text-gray-200">
+                    Activity
+                  </label>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        {formData?.is_active ? "Yes" : "No"}
+                        <ChevronDown className="w-4 h-4 opacity-70" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-full">
+                      <DropdownMenuRadioGroup
+                        value={formData?.is_active ? "Yes" : "No"}
+                        onValueChange={(value) => setStatus(value as TStatus)}
+                      >
+                        {["Yes", "No"].map((item) => (
+                          <DropdownMenuRadioItem key={item} value={item}>
+                            {item}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
                 <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
-                  <button
+                  <Button
                     disabled={loading}
                     onClick={handleCancel}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition cursor-pointer"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     disabled={loading}
                     onClick={handleSave}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-400 text-black font-medium hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
                   >
                     {loading ? "Saving" : "Save Change"}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             )}
           </section>
+          <div>
+            <DeleteUSerModal
+              handleConfirm={handleConfirm}
+              id={userInfo?.id}
+              className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+              buttonClass="text-red-600 dark:text-red-300"
+              level=" Delete user?"
+              content="This action cannot be undone. It will permanently remove the user’s
+            account and all associated data from the system."
+              buttonName="Delete"
+            />
+          </div>
         </div>
       </div>
-      {/* <ProfileStats/> */}
     </div>
   );
 };
 
-export default Profile;
+export default UserProfile;

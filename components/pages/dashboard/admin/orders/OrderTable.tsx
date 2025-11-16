@@ -1,172 +1,237 @@
-"use client"
-
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+"use client";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import PaginationControls from "@/components/ui/paginationComponent"
-import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi"
-import { debounce } from "@/utills/debounce"
+} from "@/components/ui/select";
+import PaginationControls from "@/components/ui/paginationComponent";
+import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
+import { Eye } from "lucide-react";
+import Loading from "@/components/pages/shared/Loading";
+import Image from "next/image";
+import { OrderData } from "@/types/orders";
+import Link from "next/link";
+
+
 
 export function OrderTable() {
     const [filters, setFilters] = useState({
-        sortBy: "created_at",
+        sortBy: "orderDate",
         limit: 10,
         page: 1,
+        search: "",
     });
-    const [page, setPage] = useState(1);
-    const { data } = useGetAllOrdersQuery(filters);
-    const [search, setSearch] = useState("");
-    const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-    console.log(data);
 
+    const { data, isLoading } = useGetAllOrdersQuery(filters);
+    const orders = data?.data?.orders || [];
+    const pagination = data?.data?.pagination || { page: 1, totalPages: 1, total: 0 };
 
-    const handleSearch = (val: string) => {
-        setFilters({ ...filters });
-    }
-    const debouncedLog = debounce(handleSearch, 100, { leading: false });
+    // Helpers
+    const formatCurrency = (n: number) =>
+        new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n);
 
+    const formatDate = (d: string | Date) =>
+        new Date(d).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
 
     return (
         <div className="p-4 bg-white dark:bg-muted rounded-xl border shadow-sm mt-5 transition-all">
             {/* Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+
+
+            {/* Filter Options */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+                {/* Agent Filter */}
                 <Input
-                    placeholder="Search order..."
-                    className="max-w-sm"
-                    value={search}
-                    onChange={(e) => { setSearch(e.target.value); debouncedLog(e.target.value) }}
+                    type="number"
+                    placeholder="Agent ID"
+                    onChange={(e) =>
+                        setFilters((f) => ({
+                            ...f,
+                            agentId: e.target.value ? Number(e.target.value) : undefined,
+                            page: 1,
+                        }))
+                    }
                 />
-                <div className="flex flex-wrap items-center gap-2">
-                    {/* Payment Status Filter */}
-                    {/* <Select onValueChange={setPaymentFilter} defaultValue="">
-                        <SelectTrigger className="w-40">
-                            <SelectValue placeholder="Payment Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="All">All</SelectItem>
-                            <SelectItem value="Paid">Paid</SelectItem>
-                            <SelectItem value="Pending">Pending</SelectItem>
-                            <SelectItem value="Failed">Failed</SelectItem>
-                        </SelectContent>
-                    </Select> */}
 
-                    {/* Items per page */}
-                    <Select onValueChange={(val) => { console.log(val) }} defaultValue="8">
-                        <SelectTrigger className="w-20">
-                            <SelectValue placeholder="8" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="5">5</SelectItem>
-                            <SelectItem value="8">8</SelectItem>
-                            <SelectItem value="10">10</SelectItem>
-                        </SelectContent>
-                    </Select>
+                {/* Customer Filter */}
+                <Input
+                    type="number"
+                    placeholder="Customer ID"
+                    onChange={(e) =>
+                        setFilters((f) => ({
+                            ...f,
+                            customerId: e.target.value ? Number(e.target.value) : undefined,
+                            page: 1,
+                        }))
+                    }
+                />
 
-                    <Button className="bg-pink-500 hover:bg-pink-600 text-white">+ Add Order</Button>
-                </div>
+                {/* Product Filter */}
+                <Input
+                    type="number"
+                    placeholder="Product ID"
+                    onChange={(e) =>
+                        setFilters((f) => ({
+                            ...f,
+                            productId: e.target.value ? Number(e.target.value) : undefined,
+                            page: 1,
+                        }))
+                    }
+                />
+
+                {/* Package Filter */}
+                <Input
+                    type="number"
+                    placeholder="Package ID"
+                    onChange={(e) =>
+                        setFilters((f) => ({
+                            ...f,
+                            packageId: e.target.value ? Number(e.target.value) : undefined,
+                            page: 1,
+                        }))
+                    }
+                />
+
+                {/* Date From */}
+                <Input
+                    type="date"
+                    onChange={(e) => {
+                        setFilters((f) => ({
+                            ...f,
+                            from: e.target.value || undefined,
+                            page: 1,
+                        }))
+                    }}
+                />
+
+                {/* Date To */}
+                <Input
+                    type="date"
+                    onChange={(e) =>
+                        setFilters((f) => ({
+                            ...f,
+                            to: e.target.value || undefined,
+                            page: 1,
+                        }))
+                    }
+                />
+
+                {/* Sort By */}
+                <Select
+                    onValueChange={(val) =>
+                        setFilters((f) => ({ ...f, sortBy: val }))
+                    }
+                    defaultValue="orderDate"
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder="Sort By" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="orderDate">Order Date</SelectItem>
+                        <SelectItem value="commission">Commission</SelectItem>
+                        <SelectItem value="totalAmount">Total Amount</SelectItem>
+                    </SelectContent>
+                </Select>
+
+                {/* Sort Order */}
+                <Select
+                    onValueChange={(val) =>
+                        setFilters((f) => ({ ...f, sort: val as "asc" | "desc" }))
+                    }
+                    defaultValue="desc"
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder="Sort Order" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="asc">ASC</SelectItem>
+                        <SelectItem value="desc">DESC</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             {/* Table */}
             <div className="w-full overflow-x-auto">
-                <table className="w-full min-w-[900px] text-sm">
-                    <thead>
-                        <tr className="text-left border-b border-muted">
-                            <th className="px-4 py-2">ORDER ID</th>
-                            <th>DATE</th>
-                            <th>CUSTOMER</th>
-                            <th>AMOUNT</th>
-                            <th>PAYMENT STATUS</th>
-                            <th>ORDER STATUS</th>
-                            <th>PAYMENT METHOD</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    {/* <tbody>
-                        {paginatedOrders.length === 0 ? (
-                            <tr>
-                                <td colSpan={8} className="text-center py-6 text-muted-foreground">
-                                    No orders found.
-                                </td>
+                {isLoading ? (
+                    <div className="mx-auto border w-screen"><Loading /></div>
+                ) : (
+                    <table className="w-full">
+                        <thead>
+                            <tr className="border-b border-border bg-muted">
+                                <th className="px-4 py-3 text-left">
+                                    <input type="checkbox" className="rounded border-border" />
+                                </th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Order ID</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Date</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Customer</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Quantity</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Total Amount</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Commission</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Commission Rate</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Actions</th>
                             </tr>
-                        ) : (
-                            paginatedOrders.map((order) => (
-                                <tr key={order.id} className="border-b hover:bg-muted/40">
-                                    <td className="px-4 py-3">{order.id}</td>
-                                    <td>{order.date}</td>
-                                    <td className="flex items-center gap-2 py-2">
-                                        <Image
-                                            src={order.customer.avatar}
-                                            alt={order.customer.name}
-                                            width={32}
-                                            height={32}
-                                            className="rounded-full"
-                                        />
-                                        <div>
-                                            <div>{order.customer.name}</div>
-                                            <div className="text-xs text-gray-500 hidden sm:block">
-                                                {order.customer.email}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{order.amount}</td>
-                                    <td>
-                                        <span
-                                            className={`text-sm font-medium ${order.paymentStatus === "Paid"
-                                                ? "text-green-600"
-                                                : order.paymentStatus === "Pending"
-                                                    ? "text-yellow-500"
-                                                    : "text-red-500"
-                                                }`}
-                                        >
-                                            {order.paymentStatus}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span
-                                            className={`text-xs px-2 py-1 rounded-full font-medium ${order.orderStatus === "Delivered"
-                                                ? "bg-green-100 text-green-600"
-                                                : order.orderStatus === "Shipped"
-                                                    ? "bg-blue-100 text-blue-600"
-                                                    : order.orderStatus === "Cancelled"
-                                                        ? "bg-red-100 text-red-600"
-                                                        : "bg-yellow-100 text-yellow-600"
-                                                }`}
-                                        >
-                                            {order.orderStatus}
-                                        </span>
-                                    </td>
-                                    <td>{order.paymentMethod}</td>
-                                    <td className="space-x-2">
-                                        <Button variant="ghost" size="icon">
-                                            <Eye className="w-4 h-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon">
-                                            <Edit className="w-4 h-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon" className="text-red-500">
-                                            <Trash className="w-4 h-4" />
-                                        </Button>
+                        </thead>
+                        <tbody>
+                            {orders?.length === 0 ? (
+                                <tr>
+                                    <td colSpan={9} className="text-center py-6 text-muted-foreground">
+                                        No orders found.
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody> */}
-                </table>
+                            ) : (
+                                orders?.map((order: OrderData) => (
+                                    <tr key={order.id} className="border-b border-muted hover:bg-muted/40 transition-colors">
+                                        <td className="px-4 py-3">
+                                            <input type="checkbox" className="rounded border-border" />
+                                        </td>
+                                        <td className="px-4 py-3 font-medium">{order.id}</td>
+                                        <td className="px-4 py-3">{formatDate(order.orderDate)}</td>
+                                        <td className="px-4 py-3 flex items-center gap-2">
+                                            {/* {order.customer?.avatar ? (
+                                                <Image src={"https://i.ibb.co.com/pKnCKD0/user6.png"} alt={order.customer.name ?? `Customer ${order.customerId}`} width={28} height={28} className="rounded-full" />
+                                            ) : (
+                                                <span className="w-7" />
+                                            )} */}
+                                            <span>{order.customer?.name ?? `Customer ${order.customerId}`}</span>
+                                        </td>
+                                        <td className="px-4 py-3 text-right">{order.quantity}</td>
+                                        <td className="px-4 py-3 text-right">{formatCurrency(order.totalAmount)}</td>
+                                        <td className="px-4 py-3 text-right">{order.commission}</td>
+                                        <td className="px-4 py-3 text-right">{order.commissionRate}%</td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex items-center justify-center gap-1">
+                                                <Link
+                                                    href={`/dashboard/admin/orders/${order.id}`}
+                                                >
+                                                    <Button variant="ghost" className="cursor-pointer" size="icon" title="View">
+                                                        <Eye className="w-4 h-4" />
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                )}
             </div>
 
-            {/* Pagination */}
+            {/* Pagination Controls */}
             <PaginationControls
                 pagination={pagination}
-                onPrev={() => setPage((p) => Math.max(p - 1, 1))}
-                onNext={() => setPage((p) => p + 1)}
+                onPrev={() => setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }))}
+                onNext={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
             />
-        </div>
-    )
+        </div >
+    );
 }

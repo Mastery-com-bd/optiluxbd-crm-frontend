@@ -16,26 +16,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Slash, XCircle, Trash2 } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import CreateUser from "./CreateUser";
-import {
-  useActivateUserMutation,
-  useDeleteUserMutation,
-  useGetAllUsersQuery,
-  useSuspendUserMutation,
-} from "@/redux/features/user/userApi";
+import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
-import DeleteUSerModal from "./DeleteUSerModal";
-import { toast } from "sonner";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { TStatus, TUser } from "@/types/user/user.types";
 import UserStatusDropdown from "./StatusDropdown";
-import Link from "next/link";
 import { debounce } from "@/utills/debounce";
-import RoleDropdown from "./RoleDropdown";
+import UserActionDropdown from "./UserActionDropdown";
+import { getPermissions } from "@/utills/getPermissionAndRole";
+import { TAuthUSer } from "@/redux/features/auth/authSlice";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -51,75 +45,9 @@ const ManageUsers = () => {
 
   const users = data?.data as TUser[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-  const [deleteUser] = useDeleteUserMutation();
-  const [activateUser] = useActivateUserMutation();
-  const [suspendUser] = useSuspendUserMutation();
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [is_active, setIs_active] = useState("All");
   const [selectedRole, setSelectedRole] = useState("All");
-
-  const handleConfirm = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await deleteUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
-
-  const handleInactive = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await activateUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
-
-  const handleSuspend = async (
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    id: number
-  ) => {
-    try {
-      const res = await suspendUser(id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setLoading(false);
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setLoading(false);
-    }
-  };
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
@@ -385,7 +313,7 @@ const ManageUsers = () => {
 
           <TableBody>
             {users?.map((user, index) => {
-              const role = user?.roles.map((r) => r?.role?.name)[0];
+              const { role } = getPermissions(user as TAuthUSer);
               return (
                 <TableRow
                   key={index}
@@ -404,21 +332,22 @@ const ManageUsers = () => {
                     />
                   </TableCell>
                   <TableCell className="font-medium text-gray-900 dark:text-gray-200">
-                    <Link
-                      href={`/dashboard/admin/manage-users/${user?.id}`}
-                      className="text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                      {user?.name}
-                    </Link>
+                    {user?.name}
                   </TableCell>
-                  <TableCell className="text-gray-800 dark:text-gray-200">
-                    <RoleDropdown id={user?.id} role={role} />
-                  </TableCell>
+
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.email}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.phone}
+                  </TableCell>
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {role
+                      .map(
+                        (r) =>
+                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                      )
+                      .join(", ") || "no role"}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.is_active ? "Yes" : "No"}
@@ -446,42 +375,10 @@ const ManageUsers = () => {
                       : "not yet"}
                   </TableCell>
                   <TableCell className="flex gap-2 justify-center">
-                    {/* Suspend */}
-                    <DeleteUSerModal
-                      handleConfirm={handleSuspend}
+                    <UserActionDropdown
                       id={user?.id}
-                      icon={Slash}
-                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-                      buttonClass="text-red-600 dark:text-red-300"
-                      level=" Suspend user?"
-                      content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
-                      tooltip="Suspend"
-                      disabeButton={user?.status === "SUSPENDED"}
-                    />
-
-                    {/* inactive */}
-                    <DeleteUSerModal
-                      handleConfirm={handleInactive}
-                      id={user?.id}
-                      icon={XCircle}
-                      className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-                      buttonClass="text-gray-600 dark:text-gray-300"
-                      level=" Inactive user?"
-                      content="This action cannot be undone. It will inactive the user activity from the system from this time’s"
-                      tooltip="Inactive"
-                      disabeButton={user?.status === "SUSPENDED"}
-                    />
-
-                    {/* Delete */}
-                    <DeleteUSerModal
-                      handleConfirm={handleConfirm}
-                      id={user?.id}
-                      icon={Trash2}
-                      className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-                      buttonClass="text-red-600 dark:text-red-300"
-                      level=" Delete user?"
-                      content="This action cannot be undone. It will permanently remove the user’s
-            account and all associated data from the system."
+                      status={user?.status}
+                      activity={user?.is_active}
                     />
                   </TableCell>
                 </TableRow>

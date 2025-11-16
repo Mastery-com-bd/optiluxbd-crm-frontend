@@ -5,9 +5,9 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { Camera } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import UploadImage from "./UploadImage";
 import { useUserImageUploadMutation } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
+import UploadImage from "@/components/ui/UploadImage";
 
 const ProfileImage = ({
   profileImage,

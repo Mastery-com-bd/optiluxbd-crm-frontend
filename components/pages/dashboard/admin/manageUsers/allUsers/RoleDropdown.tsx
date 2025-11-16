@@ -47,7 +47,7 @@ const RoleDropdown = ({ role, id }: { role: string; id: number }) => {
           variant="ghost"
           className="flex items-center gap-2 rounded-full text-xs"
         >
-          {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+          {role?.charAt(0).toUpperCase() + role?.slice(1).toLowerCase()}
           <ChevronDown size={12} />
         </Button>
       </DropdownMenuTrigger>

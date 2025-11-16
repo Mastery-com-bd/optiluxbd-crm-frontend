@@ -94,7 +94,7 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          if (role === "ADMIN") {
+          if (role.includes("ADMIN")) {
             router.push("/dashboard");
           } else {
             router.push("/dashboard/profile");
@@ -113,7 +113,7 @@ const Login = () => {
 
   const handleAdmin = async () => {
     const data = {
-      email: "thohanur143@gmail.com",
+      email: "admin@gmail.com",
       password: "Password@123",
     };
     try {
@@ -210,7 +210,7 @@ const Login = () => {
     }
   };
 
-  const handleCustomer = async () => {
+  const handleteamLeader = async () => {
     const data = {
       email: "customer@gmail.com",
       password: "Password@123",
@@ -292,12 +292,12 @@ const Login = () => {
           {isSubmitting ? "Logging in..." : "Agent"}
         </Button>
         <Button
-          onClick={handleCustomer}
+          onClick={handleteamLeader}
           type="submit"
           disabled={isSubmitting}
           className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
         >
-          {isSubmitting ? "Logging in..." : "Customer"}
+          {isSubmitting ? "Logging in..." : "Team Leader"}
         </Button>
       </div>
 

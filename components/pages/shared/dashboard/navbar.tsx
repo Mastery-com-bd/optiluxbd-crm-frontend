@@ -29,6 +29,9 @@ const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const router = useRouter();
+
+  const { role } = getPermissions(user as TAuthUSer);
+
   const handleLogOut = async () => {
     try {
       const res = await logout(undefined).unwrap();
@@ -167,7 +170,13 @@ const Navbar: React.FC = () => {
                         {user?.name}
                       </span>
                       <span className="text-xs text-muted-foreground/70">
-                        {getPermissions(user as TAuthUSer).role}
+                        {role
+                          .map(
+                            (r) =>
+                              r.charAt(0).toUpperCase() +
+                              r.slice(1).toLowerCase()
+                          )
+                          .join(", ")}
                       </span>
                     </div>
                   </button>
