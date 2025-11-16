@@ -298,6 +298,7 @@ export default function RoleForm({ roleId, mode = "create" }: RoleFormProps) {
                     onCheckedChange={() =>
                       handlePermissionToggle(permission.key)
                     }
+                    className="bg-gray-600"
                   />
                   <div>
                     <Label

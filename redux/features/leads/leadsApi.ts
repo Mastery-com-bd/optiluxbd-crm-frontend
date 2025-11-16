@@ -1,20 +1,27 @@
 import { baseApi } from "@/redux/api/baseApi";
 
-const rolesApi = baseApi.injectEndpoints({
+const leadsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAllRoles: builder.query({
+        
+        getAllLeads: builder.query({
             query: () => ({
-                url: `/roles`,
+                url: `/allocations/leader/customers`,
                 method: "GET",
             }),
         }),
-        getAllPermissions: builder.query({
+        getAllTeamMembers: builder.query({
             query: () => ({
-                url: `/roles/permissions`,
+                url: `/allocations/leader/team`,
                 method: "GET",
             }),
         }),
-        getRoleById: builder.query({
+       getAllInProgressLeads: builder.query({
+            query: () => ({
+                url: `/allocations/leader/inprogress`,
+                method: "GET",
+            }),
+        }),
+        /*  getRoleById: builder.query({
             query: (id) => ({
                 url: `/roles/${id}`,
                 method: "GET",
@@ -33,8 +40,8 @@ const rolesApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data.permissions,
             }),
-        }),
+        }), */
     }),
 });
 
-export const { useGetAllRolesQuery, useGetAllPermissionsQuery, useGetRoleByIdQuery, useAddRoleMutation, useUpdateRoleInfoMutation } = rolesApi;
+export const { useGetAllLeadsQuery, useGetAllTeamMembersQuery, useGetAllInProgressLeadsQuery } = leadsApi;
