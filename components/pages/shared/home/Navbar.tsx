@@ -44,8 +44,6 @@ export default function Navbar() {
 
   const dashboardRoute = role.includes("ADMIN")
     ? "/dashboard"
-    : role.includes("AGENT")
-    ? "/dashboard/agent"
     : "/dashboard/profile";
 
   const handleLogOut = async () => {
