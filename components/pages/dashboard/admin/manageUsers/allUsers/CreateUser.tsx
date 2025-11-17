@@ -71,7 +71,6 @@ const CreateUser = () => {
     data.phone = `+88${data.phone}`;
     try {
       const res = await createUser(data).unwrap();
-      console.log(res);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();

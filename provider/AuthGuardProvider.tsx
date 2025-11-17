@@ -1,24 +1,23 @@
 "use client";
 import Loading from "@/components/pages/shared/Loading";
 import { routePermissions } from "@/config/routePermission";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/customers", "/dashboard/hr&staff/roles", "/dashboard/hr&staff/roles/add", "/dashboard/hr&staff/roles/1", "/dashboard/hr&staff/roles/2"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [logout] = useLogoutMutation();
   const user = useAppSelector(currentUser);
-  const roles = user?.roles;
-  const dispatch = useAppDispatch();
+  const { role, permissions } = getPermissions(user as TAuthUSer);
+
   const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
     Promise.resolve().then(() => {
       setHydrated(true);
@@ -30,7 +29,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // ---- Guest user ----
     if (!user) {
-      // Only redirect if they're on a private route
       if (!publicRoutes.includes(pathname)) {
         router.replace("/login");
       }
@@ -38,69 +36,32 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // ---- Logged-in user ----
-    const { permissions, role } = getPermissions(user as TAuthUSer);
-    if (!permissions.length) {
-      router.replace("/login");
-      return;
-    }
 
-    // Prevent logged-in users from visiting login/register
-    if (publicRoutes.includes(pathname)) {
-      router.replace("/dashboard");
-      return;
-    }
-    // ---- Role-based default redirection ----
+    // Always allowed pages for any logged-in user
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
     }
-
-    // Admin can access these directly
-    // Admin logic
-    if (role.includes("ADMIN")) {
-      const adminAllowedRoutes = [
-        "/dashboard",
-        "/dashboard/leads/leaders",
-        "/dashboard/settings",
-        "/dashboard/profile",
-        "/dashboard/admin/landing",
-      ];
-      if (adminAllowedRoutes.includes(pathname)) return;
-
-      const requiredPerms = Object.entries(routePermissions).find(([route]) =>
-        pathname.startsWith(route)
-      )?.[1];
-
-      if (!requiredPerms) {
-        router.replace("/dashboard/admin/landing");
-        return;
-      }
-      if (
-        requiredPerms &&
-        !requiredPerms.some((p) => permissions.includes(p))
-      ) {
-        router.replace("/dashboard/admin/landing");
-        return;
-      }
-
+    if (pathname === "/dashboard" && role.includes("ADMIN")) {
       return;
     }
-    // Non-admin logic
-    const matchedRoute = Object.entries(routePermissions).find(([route]) =>
+
+    // Find required permission for current route
+    const requiredPerms = Object.entries(routePermissions).find(([route]) =>
       pathname.startsWith(route)
     )?.[1];
 
-    if (!matchedRoute) {
-      router.replace("/");
-      return;
-    }
-    if (matchedRoute && !matchedRoute.some((p) => permissions.includes(p))) {
-      router.replace("/");
-      return;
-    } else if (!alwaysAllowedRoutes.includes(pathname)) {
+    // If route not in permission map → redirect to profile
+    if (!requiredPerms) {
       router.replace("/dashboard/profile");
       return;
     }
-  }, [dispatch, hydrated, logout, pathname, roles, router, user]);
+
+    // Check if user has at least one required permission
+    const hasPermission = requiredPerms.some((p) => permissions.includes(p));
+    if (!hasPermission) {
+      router.replace("/dashboard/profile");
+    }
+  }, [hydrated, pathname, user, router, role, permissions]);
 
   if (!hydrated || !user) {
     return <Loading />;

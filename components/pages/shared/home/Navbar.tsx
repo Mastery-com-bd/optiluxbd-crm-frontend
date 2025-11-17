@@ -43,10 +43,8 @@ export default function Navbar() {
   const { role } = getPermissions(user as TAuthUSer);
 
   const dashboardRoute = role.includes("ADMIN")
-    ? "/dashboard/admin/landing"
-    : role.includes("AGENT")
-    ? "/dashboard/agent"
-    : "/dashboard";
+    ? "/dashboard"
+    : "/dashboard/profile";
 
   const handleLogOut = async () => {
     try {

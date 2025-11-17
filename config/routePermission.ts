@@ -56,9 +56,6 @@ export const routePermissions: Record<string, string[]> = {
     "ADDRESSES DELETE",
   ],
 
-  // 🧑‍💼 Role Management
-  "/dashboard/admin/roles": ["ROLES MANAGE"],
-
   // 💰 ORDERS Management
   "/dashboard/agent/orders/my-orders": [
     "ORDERS CREATE",
@@ -76,4 +73,29 @@ export const routePermissions: Record<string, string[]> = {
   ],
   // 💸 role Management
   "/dashboard/hr&staff/roles": ["ROLES MANAGE"],
+  "/dashboard/hr&staff/staff": ["USERS VIEW"],
+  "/dashboard/hr&staff/staff/add": ["USERS CREATE"],
+
+  // leads management
+  "/dashboard/leads/admin/assign-agent": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
+  "/dashboard/leads/admin/assign-customer": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
+  "/dashboard/leads/leaders": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS VIEW OWN",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "CONTACTS CREATE",
+  ],
 };

@@ -2,13 +2,6 @@ import { baseApi } from "@/redux/api/baseApi";
 
 const rolesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        /* getProfile: builder.query({
-          query: () => ({
-            url: `/auth/profile`,
-            method: "GET",
-          }),
-          providesTags: ["user"],
-        }), */
         getAllRoles: builder.query({
             query: () => ({
                 url: `/roles`,

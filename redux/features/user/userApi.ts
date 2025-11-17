@@ -18,6 +18,13 @@ const authApi = baseApi.injectEndpoints({
       providesTags: ["user"],
       keepUnusedDataFor: 3000,
     }),
+    getAllUnassignedAgents: builder.query({
+      query: (params = {}) => ({
+        url: `/users/unassigned-agents?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["unassigned-agents"],
+    }),
     getASingleUser: builder.query({
       query: (id) => ({
         url: `/users/${id}`,
@@ -95,6 +102,7 @@ const authApi = baseApi.injectEndpoints({
 export const {
   useGetProfileQuery,
   useGetAllUsersQuery,
+  useGetAllUnassignedAgentsQuery,
   useGetASingleUserQuery,
   useUserImageUploadMutation,
   useUpdateUserInfoMutation,
