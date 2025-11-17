@@ -35,7 +35,6 @@ const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
         toast.success(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
-      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.errors[0]?.message ||

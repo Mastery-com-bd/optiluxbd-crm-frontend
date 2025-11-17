@@ -66,6 +66,7 @@ export const baseApi = createApi({
     "unassigned-agents",
     "customers for leaders",
     "unassigned customers",
+    "customers",
     "team-members",
     "team-report",
   ],

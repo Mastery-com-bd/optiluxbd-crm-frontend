@@ -1,5 +1,6 @@
 export interface TCustomer {
   id: number;
+  customerId: string;
   name: string;
   phone: string;
   email: string;

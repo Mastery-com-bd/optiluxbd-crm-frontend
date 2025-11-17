@@ -65,7 +65,6 @@ const CreateComboModal = ({
     const finalData = { ...data, items: selectedProducts };
     try {
       const res = await createCombo(finalData).unwrap();
-      console.log(res);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();
