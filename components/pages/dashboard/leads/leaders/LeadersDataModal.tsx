@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,59 +19,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useAutoDistributeCustomerToAgentMutation,
+  useCustomerDistributionToAgentMutation,
+} from "@/redux/features/leads/leadsApi";
 import { useState } from "react";
+import { toast } from "sonner";
 
-type Address = {
-  id: number;
-  name: string;
-  city: string;
-  created_at: string;
-  customer_id: number;
-  geo_lat: number | null;
-  geo_lng: number | null;
-  line1: string;
-  line2: string | null;
-  postcode: string;
-  updated_at: string;
-  user_id: number | null;
-  zone_id: number | null;
-};
 type Customer = {
   id: string;
-  phone: string;
   email: string;
   customerId: string;
-  addresses: Address[];
-  assignedAt: string;
-  cancelCount: number;
-  lastContactAt: string;
   status: "ASSIGNED" | "DRAFT";
 };
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  scope: "admin" | "manager" | "team_leader";
   assigneeIds: number;
   customers: Customer[];
 };
 
-export default function AssignModal({
-  open,
-  onClose,
-  assigneeIds,
-  customers,
-}: Props) {
+const LeadersDataModal = ({ open, onClose, assigneeIds, customers }: Props) => {
   const [count, setCount] = useState(0);
-  console.log(customers);
+  const [autoDistribute, setAutoDistribute] = useState(false);
+  const totalCustomers = customers.length;
+  const [distributeCustomer] = useCustomerDistributionToAgentMutation();
+  const [autoDistributeCustomer] = useAutoDistributeCustomerToAgentMutation();
 
-  const handleAssign = () => {
-    const customerIds = customers.map((customer) => customer.id);
-    const payload = {
-      agentId: assigneeIds,
-      customerIds,
-    };
-    console.log("Final Submit Data:", payload);
+  const handleAssign = async () => {
+    let payload: any = {};
+    let loadingMessage = "";
+
+    if (autoDistribute) {
+      payload = undefined;
+      loadingMessage = "Auto distributing customers to all agents...";
+    } else {
+      if (count > totalCustomers) {
+        toast.error(
+          `You cannot assign ${count} leads. Only ${totalCustomers} leads are available.`,
+          { duration: 3000 }
+        );
+        return;
+      }
+      payload = {
+        agentId: assigneeIds,
+        customerIds: customers.slice(0, count).map((c) => c.id),
+      };
+      loadingMessage = "Distributing customers to agent...";
+    }
+
+    const toastId = toast.loading(loadingMessage);
+    try {
+      const res = autoDistribute
+        ? await autoDistributeCustomer(payload).unwrap()
+        : await distributeCustomer(payload).unwrap();
+
+      toast.dismiss(toastId);
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+      }
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      const errorInfo =
+        error?.data?.message ||
+        error?.data?.error ||
+        error?.error ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+    }
   };
 
   return (
@@ -90,12 +108,16 @@ export default function AssignModal({
             <Input
               type="number"
               placeholder="Count"
+              disabled={autoDistribute}
               className="w-28"
               value={count}
               max={customers.length}
               onChange={(e) => setCount(Number(e.target.value))}
             />
-            <Select onValueChange={(v) => setCount(Number(v))}>
+            <Select
+              onValueChange={(v) => setCount(Number(v))}
+              disabled={autoDistribute}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Quick select…" />
               </SelectTrigger>
@@ -113,7 +135,10 @@ export default function AssignModal({
               </SelectContent>
             </Select>
             <div className="ml-auto flex items-center gap-2">
-              <Checkbox />
+              <Checkbox
+                checked={autoDistribute}
+                onCheckedChange={(checked) => setAutoDistribute(!!checked)}
+              />
               <span className="text-sm text-muted-foreground">
                 Auto Distribute Evenly
               </span>
@@ -139,4 +164,6 @@ export default function AssignModal({
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default LeadersDataModal;

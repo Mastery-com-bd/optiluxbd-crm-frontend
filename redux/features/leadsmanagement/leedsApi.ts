@@ -15,7 +15,7 @@ const leedsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["leads"],
+      invalidatesTags: ["leads", "unassigned-agents"],
     }),
     removeAgentsFromALeader: builder.mutation({
       query: (data) => ({
@@ -23,20 +23,14 @@ const leedsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["leads"],
+      invalidatesTags: ["leads", "unassigned-agents"],
     }),
+
     assignCustomerToLeaders: builder.mutation({
       query: (data) => ({
         url: `/allocations/leader`,
         method: "POST",
         body: data,
-      }),
-      invalidatesTags: ["leads"],
-    }),
-    autoDistributionCustomerToLeader: builder.mutation({
-      query: () => ({
-        url: `/allocations/leader/auto-distribute`,
-        method: "POST",
       }),
       invalidatesTags: ["leads"],
     }),
@@ -48,5 +42,4 @@ export const {
   useAssignAGentToLeaderMutation,
   useRemoveAgentsFromALeaderMutation,
   useAssignCustomerToLeadersMutation,
-  useAutoDistributionCustomerToLeaderMutation,
 } = leedsApi;

@@ -25,10 +25,10 @@ const TeamMemberRow = ({ member }: { member: TTeamMember }) => {
   };
 
   return (
-    <li className="flex items-center justify-between bg-white dark:bg-gray-700 p-2 rounded">
+    <li className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded mb-1">
       <div>
-        <p className="font-medium">{member.name}</p>
-        <p className="text-xs text-gray-500">{member.email}</p>
+        <p className="font-medium">{member?.name}</p>
+        <p className="text-xs text-gray-400">{member?.email}</p>
       </div>
 
       <button

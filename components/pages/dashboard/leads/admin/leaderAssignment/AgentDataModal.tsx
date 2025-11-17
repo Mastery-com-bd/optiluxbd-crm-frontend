@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import PaginationControls from "@/components/ui/paginationComponent";
 import {
   Table,
@@ -19,14 +20,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useAssignAGentToLeaderMutation } from "@/redux/features/leadsmanagement/leedsApi";
 import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
 import { TTeam } from "@/types/teamleader.types";
 import { TUser } from "@/types/user/user.types";
-import { getPermissions } from "@/utills/getPermissionAndRole";
+import { debounce } from "@/utills/debounce";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
+import ModalSkeleton from "../ModalSkeleton";
 
 const AgentDataModal = ({
   setSelectedTeam,
@@ -41,7 +42,6 @@ const AgentDataModal = ({
     order: "desc",
     limit: 10,
     page: 1,
-    role: "AGENT",
   });
 
   const { data, isLoading } = useGetAllUnassignedAgentsQuery(filters, {
@@ -52,7 +52,14 @@ const AgentDataModal = ({
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   const [selectedAgentId, setSelectedAgentId] = useState<number | null>(null);
   const [assignAgent] = useAssignAGentToLeaderMutation();
+  console.log(pagination);
   const [openModal, setOpenModal] = useState(false);
+
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   const handleConfirmAssign = async () => {
     const data = {
@@ -79,10 +86,6 @@ const AgentDataModal = ({
     }
   };
 
-  if (isLoading) {
-    return <div>loading</div>;
-  }
-
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
       <DialogTrigger asChild>
@@ -90,87 +93,95 @@ const AgentDataModal = ({
           Assign Agent
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Select an Agent</DialogTitle>
-        </DialogHeader>
-        <div className=" overflow-y-auto border rounded-md pb-4">
-          <Table>
-            <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
-              <TableRow>
-                <TableHead className="text-center">Select</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {agents.length === 0 ? (
+      {isLoading ? (
+        <ModalSkeleton />
+      ) : (
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Select an Agent</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div className="w-full sm:w-1/2">
+              <Input
+                type="text"
+                placeholder="Search by name"
+                value={filters.search}
+                onChange={(e) => debouncedLog(e.target.value)}
+                className="w-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+              />
+            </div>
+          </div>
+          <div className=" overflow-y-auto border rounded-md pb-4">
+            <Table>
+              <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
                 <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center py-4 text-gray-500"
-                  >
-                    No agents available
-                  </TableCell>
+                  <TableHead className="text-center">Select</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Phone</TableHead>
                 </TableRow>
-              ) : (
-                agents.map((agent) => {
-                  const { role } = getPermissions(agent as TAuthUSer);
-                  return (
-                    <TableRow
-                      key={agent.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-                      onClick={() => setSelectedAgentId(agent.id)}
+              </TableHeader>
+              <TableBody>
+                {agents.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-center py-4 text-gray-500"
                     >
-                      <TableCell className="text-center">
-                        <input
-                          type="radio"
-                          name="selectedAgent"
-                          checked={selectedAgentId === agent.id}
-                          onChange={() => setSelectedAgentId(agent.id)}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {agent.name}
-                      </TableCell>
-                      <TableCell>{agent.email}</TableCell>
-                      <TableCell className="capitalize">
-                        {role
-                          .map(
-                            (r) =>
-                              r.charAt(0).toUpperCase() +
-                              r.slice(1).toLowerCase()
-                          )
-                          .join(", ") || "no role"}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-          <PaginationControls
-            pagination={pagination}
-            onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-            onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
-          />
-        </div>
-        <DialogFooter className="mt-4 flex justify-end gap-2">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSelectedAgentId(null);
-              setOpenModal(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button disabled={!selectedAgentId} onClick={handleConfirmAssign}>
-            Assign
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+                      No agents available
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  agents.map((agent) => {
+                    return (
+                      <TableRow
+                        key={agent.id}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                        onClick={() => setSelectedAgentId(agent.id)}
+                      >
+                        <TableCell className="text-center">
+                          <input
+                            type="radio"
+                            name="selectedAgent"
+                            checked={selectedAgentId === agent.id}
+                            onChange={() => setSelectedAgentId(agent.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {agent?.name}
+                        </TableCell>
+                        <TableCell>{agent?.email}</TableCell>
+                        <TableCell className="capitalize">
+                          {agent?.phone}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+            <PaginationControls
+              pagination={pagination}
+              onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
+              onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+            />
+          </div>
+          <DialogFooter className="mt-4 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSelectedAgentId(null);
+                setOpenModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button disabled={!selectedAgentId} onClick={handleConfirmAssign}>
+              Assign
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      )}
     </Dialog>
   );
 };
