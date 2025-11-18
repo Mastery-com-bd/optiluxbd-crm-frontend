@@ -29,7 +29,9 @@ import UserStatusDropdown from "./StatusDropdown";
 import { debounce } from "@/utills/debounce";
 import UserActionDropdown from "./UserActionDropdown";
 import { getPermissions } from "@/utills/getPermissionAndRole";
-import { TAuthUSer } from "@/redux/features/auth/authSlice";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
+import { useAppSelector } from "@/redux/hooks";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -39,12 +41,22 @@ const ManageUsers = () => {
     limit: 10,
     page: 1,
   });
+  // get all users
   const { data, isLoading } = useGetAllUsersQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-
   const users = data?.data as TUser[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+  // get all roles
+  const { data: roleData, isLoading: roleLoading } = useGetAllRolesQuery(
+    undefined,
+    { refetchOnMountOrArgChange: false }
+  );
+  const roles = roleData?.data || [];
+  // get current user and roles
+  const userInfo = useAppSelector(currentUser);
+  const { permissions } = getPermissions(userInfo as TAuthUSer);
+  // local state
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [is_active, setIs_active] = useState("All");
   const [selectedRole, setSelectedRole] = useState("All");
@@ -159,7 +171,7 @@ const ManageUsers = () => {
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             All Users List
           </h2>
-          <CreateUser />
+          {permissions.includes("USERS CREATE") && <CreateUser />}
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <div className="w-full sm:w-1/2">
@@ -253,23 +265,44 @@ const ManageUsers = () => {
               align="end"
               className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
-              {["All", "Inspector", "Sales", "Agent", "Admin"].map((option) => (
-                <DropdownMenuItem
-                  key={option}
-                  onClick={() => {
-                    setSelectedRole(option);
-                    setFilters((prev) => ({
-                      ...prev,
-                      is_active:
-                        option === "All" ? undefined : option.toUpperCase(),
-                      page: 1,
-                    }));
-                  }}
-                  className={option === selectedRole ? "font-medium" : ""}
-                >
-                  {option}
-                </DropdownMenuItem>
-              ))}
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedRole("All");
+                  setFilters((prev) => ({
+                    ...prev,
+                    role: "",
+                    page: 1,
+                  }));
+                }}
+                className={selectedRole === "All" ? "font-medium" : ""}
+              >
+                All
+              </DropdownMenuItem>
+
+              {roleLoading
+                ? Array.from({ length: 4 }).map((_, idx) => (
+                    <DropdownMenuItem key={idx} className="pointer-events-none">
+                      <div className="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                    </DropdownMenuItem>
+                  ))
+                : roles?.map((role: { id: number; name: string }) => (
+                    <DropdownMenuItem
+                      key={role.id}
+                      onClick={() => {
+                        setSelectedRole(role.name);
+                        setFilters((prev) => ({
+                          ...prev,
+                          role: role.name === "All" ? "" : role.name,
+                          page: 1,
+                        }));
+                      }}
+                      className={
+                        role.name === selectedRole ? "font-medium" : ""
+                      }
+                    >
+                      {role.name}
+                    </DropdownMenuItem>
+                  ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -353,10 +386,14 @@ const ManageUsers = () => {
                     {user?.is_active ? "Yes" : "No"}
                   </TableCell>
                   <TableCell>
-                    <UserStatusDropdown
-                      id={user?.id}
-                      status={user?.status as TStatus}
-                    />
+                    {permissions.includes("USERS UPDATE") ? (
+                      <UserStatusDropdown
+                        id={user?.id}
+                        status={user?.status as TStatus}
+                      />
+                    ) : (
+                      (user?.status as TStatus)
+                    )}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {new Date(user?.created_at).toLocaleDateString("en-GB", {

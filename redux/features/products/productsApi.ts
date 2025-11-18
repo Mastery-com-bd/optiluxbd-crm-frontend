@@ -9,18 +9,19 @@ const productsApi = baseApi.injectEndpoints({
         method: "POST",
         body: productInfo,
       }),
+      invalidatesTags: ["products"],
     }),
     addProductImage: builder.mutation({
       query: ({ id, image }) => {
         const formData = new FormData();
         formData.append("product_image", image);
-
         return {
           url: `/images/products/${id}/image`,
           method: "POST",
           body: formData,
         };
       },
+      invalidatesTags: ["products"],
     }),
     updateProduct: builder.mutation({
       query: ({ id, data }) => ({
@@ -28,6 +29,7 @@ const productsApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["products"],
     }),
     getAllProduct: builder.query({
       query: (params) => ({
@@ -41,6 +43,7 @@ const productsApi = baseApi.injectEndpoints({
         url: `/products/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["products"],
     }),
   }),
 });

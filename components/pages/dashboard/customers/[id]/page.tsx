@@ -10,12 +10,9 @@ import { useGetCustomerByIdQuery } from "@/redux/features/customers/cutomersApi"
 export default function EditCustomerPage() {
   const params = useParams();
   const customerId = Number.parseInt(params.id as string);
- const { data, isLoading } = useGetCustomerByIdQuery(customerId);
-   const customerData = data?.data;
- 
-   console.log(customerData);
-
-  if (!isLoading) {
+  const { data, isLoading } = useGetCustomerByIdQuery(customerId);
+  const customerData = data?.data;
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-linear-gradient(to-br, from-background, via-background, to-muted/30)">
         <div className="px-4 py-6 md:px-6 lg:px-8">

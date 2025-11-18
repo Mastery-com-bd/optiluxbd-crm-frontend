@@ -1,11 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {
-  useAcceptBatchMutation,
-  useGetTeamReportQuery,
-  useRejectBatchMutation,
-} from "@/redux/features/leads/leadsApi";
+import { useGetTeamReportQuery } from "@/redux/features/leads/leadsApi";
 import {
   Dialog,
   DialogContent,
@@ -15,66 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const TeamReportModal = () => {
   const { data, isLoading } = useGetTeamReportQuery(undefined);
   const [open, setOpen] = useState(false);
-  const [acceptbatch] = useAcceptBatchMutation();
-  const [rejectBatch] = useRejectBatchMutation();
-
   const report = data?.data;
   const hasReport = !!report;
-
-  const handleAccept = async () => {
-    const payload = {
-      batchId: data?.data?.batch?.id,
-    };
-
-    const toastId = toast.loading("accepting asigned customer batch");
-    try {
-      const res = await acceptbatch(payload).unwrap();
-      toast.dismiss(toastId);
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setOpen(false);
-      }
-    } catch (error: any) {
-      toast.dismiss(toastId);
-      const errorInfo =
-        error?.data?.message ||
-        error?.data?.error ||
-        error?.error ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setOpen(false);
-    }
-  };
-
-  const handleReject = async () => {
-    const payload = {
-      batchId: data?.data?.batch?.id,
-    };
-    const toastId = toast.loading("rejecting asigned customer batch");
-    try {
-      const res = await rejectBatch(payload).unwrap();
-      toast.dismiss(toastId);
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setOpen(false);
-      }
-    } catch (error: any) {
-      toast.dismiss(toastId);
-      const errorInfo =
-        error?.data?.message ||
-        error?.data?.error ||
-        error?.error ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-      setOpen(false);
-    }
-  };
 
   return (
     <div>
@@ -132,16 +74,6 @@ const TeamReportModal = () => {
                   <span>{report.totals.draft}</span>
                 </div>
               </div>
-              <DialogFooter className="flex justify-between">
-                {hasReport && (
-                  <div className="flex gap-2">
-                    <Button variant="destructive" onClick={handleReject}>
-                      Reject
-                    </Button>
-                    <Button onClick={handleAccept}>Accept</Button>
-                  </div>
-                )}
-              </DialogFooter>
             </>
           )}
         </DialogContent>

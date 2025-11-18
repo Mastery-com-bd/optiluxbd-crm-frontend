@@ -1,18 +1,16 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllProductQuery } from "@/redux/features/products/productsApi";
 import { Product } from "@/types/product";
 import { debounce } from "@/utills/debounce";
-import { Search, Trash2 } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import ProductDetails from "../../products/productDetails/ProductDetails";
-import UpdateProduct from "../../products/updateProduct/UpdateProduct";
 import CreateComboModal from "./CreateComboModal";
 import {
   Select,
@@ -22,6 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ComboTableSkeleton from "./ComboTableSkeleton";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
+import { toast } from "sonner";
 
 export type TComboData = { productId: number; quantity: number };
 
@@ -30,18 +32,25 @@ const CreateCombo = () => {
     search: "",
     limit: 10,
     page: 1,
+    status: "ACTIVE",
   });
-  const { data, isLoading, refetch } = useGetAllProductQuery(filters, {
+  // get all products
+  const { data, isLoading } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-  const products = (data?.data as Product[]) || [];
+  const products = data?.data?.products as Product[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-  const handleSearch = async (val: any) => {
-    setFilters({ ...filters, search: val });
-  };
+  // local state
   const [selectedProducts, setSelectedProducts] = useState<TComboData[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [category, setCategory] = useState("all");
+  // redux state
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
+
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
 
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
   const getStatusColor = (status: string) => {
@@ -69,6 +78,7 @@ const CreateCombo = () => {
       }
     });
   };
+
   const toggleSelectAll = () => {
     if (selectedProducts.length === products.length) {
       // Unselect all
@@ -80,15 +90,23 @@ const CreateCombo = () => {
     }
   };
 
-  const updateQuantity = (id: number, type: "increase" | "decrease") => {
+  const updateQuantity = (product: Product, type: "increase" | "decrease") => {
     setSelectedProducts((prev) =>
       prev.map((item) => {
-        if (item.productId === id) {
-          const newQty =
-            type === "increase"
-              ? item.quantity + 1
-              : Math.max(1, item.quantity - 1); // ensure minimum 1
-          return { ...item, quantity: newQty };
+        if (item.productId === product?.id) {
+          if (type === "increase") {
+            if (item.quantity + 1 > product?.stock) {
+              toast.error("Not enough stock available", {
+                duration: 2000,
+              });
+              return item;
+            }
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return {
+            ...item,
+            quantity: Math.max(1, item.quantity - 1),
+          };
         }
         return item;
       })
@@ -99,9 +117,11 @@ const CreateCombo = () => {
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-end mb-6">
-          <CreateComboModal selectedProducts={selectedProducts} />
-        </div>
+        {permissions.includes("PACKAGES CREATE") && (
+          <div className="flex items-center justify-end mb-6">
+            <CreateComboModal selectedProducts={selectedProducts} />
+          </div>
+        )}
 
         {/* Filters */}
         <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
@@ -149,7 +169,7 @@ const CreateCombo = () => {
 
         {/* Product Table */}
         {isLoading ? (
-          <div className="mx-auto border w-screen">
+          <div>
             <ComboTableSkeleton />
           </div>
         ) : (
@@ -198,6 +218,7 @@ const CreateCombo = () => {
                         <td className="px-4 py-3">
                           <input
                             type="checkbox"
+                            disabled={product?.stock < 1}
                             className="rounded border-border"
                             checked={selectedProducts.some(
                               (p) => p.productId === product.id
@@ -213,7 +234,7 @@ const CreateCombo = () => {
                               <button
                                 className="px-2 py-1 border rounded"
                                 onClick={() =>
-                                  updateQuantity(product.id, "decrease")
+                                  updateQuantity(product, "decrease")
                                 }
                               >
                                 -
@@ -226,7 +247,7 @@ const CreateCombo = () => {
                               <button
                                 className="px-2 py-1 border rounded"
                                 onClick={() =>
-                                  updateQuantity(product.id, "increase")
+                                  updateQuantity(product, "increase")
                                 }
                               >
                                 +
@@ -273,19 +294,10 @@ const CreateCombo = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <ProductDetails product={product} />
-                            <UpdateProduct
+                            <ProductDetails
                               product={product}
-                              refetch={refetch}
+                              buttonName="View Details"
                             />
-                            <Button
-                              className="cursor-pointer"
-                              variant="ghost"
-                              size="icon"
-                              // onClick={() => handleDelete(product.id)}
-                            >
-                              <Trash2 className="w-4 h-4 text-destructive " />
-                            </Button>
                           </div>
                         </td>
                       </tr>

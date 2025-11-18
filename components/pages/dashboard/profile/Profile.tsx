@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { convertDate } from "@/utills/dateConverter";
-import { Calendar, Clock, Mail, Phone } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -46,7 +46,6 @@ const Profile = () => {
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   const [updateInfo] = useUpdateUserInfoMutation();
   const { role } = getPermissions(userInfo as TAuthUSer);
-
   useEffect(() => {
     if (userInfo) {
       Promise.resolve().then(() => {
@@ -96,8 +95,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10">
-      <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 flex flex-col items-center space-y-10 ">
+      <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-900 rounded-2xl shadow p-8">
         <h2 className="text-2xl font-semibold text-black dark:text-gray-100 mb-8 border-b pb-4 border-gray-200 dark:border-gray-700">
           My Profile
         </h2>
@@ -114,54 +113,6 @@ const Profile = () => {
                 <h4 className="text-xl font-semibold text-black dark:text-gray-100">
                   {userInfo?.name}
                 </h4>
-
-                {/* Email Verification */}
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail
-                    size={16}
-                    className={
-                      userInfo?.email_verified
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }
-                  />
-                  <span
-                    className={`font-medium ${
-                      userInfo?.email_verified
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    Email Verified:{" "}
-                    <span className="font-normal text-gray-700 dark:text-gray-300">
-                      {userInfo?.email_verified ? "Yes" : "No"}
-                    </span>
-                  </span>
-                </div>
-
-                {/* Phone Verification */}
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone
-                    size={16}
-                    className={
-                      userInfo?.phone_verified
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }
-                  />
-                  <span
-                    className={`font-medium ${
-                      userInfo?.phone_verified
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    Phone Verified:{" "}
-                    <span className="font-normal text-gray-700 dark:text-gray-300">
-                      {userInfo?.phone_verified ? "Yes" : "No"}
-                    </span>
-                  </span>
-                </div>
 
                 <div className="flex items-center gap-2">
                   <Calendar size={15} className="text-yellow-500" />

@@ -17,6 +17,10 @@ import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
+
 const UserActionDropdown = ({
   id,
   status,
@@ -28,6 +32,8 @@ const UserActionDropdown = ({
 }) => {
   const [activateUser] = useActivateUserMutation();
   const [suspendUser] = useSuspendUserMutation();
+  const userInfo = useAppSelector(currentUser);
+  const { permissions } = getPermissions(userInfo as TAuthUSer);
 
   const handleInactive = async (
     setLoading: Dispatch<SetStateAction<boolean>>,
@@ -89,37 +95,40 @@ const UserActionDropdown = ({
             </Button>
           </Link>
         </DropdownMenuItem>
-
-        <DropdownMenuItem
-          className="flex items-center gap-2"
-          onSelect={(e) => e.preventDefault()}
-        >
-          <DeleteUSerModal
-            handleConfirm={handleSuspend}
-            id={id}
-            className=" cursor-pointer"
-            buttonClass="text-red-600 dark:text-red-300"
-            level=" Suspend user?"
-            content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
-            disabeButton={status === "SUSPENDED"}
-            buttonName="Suspend"
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="flex items-center gap-2"
-          onSelect={(e) => e.preventDefault()}
-        >
-          <DeleteUSerModal
-            handleConfirm={handleInactive}
-            id={id}
-            className=" cursor-pointer"
-            buttonClass="text-red-600 dark:text-red-300"
-            level=" Deactive user?"
-            content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
-            disabeButton={activity === false}
-            buttonName="Inactive"
-          />
-        </DropdownMenuItem>
+        {permissions.includes("USERS UPDATE") && (
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={(e) => e.preventDefault()}
+          >
+            <DeleteUSerModal
+              handleConfirm={handleSuspend}
+              id={id}
+              className=" cursor-pointer"
+              buttonClass="text-red-600 dark:text-red-300"
+              level=" Suspend user?"
+              content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
+              disabeButton={status === "SUSPENDED"}
+              buttonName="Suspend"
+            />
+          </DropdownMenuItem>
+        )}
+        {permissions.includes("USERS UPDATE") && (
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={(e) => e.preventDefault()}
+          >
+            <DeleteUSerModal
+              handleConfirm={handleInactive}
+              id={id}
+              className=" cursor-pointer"
+              buttonClass="text-red-600 dark:text-red-300"
+              level=" Deactive user?"
+              content="This action cannot be undone. It will suspend the user from the system from this time’s. He will not be able to perfor anything from now"
+              disabeButton={activity === false}
+              buttonName="Inactive"
+            />
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
