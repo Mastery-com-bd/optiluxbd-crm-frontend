@@ -90,7 +90,7 @@ const CreateComboModal = ({
     >
       <DialogTrigger asChild>
         <Button
-          disabled={!selectedProducts.length}
+          disabled={selectedProducts.length < 2}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="w-4 h-4 mr-2" />

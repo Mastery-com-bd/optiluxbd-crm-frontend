@@ -38,17 +38,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ComboProductstable from "./ComboProductstable";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 const GetASingleCombo = ({ id }: { id: string }) => {
+  // get a single combo
   const { data, isLoading: loading } = useGetASingleCOmboPackageQuery(id);
   const ComboPackage = data?.data as TCombo;
-  const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // redux state
   const [updatePackage] = useUpdateComboPackageMutation();
   const [deletePackage] = useDeleteComboPackageMutation();
-  const [formData, setFormData] = useState<TCombo | null>(null);
   const currentComboPackage = useAppSelector(currentCombo);
   const dispatch = useAppDispatch();
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
+  // local state
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<TCombo | null>(null);
   const [tagInput, setTagInput] = useState(formData?.tags.join(", ") || "");
 
   useEffect(() => {
@@ -202,14 +209,16 @@ const GetASingleCombo = ({ id }: { id: string }) => {
               </Badge>
             </div>
           </CardContent>
-          <CardContent className="flex justify-end items-center">
-            <Button
-              onClick={() => setOpen(true)}
-              className=" px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
-            >
-              Edit Info
-            </Button>
-          </CardContent>
+          {permissions.includes("PACKAGES UPDATE") && (
+            <CardContent className="flex justify-end items-center">
+              <Button
+                onClick={() => setOpen(true)}
+                className=" px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
+              >
+                Edit Info
+              </Button>
+            </CardContent>
+          )}
         </Card>
       ) : (
         <Card className="shadow-sm border dark:border-gray-700 w-full">
@@ -395,17 +404,19 @@ const GetASingleCombo = ({ id }: { id: string }) => {
 
       {/* Items Table */}
       <ComboProductstable ComboPackage={ComboPackage} />
-      <div className="flex items-center justify-end">
-        <DeleteUSerModal
-          handleConfirm={handleConfirm}
-          id={ComboPackage?.id}
-          className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-          buttonClass="text-red-600 dark:text-red-300"
-          level=" Delete Combo Package?"
-          content="This action cannot be undone. It will permanently remove the combo and its details from the system."
-          buttonName="Delete"
-        />
-      </div>
+      {permissions.includes("PACKAGES DELETE") && (
+        <div className="flex items-center justify-end">
+          <DeleteUSerModal
+            handleConfirm={handleConfirm}
+            id={ComboPackage?.id}
+            className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+            buttonClass="text-red-600 dark:text-red-300"
+            level=" Delete Combo Package?"
+            content="This action cannot be undone. It will permanently remove the combo and its details from the system."
+            buttonName="Delete"
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -33,11 +33,13 @@ const Navbar: React.FC = () => {
   const { role } = getPermissions(user as TAuthUSer);
 
   const handleLogOut = async () => {
+    const toastId = toast.loading("logging out", { duration: 3000 });
     try {
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
         toast.success(res?.message, {
+          id: toastId,
           duration: 3000,
         });
         router.push("/login");
@@ -48,9 +50,10 @@ const Navbar: React.FC = () => {
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
+
   return (
     <div>
       <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
@@ -72,7 +75,7 @@ const Navbar: React.FC = () => {
                     setTheme("light");
                     console.log("clicked sun");
                   }}
-                  className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                  className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
                   aria-label="Switch to light mode"
                 >
                   <SunIcon className="w-6 h-6" />
@@ -82,7 +85,7 @@ const Navbar: React.FC = () => {
                     setTheme("dark");
                     console.log("clicked moon");
                   }}
-                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
+                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
                   aria-label="Switch to dark mode"
                 >
                   <MoonIcon className="w-6 h-6" />
@@ -90,7 +93,7 @@ const Navbar: React.FC = () => {
               </div>
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="relative p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <button className="relative p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
                     <BellDotIcon className="w-6 h-6" />
                     <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white text-[10px] font-bold text-destructive-foreground shadow">
                       3
@@ -153,7 +156,7 @@ const Navbar: React.FC = () => {
               </Popover>
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background">
+                  <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
                     <Avatar className="w-9 h-9 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
                       <AvatarImage
                         src={
