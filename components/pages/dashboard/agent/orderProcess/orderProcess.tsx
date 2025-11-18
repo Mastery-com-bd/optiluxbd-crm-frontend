@@ -40,6 +40,7 @@ import {
   CheckCircle,
   Clock,
   Eye,
+  Loader2,
   Mail,
   MapPin,
   Package,
@@ -87,6 +88,7 @@ interface PendingLeadsType {
 }
 
 const OrderProcessingSystem = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [customerOutcome, setCustomerOutcome] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const router = useRouter();
@@ -111,68 +113,39 @@ const OrderProcessingSystem = () => {
   const assignedCustomerData: TCurrentCustomer = assignedLeads?.data;
   const currentCustomer = assignedCustomerData?.customers[0];
 
-  if (assignedCustomerData) {
-    console.log("Assigned Customer", currentCustomer);
-  }
-
-  if (pendingLeadsData) {
-    console.log("Assign Customer", assignedCustomerData);
-  }
-
   const handleStatusUpdate = async () => {
-
+    setLoading(true);
+    toast.loading("Updating status...");
 
     const payload = {
-      customerId: currentCustomer?.customerId,
+      customerId: currentCustomer?.id,
       outcome: customerOutcome,
       note: note,
     };
     if (!customerOutcome || !note) {
       toast.error("Please select outcome and add note");
+      setLoading(false);
       return;
     }
     try {
       const res = await updateLeadStatus(payload).unwrap();
       console.log("Update Lead Status Response", res);
-      if (res?.ok) {
+      if (res?.success) {
         toast.dismiss();
+        setLoading(false);
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        // Reload the page to reflect the updated status
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
+      toast.dismiss();
+      toast.error("Failed to update status");
+      setLoading(false);
     }
 
-    console.log(payload);
-
-    /*
-    
-    Save to local store for tracking
-    
-    // Retrieve existing processed IDs from localStorage or initialize empty array
-    const existingIdsStr = localStorage.getItem("processedCustomerIds");
-    let processedIds: string[] = [];
-    if (existingIdsStr) {
-      try {
-        processedIds = JSON.parse(existingIdsStr);
-      } catch (e) {
-        processedIds = [];
-      }
-    }
-
-    // Add current customer ID if not already present
-    if (firstCustomer?.customerId && !processedIds.includes(firstCustomer.customerId)) {
-      processedIds.push(firstCustomer.customerId);
-    }
-
-    // Save updated array back to localStorage
-    localStorage.setItem("processedCustomerIds", JSON.stringify(processedIds));
-
-    console.log("Updated processedCustomerIds:", processedIds);
-  
- */
   };
 
   const handleAccept = async (batchId: number) => {
@@ -234,12 +207,12 @@ const OrderProcessingSystem = () => {
     <div className="min-h-screen p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Tabs Start */}
-        <Tabs defaultValue="account" className="w-full">
+        <Tabs defaultValue="Assigned" className="w-full">
           <TabsList className="w-full">
-            <TabsTrigger value="account">Pending Leads</TabsTrigger>
-            <TabsTrigger value="password">Assigned Leads</TabsTrigger>
+            <TabsTrigger value="Pending">Pending Leads</TabsTrigger>
+            <TabsTrigger value="Assigned">Assigned Leads</TabsTrigger>
           </TabsList>
-          <TabsContent value="account">
+          <TabsContent value="Pending">
             {/* Pending Leads Tab */}
             <div className="space-y-4">
               {pendingLeadsLoading ? (
@@ -606,7 +579,7 @@ const OrderProcessingSystem = () => {
               )}
             </div>
           </TabsContent>
-          <TabsContent value="password">
+          <TabsContent value="Assigned">
             {/* Current Order Details */}
             <Card className="shadow-xl overflow-hidden">
               <CardHeader className="border-b dark:border-gray-700">
@@ -625,14 +598,17 @@ const OrderProcessingSystem = () => {
                   >
                     <Clock className="w-4 h-4 mr-1" />
                     {currentCustomer?.assignedAt
-                      ? new Date(currentCustomer.assignedAt).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                          hour12: true,
-                        })
+                      ? new Date(currentCustomer.assignedAt).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          }
+                        )
                       : "N/A"}
                   </Badge>
                 </div>
@@ -776,9 +752,14 @@ const OrderProcessingSystem = () => {
               <CardFooter className="flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 py-6">
                 <Button
                   onClick={() => handleStatusUpdate()}
+                  disabled={loading}
                   className="w-full bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600 cursor-pointer"
                 >
-                  <CheckCircle className="w-4 h-4 mr-2" />
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                  )}
                   Confirm Status
                 </Button>
               </CardFooter>
