@@ -1,6 +1,5 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,155 +11,239 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  AlertCircle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useGetAssignCustomersQuery } from "@/redux/features/leads/leadsAgentApi";
+import {
   CheckCircle,
   Clock,
-  Copy,
   Mail,
   MapPin,
   Package,
   Phone,
-  User,
-  XCircle,
+  User
 } from "lucide-react";
 import { useState } from "react";
 
-interface Order {
-  id: string;
-  orderNumber: string;
-  customerName: string;
+type BatchType = {
+  id: number;
+  leaderId: number;
+  status: string;
+};
+
+interface customer {
+  id: number;
+  name: string;
   phone: string;
-  email: string;
-  address: string;
-  product: string;
-  quantity: number;
-  amount: number;
-  orderDate: string;
-  notes: string;
+  email: null;
+  customerId: string;
+  addresses: [];
+  assignedAt: string;
+  batch: BatchType;
+  batchId: number;
+  lastContactAt: null;
   status: string;
 }
 
-// Mock data generator
-const generateMockOrders = (count = 10) => {
-  const products = [
-    "Wireless Headphones",
-    "Smart Watch",
-    "Laptop Stand",
-    "USB-C Hub",
-    "Mechanical Keyboard",
-    "Mouse Pad",
-    "Phone Case",
-    "Tablet",
-    "Monitor",
-    "Webcam",
-  ];
-  const cities = [
-    "Dhaka",
-    "Chittagong",
-    "Sylhet",
-    "Rajshahi",
-    "Khulna",
-    "Barisal",
-  ];
-  const firstNames = [
-    "Ahmed",
-    "Fatima",
-    "Karim",
-    "Nadia",
-    "Rahim",
-    "Sadia",
-    "Jamal",
-    "Ayesha",
-    "Farhan",
-    "Zara",
-  ];
-  const lastNames = [
-    "Khan",
-    "Rahman",
-    "Ali",
-    "Chowdhury",
-    "Hossain",
-    "Islam",
-    "Ahmed",
-    "Begum",
-  ];
-
-  return Array.from({ length: count }, (_, i) => ({
-    id: `ORD-${Date.now()}-${i + 1}`,
-    orderNumber: `#${10000 + i + 1}`,
-    customerName: `${
-      firstNames[Math.floor(Math.random() * firstNames.length)]
-    } ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
-    phone: `+880 1${Math.floor(Math.random() * 900000000 + 100000000)}`,
-    email: `customer${i + 1}@example.com`,
-    address: `${Math.floor(Math.random() * 999 + 1)}, ${
-      cities[Math.floor(Math.random() * cities.length)]
-    }, Bangladesh`,
-    product: products[Math.floor(Math.random() * products.length)],
-    quantity: Math.floor(Math.random() * 3 + 1),
-    amount: Math.floor(Math.random() * 5000 + 1000),
-    orderDate: new Date(
-      Date.now() - Math.floor(Math.random() * 86400000)
-    ).toISOString(),
-    notes:
-      Math.random() > 0.5
-        ? "Please deliver before 5 PM"
-        : "Call before delivery",
-    status: "",
-  }));
-};
+/* const MocCustomer: customer[] = [
+  {
+    id: 1,
+    name: "Rahim Uddin",
+    phone: "01711223344",
+    email: null,
+    customerId: "CUST-0001",
+    addresses: [],
+    assignedAt: "2024-06-01T10:00:00Z",
+    batch: { id: 101, leaderId: 201, status: "active" },
+    batchId: 101,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 2,
+    name: "Karim Ahmed",
+    phone: "01822334455",
+    email: null,
+    customerId: "CUST-0002",
+    addresses: [],
+    assignedAt: "2024-06-01T10:05:00Z",
+    batch: { id: 101, leaderId: 201, status: "active" },
+    batchId: 101,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 3,
+    name: "Fatima Begum",
+    phone: "01933445566",
+    email: null,
+    customerId: "CUST-0003",
+    addresses: [],
+    assignedAt: "2024-06-01T10:10:00Z",
+    batch: { id: 102, leaderId: 202, status: "active" },
+    batchId: 102,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 4,
+    name: "Abdul Matin",
+    phone: "01644556677",
+    email: null,
+    customerId: "CUST-0004",
+    addresses: [],
+    assignedAt: "2024-06-01T10:15:00Z",
+    batch: { id: 102, leaderId: 202, status: "active" },
+    batchId: 102,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 5,
+    name: "Shabnam Chowdhury",
+    phone: "01555667788",
+    email: null,
+    customerId: "CUST-0005",
+    addresses: [],
+    assignedAt: "2024-06-01T10:20:00Z",
+    batch: { id: 103, leaderId: 203, status: "active" },
+    batchId: 103,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 6,
+    name: "Imran Hossain",
+    phone: "01466778899",
+    email: null,
+    customerId: "CUST-0006",
+    addresses: [],
+    assignedAt: "2024-06-01T10:25:00Z",
+    batch: { id: 103, leaderId: 203, status: "active" },
+    batchId: 103,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 7,
+    name: "Nasima Akter",
+    phone: "01377889900",
+    email: null,
+    customerId: "CUST-0007",
+    addresses: [],
+    assignedAt: "2024-06-01T10:30:00Z",
+    batch: { id: 104, leaderId: 204, status: "active" },
+    batchId: 104,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 8,
+    name: "Jamal Sheikh",
+    phone: "01288990011",
+    email: null,
+    customerId: "CUST-0008",
+    addresses: [],
+    assignedAt: "2024-06-01T10:35:00Z",
+    batch: { id: 104, leaderId: 204, status: "active" },
+    batchId: 104,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 9,
+    name: "Salma Khatun",
+    phone: "01199001122",
+    email: null,
+    customerId: "CUST-0009",
+    addresses: [],
+    assignedAt: "2024-06-01T10:40:00Z",
+    batch: { id: 105, leaderId: 205, status: "active" },
+    batchId: 105,
+    lastContactAt: null,
+    status: "pending",
+  },
+  {
+    id: 10,
+    name: "Tareq Aziz",
+    phone: "01000112233",
+    email: null,
+    customerId: "CUST-0010",
+    addresses: [],
+    assignedAt: "2024-06-01T10:45:00Z",
+    batch: { id: 105, leaderId: 205, status: "active" },
+    batchId: 105,
+    lastContactAt: null,
+    status: "pending",
+  },
+]; */
 
 const OrderProcessingSystem = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [processedOrders, setProcessedOrders] = useState<Order[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
+  // const [processedOrders, setProcessedOrders] = useState<customer[]>([]);
+  const [customerOutcome, setCustomerOutcome] = useState<string>("");
+  const [note, setNote] = useState<string>("");
 
-  const loadNewOrders = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setProcessedOrders([]);
-      setOrders([]);
-      const newOrders = generateMockOrders(10);
-      setOrders(newOrders);
-      setCurrentIndex(0);
-      setShowHistory(false);
-      setLoading(false);
-    }, 800);
-  };
+  const { data, isLoading } = useGetAssignCustomersQuery(undefined);
+  const customerData: customer[] = data?.data;
+  const firstCustomer = customerData?.[0];
 
-  if (orders.length === 0) {
-    const newOrders = generateMockOrders(10);
-    setOrders(newOrders);
-    setLoading(false);
+  if (customerData) {
+    console.log(customerData);
   }
 
-  const handleStatusUpdate = (status: string) => {
-    setProcessing(true);
+  const handleStatusUpdate = () => {
+    const payload = {
+      customerId: firstCustomer?.customerId,
+      outcome: customerOutcome,
+      note: note,
+    }
+    console.log(payload);
 
-    setTimeout(() => {
-      const currentOrder = orders[currentIndex];
-      const processedOrder = {
-        ...currentOrder,
-        status,
-        processedAt: new Date().toISOString(),
-      };
 
-      setProcessedOrders((prev) => [...prev, processedOrder]);
 
-      if (currentIndex < orders.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        setShowHistory(true);
+    /*
+    
+    Save to local store for tracking
+    
+    // Retrieve existing processed IDs from localStorage or initialize empty array
+    const existingIdsStr = localStorage.getItem("processedCustomerIds");
+    let processedIds: string[] = [];
+    if (existingIdsStr) {
+      try {
+        processedIds = JSON.parse(existingIdsStr);
+      } catch (e) {
+        processedIds = [];
       }
+    }
 
-      setProcessing(false);
-    }, 500);
+    // Add current customer ID if not already present
+    if (firstCustomer?.customerId && !processedIds.includes(firstCustomer.customerId)) {
+      processedIds.push(firstCustomer.customerId);
+    }
+
+    // Save updated array back to localStorage
+    localStorage.setItem("processedCustomerIds", JSON.stringify(processedIds));
+
+    console.log("Updated processedCustomerIds:", processedIds);
+  
+ */
+
+
+
+
+
+
+
+
+
   };
 
-  const getStatusColor = (status: string) => {
+/*   const getStatusColor = (status: string) => {
     switch (status) {
       case "confirmed":
         return "bg-green-500";
@@ -188,9 +271,9 @@ const OrderProcessingSystem = () => {
       default:
         return null;
     }
-  };
+  }; */
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
@@ -207,7 +290,7 @@ const OrderProcessingSystem = () => {
     );
   }
 
-  if (showHistory) {
+ /*  if (showHistory) {
     return (
       <div className="min-h-screen bg-white dark:bg-background p-4 md:p-6 lg:p-8">
         <div className="max-w-6xl mx-auto">
@@ -267,12 +350,12 @@ const OrderProcessingSystem = () => {
             <CardFooter className=" rounded-2xl mx-5 flex flex-col-reverse sm:flex-row-reverse gap-3 bg-linear-to-r from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-b-xl p-6">
               <Button
                 onClick={loadNewOrders}
-                disabled={processedOrders.length < 10}
+                disabled={processedOrders.length < orders.length}
                 className="w-full sm:w-auto "
               >
-                {processedOrders.length < 10
-                  ? `Processing... (${processedOrders.length}/10)`
-                  : "Load 10 New Orders"}
+                {processedOrders.length < orders.length
+                  ? `Processing... (${processedOrders.length}/${orders.length})`
+                  : "Load New Orders"}
               </Button>
               <Button
                 onClick={() => setShowHistory(false)}
@@ -286,50 +369,18 @@ const OrderProcessingSystem = () => {
         </div>
       </div>
     );
-  }
-
-  const currentOrder = orders[currentIndex];
+  } */
 
   return (
     <div className="min-h-screen  p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
-        {/* Progress Bar */}
-        <Card className="shadow-lg lg:flex-row">
-          <CardHeader className="py-0 w-full lg:w-1/3">
-            <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-              Processing Progress
-            </CardTitle>
-            <CardDescription className="text-sm text-gray-500 dark:text-gray-400">
-              Track your order processing progress
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4 w-full lg:w-2/3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Order {currentIndex + 1} of {orders.length}
-              </span>
-              <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                {Math.round(((currentIndex + 1) / orders.length) * 100)}%
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-              <div
-                className="bg-linear-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 h-3 rounded-full transition-all duration-500"
-                style={{
-                  width: `${((currentIndex + 1) / orders.length) * 100}%`,
-                }}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Current Order Details */}
         <Card className="shadow-xl overflow-hidden">
           <CardHeader className="border-b dark:border-gray-700">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div>
                 <CardTitle className="text-2xl md:text-3xl dark:text-gray-100">
-                  {currentOrder.orderNumber}
+                  0001
                 </CardTitle>
                 <CardDescription className="text-indigo-100 dark:text-indigo-200 mt-1">
                   New Order - Awaiting Processing
@@ -340,7 +391,7 @@ const OrderProcessingSystem = () => {
                 className="w-fit bg-white text-indigo-600 dark:bg-gray-900 dark:text-indigo-400"
               >
                 <Clock className="w-4 h-4 mr-1" />
-                {new Date(currentOrder.orderDate).toLocaleString()}
+                {new Date(firstCustomer?.assignedAt || "").toLocaleString()}
               </Badge>
             </div>
           </CardHeader>
@@ -359,7 +410,7 @@ const OrderProcessingSystem = () => {
                       Customer Name
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.customerName}
+                      {firstCustomer?.name || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -370,7 +421,7 @@ const OrderProcessingSystem = () => {
                       Phone
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.phone}
+                      {firstCustomer?.phone || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -381,7 +432,7 @@ const OrderProcessingSystem = () => {
                       Email
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.email}
+                      {firstCustomer?.email || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -392,7 +443,7 @@ const OrderProcessingSystem = () => {
                       Delivery Address
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.address}
+                      {firstCustomer?.addresses || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -412,7 +463,7 @@ const OrderProcessingSystem = () => {
                       Product
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.product}
+                      Product details
                     </p>
                   </div>
                 </div>
@@ -425,7 +476,7 @@ const OrderProcessingSystem = () => {
                       Quantity
                     </p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.quantity}
+                      produc Quantuty
                     </p>
                   </div>
                 </div>
@@ -438,72 +489,53 @@ const OrderProcessingSystem = () => {
                       Total Amount
                     </p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      ৳{currentOrder.amount.toLocaleString()}
+                      ৳99999
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Contact Outcome Select */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Contact Outcome
+              </label>
+              <Select onValueChange={(value) => setCustomerOutcome(value)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select outcome" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={"CONTACTED"}>Contacted</SelectItem>
+                  <SelectItem value={"NO_ORDER"}>No Order</SelectItem>
+                  <SelectItem value={"ORDER_PLACED"}>Order Placed</SelectItem>
+                  <SelectItem value={"CANCELLED"}>Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Special Notes */}
-            {currentOrder.notes && (
-              <Alert className="dark:bg-gray-900 dark:border-gray-700">
-                <AlertCircle className="h-4 w-4 dark:text-gray-400" />
-                <AlertDescription className="dark:text-gray-300">
-                  <strong className="dark:text-gray-200">Note:</strong>{" "}
-                  {currentOrder.notes}
-                </AlertDescription>
-              </Alert>
-            )}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Order Notes
+              </label>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="w-full min-h-[80px] p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
+                placeholder="Enter any special notes for this order..."
+              />
+            </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 py-6">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
-              Select order status:
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
-              <Button
-                onClick={() => handleStatusUpdate("confirmed")}
-                disabled={processing}
-                className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600"
-              >
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Confirm
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("canceled")}
-                disabled={processing}
-                variant="destructive"
-              >
-                <XCircle className="w-4 h-4 mr-2" />
-                Cancel
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("fake")}
-                disabled={processing}
-                className="bg-orange-600 hover:bg-orange-700 text-white dark:bg-orange-700 dark:hover:bg-orange-600"
-              >
-                <AlertCircle className="w-4 h-4 mr-2" />
-                Fake
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("duplicate")}
-                disabled={processing}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white dark:bg-yellow-700 dark:hover:bg-yellow-600"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Duplicate
-              </Button>
-            </div>
-            {processedOrders.length > 0 && (
-              <Button
-                onClick={() => setShowHistory(true)}
-                variant="outline"
-                className="w-full mt-2 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                View Processed Orders ({processedOrders.length})
-              </Button>
-            )}
+            <Button
+              onClick={() => handleStatusUpdate()}
+              className="w-full bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600 cursor-pointer"
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Confirm Status
+            </Button>
           </CardFooter>
         </Card>
       </div>
