@@ -22,6 +22,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ComboTableSkeleton from "./ComboTableSkeleton";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 export type TComboData = { productId: number; quantity: number };
 
@@ -31,17 +34,23 @@ const CreateCombo = () => {
     limit: 10,
     page: 1,
   });
+  // get all products
   const { data, isLoading, refetch } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
   const products = (data?.data as Product[]) || [];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-  const handleSearch = async (val: any) => {
-    setFilters({ ...filters, search: val });
-  };
+  // local state
   const [selectedProducts, setSelectedProducts] = useState<TComboData[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [category, setCategory] = useState("all");
+  // redux state
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
+
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
 
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
   const getStatusColor = (status: string) => {
@@ -69,6 +78,7 @@ const CreateCombo = () => {
       }
     });
   };
+
   const toggleSelectAll = () => {
     if (selectedProducts.length === products.length) {
       // Unselect all
@@ -99,9 +109,11 @@ const CreateCombo = () => {
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-end mb-6">
-          <CreateComboModal selectedProducts={selectedProducts} />
-        </div>
+        {permissions.includes("PACKAGES CREATE") && (
+          <div className="flex items-center justify-end mb-6">
+            <CreateComboModal selectedProducts={selectedProducts} />
+          </div>
+        )}
 
         {/* Filters */}
         <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
@@ -149,7 +161,7 @@ const CreateCombo = () => {
 
         {/* Product Table */}
         {isLoading ? (
-          <div className="mx-auto border w-screen">
+          <div>
             <ComboTableSkeleton />
           </div>
         ) : (

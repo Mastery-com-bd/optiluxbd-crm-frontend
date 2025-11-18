@@ -7,25 +7,16 @@ import {
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  ChevronDown,
-  Clock,
-  Mail,
-  Phone,
-  UserCheck,
-} from "lucide-react";
+import { Calendar, ChevronDown, Clock, UserCheck } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   resetProfile,
   setname,
   setPhone,
-  setRole,
   setStatus,
 } from "@/redux/features/agent/agentProfileSlice";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
 import DeleteUSerModal from "./DeleteUSerModal";
 import ProfileLoader from "../../../profile/ProfileLoader";
@@ -41,20 +32,24 @@ import { TStatus } from "@/types/user/user.types";
 import { IProfileInfo } from "../../../profile/Profile";
 import ProfileImage from "../../../profile/ProfileImage";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 
 const UserProfile = ({ id }: { id: string }) => {
+  // get user information
   const { data, isLoading } = useGetASingleUserQuery(id, {
     refetchOnMountOrArgChange: false,
   });
   const userInfo = data?.data;
+  // local state
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
+  // redux state
   const [updateInfo] = useUpdateUserInfoMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const { role, permissions } = getPermissions(userInfo as TAuthUSer);
-  const roleOptions = ["ADMIN", "AGENT", "SALES", "INSPECTOR"];
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(currentUser);
+  const { role, permissions } = getPermissions(user as TAuthUSer);
 
   useEffect(() => {
     if (userInfo) {
@@ -141,54 +136,6 @@ const UserProfile = ({ id }: { id: string }) => {
                   {userInfo?.name}
                 </h4>
 
-                {/* Email Verification */}
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail
-                    size={16}
-                    className={
-                      userInfo?.email_verified
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }
-                  />
-                  <span
-                    className={`font-medium ${
-                      userInfo?.email_verified
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    Email Verified:{" "}
-                    <span className="font-normal text-gray-700 dark:text-gray-300">
-                      {userInfo?.email_verified ? "Yes" : "No"}
-                    </span>
-                  </span>
-                </div>
-
-                {/* Phone Verification */}
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone
-                    size={16}
-                    className={
-                      userInfo?.phone_verified
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }
-                  />
-                  <span
-                    className={`font-medium ${
-                      userInfo?.phone_verified
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    Phone Verified:{" "}
-                    <span className="font-normal text-gray-700 dark:text-gray-300">
-                      {userInfo?.phone_verified ? "Yes" : "No"}
-                    </span>
-                  </span>
-                </div>
-
                 {/* Account Activity */}
                 <div className="flex items-center gap-2 text-sm">
                   <UserCheck
@@ -247,12 +194,14 @@ const UserProfile = ({ id }: { id: string }) => {
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
-                >
-                  Edit
-                </Button>
+                {permissions.includes("USERS UPDATE") && (
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
+                  >
+                    Edit
+                  </Button>
+                )}
 
                 {/* Static info */}
                 <div>
@@ -495,18 +444,20 @@ const UserProfile = ({ id }: { id: string }) => {
               </motion.div>
             )}
           </section>
-          <div>
-            <DeleteUSerModal
-              handleConfirm={handleConfirm}
-              id={userInfo?.id}
-              className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
-              buttonClass="text-red-600 dark:text-red-300"
-              level=" Delete user?"
-              content="This action cannot be undone. It will permanently remove the user’s
+          {permissions.includes("USERS DELETE") && (
+            <div>
+              <DeleteUSerModal
+                handleConfirm={handleConfirm}
+                id={userInfo?.id}
+                className="bg-red-100 dark:bg-red-700 hover:bg-red-200 dark:hover:bg-red-600 cursor-pointer"
+                buttonClass="text-red-600 dark:text-red-300"
+                level=" Delete user?"
+                content="This action cannot be undone. It will permanently remove the user’s
             account and all associated data from the system."
-              buttonName="Delete"
-            />
-          </div>
+                buttonName="Delete"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

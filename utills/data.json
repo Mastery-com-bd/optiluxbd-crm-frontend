@@ -1,249 +1,56 @@
 {
-  "success": true,
-  "message": "Retrieve user profile successfully",
-  "data": {
-    "id": 2,
-    "name": "Admin User",
-    "email": "admin@gmail.com",
-    "phone": "+1234567890",
-    "roles": [
-      {
-        "id": 2,
-        "userId": 2,
-        "roleId": 1,
-        "role": {
-          "id": 1,
-          "name": "ADMIN",
-          "description": "ADMIN role",
-          "description1": "ADMIN role",
-          "permissions": [
-            {
-              "id": 1,
-              "roleId": 1,
-              "permissionId": 1,
-              "created_at": "2025-11-07T06:25:37.908Z",
-              "permission": {
-                "id": 1,
-                "name": "USERS CREATE",
-                "key": "users.create"
-              }
-            },
-            {
-              "id": 2,
-              "roleId": 1,
-              "permissionId": 2,
-              "created_at": "2025-11-07T06:25:38.736Z",
-              "permission": {
-                "id": 2,
-                "name": "USERS VIEW",
-                "key": "users.view"
-              }
-            },
-            {
-              "id": 3,
-              "roleId": 1,
-              "permissionId": 3,
-              "created_at": "2025-11-07T06:25:39.361Z",
-              "permission": {
-                "id": 3,
-                "name": "USERS UPDATE",
-                "key": "users.update"
-              }
-            },
-            {
-              "id": 4,
-              "roleId": 1,
-              "permissionId": 4,
-              "created_at": "2025-11-07T06:25:40.845Z",
-              "permission": {
-                "id": 4,
-                "name": "USERS DELETE",
-                "key": "users.delete"
-              }
-            },
-            {
-              "id": 5,
-              "roleId": 1,
-              "permissionId": 5,
-              "created_at": "2025-11-07T06:25:41.915Z",
-              "permission": {
-                "id": 5,
-                "name": "PRODUCTS CREATE",
-                "key": "products.create"
-              }
-            },
-            {
-              "id": 6,
-              "roleId": 1,
-              "permissionId": 6,
-              "created_at": "2025-11-07T06:25:43.248Z",
-              "permission": {
-                "id": 6,
-                "name": "PRODUCTS VIEW",
-                "key": "products.view"
-              }
-            },
-            {
-              "id": 7,
-              "roleId": 1,
-              "permissionId": 7,
-              "created_at": "2025-11-07T06:25:44.065Z",
-              "permission": {
-                "id": 7,
-                "name": "PRODUCTS UPDATE",
-                "key": "products.update"
-              }
-            },
-            {
-              "id": 8,
-              "roleId": 1,
-              "permissionId": 8,
-              "created_at": "2025-11-07T06:25:45.045Z",
-              "permission": {
-                "id": 8,
-                "name": "PRODUCTS DELETE",
-                "key": "products.delete"
-              }
-            },
-            {
-              "id": 9,
-              "roleId": 1,
-              "permissionId": 9,
-              "created_at": "2025-11-07T06:25:46.530Z",
-              "permission": {
-                "id": 9,
-                "name": "CUSTOMERS CREATE",
-                "key": "customers.create"
-              }
-            },
-            {
-              "id": 10,
-              "roleId": 1,
-              "permissionId": 10,
-              "created_at": "2025-11-07T06:25:47.147Z",
-              "permission": {
-                "id": 10,
-                "name": "CUSTOMERS VIEW",
-                "key": "customers.view"
-              }
-            },
-            {
-              "id": 11,
-              "roleId": 1,
-              "permissionId": 11,
-              "created_at": "2025-11-07T06:25:48.318Z",
-              "permission": {
-                "id": 11,
-                "name": "CUSTOMERS UPDATE",
-                "key": "customers.update"
-              }
-            },
-            {
-              "id": 12,
-              "roleId": 1,
-              "permissionId": 12,
-              "created_at": "2025-11-07T06:25:49.319Z",
-              "permission": {
-                "id": 12,
-                "name": "CUSTOMERS DELETE",
-                "key": "customers.delete"
-              }
-            },
-            {
-              "id": 13,
-              "roleId": 1,
-              "permissionId": 13,
-              "created_at": "2025-11-07T06:25:49.878Z",
-              "permission": {
-                "id": 13,
-                "name": "IMAGES UPLOAD",
-                "key": "images.upload"
-              }
-            },
-            {
-              "id": 14,
-              "roleId": 1,
-              "permissionId": 14,
-              "created_at": "2025-11-07T06:25:50.737Z",
-              "permission": {
-                "id": 14,
-                "name": "IMAGES DELETE",
-                "key": "images.delete"
-              }
-            },
-            {
-              "id": 15,
-              "roleId": 1,
-              "permissionId": 15,
-              "created_at": "2025-11-07T06:25:51.617Z",
-              "permission": {
-                "id": 15,
-                "name": "IMAGES OPTIMIZE",
-                "key": "images.optimize"
-              }
-            },
-            {
-              "id": 16,
-              "roleId": 1,
-              "permissionId": 16,
-              "created_at": "2025-11-07T06:25:52.656Z",
-              "permission": {
-                "id": 16,
-                "name": "ADDRESSES CREATE",
-                "key": "addresses.create"
-              }
-            },
-            {
-              "id": 17,
-              "roleId": 1,
-              "permissionId": 17,
-              "created_at": "2025-11-07T06:25:53.274Z",
-              "permission": {
-                "id": 17,
-                "name": "ADDRESSES VIEW",
-                "key": "addresses.view"
-              }
-            },
-            {
-              "id": 18,
-              "roleId": 1,
-              "permissionId": 18,
-              "created_at": "2025-11-07T06:25:54.034Z",
-              "permission": {
-                "id": 18,
-                "name": "ADDRESSES UPDATE",
-                "key": "addresses.update"
-              }
-            },
-            {
-              "id": 19,
-              "roleId": 1,
-              "permissionId": 19,
-              "created_at": "2025-11-07T06:25:55.077Z",
-              "permission": {
-                "id": 19,
-                "name": "ADDRESSES DELETE",
-                "key": "addresses.delete"
-              }
-            },
-            {
-              "id": 20,
-              "roleId": 1,
-              "permissionId": 20,
-              "created_at": "2025-11-07T06:25:56.212Z",
-              "permission": {
-                "id": 20,
-                "name": "ROLES MANAGE",
-                "key": "roles.manage"
-              }
-            }
-          ]
-        }
-      }
-    ],
-    "created_at": "2025-11-07T06:29:14.362Z",
-    "last_login": "2025-11-08T16:22:30.054Z",
-    "avatar_public_id": null,
-    "avatar_secure_url": null
-  }
+  "permissions": [
+    "USERS CREATE",
+    "USERS VIEW",
+    "USERS UPDATE",
+    "USERS DELETE",
+    "PRODUCTS CREATE",
+    "PRODUCTS VIEW",
+    "PRODUCTS UPDATE",
+    "PRODUCTS DELETE",
+    "PACKAGES CREATE",
+    "PACKAGES VIEW",
+    "PACKAGES UPDATE",
+    "PACKAGES DELETE",
+    "CUSTOMERS CREATE",
+    "CUSTOMERS VIEW",
+    "CUSTOMERS UPDATE",
+    "CUSTOMERS DELETE",
+    "IMAGES UPLOAD",
+    "IMAGES DELETE",
+    "IMAGES OPTIMIZE",
+    "IMAGES VIEW",
+    "ADDRESSES CREATE",
+    "ADDRESSES VIEW",
+    "ADDRESSES UPDATE",
+    "ADDRESSES DELETE",
+    "ROLES MANAGE",
+    "ROLES VIEW",
+    "ROLES CREATE",
+    "ROLES UPDATE",
+    "ROLES DELETE",
+    "ORDERS CREATE",
+    "ORDERS VIEW",
+    "ORDERS VIEW OWN",
+    "ORDERS UPDATE",
+    "ORDERS DELETE",
+    "COMMISSIONS CREATE",
+    "COMMISSIONS VIEW",
+    "COMMISSIONS VIEW OWN",
+    "COMMISSIONS VIEW ALL",
+    "SETTINGS VIEW",
+    "SETTINGS CREATE",
+    "SETTINGS UPDATE",
+    "SETTINGS DELETE",
+    "SETTINGS MANAGE",
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+    "CONTACTS CREATE",
+    "AUDIT VIEW",
+    "AUDIT VIEW OWN",
+    "AUDIT EXPORT"
+  ]
 }
