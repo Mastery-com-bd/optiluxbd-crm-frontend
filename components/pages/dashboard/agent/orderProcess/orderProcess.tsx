@@ -670,7 +670,7 @@ const OrderProcessingSystem = () => {
                 </div>
 
                 {/* Order Information */}
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2">
                     Order Details
                   </h3>
@@ -713,7 +713,7 @@ const OrderProcessingSystem = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Contact Outcome Select */}
                 <div className="space-y-2">
