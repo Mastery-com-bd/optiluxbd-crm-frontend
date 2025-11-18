@@ -8,14 +8,34 @@ const leadsAgentsApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
-        updateOrderStatus: builder.mutation({
+        getPendingCustomers: builder.query({
+            query: () => ({
+                url: `/allocations/agent/pending`,
+                method: "GET",
+            }),
+        }),
+        acceptPendingLeads: builder.mutation({
+            query: (data) => ({
+                url: `/allocations/agent/accept`,
+                method: "POST",
+                body: data,
+            }),
+        }),
+        rejectPendingLeads: builder.mutation({
+            query: (data) => ({
+                url: `/allocations/agent/reject`,
+                method: "POST",
+                body: data,
+            }),
+        }),
+        updateLeadStatus: builder.mutation({
             query: (data) => ({
                 url: `/contacts/log`,
                 method: "POST",
-                body: data.status,
+                body: data,
             }),
         }),
     }),
 });
 
-export const { useGetAssignCustomersQuery } = leadsAgentsApi;
+export const { useGetAssignCustomersQuery, useGetPendingCustomersQuery, useAcceptPendingLeadsMutation, useRejectPendingLeadsMutation, useUpdateLeadStatusMutation } = leadsAgentsApi;
