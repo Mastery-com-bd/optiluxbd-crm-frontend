@@ -47,11 +47,13 @@ export default function Navbar() {
     : "/dashboard/profile";
 
   const handleLogOut = async () => {
+    const toastId = toast.loading("logging out", { duration: 3000 });
     try {
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
         toast.success(res?.message, {
+          id: toastId,
           duration: 3000,
         });
         router.push("/login");
@@ -62,7 +64,7 @@ export default function Navbar() {
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
 
@@ -234,7 +236,7 @@ export default function Navbar() {
                   setTheme("light");
                   console.log("clicked sun");
                 }}
-                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
                 aria-label="Switch to light mode"
               >
                 <SunIcon className="w-6 h-6" />
@@ -244,7 +246,7 @@ export default function Navbar() {
                   setTheme("dark");
                   console.log("clicked moon");
                 }}
-                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
+                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
                 aria-label="Switch to dark mode"
               >
                 <MoonIcon className="w-6 h-6" />
@@ -254,7 +256,7 @@ export default function Navbar() {
               <>
                 <Link href={dashboardRoute}>
                   <Button
-                    className="bg-orange-500 hover:bg-orange-600 text-white flex gap-2"
+                    className="bg-orange-500 hover:bg-orange-600 text-white flex gap-2 cursor-pointer"
                     size="sm"
                     variant="default"
                   >
@@ -265,7 +267,7 @@ export default function Navbar() {
                 <Button
                   onClick={handleLogOut}
                   variant="ghost"
-                  className="text-red-400 hover:text-white p-2"
+                  className="text-red-400 hover:text-white p-2 cursor-pointer"
                 >
                   <LogOut size={18} />
                 </Button>
@@ -273,7 +275,7 @@ export default function Navbar() {
             ) : (
               <Link href="/login">
                 <Button
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold cursor-pointer"
                   size="sm"
                 >
                   <LogIn size={16} className="mr-2" /> Login

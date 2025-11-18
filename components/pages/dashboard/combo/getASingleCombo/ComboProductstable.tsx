@@ -16,11 +16,18 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 const ComboProductstable = ({ ComboPackage }: { ComboPackage: TCombo }) => {
+  // local state
   const [formData, setFormData] = useState<TCombo | null>(ComboPackage || null);
   const [isLoading, setIsLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  // redux state
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
   const [updatePackage] = useUpdateComboPackageMutation();
 
   useEffect(() => {
@@ -84,13 +91,15 @@ const ComboProductstable = ({ ComboPackage }: { ComboPackage: TCombo }) => {
         <CardTitle className="text-lg font-semibold">
           Included Products
         </CardTitle>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => setEditing(!editing)}
-        >
-          {editing ? "Done" : "Edit"}
-        </Button>
+        {permissions.includes("PACKAGES UPDATE") && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setEditing(!editing)}
+          >
+            {editing ? "Done" : "Edit"}
+          </Button>
+        )}
       </CardHeader>
 
       <CardContent className="overflow-x-auto">

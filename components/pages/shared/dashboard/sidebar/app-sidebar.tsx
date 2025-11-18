@@ -1,14 +1,8 @@
 "use client";
-import {
-  Frame,
-  GalleryVerticalEnd,
-  PieChart,
-  Map as MapIcon,
-} from "lucide-react";
+import { Frame } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
 import {
@@ -18,16 +12,13 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { crmRoutes } from "@/constants/CRM_Navigation";
+import { crmRoutes, NavRoute } from "@/constants/CRM_Navigation";
 import Optilux from "../../../../../public/images/OptiluxBD.png";
 import Image from "next/image";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "OpitluxBD",
@@ -41,17 +32,18 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useAppSelector(currentUser);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={data?.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={data?.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user as TAuthUSer} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

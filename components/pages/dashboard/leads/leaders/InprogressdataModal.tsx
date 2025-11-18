@@ -1,15 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useGetAllInProgressLeadsQuery } from "@/redux/features/leads/leadsApi";
+import {
+  useAcceptBatchMutation,
+  useGetAllInProgressLeadsQuery,
+  useRejectBatchMutation,
+} from "@/redux/features/leads/leadsApi";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { convertDate } from "@/utills/dateConverter";
+import { toast } from "sonner";
 
 export interface TCreator {
   id: number;
@@ -33,6 +40,58 @@ const InprogressdataModal = () => {
   const { data, isLoading } = useGetAllInProgressLeadsQuery(undefined);
   const reports = (data?.data as TProgressdata[]) || [];
   const hasReport = !!reports;
+
+  const [acceptbatch] = useAcceptBatchMutation();
+  const [rejectBatch] = useRejectBatchMutation();
+
+  const handleAccept = async () => {
+    const payload = {
+      batchId: data?.data[0]?.id,
+    };
+    const toastId = toast.loading("accepting asigned customer batch");
+    try {
+      const res = await acceptbatch(payload).unwrap();
+      toast.dismiss(toastId);
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setOpen(false);
+      }
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      const errorInfo =
+        error?.data?.message ||
+        error?.data?.error ||
+        error?.error ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setOpen(false);
+    }
+  };
+
+  const handleReject = async () => {
+    const payload = {
+      batchId: data?.data?.batch?.id,
+    };
+    const toastId = toast.loading("rejecting asigned customer batch");
+    try {
+      const res = await rejectBatch(payload).unwrap();
+      toast.dismiss(toastId);
+      if (res?.success) {
+        toast.success(res?.message, { duration: 3000 });
+        setOpen(false);
+      }
+    } catch (error: any) {
+      toast.dismiss(toastId);
+      const errorInfo =
+        error?.data?.message ||
+        error?.data?.error ||
+        error?.error ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setOpen(false);
+    }
+  };
+
   return (
     <div>
       {/* Open Modal Button */}
@@ -51,7 +110,7 @@ const InprogressdataModal = () => {
             <div className="p-4 text-center text-sm text-muted-foreground">
               Loading progress report...
             </div>
-          ) : !hasReport ? (
+          ) : reports.length < 1 ? (
             /* If empty */
             <div className="p-4 text-center text-sm text-muted-foreground">
               No progress report available.
@@ -98,6 +157,18 @@ const InprogressdataModal = () => {
                   </div>
                 </div>
               ))}
+              {reports?.length && (
+                <DialogFooter className="flex justify-between">
+                  {hasReport && (
+                    <div className="flex gap-2">
+                      <Button variant="destructive" onClick={handleReject}>
+                        Reject
+                      </Button>
+                      <Button onClick={handleAccept}>Accept</Button>
+                    </div>
+                  )}
+                </DialogFooter>
+              )}
             </div>
           )}
         </DialogContent>

@@ -12,9 +12,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useUpdateComboPackageMutation } from "@/redux/features/combo/comboApi";
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
   const [updatePackage] = useUpdateComboPackageMutation();
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
 
   const handleDeactive = async () => {
     const currentComboPackage = {
@@ -35,7 +40,6 @@ const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
         toast.success(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
-      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.errors[0]?.message ||
@@ -60,15 +64,17 @@ const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
             </Button>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
-          <Button
-            onClick={() => handleDeactive()}
-            variant="ghost"
-            className="text-left hover:bg-transparent"
-          >
-            {activity ? "Deactivate" : "Inactive"}
-          </Button>
-        </DropdownMenuItem>
+        {permissions.includes("ROLES UPDATE") && (
+          <DropdownMenuItem className="flex items-center gap-2">
+            <Button
+              onClick={() => handleDeactive()}
+              variant="ghost"
+              className="text-left hover:bg-transparent"
+            >
+              {activity ? "Deactivate" : "Inactive"}
+            </Button>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
