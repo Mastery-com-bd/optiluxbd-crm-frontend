@@ -13,15 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Download,
-  Grid3x3,
-  List,
-  Pencil,
-  Plus,
-  Search,
-  Trash2,
-} from "lucide-react";
+import { Download, Grid3x3, List, Plus, Search, Trash2 } from "lucide-react";
 import {
   useDeleteProductMutation,
   useGetAllProductQuery,
@@ -66,12 +58,11 @@ const AllProducts = () => {
   const [viewMode, setViewMode] = useState("list");
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteProduct] = useDeleteProductMutation();
-  const {
-    data: productRes,
-    refetch,
-    isLoading,
-  } = useGetAllProductQuery(filters, { refetchOnMountOrArgChange: false });
+  const { data: productRes, isLoading } = useGetAllProductQuery(filters, {
+    refetchOnMountOrArgChange: false,
+  });
   const PRODUCTS = productRes?.data?.products || [];
+  console.log(PRODUCTS);
   const pagination = productRes?.pagination || {
     page: 1,
     totalPages: 1,
@@ -92,7 +83,6 @@ const AllProducts = () => {
         success: "Product deleted successfully!",
         error: "Failed to delete product.",
       });
-      refetch();
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -358,7 +348,7 @@ const AllProducts = () => {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           <ProductDetails product={product} />
-                          <UpdateProduct product={product} refetch={refetch} />
+                          <UpdateProduct product={product} />
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
