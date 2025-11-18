@@ -7,7 +7,7 @@ export function NotificationBell() {
   const { notifications, unreadCount, markAsRead, deleteNotification } =
     useNotifications();
   const [isOpen, setIsOpen] = useState(false);
-console.log("Notifications",notifications)
+console.log("Notifications", notifications);
   return (
     <div className="relative">
       {/* Bell Button */}

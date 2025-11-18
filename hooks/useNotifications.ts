@@ -1,4 +1,4 @@
-"use client"; // Remove this line if using Pages Router
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { io, Socket } from "socket.io-client";
@@ -12,33 +12,20 @@ export function useNotifications() {
   const [isLoading, setIsLoading] = useState(true);
   const socketRef = useRef<Socket | null>(null);
 
-  // Get auth token from cookies
   const getAuthToken = () => {
     if (typeof document === "undefined") return null;
-    
     const cookies = document.cookie.split("; ");
-    console.log(cookies)
-    const accessTokenCookie = cookies.find((c) => c.startsWith("accessToken="));
-    
-    if (accessTokenCookie) {
-      return accessTokenCookie.split("=")[1];
-    }
-    
-    return null;
+    console.log(document.cookie);
+    const tokenCookie = cookies.find((c) => c.startsWith("accessToken="));
+    console.log(tokenCookie);
+    return tokenCookie ? tokenCookie.split("=")[1] : null;
   };
 
-  // Fetch notifications from API
   const fetchNotifications = useCallback(async () => {
-    const token = getAuthToken();
-    console.log(token)
-    // if (!token) return;
-
     try {
       const response = await fetch(
         `${config.next_public_base_api}/notifications?limit=50`,
-        {
-          credentials: "include",
-        },
+        { credentials: "include" },
       );
 
       if (response.ok) {
@@ -55,7 +42,6 @@ export function useNotifications() {
     }
   }, []);
 
-  // Mark notification as read
   const markAsRead = useCallback(async (id: number) => {
     const token = getAuthToken();
     if (!token) return;
@@ -66,9 +52,6 @@ export function useNotifications() {
         {
           method: "PATCH",
           credentials: "include",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
       );
 
@@ -83,7 +66,6 @@ export function useNotifications() {
     }
   }, []);
 
-  // Mark all as read
   const markAllAsRead = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -94,9 +76,6 @@ export function useNotifications() {
         {
           method: "PATCH",
           credentials: "include",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
       );
 
@@ -109,7 +88,6 @@ export function useNotifications() {
     }
   }, []);
 
-  // Delete notification
   const deleteNotification = useCallback(
     async (id: number) => {
       const token = getAuthToken();
@@ -121,9 +99,6 @@ export function useNotifications() {
           {
             method: "DELETE",
             credentials: "include",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           },
         );
 
@@ -141,59 +116,95 @@ export function useNotifications() {
     [notifications],
   );
 
-  // Setup WebSocket connection
+  // ============ SOCKET.IO SETUP ==============
   useEffect(() => {
     const token = getAuthToken();
     if (!token) {
+      console.warn("❌ No auth token found - skipping WebSocket connection");
       setIsLoading(false);
       return;
     }
 
-    // Initial fetch
+    console.log("🔄 Initializing notifications...");
     fetchNotifications();
 
-    // Connect WebSocket - Use the base API URL without /api suffix for WebSocket
-    const wsUrl = config.next_public_base_api?.replace("/api", "") || "http://localhost:5000";
-    
+    // Construct WebSocket URL properly
+    const wsUrl = config.next_public_ws_url || "http://localhost:5000";
+
+    console.log("🔌 Connecting to WebSocket:", wsUrl);
+    console.log("🔑 Using token:", token.substring(0, 20) + "...");
+
     const socket = io(wsUrl, {
       auth: { token },
-      transports: ["websocket", "polling"],
+      transports: ["websocket", "polling"], // Try polling as fallback
       reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5,
+      timeout: 10000,
+      path: "/socket.io",
+      withCredentials: true,
     });
 
     socket.on("connect", () => {
-      console.log("✅ WebSocket connected");
+      console.log("✅ WebSocket connected - Socket ID:", socket.id);
       setIsConnected(true);
     });
 
-    socket.on("notification", (notification: Notification) => {
-      console.log("📬 New notification:", notification);
+    socket.on("connect_error", (error) => {
+      console.error("❌ WebSocket connection error:", error.message);
+      console.error("Error details:", error);
+      setIsConnected(false);
+    });
+
+    socket.on("error", (error) => {
+      console.error("❌ WebSocket error:", error);
+    });
+
+    // NEW NOTIFICATION
+    socket.on("notification:new", (notification: Notification) => {
+      console.log("📬 New notification received:", notification);
       setNotifications((prev) => [notification, ...prev]);
       setUnreadCount((prev) => prev + 1);
 
-      // Show browser notification if permitted
+      // Show browser notification if permission granted
       if ("Notification" in window && Notification.permission === "granted") {
         new Notification(notification.title, {
           body: notification.message,
           icon: "/icon-192x192.png",
+          tag: `notification-${notification.id}`,
         });
       }
     });
 
-    socket.on("disconnect", () => {
-      console.log("❌ WebSocket disconnected");
+    // UNREAD COUNT
+    socket.on("notification:unreadCount", ({ count }: { count: number }) => {
+      console.log("📊 Unread count updated:", count);
+      setUnreadCount(count);
+    });
+
+    // DELETED
+    socket.on(
+      "notification:deleted",
+      ({ notificationId }: { notificationId: number }) => {
+        console.log("🗑️ Notification deleted:", notificationId);
+        setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+      },
+    );
+
+    socket.on("disconnect", (reason) => {
+      console.log("⚠️ WebSocket disconnected:", reason);
       setIsConnected(false);
     });
 
     socketRef.current = socket;
 
-    // Cleanup
     return () => {
+      console.log("🔌 Cleaning up WebSocket connection");
       socket.disconnect();
     };
   }, [fetchNotifications]);
 
-  // Request notification permission
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();

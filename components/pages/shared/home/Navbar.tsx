@@ -154,6 +154,7 @@ export default function Navbar() {
                 aria-label="Switch to light mode">
                 <SunIcon className="w-6 h-6" />
               </button>
+              <NotificationBell />
               <button
                 onClick={() => {
                   setTheme("dark");
@@ -232,8 +233,7 @@ export default function Navbar() {
                   console.log("clicked sun");
                 }}
                 className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                aria-label="Switch to light mode"
-              >
+                aria-label="Switch to light mode">
                 <SunIcon className="w-6 h-6" />
               </button>
               <button
@@ -242,8 +242,7 @@ export default function Navbar() {
                   console.log("clicked moon");
                 }}
                 className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                aria-label="Switch to dark mode"
-              >
+                aria-label="Switch to dark mode">
                 <MoonIcon className="w-6 h-6" />
               </button>
             </div>
@@ -261,8 +260,7 @@ export default function Navbar() {
                 <Button
                   onClick={handleLogOut}
                   variant="ghost"
-                  className="text-red-400 hover:text-white p-2 cursor-pointer"
-                >
+                  className="text-red-400 hover:text-white p-2 cursor-pointer">
                   <LogOut size={18} />
                 </Button>
               </>
@@ -270,8 +268,7 @@ export default function Navbar() {
               <Link href="/login">
                 <Button
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold cursor-pointer"
-                  size="sm"
-                >
+                  size="sm">
                   <LogIn size={16} className="mr-2" /> Login
                 </Button>
               </Link>
