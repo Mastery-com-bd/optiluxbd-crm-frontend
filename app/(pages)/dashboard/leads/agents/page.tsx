@@ -1,9 +1,11 @@
-import React from 'react'
+import OrderProcessingSystem from "@/components/pages/dashboard/agent/orderProcess/orderProcess";
 
 const Page = () => {
   return (
-    <div>Page</div>
-  )
-}
+    <div>
+      <OrderProcessingSystem />
+    </div>
+  );
+};
 
-export default Page
+export default Page;
