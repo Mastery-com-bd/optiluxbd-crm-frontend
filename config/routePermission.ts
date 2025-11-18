@@ -98,4 +98,11 @@ export const routePermissions: Record<string, string[]> = {
     "ALLOCATIONS REPORTS VIEW OWN",
     "CONTACTS CREATE",
   ],
+  "/dashboard/test-notifications": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS VIEW OWN",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "CONTACTS CREATE",
+  ],
 };
