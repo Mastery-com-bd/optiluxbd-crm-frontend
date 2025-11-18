@@ -1,82 +1,35 @@
 export const routePermissions: Record<string, string[]> = {
   //   👤 User Management
-  "/dashboard/admin/manage-users": [
-    "USERS VIEW",
-    "USERS CREATE",
-    "USERS UPDATE",
-    "USERS DELETE",
-  ],
+  "/dashboard/admin/manage-users": ["USERS VIEW"],
 
   // 🛍️ Product Management
-  // "/dashboard/admin/products": [
-  //   "PRODUCTS VIEW",
-  //   "PRODUCTS CREATE",
-  //   "PRODUCTS UPDATE",
-  //   "PRODUCTS DELETE",
-  // ],
+  "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
+  "/dashboard/admin/products/add-product": ["PRODUCTS CREATE"],
+  "/dashboard/admin/products/drafts": ["PRODUCTS VIEW"],
+  "/dashboard/admin/products/deleted": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/inventory": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/reviews": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
-  "/dashboard/admin/products/all": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
-  "/dashboard/admin/products/drafts": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
-  "/dashboard/admin/products/add": ["PRODUCTS CREATE"],
-  "/dashboard/admin/products/deleted": ["PRODUCTS DELETE"],
+  "/dashboard/admin/products/bulk-upload": ["PRODUCTS VIEW", "PRODUCTS DELETE"],
+
   // combo management
-  "/dashboard/combo": [
-    "PACKAGES VIEW",
-    "PACKAGES CREATE",
-    "PACKAGES UPDATE",
-    "PACKAGES DELETE",
-  ],
-  "/dashboard/combo/create-combo": [
-    "PACKAGES CREATE",
-    "PACKAGES VIEW",
-    "PACKAGES DELETE",
-    "PACKAGES UPDATE",
-  ],
+  "/dashboard/combo": ["PACKAGES VIEW"],
+  "/dashboard/combo/create-combo": ["PACKAGES CREATE"],
 
   // 🧾 Customer Management
   "/dashboard/customers": ["CUSTOMERS VIEW"],
   "/dashboard/customers/add": ["CUSTOMERS CREATE"],
-  "/dashboard/customers/id": ["CUSTOMERS VIEW"],
-  "/dashboard/customers/edit": ["CUSTOMERS UPDATE"],
-  "/dashboard/customers/delete": ["CUSTOMERS DELETE"],
-
-  // 🖼️ Image Management
-  "/dashboard/admin/images": [
-    "IMAGES UPLOAD",
-    "IMAGES DELETE",
-    "IMAGES OPTIMIZE",
-  ],
-
-  // 🏠 Address Management
-  "/dashboard/admin/addresses": [
-    "ADDRESSES VIEW",
-    "ADDRESSES CREATE",
-    "ADDRESSES UPDATE",
-    "ADDRESSES DELETE",
-  ],
+  "dashboard/customers/id/": ["CUSTOMERS UPDATE"],
 
   // 💰 ORDERS Management
-  "/dashboard/agent/orders/my-orders": [
-    "ORDERS CREATE",
-    "ORDERS VIEW",
-    "ORDERS VIEW OWN",
-    "ORDERS UPDATE",
-    "ORDERS DELETE",
-  ],
+  "/dashboard/agent/orders/my-orders": ["ORDERS VIEW OWN"],
+  "/dashboard/admin/orders/top-sellers": ["ORDERS VIEW"],
+  "/dashboard/admin/orders": ["ORDERS VIEW"],
 
-  // 💸 Commissions Management
-  "/dashboard/admin/commissions": [
-    "COMMISSIONS VIEW",
-    "COMMISSIONS VIEW OWN",
-    "COMMISSIONS VIEW ALL",
-  ],
   // 💸 role Management
   "/dashboard/hr&staff/roles": ["ROLES MANAGE"],
-  "/dashboard/hr&staff/staff": ["USERS VIEW"],
   "/dashboard/hr&staff/staff/add": ["USERS CREATE"],
 
-  // leads management
+  // leads management of admin
   "/dashboard/leads/admin/assign-agent": [
     "ALLOCATIONS ASSIGN LEADER",
     "ALLOCATIONS DISTRIBUTE",
@@ -91,11 +44,14 @@ export const routePermissions: Record<string, string[]> = {
     "ALLOCATIONS REPORTS VIEW OWN",
     "ALLOCATIONS VIEW OWN",
   ],
+
+  // lead management of leaders
   "/dashboard/leads/leaders": [
     "ALLOCATIONS ASSIGN LEADER",
     "ALLOCATIONS DISTRIBUTE",
-    "ALLOCATIONS VIEW OWN",
     "ALLOCATIONS REPORTS VIEW OWN",
-    "CONTACTS CREATE",
+    "ALLOCATIONS VIEW OWN",
   ],
+  // lead management of agents
+  "/dashboard/leads/agents": ["ALLOCATIONS VIEW OWN"],
 };

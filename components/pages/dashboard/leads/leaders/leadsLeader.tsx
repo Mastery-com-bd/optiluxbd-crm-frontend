@@ -14,6 +14,7 @@ import LeadersDataModal from "./LeadersDataModal";
 import TeamReportModal from "./TeamReportModal";
 import InprogressdataModal from "./InprogressdataModal";
 import LeadersSkeleton from "./LeadersSkeleton";
+import AutoDistributeModal from "./AutoDistributeModal";
 
 const LeadsLeader = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -27,7 +28,6 @@ const LeadsLeader = () => {
 
   const allLeads = data?.data;
   const teamMembers = teamMembersData?.data;
-  console.log(teamMembers);
   const unAssignedCustomer = unassignedCustomerData?.data || [];
 
   const toggleWorker = (id: number) => {
@@ -122,7 +122,7 @@ const LeadsLeader = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Agents</CardTitle>
+                <AutoDistributeModal selectedWorkers={selectedWorkers} />
               </CardHeader>
               <CardContent className="space-y-2">
                 <Agentcard

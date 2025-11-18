@@ -18,23 +18,24 @@ const LeaderAssignSkeleton = () => {
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-          {/* Card 1 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
+        <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {/* Total Teams */}
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
             <Skeleton className="h-4 w-20 mb-2" />
-            <Skeleton className="h-7 w-10" />
+            <Skeleton className="h-8 w-12" />
           </div>
 
-          {/* Card 2 */}
-          <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
-            <Skeleton className="h-4 w-28 mb-2" />
-            <Skeleton className="h-7 w-10" />
+          {/* Total Unassigned Agents */}
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg border dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-8 w-12" />
           </div>
 
-          {/* Button Skeleton */}
-          <div className="flex items-center justify-center p-2">
-            <Skeleton className="h-10 w-28 rounded-md" />
-          </div>
+          {/* Team Report Dropdown Skeleton */}
+          <Skeleton className="h-10 w-full" />
+
+          {/* Assign Button Skeleton */}
+          <Skeleton className="h-10 w-full" />
         </CardContent>
       </Card>
 

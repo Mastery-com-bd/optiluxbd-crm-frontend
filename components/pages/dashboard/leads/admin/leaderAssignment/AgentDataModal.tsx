@@ -52,7 +52,6 @@ const AgentDataModal = ({
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   const [selectedAgentId, setSelectedAgentId] = useState<number | null>(null);
   const [assignAgent] = useAssignAGentToLeaderMutation();
-  console.log(pagination);
   const [openModal, setOpenModal] = useState(false);
 
   const handleSearch = async (val: any) => {

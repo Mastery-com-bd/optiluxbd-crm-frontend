@@ -8,16 +8,40 @@ import CustomerdataModal from "./CustomerdataModal";
 import Leadercard from "../Leadercard";
 import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
 import LeaderAssignSkeleton from "../leaderAssignment/LeaderAssignSkeleton";
+import { useGetUnassignedCustomersByAdminQuery } from "@/redux/features/customers/cutomersApi";
+import { TCustomer } from "@/types/customer.types";
 
 const AssignCustomer = () => {
+  const [filters, setFilters] = useState({
+    search: "",
+    sortBy: "created_at",
+    order: "desc",
+    limit: 50,
+    page: 1,
+  });
+  // get all team data
   const { data, isLoading } = useGetAllteamsQuery(undefined);
   const teams = (data?.data as TTeam[]) || [];
   const totalTeams = teams.length;
 
+  // get unassigned agent data
   const { data: unassignedAgentData } = useGetAllUnassignedAgentsQuery({
     refetchOnMountOrArgChange: false,
   });
   const unassignedCount = unassignedAgentData?.pagination?.total || 0;
+
+  // get unassigned customer data
+  const { data: unAssignedCustomer, isLoading: unAssignedCustomerLoading } =
+    useGetUnassignedCustomersByAdminQuery(filters, {
+      refetchOnMountOrArgChange: false,
+    });
+  const customers = (unAssignedCustomer?.data as TCustomer[]) || [];
+  const customersPagination = unAssignedCustomer?.pagination || {
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  };
+
   const [selectedTeam, setSelectedTeam] = useState<TTeam | null>(null);
 
   const handleCardClick = (team: TTeam) => {
@@ -80,7 +104,7 @@ const AssignCustomer = () => {
               Unassigned Customers
             </p>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {0}
+              {customersPagination?.total}
             </p>
           </div>
         </CardContent>
@@ -88,6 +112,11 @@ const AssignCustomer = () => {
           <CustomerdataModal
             setSelectedTeam={setSelectedTeam}
             selectedTeam={selectedTeam}
+            customers={customers}
+            pagination={customersPagination}
+            isLoading={unAssignedCustomerLoading}
+            setFilters={setFilters}
+            filters={filters}
           />
         </CardContent>
       </Card>

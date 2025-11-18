@@ -1,10 +1,18 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { buildParams } from "@/utills/paramsBuilder";
 
 const leedsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllteams: builder.query({
       query: () => ({
         url: `/allocations/admin/teams`,
+        method: "GET",
+      }),
+      providesTags: ["leads"],
+    }),
+    getAdminTeamReports: builder.query({
+      query: (params = {}) => ({
+        url: `/allocations/admin/reports?${buildParams(params)}`,
         method: "GET",
       }),
       providesTags: ["leads"],
@@ -32,13 +40,14 @@ const leedsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["leads"],
+      invalidatesTags: ["leads", "unassigned customers", "customers"],
     }),
   }),
 });
 
 export const {
   useGetAllteamsQuery,
+  useGetAdminTeamReportsQuery,
   useAssignAGentToLeaderMutation,
   useRemoveAgentsFromALeaderMutation,
   useAssignCustomerToLeadersMutation,

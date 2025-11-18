@@ -65,7 +65,6 @@ const CreateComboModal = ({
     const finalData = { ...data, items: selectedProducts };
     try {
       const res = await createCombo(finalData).unwrap();
-      console.log(res);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();
@@ -91,7 +90,7 @@ const CreateComboModal = ({
     >
       <DialogTrigger asChild>
         <Button
-          disabled={!selectedProducts.length}
+          disabled={selectedProducts.length < 2}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="w-4 h-4 mr-2" />

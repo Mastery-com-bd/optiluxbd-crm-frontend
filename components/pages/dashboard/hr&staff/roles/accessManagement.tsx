@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -25,8 +24,9 @@ import { Plus, Users, Shield, Trash2, UserPlus } from "lucide-react";
 import { debounce } from "@/utills/debounce";
 import Link from "next/link";
 import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
-
-
+import { useAppSelector } from "@/redux/hooks";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { getPermissions } from "@/utills/getPermissionAndRole";
 
 interface User {
   id: number;
@@ -50,7 +50,6 @@ interface Permission {
   updated_at: string;
 }
 
-
 interface RolePermission {
   id: number;
   roleId: number;
@@ -70,11 +69,16 @@ interface Role {
 }
 
 const AccessManagement: React.FC = () => {
+  // get roles
+  const { data: roleData, isLoading: roleIsLoading } = useGetAllRolesQuery(
+    undefined,
+    { refetchOnMountOrArgChange: false }
+  );
+  const roles: Role[] = roleData?.data || [];
 
-    const { data: roleData, isLoading: roleIsLoading } = useGetAllRolesQuery(undefined);
-    console.log(roleData);
-
-const roles: Role[] = roleData?.data || [];
+  // get current user
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
 
   const [newUser, setNewUser] = useState({ name: "", email: "" });
   const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
@@ -82,14 +86,13 @@ const roles: Role[] = roleData?.data || [];
   const handleAddUser = (roleId: number) => {
     console.log("Add user to role", roleId, newUser);
   };
-  
+
   const handleSearch = async (query: string) => {
     // search the users by query
     setSearchQuery(query);
     // set the user details
     setNewUser({ name: "", email: "" });
     // add the user to the role
-    console.log(searchQuery)
   };
   const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 

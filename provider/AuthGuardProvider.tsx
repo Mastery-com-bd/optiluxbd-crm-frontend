@@ -15,7 +15,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
-
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -34,8 +33,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       }
       return;
     }
-
-    // ---- Logged-in user ----
 
     // Always allowed pages for any logged-in user
     if (alwaysAllowedRoutes.includes(pathname)) {

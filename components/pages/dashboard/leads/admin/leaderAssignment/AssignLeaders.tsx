@@ -8,18 +8,35 @@ import AgentDataModal from "./AgentDataModal";
 import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
 import Leadercard from "../Leadercard";
 import LeaderAssignSkeleton from "./LeaderAssignSkeleton";
+import TeamReportModal from "./TeamReportModal";
+
+export interface TTeamReport {
+  batch: {
+    id: number;
+  };
+  leaderId: number;
+  totals: {
+    cancelled: number;
+    draft: number;
+    ordered: number;
+    totalAssigned: number;
+  };
+}
 
 const AssignLeaders = () => {
+  // local states
+  const [selectedTeam, setSelectedTeam] = useState<TTeam | null>(null);
+
+  // get all teams
   const { data, isLoading } = useGetAllteamsQuery(undefined);
   const teams = (data?.data as TTeam[]) || [];
   const totalTeams = teams.length;
 
+  // get un assigned agents
   const { data: unassignedAgentData } = useGetAllUnassignedAgentsQuery({
     refetchOnMountOrArgChange: false,
   });
-
   const unassignedCount = unassignedAgentData?.pagination?.total || 0;
-  const [selectedTeam, setSelectedTeam] = useState<TTeam | null>(null);
 
   const handleCardClick = (team: TTeam) => {
     if (selectedTeam?.leader.id === team.leader.id) {
@@ -49,7 +66,7 @@ const AssignLeaders = () => {
           <CardTitle className="text-lg font-semibold">Team Summary</CardTitle>
         </CardHeader>
 
-        <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4 ">
+        <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 ">
           {/* Total Teams */}
           <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 border dark:border-gray-700">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -69,7 +86,8 @@ const AssignLeaders = () => {
               {unassignedCount}
             </p>
           </div>
-
+          {/* team report dropdown */}
+          <TeamReportModal teams={teams} />
           {/* Assign Button */}
           <div className="flex items-center justify-center p-2">
             <AgentDataModal

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,39 +18,63 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
 import { useAssignCustomerToLeadersMutation } from "@/redux/features/leadsmanagement/leedsApi";
 import { TCustomer } from "@/types/customer.types";
 import { TTeam } from "@/types/teamleader.types";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import ModalSkeleton from "../ModalSkeleton";
-
+import { TFiltering } from "@/types/filter.types";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { debounce } from "@/utills/debounce";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+// types are here
+type TPagination = { page: 1; totalPages: 1; total: 0 };
+type TCustomerModalProps = {
+  setSelectedTeam: Dispatch<SetStateAction<TTeam | null>>;
+  selectedTeam: TTeam | null;
+  customers: TCustomer[];
+  pagination: TPagination;
+  isLoading: boolean;
+  filters: TFiltering;
+  setFilters: Dispatch<SetStateAction<TFiltering>>;
+};
+// component starts
 const CustomerdataModal = ({
   setSelectedTeam,
   selectedTeam,
-}: {
-  setSelectedTeam: Dispatch<SetStateAction<TTeam | null>>;
-  selectedTeam: TTeam | null;
-}) => {
-  const [filters, setFilters] = useState({
-    search: "",
-    sortBy: "created_at",
-    order: "desc",
-    limit: 10,
-    page: 1,
-  });
-
-  const { data, isLoading } = useGetAllCustomerQuery(filters, {
-    refetchOnMountOrArgChange: false,
-  });
-
-  const customers = (data?.data as TCustomer[]) || [];
-  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
+  customers,
+  pagination,
+  isLoading,
+  filters,
+  setFilters,
+}: TCustomerModalProps) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState<number[]>([]);
   const [endDate, setEndDate] = useState<string>("");
-  const [assignAgent] = useAssignCustomerToLeadersMutation();
+  const [count, setCount] = useState(0);
+  const [assignCustomer] = useAssignCustomerToLeadersMutation();
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("All");
+
+  const handleSearch = async (val: any) => {
+    setFilters({ ...filters, search: val });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   const toggleCustomerSelection = (id: number) => {
     setSelectedCustomerIds((prev) =>
@@ -59,23 +82,49 @@ const CustomerdataModal = ({
     );
   };
 
-  const handleConfirmAssign = async () => {
-    const data: { leaderId: number; customerIds: number[]; endDate?: string } =
-      {
-        leaderId: selectedTeam?.leader.id as number,
-        customerIds: selectedCustomerIds,
-      };
+  const handleQuickSelect = (value: number) => {
+    const sliced = customers.slice(0, value);
+    const ids = sliced.map((c) => c.id);
+    setSelectedCustomerIds(ids);
+  };
 
-    if (endDate) data.endDate = endDate;
+  const resetModalState = () => {
+    setSelectedCustomerIds([]);
+    setEndDate("");
+    setCount(0);
+    setFilters({
+      search: "",
+      sortBy: "created_at",
+      order: "desc",
+      limit: 50,
+      page: 1,
+    });
+    setSelectedStatus("All");
+  };
+
+  const handleConfirmAssign = async () => {
+    const customerIdsToAssign =
+      count > 0
+        ? customers.slice(0, count).map((c) => c.id)
+        : selectedCustomerIds;
+    const data = {
+      leaderId: selectedTeam?.leader.id as number,
+      customerIds: customerIdsToAssign,
+      ...(endDate && { endDate }),
+    };
+
     // Show loading toast
     const toastId = toast.loading("Assigning customers to team...");
+
     try {
-      const res = await assignAgent(data).unwrap();
+      setLoading(false);
+      const res = await assignCustomer(data).unwrap();
       toast.dismiss(toastId);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         setOpenModal(false);
         setSelectedTeam(null);
+        setLoading(true);
       }
     } catch (error: any) {
       toast.dismiss(toastId);
@@ -85,11 +134,20 @@ const CustomerdataModal = ({
         error?.error ||
         "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
+      setLoading(true);
     }
   };
 
   return (
-    <Dialog open={openModal} onOpenChange={setOpenModal}>
+    <Dialog
+      open={openModal}
+      onOpenChange={(isOpen) => {
+        setOpenModal(isOpen);
+        if (!isOpen) {
+          resetModalState();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button disabled={!selectedTeam} onClick={() => setOpenModal(true)}>
           Assign Customers
@@ -99,18 +157,134 @@ const CustomerdataModal = ({
         <ModalSkeleton />
       ) : (
         <DialogContent className="sm:max-w-lg">
+          <h1 className="flex justify-center items-center">
+            Distribute Customers
+          </h1>
+          <div className="flex items-center gap-3">
+            <Input
+              type="number"
+              placeholder="Count"
+              disabled={selectedCustomerIds.length > 0}
+              className="w-28"
+              value={count}
+              max={customers.length}
+              onChange={(e) => setCount(Number(e.target.value))}
+            />
+
+            <Select
+              disabled={count > 0}
+              onValueChange={(v) => handleQuickSelect(Number(v))}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Quick select…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={`${Math.round(customers.length * 0.1)}`}>
+                  10%
+                </SelectItem>
+                <SelectItem value={`${Math.round(customers.length * 0.2)}`}>
+                  20%
+                </SelectItem>
+                <SelectItem value={`${Math.round(customers.length * 0.3)}`}>
+                  30%
+                </SelectItem>
+                <SelectItem value={`${Math.round(customers.length * 0.4)}`}>
+                  40%
+                </SelectItem>
+
+                <SelectItem value={`${Math.round(customers.length * 0.5)}`}>
+                  50%
+                </SelectItem>
+                <SelectItem value={`${Math.round(customers.length * 0.6)}`}>
+                  60%
+                </SelectItem>
+
+                <SelectItem value={`${Math.round(customers.length * 0.7)}`}>
+                  70%
+                </SelectItem>
+
+                <SelectItem value={`${Math.round(customers.length * 0.8)}`}>
+                  80%
+                </SelectItem>
+
+                <SelectItem value={`${Math.round(customers.length * 0.9)}`}>
+                  90%
+                </SelectItem>
+
+                <SelectItem value={`${customers.length}`}>100%</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <DialogHeader>
             <DialogTitle>Select Customers</DialogTitle>
           </DialogHeader>
-
-          <div className="overflow-y-auto border rounded-md pb-4 max-h-96">
+          <div className="flex items-center justify-between">
+            <div className="w-full sm:w-1/2">
+              <Input
+                type="text"
+                placeholder="Search by name or ID"
+                value={filters.search}
+                onChange={(e) => debouncedLog(e.target.value)}
+                className="w-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+                >
+                  {selectedStatus === "All"
+                    ? "Filter by Level"
+                    : selectedStatus}
+                  <ChevronDown size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              >
+                {[
+                  "All",
+                  "BRONZE_PENDING",
+                  "BRONZE",
+                  "SILVER_PENDING",
+                  "SILVER",
+                  "GOLD_PENDING",
+                  "GOLD",
+                  "DIAMOND_PENDING",
+                  "DIAMOND",
+                  "PLATINUM_PENDING",
+                  "PLATINUM",
+                ].map((status) => (
+                  <DropdownMenuItem
+                    key={status}
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setFilters((prev) => ({
+                        ...prev,
+                        customerLevel:
+                          status === "All" ? undefined : status.toUpperCase(),
+                        page: 1,
+                      }));
+                    }}
+                    className={status === selectedStatus ? "font-medium" : ""}
+                  >
+                    {status}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="overflow-y-auto border rounded-md pb-4 max-h-72">
             <Table>
               <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
                 <TableRow>
                   <TableHead className="text-center">Select</TableHead>
+                  <TableHead>ID</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Level</TableHead>
-                  <TableHead>Phone</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -132,15 +306,18 @@ const CustomerdataModal = ({
                       <TableCell className="text-center">
                         <input
                           type="checkbox"
+                          disabled={count > 0}
                           checked={selectedCustomerIds.includes(customer.id)}
                           onChange={() => toggleCustomerSelection(customer.id)}
                         />
                       </TableCell>
                       <TableCell className="font-medium">
-                        {customer.name}
+                        {customer?.customerId}
                       </TableCell>
-                      <TableCell>{customer.customerLevel}</TableCell>
-                      <TableCell>{customer.phone}</TableCell>
+                      <TableCell className="font-medium">
+                        {customer?.name}
+                      </TableCell>
+                      <TableCell>{customer?.customerLevel}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -155,7 +332,7 @@ const CustomerdataModal = ({
           </div>
 
           {/* End Date Field */}
-          <div className="mt-4">
+          <div>
             <label className="text-sm font-medium">End Date (optional)</label>
             <input
               type="date"
@@ -164,26 +341,34 @@ const CustomerdataModal = ({
               className="w-full mt-1 p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
             />
           </div>
-
-          <DialogFooter className="mt-4 flex justify-end gap-2">
+          <div className=" flex justify-end gap-2">
             <Button
               variant="outline"
+              disabled={loading}
               onClick={() => {
                 setSelectedCustomerIds([]);
                 setEndDate("");
                 setOpenModal(false);
+                setCount(0);
+                setFilters({
+                  search: "",
+                  sortBy: "created_at",
+                  order: "desc",
+                  limit: 50,
+                  page: 1,
+                });
+                setSelectedStatus("All");
               }}
             >
               Cancel
             </Button>
-
             <Button
-              disabled={selectedCustomerIds.length === 0}
+              disabled={(selectedCustomerIds.length === 0 && !count) || loading}
               onClick={handleConfirmAssign}
             >
               Assign
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       )}
     </Dialog>

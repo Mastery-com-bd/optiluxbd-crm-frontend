@@ -21,6 +21,7 @@ const leadsApi = baseApi.injectEndpoints({
         url: `/allocations/leader/inprogress`,
         method: "GET",
       }),
+      providesTags: ["customers for leaders", "unassigned customers"],
     }),
     getTeamReport: builder.query({
       query: () => ({
@@ -57,7 +58,11 @@ const leadsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["unassigned customers", "team-report"],
+      invalidatesTags: [
+        "unassigned customers",
+        "team-report",
+        "customers for leaders",
+      ],
     }),
     rejectBatch: builder.mutation({
       query: (data) => ({
@@ -65,7 +70,11 @@ const leadsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["unassigned customers", "team-report"],
+      invalidatesTags: [
+        "unassigned customers",
+        "team-report",
+        "customers for leaders",
+      ],
     }),
     /*  getRoleById: builder.query({
             query: (id) => ({
