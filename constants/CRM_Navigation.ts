@@ -94,6 +94,7 @@ export const crmRoutes: NavRoute[] = [
       "ORDERS CREATE",
       "ORDERS UPDATE",
       "ORDERS DELETE",
+      "ORDERS VIEW OWN",
     ],
     children: [
       {
@@ -104,12 +105,14 @@ export const crmRoutes: NavRoute[] = [
       {
         title: "My Orders",
         path: "/dashboard/agent/orders/my-orders",
-        permissions: ["ORDERS VIEW"],
+        permissions: ["ORDERS VIEW OWN"],
+        roles: ["AGENT"],
       },
       {
         title: "Top Sellers",
         path: "/dashboard/admin/orders/top-sellers",
         permissions: ["ORDERS VIEW"],
+        roles: ["ADMIN"],
       },
     ],
   },
@@ -218,6 +221,7 @@ export const crmRoutes: NavRoute[] = [
     title: "HR & Staff",
     icon: Users2,
     permissions: ["USERS CREATE", "USERS VIEW", "ROLES MANAGE", "ROLES VIEW"],
+    roles: ["ADMIN"],
     children: [
       {
         title: "All Employee",
@@ -232,7 +236,7 @@ export const crmRoutes: NavRoute[] = [
       {
         title: "Roles & Permissions",
         path: "/dashboard/hr&staff/roles",
-        permissions: ["ROLES MANAGE", "ROLES VIEW"],
+        permissions: ["ROLES MANAGE"],
       },
     ],
   },

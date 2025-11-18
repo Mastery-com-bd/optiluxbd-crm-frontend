@@ -121,7 +121,7 @@ const UserProfile = ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center space-y-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 flex flex-col items-center space-y-10">
       <div className="w-full lg:w-[60vw] bg-white dark:bg-gray-800 rounded-2xl shadow p-8">
         <div className="space-y-6">
           {/* Profile Header Section */}

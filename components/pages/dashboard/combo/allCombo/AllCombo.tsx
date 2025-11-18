@@ -38,6 +38,7 @@ const AllCombo = () => {
     refetchOnMountOrArgChange: false,
   });
   const comboPackages = data?.data?.packages as TComboPackage[];
+  console.log(data?.data);
   const pagination = data?.data?.pagination || {
     page: 1,
     totalPages: 1,
