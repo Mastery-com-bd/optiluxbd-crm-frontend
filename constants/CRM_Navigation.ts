@@ -117,6 +117,25 @@ export const crmRoutes: NavRoute[] = [
       },
     ],
   },
+  // Courier route
+  {
+    title: "Courier",
+    icon: Users,
+    permissions: [
+      "ORDERS VIEW",
+      "ORDERS CREATE",
+      "ORDERS UPDATE",
+      "ORDERS DELETE",
+      "ORDERS VIEW OWN",
+    ],
+    children: [
+      {
+        title: "All Courier",
+        path: "/dashboard/couriar",
+        permissions: ["ORDERS VIEW"],
+      },
+    ],
+  },
 
   // leads management route
   {
