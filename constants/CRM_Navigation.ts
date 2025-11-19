@@ -5,6 +5,7 @@ import {
   Users,
   Users2,
   Gift,
+  Activity,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -131,17 +132,6 @@ export const crmRoutes: NavRoute[] = [
     roles: ["ADMIN", "AGENT", "TEAM_LEADER"],
     children: [
       {
-        title: "All Leads",
-        path: "/dashboard/admin/leads",
-        permissions: [
-          "ALLOCATIONS ASSIGN LEADER",
-          "ALLOCATIONS DISTRIBUTE",
-          "ALLOCATIONS REPORTS VIEW",
-          "ALLOCATIONS REPORTS VIEW OWN",
-          "ALLOCATIONS VIEW OWN",
-        ],
-      },
-      {
         title: "Agent Distribution",
         path: "/dashboard/leads/admin/assign-agent",
         roles: ["ADMIN"],
@@ -237,6 +227,22 @@ export const crmRoutes: NavRoute[] = [
         title: "Roles & Permissions",
         path: "/dashboard/hr&staff/roles",
         permissions: ["ROLES MANAGE"],
+      },
+    ],
+  },
+  {
+    title: "Activity",
+    icon: Activity,
+    children: [
+      {
+        title: "All Activity",
+        path: "/dashboard/activity",
+        permissions: ["AUDIT VIEW"],
+        roles: ["ADMIN"],
+      },
+      {
+        title: "My Activity",
+        path: "/dashboard/my-activity",
       },
     ],
   },
