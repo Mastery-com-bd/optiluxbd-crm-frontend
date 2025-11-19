@@ -38,7 +38,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
     }
-    if (pathname === "/dashboard" && role.includes("ADMIN")) {
+    if (pathname === "/dashboard/activity" && !role.includes("ADMIN")) {
+      router.replace("/dashboard/profile");
+      return;
+    }
+    if (
+      (pathname === "/dashboard" || pathname === "/dashboard/activity") &&
+      role.includes("ADMIN")
+    ) {
       return;
     }
 
@@ -57,6 +64,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const hasPermission = requiredPerms.some((p) => permissions.includes(p));
     if (!hasPermission) {
       router.replace("/dashboard/profile");
+      return;
     }
   }, [hydrated, pathname, user, router, role, permissions]);
 
