@@ -16,9 +16,16 @@ export function useNotifications() {
     if (typeof document === "undefined") return null;
     const cookies = document.cookie.split("; ");
     console.log(document.cookie);
-    const tokenCookie = cookies.find((c) => c.startsWith("accessToken="));
-    console.log(tokenCookie);
-    return tokenCookie ? tokenCookie.split("=")[1] : null;
+    // Try common names; handle '=' inside value by splitting at first '='
+    const names = ["accessToken", "access_token", "token"];
+    for (const name of names) {
+      const cookie = cookies.find((c) => c.startsWith(name + "="));
+      if (cookie) {
+        const idx = cookie.indexOf("=");
+        return decodeURIComponent(cookie.substring(idx + 1));
+      }
+    }
+    return null;
   };
 
   const fetchNotifications = useCallback(async () => {
@@ -43,9 +50,7 @@ export function useNotifications() {
   }, []);
 
   const markAsRead = useCallback(async (id: number) => {
-    const token = getAuthToken();
-    if (!token) return;
-
+    // server authenticates via cookie; no JS token required
     try {
       const response = await fetch(
         `${config.next_public_base_api}/notifications/${id}/read`,
@@ -67,9 +72,7 @@ export function useNotifications() {
   }, []);
 
   const markAllAsRead = useCallback(async () => {
-    const token = getAuthToken();
-    if (!token) return;
-
+    // server authenticates via cookie; no JS token required
     try {
       const response = await fetch(
         `${config.next_public_base_api}/notifications/read-all`,
@@ -90,9 +93,7 @@ export function useNotifications() {
 
   const deleteNotification = useCallback(
     async (id: number) => {
-      const token = getAuthToken();
-      if (!token) return;
-
+      // server authenticates via cookie; no JS token required
       try {
         const response = await fetch(
           `${config.next_public_base_api}/notifications/${id}`,
@@ -119,24 +120,26 @@ export function useNotifications() {
   // ============ SOCKET.IO SETUP ==============
   useEffect(() => {
     const token = getAuthToken();
-    if (!token) {
-      console.warn("❌ No auth token found - skipping WebSocket connection");
-      setIsLoading(false);
-      return;
-    }
 
     console.log("🔄 Initializing notifications...");
+    // Always try to fetch notifications; server auth via cookie (credentials: include)
     fetchNotifications();
 
     // Construct WebSocket URL properly
     const wsUrl = config.next_public_ws_url || "http://localhost:5000";
 
     console.log("🔌 Connecting to WebSocket:", wsUrl);
-    console.log("🔑 Using token:", token.substring(0, 20) + "...");
+    if (token)
+      console.log(
+        "🔑 Using token (js-visible):",
+        token.substring(0, 20) + "...",
+      );
 
     const socket = io(wsUrl, {
-      auth: { token },
-      transports: ["websocket", "polling"], // Try polling as fallback
+      // If a JS-visible token exists pass it; otherwise rely on cookie-based auth via polling
+      auth: token ? { token } : undefined,
+      // Use polling first so browser sends cookies on handshake (polling uses XHR)
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,

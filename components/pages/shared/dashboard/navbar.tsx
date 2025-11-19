@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { NotificationBell } from "@/components/notification/NotificationBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Popover,
@@ -76,8 +77,7 @@ const Navbar: React.FC = () => {
                     console.log("clicked sun");
                   }}
                   className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                  aria-label="Switch to light mode"
-                >
+                  aria-label="Switch to light mode">
                   <SunIcon className="w-6 h-6" />
                 </button>
                 <button
@@ -86,74 +86,11 @@ const Navbar: React.FC = () => {
                     console.log("clicked moon");
                   }}
                   className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                  aria-label="Switch to dark mode"
-                >
+                  aria-label="Switch to dark mode">
                   <MoonIcon className="w-6 h-6" />
                 </button>
               </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="relative p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
-                    <BellDotIcon className="w-6 h-6" />
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white text-[10px] font-bold text-destructive-foreground shadow">
-                      3
-                    </span>
-                    {/* Optional: subtle pulse animation on the badge */}
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                    </span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
-                  <div className="p-4 border-b">
-                    <h4 className="font-semibold text-sm">Notifications</h4>
-                  </div>
-                  <div className="max-h-80 overflow-y-auto">
-                    {/* Mock CRM notifications */}
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-blue-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">New lead assigned</p>
-                        <p className="text-xs text-muted-foreground">
-                          Sarah Johnson just filled the contact form.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          2 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-green-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">Deal won</p>
-                        <p className="text-xs text-muted-foreground">
-                          Acme Corp deal ($45,000) moved to Closed-Won.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          1 hour ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">Task overdue</p>
-                        <p className="text-xs text-muted-foreground">
-                          Follow-up with TechGlobal is 3 days overdue.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          3 hours ago
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-2 border-t">
-                    <button className="w-full text-center text-xs text-primary hover:underline">
-                      View all notifications
-                    </button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <NotificationBell />
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
@@ -177,7 +114,7 @@ const Navbar: React.FC = () => {
                           .map(
                             (r) =>
                               r.charAt(0).toUpperCase() +
-                              r.slice(1).toLowerCase()
+                              r.slice(1).toLowerCase(),
                           )
                           .join(", ")}
                       </span>
@@ -205,21 +142,18 @@ const Navbar: React.FC = () => {
                   <hr className="my-2" />
                   <Link
                     href="/dashboard/profile"
-                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                  >
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
                     Profile
                   </Link>
                   <Link
                     href="/dashboard/settings"
-                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                  >
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
                     Settings
                   </Link>
                   <hr className="my-2" />
                   <button
                     onClick={handleLogOut}
-                    className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
-                  >
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
                     Log out
                   </button>
                 </PopoverContent>
