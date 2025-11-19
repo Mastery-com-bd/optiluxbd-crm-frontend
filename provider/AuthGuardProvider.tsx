@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const publicRoutes = ["/login", "/register"];
-const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings"];
+const alwaysAllowedRoutes = ["/dashboard/profile", "/dashboard/settings", "/dashboard/couriar", "/dashboard/couriar/local-create", "/dashboard/couriar/local-with-steadfast", "/dashboard/couriar/local-update-status", "/dashboard/couriar/local-list", "/dashboard/couriar/local-get-by-id", "/dashboard/couriar/steadfast-create-order", "/dashboard/couriar/steadfast-bulk-order", "/dashboard/couriar/steadfast-status-invoice", "/dashboard/couriar/steadfast-balance", "/dashboard/couriar/steadfast-return-request"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
