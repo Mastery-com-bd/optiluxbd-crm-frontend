@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"; // Remove this if using Pages Router
 
 import { useEffect, useState } from "react";
@@ -9,17 +11,16 @@ export function NotificationBell() {
   const {
     notifications,
     unreadCount,
-    markAsRead,
-    deleteNotification,
+    handleMarkAsRead,
+    handleMarkAllAsRead,
     isConnected,
     isLoading,
-    markAllAsRead,
+    handleDeleteNotification,
   } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const [isPushSupported, setIsPushSupported] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
-
   // Check support and existing subscription on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -52,7 +53,7 @@ export function NotificationBell() {
         `${config.next_public_base_api}/notifications/push/vapid-key`,
         {
           credentials: "include",
-        },
+        }
       );
       if (!res.ok) throw new Error(`Failed to get VAPID key: ${res.status}`);
       const { data } = await res.json();
@@ -74,7 +75,7 @@ export function NotificationBell() {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ subscription }),
-        },
+        }
       );
       if (!subRes.ok) {
         const txt = await subRes.text();
@@ -82,29 +83,29 @@ export function NotificationBell() {
       }
 
       setIsSubscribed(true);
-      console.log("Push subscription successful");
     } catch (err) {
-      console.error("Failed to subscribe to push:", err);
       // keep UI responsive
       setIsSubscribed(false);
     } finally {
       setPushLoading(false);
     }
   }
-  console.log("Notifications", notifications);
+
   return (
     <div className="relative">
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100"
-        aria-label="Notifications">
+        className="relative p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+        aria-label="Notifications"
+      >
         {/* Bell Icon */}
         <svg
           className="w-6 h-6"
           fill="none"
           stroke="currentColor"
-          viewBox="0 0 24 24">
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -131,11 +132,11 @@ export function NotificationBell() {
           />
 
           {/* Notification Panel */}
-          <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-128 overflow-hidden">
+          <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 max-h-128 overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="p-2 space-y-3">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   Notifications {unreadCount > 0 && `(${unreadCount})`}
                 </h3>
 
@@ -153,21 +154,23 @@ export function NotificationBell() {
                       ? "bg-green-500"
                       : isLoading
                       ? "bg-yellow-400"
-                      : "bg-gray-300"
-                  }`}></span>
+                      : "bg-gray-300 dark:bg-gray-500"
+                  }`}
+                ></span>
               </div>
-
-              <div className="flex items-center gap-2">
+              <div className="flex flex-row-reverse justify-between items-center">
                 {/* Mark all as read */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    markAllAsRead();
+                    handleMarkAllAsRead();
                   }}
                   disabled={unreadCount === 0}
-                  className="px-2 py-1 text-xs rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50">
+                  className="px-2 py-1 text-xs rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50"
+                >
                   Mark all read
                 </button>
+
                 {/* Push subscribe UI */}
                 {isPushSupported && (
                   <button
@@ -177,7 +180,8 @@ export function NotificationBell() {
                       await subscribeToPush();
                     }}
                     disabled={pushLoading || isSubscribed}
-                    className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:opacity-90 disabled:opacity-60">
+                    className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:opacity-90 disabled:opacity-60"
+                  >
                     {pushLoading
                       ? "..."
                       : isSubscribed
@@ -185,74 +189,75 @@ export function NotificationBell() {
                       : "Enable Push"}
                   </button>
                 )}
-
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-gray-600">
-                  ✕
-                </button>
               </div>
             </div>
 
             {/* Notification List */}
-            <div className="overflow-y-auto max-h-96">
+            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-700">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
+                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                   No notifications yet
                 </div>
               ) : (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${
-                      !notification.isRead ? "bg-blue-50" : ""
-                    }`}
-                    onClick={() => {
-                      markAsRead(notification.id);
-                      if (notification.actionUrl) {
-                        window.location.href = notification.actionUrl;
-                        setIsOpen(false);
-                      }
-                    }}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-sm">
-                            {notification.title}
-                          </h4>
-                          {!notification.isRead && (
-                            <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                          )}
+                <div className="space-y-2 py-2">
+                  {notifications.map((notification: any) => (
+                    <div
+                      key={notification.id}
+                      className={`px-2 py-1 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${
+                        !notification.isRead
+                          ? "bg-gray-200 dark:bg-gray-800"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        handleMarkAsRead(notification.id);
+                        if (notification.actionUrl) {
+                          window.location.href = notification.actionUrl;
+                          setIsOpen(false);
+                        }
+                      }}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                              {notification.title}
+                            </h4>
+                            {!notification.isRead && (
+                              <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                            {notification.message}
+                          </p>
+                          <p className="text-xs text-gray-400 dark:text-gray-400 mt-1">
+                            {new Date(notification.createdAt).toLocaleString()}
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {notification.message}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {new Date(notification.createdAt).toLocaleString()}
-                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteNotification(notification.id);
+                          }}
+                          className="text-gray-400 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-500 ml-2"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteNotification(notification.id);
-                        }}
-                        className="text-gray-400 hover:text-red-600 ml-2">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               )}
             </div>
           </div>

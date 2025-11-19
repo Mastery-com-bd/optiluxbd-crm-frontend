@@ -1,12 +1,12 @@
-import HomePage1 from "@/components/pages/dashboard/dashboard1";
+import DashboardHome from "@/components/pages/dashboard/rootDashboard/DashboardHome";
 import React from "react";
 
 const Home: React.FC = () => {
   return (
     <div>
-      <HomePage1 />
+      <DashboardHome />
     </div>
   );
-}
+};
 
-export default Home
+export default Home;

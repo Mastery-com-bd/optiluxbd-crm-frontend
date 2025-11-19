@@ -1,4 +1,5 @@
 "use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,9 +25,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import DashboardHistoryModal from "./DashboardHistoryModal";
 
-const HomePage1 = () => {
-  // Mock Data
+const DashboardHome = () => {
   const salesData = [
     { month: "Jan", online: 1200, instore: 2100, projected: 3100 },
     { month: "Feb", online: 1400, instore: 2300, projected: 2800 },
@@ -137,6 +138,7 @@ const HomePage1 = () => {
               <span>Dashboard</span>
             </div>
           </div>
+          <DashboardHistoryModal />
         </div>
 
         {/* Stats Cards */}
@@ -551,4 +553,4 @@ const HomePage1 = () => {
   );
 };
 
-export default HomePage1;
+export default DashboardHome;

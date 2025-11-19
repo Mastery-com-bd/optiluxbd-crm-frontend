@@ -17,7 +17,7 @@ import {
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
-import { BellDotIcon, MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -77,7 +77,8 @@ const Navbar: React.FC = () => {
                     console.log("clicked sun");
                   }}
                   className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                  aria-label="Switch to light mode">
+                  aria-label="Switch to light mode"
+                >
                   <SunIcon className="w-6 h-6" />
                 </button>
                 <button
@@ -86,7 +87,8 @@ const Navbar: React.FC = () => {
                     console.log("clicked moon");
                   }}
                   className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                  aria-label="Switch to dark mode">
+                  aria-label="Switch to dark mode"
+                >
                   <MoonIcon className="w-6 h-6" />
                 </button>
               </div>
@@ -114,7 +116,7 @@ const Navbar: React.FC = () => {
                           .map(
                             (r) =>
                               r.charAt(0).toUpperCase() +
-                              r.slice(1).toLowerCase(),
+                              r.slice(1).toLowerCase()
                           )
                           .join(", ")}
                       </span>
@@ -142,18 +144,21 @@ const Navbar: React.FC = () => {
                   <hr className="my-2" />
                   <Link
                     href="/dashboard/profile"
-                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
                     Profile
                   </Link>
                   <Link
                     href="/dashboard/settings"
-                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
+                    className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
                     Settings
                   </Link>
                   <hr className="my-2" />
                   <button
                     onClick={handleLogOut}
-                    className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+                  >
                     Log out
                   </button>
                 </PopoverContent>

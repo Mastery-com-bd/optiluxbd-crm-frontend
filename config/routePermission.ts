@@ -54,4 +54,7 @@ export const routePermissions: Record<string, string[]> = {
   ],
   // lead management of agents
   "/dashboard/leads/agents": ["ALLOCATIONS VIEW OWN"],
+
+  // audit and history
+  "/dashboard/activity": ["AUDIT VIEW"],
 };

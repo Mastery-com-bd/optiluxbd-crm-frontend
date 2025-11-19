@@ -82,6 +82,15 @@ const CustomerdataModal = ({
     );
   };
 
+  const toggleSelectAll = () => {
+    if (selectedCustomerIds.length === customers.length) {
+      setSelectedCustomerIds([]);
+    } else {
+      const all = customers.map((item: TCustomer) => item.id);
+      setSelectedCustomerIds(all);
+    }
+  };
+
   const handleQuickSelect = (value: number) => {
     const sliced = customers.slice(0, value);
     const ids = sliced.map((c) => c.id);
@@ -281,7 +290,17 @@ const CustomerdataModal = ({
             <Table>
               <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
                 <TableRow>
-                  <TableHead className="text-center">Select</TableHead>
+                  <TableHead className="text-center">
+                    <input
+                      type="checkbox"
+                      className="rounded border-border"
+                      checked={
+                        selectedCustomerIds.length === customers.length &&
+                        customers.length > 0
+                      }
+                      onChange={toggleSelectAll}
+                    />
+                  </TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Level</TableHead>
