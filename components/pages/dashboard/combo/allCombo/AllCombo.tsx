@@ -21,9 +21,6 @@ import ComboDropdown from "./ComboDropdown";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import CombocardSkeleton from "./CombocardSkeleton";
-import { useAppSelector } from "@/redux/hooks";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -38,7 +35,6 @@ const AllCombo = () => {
     refetchOnMountOrArgChange: false,
   });
   const comboPackages = data?.data?.packages as TComboPackage[];
-  console.log(data?.data);
   const pagination = data?.data?.pagination || {
     page: 1,
     totalPages: 1,
@@ -46,8 +42,6 @@ const AllCombo = () => {
   };
 
   // get current user
-  const user = useAppSelector(currentUser);
-  const { permissions } = getPermissions(user as TAuthUSer);
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };

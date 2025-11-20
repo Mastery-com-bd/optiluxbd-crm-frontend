@@ -52,15 +52,6 @@ const AssignLeaders = () => {
 
   return (
     <section className=" lg:p-6 space-y-3">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Agent Distributions
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Distribute agents to the teams
-        </p>
-      </div>
-
       <Card className="shadow-sm border dark:border-gray-700">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">Team Summary</CardTitle>

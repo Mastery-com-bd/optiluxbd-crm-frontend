@@ -1,8 +1,3 @@
-"use client";
-
-import { useGetMyAuditQuery } from "@/redux/features/audit/user/userAuditApi";
-import { AuditLogData } from "@/types/audit.types";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,38 +6,38 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
 import PaginationControls from "@/components/ui/paginationComponent";
-import MyActivityExpand from "./MyActivityExpand";
-import ActivityListSkeleton from "../activity/ActivityListSkeleton";
-import { Input } from "@/components/ui/input";
+import { useGetRecentAuditQuery } from "@/redux/features/audit/admin/adminAuditApi";
+import { AuditLog } from "@/types/audit.types";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import ActivityListSkeleton from "../ActivityListSkeleton";
+import ExpandItem from "./ExpandItem";
 
-const MyActivity = () => {
+const RecentActivity = () => {
+  // get all activity
   const [filters, setFilters] = useState({
     entityType: "",
     action: "",
-    startDate: "",
-    endDate: "",
     limit: 50,
     page: 1,
   });
-  const [action, setAction] = useState("All");
-  const [entityType, setEntityType] = useState("All");
-  // get my all activity
-  const { data, isLoading } = useGetMyAuditQuery(filters, {
+  const { data, isLoading } = useGetRecentAuditQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
-  const activity = (data?.data?.logs as AuditLogData[]) || [];
+  const activity = (data?.data?.logs as AuditLog[]) || [];
   const pagination = data?.data?.pagination || {
     page: 1,
     totalPages: 1,
     total: 0,
   };
+  const [action, setAction] = useState("All");
+  const [entityType, setEntityType] = useState("All");
 
   return (
-    <CardContent className=" w-full">
-      <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
-        <div className="flex flex-col md:flex-row items-end justify-between">
+    <CardContent className="w-full p-0 lg:p-4">
+      <Card className="bg-card text-card-foreground border shadow-sm px-2 lg:p-4 mb-5 flex">
+        <div className="flex flex-row items-center justify-between">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -141,47 +136,6 @@ const MyActivity = () => {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="flex flex-col ">
-            <label className="text-gray-700 dark:text-gray-200 text-sm mb-1">
-              Start Date
-            </label>
-            <Input
-              type="date"
-              value={filters.startDate}
-              onChange={(e) =>
-                setFilters({ ...filters, startDate: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex flex-col  ">
-            <label className="text-gray-700 dark:text-gray-200 text-sm mb-1">
-              End Date
-            </label>
-            <Input
-              type="date"
-              value={filters.endDate}
-              onChange={(e) =>
-                setFilters({ ...filters, endDate: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <Button
-              onClick={() =>
-                setFilters({
-                  entityType: "",
-                  action: "",
-                  startDate: "",
-                  endDate: "",
-                  limit: 50,
-                  page: 1,
-                })
-              }
-              className="w-full sm:w-auto px-6"
-            >
-              Reset
-            </Button>
-          </div>
         </div>
       </Card>
       <Card className="px-4">
@@ -190,7 +144,7 @@ const MyActivity = () => {
         ) : (
           <>
             {activity.map((log) => (
-              <MyActivityExpand key={log.id} log={log} />
+              <ExpandItem key={log.id} log={log} />
             ))}
             <PaginationControls
               pagination={pagination}
@@ -204,4 +158,4 @@ const MyActivity = () => {
   );
 };
 
-export default MyActivity;
+export default RecentActivity;
