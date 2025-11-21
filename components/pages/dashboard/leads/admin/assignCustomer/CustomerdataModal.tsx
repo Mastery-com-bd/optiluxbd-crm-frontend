@@ -70,6 +70,7 @@ const CustomerdataModal = ({
   const [loading, setLoading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All");
 
+  console.log(selectedCustomerIds.length);
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };
@@ -125,15 +126,15 @@ const CustomerdataModal = ({
     // Show loading toast
     const toastId = toast.loading("Assigning customers to team...");
 
+    setLoading(true);
     try {
-      setLoading(false);
       const res = await assignCustomer(data).unwrap();
       toast.dismiss(toastId);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         setOpenModal(false);
         setSelectedTeam(null);
-        setLoading(true);
+        setLoading(false);
       }
     } catch (error: any) {
       toast.dismiss(toastId);
@@ -143,7 +144,7 @@ const CustomerdataModal = ({
         error?.error ||
         "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
-      setLoading(true);
+      setLoading(false);
     }
   };
 
@@ -158,7 +159,11 @@ const CustomerdataModal = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button disabled={!selectedTeam} onClick={() => setOpenModal(true)}>
+        <Button
+          className="cursor-pointer"
+          disabled={!selectedTeam}
+          onClick={() => setOpenModal(true)}
+        >
           Assign Customers
         </Button>
       </DialogTrigger>
@@ -378,12 +383,14 @@ const CustomerdataModal = ({
                 });
                 setSelectedStatus("All");
               }}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               disabled={(selectedCustomerIds.length === 0 && !count) || loading}
               onClick={handleConfirmAssign}
+              className="cursor-pointer"
             >
               Assign
             </Button>

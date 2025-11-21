@@ -77,6 +77,7 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
+
         const user: TAuthUSer = {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
@@ -84,7 +85,8 @@ const Login = () => {
           avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
-        const { role } = getPermissions(res?.data?.userData?.roles);
+        const { role } = getPermissions(res?.data?.userData);
+
         dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
@@ -94,6 +96,10 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
+          if (!role.length) {
+            router.push("/activeAccount");
+            return;
+          }
           if (role.includes("ADMIN")) {
             router.push("/dashboard");
           } else {
@@ -274,7 +280,7 @@ const Login = () => {
         Lets get you signed in. Enter your email and password to continue
       </p>
 
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <Button
           onClick={handleAdmin}
           type="submit"
@@ -299,7 +305,7 @@ const Login = () => {
         >
           {isSubmitting ? "Logging in..." : "Team Leader"}
         </Button>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}

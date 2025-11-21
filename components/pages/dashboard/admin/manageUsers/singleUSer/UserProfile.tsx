@@ -448,6 +448,12 @@ const UserProfile = ({ id }: { id: string }) => {
                     {userInfo?.address ?? "no address"}
                   </p>
                 </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    UserID
+                  </p>
+                  <p className="font-medium">{userInfo?.userId ?? "no id"}</p>
+                </div>
                 {role.length > 0 && (
                   <div>
                     {!deleteEditing ? (

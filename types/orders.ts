@@ -1,145 +1,167 @@
 export interface Agent {
-    id: number;
-    name: string;
-    email: string;
+  id: number;
+  name: string;
+  email: string;
 }
 
 export interface Customer {
-    id: number;
-    name: string;
-    phone: string;
-    email: string;
-    location: string;
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  location: string;
 }
 
 export interface Product {
-    id: number;
-    name: string;
-    price: number;
+  id: number;
+  name: string;
+  price: number;
 }
 
 export interface Package {
-    id: number;
-    // Add more fields if needed
+  id: number;
+  // Add more fields if needed
 }
 
 export interface TopProducts {
-    productId: number,
-    productName: string,
-    timesPurchased: number,
-    totalSpent: number,
+  productId: number;
+  productName: string;
+  timesPurchased: number;
+  totalSpent: number;
 }
 
-
 export interface OrderData {
-    id: number;
-    orderDate: string;
-    quantity: number;
-    totalAmount: number;
-    commissionRate: number;
-    commission: number;
-    addressId: string | null;
-    shipping_address_tag: string | null;
-    shipping_address_line1: string | null;
-    shipping_address_line2: string | null;
-    shipping_address_city: string | null;
-    shipping_address_postcode: string | null;
-    shipping_address_geo_lat: string | null;
-    shipping_address_geo_lng: string | null;
+  id: number;
+  orderDate: string;
+  quantity: number;
+  totalAmount: number;
+  commissionRate: number;
+  commission: number;
+  addressId: string | null;
+  shipping_address_tag: string | null;
+  shipping_address_line1: string | null;
+  shipping_address_line2: string | null;
+  shipping_address_city: string | null;
+  shipping_address_postcode: string | null;
+  shipping_address_geo_lat: string | null;
+  shipping_address_geo_lng: string | null;
 
-    agentId: number;
-    customerId: number;
-    productId: number | null;
-    packageId: number | null;
+  agentId: number;
+  customerId: number;
+  productId: number | null;
+  packageId: number | null;
 
-    agent: Agent;
-    customer: Customer;
-    product: Product | null;
-    package: Package | null;
+  agent: Agent;
+  customer: Customer;
+  product: Product | null;
+  package: Package | null;
 }
 
 export type OrderFilters = {
-    sortBy?: string;
-    sort?: "asc" | "desc";
-    limit?: number;
-    page?: number;
-    search?: string;
-    agentId?: number;
-    customerId?: number;
-    productId?: number;
-    packageId?: number;
-    from?: Date;
-    to?: Date;
+  sortBy?: string;
+  sort?: "asc" | "desc";
+  limit?: number;
+  page?: number;
+  search?: string;
+  agentId?: number;
+  customerId?: number;
+  productId?: number;
+  packageId?: number;
+  from?: Date;
+  to?: Date;
 };
 
 export interface SummaryData {
-    summary: {
-        totalOrders: number
-        totalAmount: number
-        totalQuantity: number
-        averageOrderValue: number
-    }
-    ordersByMonth: {
-        [month: string]: number
-    }
-    topProducts: {
-        productId: number
-        productName: string
-        timesPurchased: number
-        totalSpent: number
-    }[]
+  summary: {
+    totalOrders: number;
+    totalAmount: number;
+    totalQuantity: number;
+    averageOrderValue: number;
+  };
+  ordersByMonth: {
+    [month: string]: number;
+  };
+  topProducts: {
+    productId: number;
+    productName: string;
+    timesPurchased: number;
+    totalSpent: number;
+  }[];
 }
 
 export interface AgentOrderSummary {
-    totalOrders: number,
-    totalCommission: string,
-    averageOrderValue: string,
-    totalRevenue: string,
-    averageCommission: string
+  totalOrders: number;
+  totalCommission: string;
+  averageOrderValue: string;
+  totalRevenue: string;
+  averageCommission: string;
 }
 
 export interface OrderItem {
+  id: number;
+  agentId: number;
+  customerId: number;
+  productId: number | null;
+  packageId: number | null;
+  quantity: number;
+  totalAmount: string;
+  commissionRate: string;
+  commission: string;
+  orderDate: string;
+  addressId: number | null;
+
+  // Shipping address fields
+  shipping_address_tag: string | null;
+  shipping_address_line1: string | null;
+  shipping_address_line2: string | null;
+  shipping_address_city: string | null;
+  shipping_address_postcode: string | null;
+  shipping_address_geo_lat: number | null;
+  shipping_address_geo_lng: number | null;
+
+  // Nested customer object
+  customer: {
     id: number;
-    agentId: number;
-    customerId: number;
-    productId: number | null;
-    packageId: number | null;
-    quantity: number;
-    totalAmount: string;
-    commissionRate: string;
-    commission: string;
-    orderDate: string;
-    addressId: number | null;
+    name: string;
+    phone: string;
+    email?: string | null;
+  };
 
-    // Shipping address fields
-    shipping_address_tag: string | null;
-    shipping_address_line1: string | null;
-    shipping_address_line2: string | null;
-    shipping_address_city: string | null;
-    shipping_address_postcode: string | null;
-    shipping_address_geo_lat: number | null;
-    shipping_address_geo_lng: number | null;
+  // Nested product (nullable)
+  product: {
+    id: number;
+    name: string;
+    price: string;
+  } | null;
 
-    // Nested customer object
-    customer: {
-        id: number;
-        name: string;
-        phone: string;
-        email?: string | null;
-    };
+  // Nested package (nullable)
+  package: {
+    id: number;
+    name: string;
+    sku: string;
+    discountPrice: string;
+  } | null;
+}
 
-    // Nested product (nullable)
-    product: {
-        id: number;
-        name: string;
-        price: string;
-    } | null;
-
-    // Nested package (nullable)
-    package: {
-        id: number;
-        name: string;
-        sku: string;
-        discountPrice: string;
-    } | null;
+export interface TProfileOrderData {
+  addressId: number | null;
+  agentId: number | null;
+  batchId: number | null;
+  commission: string;
+  commissionRate: string;
+  customerId: number;
+  id: number;
+  orderDate: string; // ISO string
+  packageId: number | null;
+  productId: number | null;
+  quantity: number;
+  shipping_address_city: string | null;
+  shipping_address_division: string | null;
+  shipping_address_geo_lat: string | null;
+  shipping_address_geo_lng: string | null;
+  shipping_address_post: string | null;
+  shipping_address_street: string | null;
+  shipping_address_tag: string | null;
+  shipping_address_thana: string | null;
+  totalAmount: string;
 }

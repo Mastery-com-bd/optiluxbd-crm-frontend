@@ -96,7 +96,8 @@ export function NotificationBell() {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+        className="relative p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 
+  dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
         aria-label="Notifications"
       >
         {/* Bell Icon */}
@@ -114,9 +115,17 @@ export function NotificationBell() {
           />
         </svg>
 
-        {/* Unread Badge */}
+        {/* Notification Count Badge */}
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+          <span
+            className={`
+        absolute -top-1.5 -right-1.5 
+        flex items-center justify-center
+        text-[10px] font-bold text-white 
+        bg-red-600 rounded-full 
+        h-5 min-w-5 px-1
+      `}
+          >
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
