@@ -7,10 +7,17 @@ import {
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import { motion } from "framer-motion";
-import { Calendar, ChevronDown, Clock, UserCheck } from "lucide-react";
+import {
+  Calendar,
+  ChevronDown,
+  Clock,
+  Pencil,
+  Shield,
+  UserCheck,
+} from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import {
   resetProfile,
   setname,
@@ -23,6 +30,7 @@ import ProfileLoader from "../../../profile/ProfileLoader";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -33,6 +41,12 @@ import { IProfileInfo } from "../../../profile/Profile";
 import ProfileImage from "../../../profile/ProfileImage";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import {
+  useAssignRoleToUserMutation,
+  useGetAllRolesQuery,
+  useRemoveRoleFromUserMutation,
+} from "@/redux/features/roles/roleApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const UserProfile = ({ id }: { id: string }) => {
   // get user information
@@ -40,16 +54,27 @@ const UserProfile = ({ id }: { id: string }) => {
     refetchOnMountOrArgChange: false,
   });
   const userInfo = data?.data;
+  // get all roles
+  const { data: roleData, isLoading: roleLoading } = useGetAllRolesQuery(
+    undefined,
+    { refetchOnMountOrArgChange: false }
+  );
+  const roles = roleData?.data || [];
+  const { role, permissions } = getPermissions(userInfo as TAuthUSer);
   // local state
   const [isEditing, setIsEditing] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [deleteEditing, setDeleteEditing] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(role[0] || "");
+  const [roleId, setRoleId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<IProfileInfo | null>(null);
   // redux state
   const [updateInfo] = useUpdateUserInfoMutation();
   const [deleteUser] = useDeleteUserMutation();
   const dispatch = useAppDispatch();
-  const user = useAppSelector(currentUser);
-  const { role, permissions } = getPermissions(user as TAuthUSer);
+  const [assignRoleToUser] = useAssignRoleToUserMutation();
+  const [removeRoleFromUser] = useRemoveRoleFromUserMutation();
 
   useEffect(() => {
     if (userInfo) {
@@ -116,6 +141,71 @@ const UserProfile = ({ id }: { id: string }) => {
     }
   };
 
+  const handleSaveRole = async (id: number) => {
+    if (selectedRole === role[0]) {
+      toast.error(`you already have ${selectedRole} role`);
+      return;
+    }
+    if (!userInfo?.id || !id) {
+      toast.error("faild to update the user!");
+      return;
+    }
+
+    const data = {
+      userId: userInfo?.id,
+    };
+
+    const toastId = toast.loading("updating role status");
+    try {
+      const res = await assignRoleToUser({ roleId, data }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { id: toastId, duration: 3000 });
+        setEditing(false);
+        setSelectedRole(role[0] || "");
+        setLoading(false);
+        setRoleId(null);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteRole = async (id: number) => {
+    if (!userInfo?.id || !id) {
+      toast.error("faild to update the user!");
+      return;
+    }
+    const data = {
+      userId: userInfo?.id,
+    };
+
+    const toastId = toast.loading("removing role status");
+    try {
+      const res = await removeRoleFromUser({ roleId, data }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, { id: toastId, duration: 3000 });
+        setDeleteEditing(false);
+        setSelectedRole(role[0] || "");
+        setLoading(false);
+        setRoleId(null);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.errors[0]?.message ||
+        error?.data?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
+      setLoading(false);
+    }
+  };
+
   if (isLoading) {
     return <ProfileLoader />;
   }
@@ -173,18 +263,126 @@ const UserProfile = ({ id }: { id: string }) => {
                   <span className="text-gray-600 dark:text-gray-400">
                     Last Login:{" "}
                     <span className="font-medium text-gray-800 dark:text-gray-200">
-                      {userInfo?.last_login
-                        ? new Date(userInfo?.last_login).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )
-                        : "Not yet"}
+                      {userInfo?.last_login ? (
+                        <span>
+                          {
+                            convertDate(new Date(userInfo?.last_login))
+                              .creationTime
+                          }
+                          ,
+                          {
+                            convertDate(new Date(userInfo?.last_login))
+                              .creationDate
+                          }
+                        </span>
+                      ) : (
+                        "Not yet"
+                      )}
                     </span>
                   </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Shield size={16} className="text-purple-500 mt-1" />
+                  {!editing && (
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Role:{" "}
+                        <span className="font-medium text-gray-800 dark:text-gray-200">
+                          {role.length
+                            ? role
+                                .map(
+                                  (r) =>
+                                    r.charAt(0).toUpperCase() +
+                                    r.slice(1).toLowerCase()
+                                )
+                                .join(", ")
+                            : "No role assign"}
+                        </span>
+                      </span>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className=" cursor-pointer"
+                        onClick={() => setEditing(true)}
+                      >
+                        <Pencil size={15} />
+                      </Button>
+                    </div>
+                  )}
+
+                  {editing && (
+                    <div className="space-y-2 w-full ">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-[150px] justify-between"
+                          >
+                            {selectedRole || role[0] || "No role assigned yet"}
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent className="w-[150px]">
+                          {roleLoading ? (
+                            <div className="w-[150px] p-2 space-y-2">
+                              {[...Array(4)].map((_, i) => (
+                                <Skeleton
+                                  key={i}
+                                  className="h-8 w-full rounded-md bg-gray-200 dark:bg-gray-700"
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <>
+                              {roles?.length > 0 &&
+                                roles.map(
+                                  (
+                                    role: { name: string; id: number },
+                                    i: number
+                                  ) => (
+                                    <DropdownMenuItem
+                                      key={i}
+                                      onClick={() => {
+                                        setSelectedRole(role?.name);
+                                        setRoleId(role?.id);
+                                      }}
+                                      className="cursor-pointer"
+                                    >
+                                      {role?.name}
+                                    </DropdownMenuItem>
+                                  )
+                                )}
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <div className="flex items-center gap-10">
+                        <button
+                          className="text-blue-600 cursor-pointer"
+                          onClick={() => {
+                            handleSaveRole(roleId as number);
+                          }}
+                        >
+                          Save
+                        </button>
+
+                        {/* Cancel Button */}
+                        <button
+                          className=" cursor-pointer"
+                          onClick={() => {
+                            setEditing(false);
+                            setSelectedRole(role[0] || "");
+                            setRoleId(null);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -194,14 +392,15 @@ const UserProfile = ({ id }: { id: string }) => {
           <section>
             {!isEditing ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 relative">
-                {permissions.includes("USERS UPDATE") && (
-                  <Button
-                    onClick={() => setIsEditing(true)}
-                    className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
-                  >
-                    Edit
-                  </Button>
-                )}
+                {/* {permissions.includes("USERS UPDATE") && (
+                  
+                )} */}
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  className="absolute top-0 right-0 px-3 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500 dark:text-black dark:hover:bg-yellow-500 transition cursor-pointer"
+                >
+                  Edit
+                </Button>
 
                 {/* Static info */}
                 <div>
@@ -232,19 +431,7 @@ const UserProfile = ({ id }: { id: string }) => {
                   </p>
                   <p className="font-medium">{userInfo?.phone}</p>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Role
-                  </p>
-                  <p className="font-medium capitalize">
-                    {role
-                      .map(
-                        (r) =>
-                          r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
-                      )
-                      .join(", ")}
-                  </p>
-                </div>
+
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Active
@@ -261,6 +448,84 @@ const UserProfile = ({ id }: { id: string }) => {
                     {userInfo?.address ?? "no address"}
                   </p>
                 </div>
+                {role.length > 0 && (
+                  <div>
+                    {!deleteEditing ? (
+                      <Button
+                        size="sm"
+                        className="cursor-pointer"
+                        onClick={() => setDeleteEditing(true)}
+                      >
+                        Delete Role From User
+                      </Button>
+                    ) : (
+                      <div>
+                        <div className="space-y-2 w-full ">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-[150px] justify-between"
+                              >
+                                {selectedRole || role[0]}
+                              </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent className="w-[150px]">
+                              {userInfo?.roles.length > 0 &&
+                                userInfo?.roles.map(
+                                  (
+                                    role: {
+                                      role: {
+                                        name: string;
+                                        id: number;
+                                      };
+                                    },
+                                    i: number
+                                  ) => (
+                                    <DropdownMenuItem
+                                      key={i}
+                                      onClick={() => {
+                                        setSelectedRole(role?.role.name);
+                                        setRoleId(role?.role?.id);
+                                      }}
+                                      className="cursor-pointer"
+                                    >
+                                      {role?.role?.name}
+                                    </DropdownMenuItem>
+                                  )
+                                )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+
+                          <div className="flex items-center gap-10">
+                            <button
+                              className="text-blue-600 cursor-pointer"
+                              onClick={() => {
+                                handleDeleteRole(roleId as number);
+                              }}
+                            >
+                              Save
+                            </button>
+
+                            {/* Cancel Button */}
+                            <button
+                              className=" cursor-pointer"
+                              onClick={() => {
+                                setDeleteEditing(false);
+                                setSelectedRole(role[0] || "");
+                                setRoleId(null);
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <motion.div
@@ -331,37 +596,6 @@ const UserProfile = ({ id }: { id: string }) => {
                   />
                 </div>
 
-                {/* <div className="flex flex-col gap-1">
-                  <label className="text-gray-700 dark:text-gray-200">
-                    Role
-                  </label>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between border rounded-lg text-gray-700 dark:text-gray-100 dark:border-gray-600 dark:bg-gray-700"
-                      >
-                        {getPermissions(formData as TAuthUSer).role ||
-                          "select role"}
-                        <ChevronDown className="w-4 h-4 opacity-70" />
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent className="w-full">
-                      <DropdownMenuRadioGroup
-                        value={getPermissions(formData as TAuthUSer).role[1]}
-                        onValueChange={(value) => setRole(value)}
-                      >
-                        {roleOptions.map((item) => (
-                          <DropdownMenuRadioItem key={item} value={item}>
-                            {item}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div> */}
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-700 dark:text-gray-200">
                     Status

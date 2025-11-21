@@ -10,6 +10,13 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    getMyProfile: builder.query({
+      query: () => ({
+        url: `/users/profile`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+    }),
     getAllUsers: builder.query({
       query: (params = {}) => ({
         url: `/users?${buildParams(params)}`,
@@ -21,6 +28,13 @@ const authApi = baseApi.injectEndpoints({
     getAllUnassignedAgents: builder.query({
       query: (params = {}) => ({
         url: `/users/unassigned-agents?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["unassigned-agents"],
+    }),
+    getUnassignedUsers: builder.query({
+      query: (params = {}) => ({
+        url: `/users/without-roles?${buildParams(params)}`,
         method: "GET",
       }),
       providesTags: ["unassigned-agents"],
@@ -98,8 +112,10 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useGetProfileQuery,
+  useGetMyProfileQuery,
   useGetAllUsersQuery,
   useGetAllUnassignedAgentsQuery,
+  useGetUnassignedUsersQuery,
   useGetASingleUserQuery,
   useUserImageUploadMutation,
   useUpdateUserInfoMutation,

@@ -239,7 +239,7 @@ export default function RoleForm({ roleId, mode = "create" }: RoleFormProps) {
 
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-6">
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="roleName">Role Name</Label>
             <Input
               id="roleName"
@@ -249,7 +249,7 @@ export default function RoleForm({ roleId, mode = "create" }: RoleFormProps) {
               required
             />
           </div>
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="roleDescription">Role Description</Label>
             <Input
               id="roleDescription"

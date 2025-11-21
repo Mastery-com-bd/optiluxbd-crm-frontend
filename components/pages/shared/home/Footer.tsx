@@ -1,13 +1,26 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, MapPin, Phone, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Mail,
+  MailIcon,
+  MapPin,
+  Phone,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/login") || pathname?.startsWith("/register")) return null;
+  if (
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/login") ||
+    pathname?.startsWith("/register")
+  )
+    return null;
 
   return (
     <footer className="bg-black text-white">
@@ -75,6 +88,10 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={16} /> New York, USA
+            </li>
+            <li className="flex items-center gap-2">
+              <MailIcon size={16} />{" "}
+              <Link href="/verify-email">Verify Email</Link>
             </li>
           </ul>
         </div>

@@ -32,6 +32,7 @@ import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
 import { useAppSelector } from "@/redux/hooks";
 import UserTableSkeleton from "./UserTableSkeleton";
+import { convertDate } from "@/utills/dateConverter";
 
 const ManageUsers = () => {
   const [filters, setFilters] = useState({
@@ -226,9 +227,6 @@ const ManageUsers = () => {
                 Name
               </TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
-                Role
-              </TableHead>
-              <TableHead className="text-gray-800 dark:text-gray-200">
                 Email
               </TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
@@ -311,13 +309,18 @@ const ManageUsers = () => {
                     })}
                   </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
-                    {user?.last_login
-                      ? new Date(user?.last_login).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })
-                      : "not yet"}
+                    {user?.last_login ? (
+                      <p className="flex flex-col text-sm">
+                        <span>
+                          {convertDate(new Date(user?.last_login)).creationTime}
+                        </span>
+                        <span>
+                          {convertDate(new Date(user?.last_login)).creationDate}
+                        </span>
+                      </p>
+                    ) : (
+                      "not yet"
+                    )}
                   </TableCell>
                   <TableCell className="flex gap-2 justify-center">
                     <UserActionDropdown
