@@ -48,7 +48,6 @@ import {
   User,
   XCircle,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -91,7 +90,6 @@ const OrderProcessingSystem = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [customerOutcome, setCustomerOutcome] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const router = useRouter();
 
   /* Pending Customer Data */
   const { data: pendingLeads, isLoading: pendingLeadsLoading } =
@@ -160,7 +158,7 @@ const OrderProcessingSystem = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -179,7 +177,7 @@ const OrderProcessingSystem = () => {
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
