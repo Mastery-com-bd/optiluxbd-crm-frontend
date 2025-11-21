@@ -12,7 +12,7 @@ import {
   setPhone,
 } from "@/redux/features/agent/agentProfileSlice";
 import {
-  useGetProfileQuery,
+  useGetMyProfileQuery,
   useUpdateUserInfoMutation,
 } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
@@ -37,7 +37,7 @@ export interface IProfileInfo {
 }
 
 const Profile = () => {
-  const { data, isLoading } = useGetProfileQuery(undefined);
+  const { data, isLoading } = useGetMyProfileQuery(undefined);
   const userInfo = data?.data;
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);

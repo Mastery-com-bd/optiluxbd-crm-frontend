@@ -58,15 +58,6 @@ const AssignCustomer = () => {
 
   return (
     <div className="p-2 lg:p-6 space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Customer Distributions
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Distribute customers to the teams
-        </p>
-      </div>
-
       <Card className="shadow-sm border dark:border-gray-700">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">Team Summary</CardTitle>

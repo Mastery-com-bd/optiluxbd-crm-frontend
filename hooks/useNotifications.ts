@@ -96,7 +96,6 @@ export function useNotifications() {
     });
 
     socket.on("connect_error", (error) => {
-      console.error("❌ WebSocket connection error:", error.message);
       setIsConnected(false);
     });
 

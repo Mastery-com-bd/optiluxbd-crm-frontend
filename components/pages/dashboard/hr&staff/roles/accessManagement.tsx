@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,91 +10,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Users, Shield, Trash2, UserPlus } from "lucide-react";
-import { debounce } from "@/utills/debounce";
+import { Plus, Shield } from "lucide-react";
 import Link from "next/link";
 import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface RoleUser {
-  id: number;
-  userId: number;
-  roleId: number;
-  user: User;
-}
-
-interface Permission {
-  id: number;
-  key: string;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface RolePermission {
-  id: number;
-  roleId: number;
-  permissionId: number;
-  created_at: string;
-  permission: Permission;
-}
-
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-  permissions: RolePermission[];
-  users: RoleUser[];
-}
+import { Role } from "@/types/role.types";
+import AssignedUsers from "./AssignedUsers";
 
 const AccessManagement: React.FC = () => {
+  // get current user
+  const user = useAppSelector(currentUser);
+  const { permissions } = getPermissions(user as TAuthUSer);
+
   // get roles
   const { data: roleData, isLoading: roleIsLoading } = useGetAllRolesQuery(
     undefined,
     { refetchOnMountOrArgChange: false }
   );
   const roles: Role[] = roleData?.data || [];
-
-  // get current user
-  const user = useAppSelector(currentUser);
-  const { permissions } = getPermissions(user as TAuthUSer);
-
-  const [newUser, setNewUser] = useState({ name: "", email: "" });
-  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
-
-  const handleAddUser = (roleId: number) => {
-    console.log("Add user to role", roleId, newUser);
-  };
-
-  const handleSearch = async (query: string) => {
-    // search the users by query
-    setSearchQuery(query);
-    // set the user details
-    setNewUser({ name: "", email: "" });
-    // add the user to the role
-  };
-  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
   if (roleIsLoading)
     return (
@@ -109,9 +45,6 @@ const AccessManagement: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Access Management
-        </h1>
         <Button asChild className="flex items-center gap-2">
           <Link href="/dashboard/hr&staff/roles/add">
             <Plus className="h-4 w-4" /> New Role
@@ -139,60 +72,15 @@ const AccessManagement: React.FC = () => {
                 <Button variant="outline" size="sm" asChild>
                   <a href={`/dashboard/hr&staff/roles/${role.id}`}>Edit</a>
                 </Button>
-                <Button variant="destructive" size="sm" disabled>
+                {/* <Button variant="destructive" size="sm" disabled>
                   <Trash2 className="h-4 w-4" />
-                </Button>
+                </Button> */}
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
-                  <Users className="h-4 w-4" /> Assigned Users
-                </h4>
-                {role.users.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {role.users.map((ru) => (
-                      <Badge key={ru.id} variant="secondary">
-                        {ru.user.name}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No users assigned.
-                  </p>
-                )}
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-3 flex items-center gap-2"
-                    >
-                      <UserPlus className="h-4 w-4" /> Add User
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add User to {role.name}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-3 py-2">
-                      <Input
-                        onChange={(e) => debouncedLog(e.target.value)}
-                        placeholder="Search by Name, mail or Phone Number"
-                      />
-
-                      <Button
-                        className="w-full"
-                        onClick={() => handleAddUser(role.id)}
-                      >
-                        Add User
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+            <CardContent className="space-y-4 flex flex-col h-full">
+              <div className="grow ">
+                <AssignedUsers role={role} />
               </div>
 
               <div>
