@@ -116,13 +116,6 @@ const CreateCombo = () => {
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
-        {/* Header */}
-        {permissions.includes("PACKAGES CREATE") && (
-          <div className="flex items-center justify-end mb-6">
-            <CreateComboModal selectedProducts={selectedProducts} />
-          </div>
-        )}
-
         {/* Filters */}
         <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
           <div className="flex items-center justify-between">
@@ -164,6 +157,9 @@ const CreateCombo = () => {
                 </SelectContent>
               </Select>
             </div>
+            {permissions.includes("PACKAGES CREATE") && (
+              <CreateComboModal selectedProducts={selectedProducts} />
+            )}
           </div>
         </Card>
 

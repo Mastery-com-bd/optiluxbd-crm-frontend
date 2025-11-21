@@ -73,6 +73,8 @@ export const baseApi = createApi({
     "permissions",
     "notifications",
     "orders",
+    "my activity",
+    "activity",
   ],
   endpoints: () => ({}),
 });

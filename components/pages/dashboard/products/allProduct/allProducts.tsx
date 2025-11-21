@@ -62,7 +62,6 @@ const AllProducts = () => {
     refetchOnMountOrArgChange: false,
   });
   const PRODUCTS = productRes?.data?.products || [];
-  console.log(PRODUCTS);
   const pagination = productRes?.pagination || {
     page: 1,
     totalPages: 1,
@@ -138,7 +137,6 @@ const AllProducts = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">All Products</h1>
             <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
               <span className="font-medium text-foreground">CRM</span>
               <span>›</span>
@@ -245,7 +243,7 @@ const AllProducts = () => {
 
         {/* Product Table */}
         {isLoading ? (
-          <div className="mx-auto border w-screen">
+          <div>
             <Loading />
           </div>
         ) : (
