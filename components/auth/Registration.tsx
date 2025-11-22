@@ -62,7 +62,7 @@ const Registration = () => {
   const { visible, toggle } = usePasswordToggle();
   const [touched, setTouched] = useState(false);
   const [passwordtext, setPasswordText] = useState("");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const {
     handleSubmit,
     register,

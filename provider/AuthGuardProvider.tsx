@@ -49,6 +49,13 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    if (!role.length) {
+      if (!publicRoutes.includes(pathname)) {
+        router.replace("/activeAccount");
+      }
+      return;
+    }
+
     // Always allowed pages for any logged-in user
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
