@@ -1,33 +1,32 @@
-"use client"
+"use client";
 
-import { motion } from 'framer-motion';
-import React from 'react';
+import { currentUser } from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
+import { motion } from "framer-motion";
+import React from "react";
 
-interface ActiveAccountProps {
-  email: string;
-  name: string;
-}
+const ActiveAccount = () => {
+  const user = useAppSelector(currentUser);
 
-const ActiveAccount: React.FC<ActiveAccountProps> = ({ email, name }) => {
   return (
     <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="w-full max-w-md"
       >
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           <motion.div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="flex justify-center"
           >
             {/* Animated Pending Icon */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               className="w-20 h-20 bg-linear-to-tr from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg"
             >
               <svg
@@ -61,8 +60,11 @@ const ActiveAccount: React.FC<ActiveAccountProps> = ({ email, name }) => {
             transition={{ delay: 0.4 }}
             className="text-center text-gray-600"
           >
-            Hi <span className="font-semibold text-indigo-600">{name}</span>, your account linked to{' '}
-            <span className="font-semibold text-indigo-600">{email}</span> is currently pending admin approval.
+            Hi{" "}
+            <span className="font-semibold text-indigo-600">{user?.name}</span>,
+            your account linked to{" "}
+            <span className="font-semibold text-indigo-600">{user?.email}</span>{" "}
+            is currently pending admin approval.
           </motion.p>
 
           {/* Animated waiting dots */}

@@ -216,27 +216,6 @@ const AllProducts = () => {
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
-
-              <div className="flex items-center gap-2 border-l pl-3">
-                <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid3x3 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => setViewMode("list")}
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <Button variant="outline" size="icon">
-                <Download className="w-4 h-4" />
-              </Button>
             </div>
           </div>
         </Card>

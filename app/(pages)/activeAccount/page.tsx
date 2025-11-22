@@ -4,9 +4,9 @@ import React from 'react'
 const Page = () => {
   return (
     <div>
-        <ActiveAccount email="bishal@optiluxbd.com" name="Bishal" />
+      <ActiveAccount />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
