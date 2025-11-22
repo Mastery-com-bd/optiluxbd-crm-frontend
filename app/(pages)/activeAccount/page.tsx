@@ -1,5 +1,5 @@
-import ActiveAccount from "@/components/pages/activeAccount/activeAccount";
-import React from "react";
+import ActiveAccount from '@/components/pages/activeAccount/activeAccount'
+import React from 'react'
 
 const Page = () => {
   return (

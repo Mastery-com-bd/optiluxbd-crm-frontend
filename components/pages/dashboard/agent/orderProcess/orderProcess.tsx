@@ -48,7 +48,6 @@ import {
   User,
   XCircle,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -91,7 +90,6 @@ const OrderProcessingSystem = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [customerOutcome, setCustomerOutcome] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const router = useRouter();
 
   /* Pending Customer Data */
   const { data: pendingLeads, isLoading: pendingLeadsLoading } =
@@ -99,10 +97,12 @@ const OrderProcessingSystem = () => {
   const pendingLeadsData = pendingLeads?.data;
 
   /* Accept Pending Customer Data */
-  const [acceptPendingLeads] = useAcceptPendingLeadsMutation();
+  const [acceptPendingLeads, { isLoading: acceptLoading }] =
+    useAcceptPendingLeadsMutation();
 
   /* Reject Pending Customer Data */
-  const [rejectPendingLeads] = useRejectPendingLeadsMutation();
+  const [rejectPendingLeads, { isLoading: rejectLoading }] =
+    useRejectPendingLeadsMutation();
 
   /* Update Lead Status */
   const [updateLeadStatus] = useUpdateLeadStatusMutation();
@@ -155,12 +155,12 @@ const OrderProcessingSystem = () => {
       };
       const res = await acceptPendingLeads(payload).unwrap();
       console.log("Accept Response", res);
-      if (res?.ok) {
+      if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -174,19 +174,19 @@ const OrderProcessingSystem = () => {
       };
       const res = await rejectPendingLeads(payload).unwrap();
       console.log("Reject Response", res);
-      if (res?.ok) {
+      if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (assignedLeadsLoading || pendingLeadsLoading) {
+  if (assignedLeadsLoading || pendingLeadsLoading || acceptLoading || rejectLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
@@ -194,7 +194,7 @@ const OrderProcessingSystem = () => {
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
               <p className="text-gray-600 dark:text-gray-300">
-                Loading orders...
+                Loading leads...
               </p>
             </div>
           </CardContent>
@@ -202,12 +202,13 @@ const OrderProcessingSystem = () => {
       </div>
     );
   }
+  const activeTab = pendingLeadsData?.customers?.length > 0 ? "Pending" : "Assigned";
 
   return (
     <div className="min-h-screen p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Tabs Start */}
-        <Tabs defaultValue="Assigned" className="w-full">
+        <Tabs defaultValue={activeTab} className="w-full">
           <TabsList className="w-full">
             <TabsTrigger value="Pending">Pending Leads</TabsTrigger>
             <TabsTrigger value="Assigned">Assigned Leads</TabsTrigger>
