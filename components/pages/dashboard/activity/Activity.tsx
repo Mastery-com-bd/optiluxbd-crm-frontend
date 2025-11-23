@@ -7,8 +7,10 @@ import UserActivity from "./userActivity/UserActivity";
 import CustomerHistory from "./customerHistory/CustomerHistory";
 import ProductHistory from "./productHistory/ProductHistory";
 import OrderHistory from "./orderHistory/OrderHistory";
+import ActivityStats from "./activityStats/ActivityStats";
 
 const tabs = [
+  "Statistics",
   "Recent Activity",
   "User Activity",
   "Customer History",
@@ -19,6 +21,7 @@ const tabs = [
 
 const Activity = () => {
   type TTabs =
+    | "Statistics"
     | "Recent Activity"
     | "User Activity"
     | "Customer History"
@@ -26,7 +29,7 @@ const Activity = () => {
     | "Order History"
     | "User History";
 
-  const [activeTab, setActiveTab] = useState<TTabs | string>("Recent Activity");
+  const [activeTab, setActiveTab] = useState<TTabs | string>("Statistics");
 
   return (
     <CardContent className="p-1 lg:p-8 w-full mt-4 lg:mt-1">
@@ -48,6 +51,7 @@ const Activity = () => {
         </Card>
 
         {/* Activity Content */}
+        {activeTab === "Statistics" && <ActivityStats />}
         {activeTab === "Recent Activity" && <RecentActivity />}
         {activeTab === "User Activity" && <UserActivity />}
         {activeTab === "User History" && <CustomerHistory />}
