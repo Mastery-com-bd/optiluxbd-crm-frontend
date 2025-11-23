@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -62,7 +61,7 @@ const ManageUsers = () => {
   const [is_active, setIs_active] = useState("All");
   const [selectedRole, setSelectedRole] = useState("All");
 
-  const handleSearch = async (val: any) => {
+  const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
   };
 

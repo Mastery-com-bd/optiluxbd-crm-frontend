@@ -1,10 +1,11 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { buildParams } from "@/utills/paramsBuilder";
 
 const auditStatisticsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAuditStatistics: builder.query({
-      query: () => ({
-        url: `/audit/statistics`,
+      query: (params = {}) => ({
+        url: `/audit/statistics?${buildParams(params)}`,
         method: "GET",
       }),
       providesTags: [

@@ -10,7 +10,6 @@ import ProfileImage from "./ProfileImage";
 import MyOrders from "./MyOrders";
 import EditInfoComponent from "./EditInfoComponent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EditAddressComponent from "./EditAddressComponent";
 import AddressComponent from "./AddressComponent";
 
 const Profile = () => {
