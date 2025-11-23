@@ -29,6 +29,7 @@ const UserRoleEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
   const { role } = getPermissions(userInfo as TAuthUSer);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<"edit" | "delete" | string>("");
+  const [isAddRole, setIsAddRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(role[0] || "");
   const [roleId, setRoleId] = useState<number | null>(null);
   const [assignRoleToUser] = useAssignRoleToUserMutation();
@@ -56,6 +57,7 @@ const UserRoleEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
         setSelectedRole(role[0] || "");
         setLoading(false);
         setRoleId(null);
+        setIsAddRole(false);
       }
     } catch (error: any) {
       const errorInfo =
@@ -99,21 +101,18 @@ const UserRoleEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
 
   return (
     <div className="flex items-start gap-2">
-      {!editing && (
+      {!editing && role.length > 0 ? (
         <div className="flex items-center gap-3 ">
           <p className=" flex items-center  gap-2">
             <User size={16} />
             <span className="text-gray-600 dark:text-gray-400"> Role:</span>
 
             <span className="font-medium text-gray-800 dark:text-gray-200">
-              {role.length
-                ? role
-                    .map(
-                      (r) =>
-                        r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
-                    )
-                    .join(", ")
-                : "No role assign"}
+              {role
+                .map(
+                  (r) => r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()
+                )
+                .join(", ")}
             </span>
           </p>
 
@@ -149,6 +148,92 @@ const UserRoleEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
               </DropdownMenuContent>
             )}
           </DropdownMenu>
+        </div>
+      ) : (
+        <div className="flex flex-col items-end">
+          {!isAddRole && editing === "" && (
+            <div className="flex items-center justify-end ">
+              <Button
+                className="cursor-pointer"
+                onClick={() => setIsAddRole(true)}
+              >
+                Add Role
+              </Button>
+            </div>
+          )}
+
+          {isAddRole && (
+            <div className="space-y-2 w-full ">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-[150px] justify-between"
+                  >
+                    {selectedRole || "Select role"}
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-[150px]">
+                  {isLoading ? (
+                    <div className="w-[150px] p-2 space-y-2">
+                      {[...Array(4)].map((_, i) => (
+                        <Skeleton
+                          key={i}
+                          className="h-8 w-full rounded-md bg-gray-200 dark:bg-gray-700"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <>
+                      {roles?.length > 0 &&
+                        roles.map(
+                          (role: { name: string; id: number }, i: number) => (
+                            <DropdownMenuItem
+                              key={i}
+                              onClick={() => {
+                                setSelectedRole(role?.name);
+                                setRoleId(role?.id);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              {role?.name}
+                            </DropdownMenuItem>
+                          )
+                        )}
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="flex items-center gap-10">
+                <button
+                  disabled={loading}
+                  className="text-blue-600 cursor-pointer"
+                  onClick={() => {
+                    handleSaveRole(roleId as number);
+                  }}
+                >
+                  Save
+                </button>
+
+                {/* Cancel Button */}
+                <button
+                  disabled={loading}
+                  className=" cursor-pointer"
+                  onClick={() => {
+                    setEditing("");
+                    setSelectedRole(role[0] || "");
+                    setRoleId(null);
+                    setIsAddRole(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
