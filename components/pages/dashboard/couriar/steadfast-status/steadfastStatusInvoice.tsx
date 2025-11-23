@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,73 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLazyGetCouriarDetailsByIdQuery } from "@/redux/features/couriar/couriarApi";
+import { useLazyCheckStatusByInvoiceQuery } from "@/redux/features/couriar/couriarApi";
 import { Barcode, Calendar, DollarSign, MapPin, Package, Search, Truck, User } from "lucide-react";
 import { useState } from "react";
 
-interface CourierDetail {
-  id: number;
-  orderId: number;
-  consignmentId: string | null;
-  trackingCode: string | null;
-  invoice: string;
-  status: string;
-  courierService: string;
-  recipientName: string;
-  recipientPhone: string;
-  recipientAddress: string;
-  codAmount: string;
-  deliveryCharge: string;
-  note: string;
-  createdAt: string;
-  updatedAt: string;
-  order: {
-    id: number;
-    agentId: number;
-    customerId: number;
-    productId: number;
-    packageId: string | null;
-    quantity: number;
-    totalAmount: string;
-    commissionRate: string;
-    commission: string;
-    orderDate: string;
-    batchId: string | null;
-    addressId: string | null;
-    shipping_address_tag: string | null;
-    shipping_address_street: string | null;
-    shipping_address_thana: string | null;
-    shipping_address_city: string | null;
-    shipping_address_post: string | null;
-    shipping_address_division: string | null;
-    shipping_address_geo_lat: string | null;
-    shipping_address_geo_lng: string | null;
-    customer: {
-      id: number;
-      name: string;
-      phone: string;
-    };
-    agent: {
-      id: number;
-      name: string;
-    };
-    product: {
-      id: number;
-      name: string;
-      price: string;
-    };
-    package: string | null;
-  };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  returns: any[];
-}
 
-export default function LocalGetById() {
+export default function SteadfastStatusByInvoice() {
   const [id, setId] = useState("");
-  const [data, setData] = useState<CourierDetail | null>(null);
+  const [data, setData] = useState<any | null>(null);
 
   const [trigger, { data: detail, isFetching }] =
-    useLazyGetCouriarDetailsByIdQuery();
+    useLazyCheckStatusByInvoiceQuery();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,6 +32,7 @@ export default function LocalGetById() {
     if (result.data) {
       console.log("Result Data:", result.data.data);
       setData(result.data.data);
+      console.log(data)
     }
   }
 
@@ -117,7 +63,7 @@ export default function LocalGetById() {
       <div className="max-w-3xl mx-auto px-4 py-6 md:py-10">
         <div className="flex items-center gap-3 mb-6">
           <Truck className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Courier Lookup</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Steadfast Status by Invoice</h1>
         </div>
 
         <Card className="shadow-sm">
