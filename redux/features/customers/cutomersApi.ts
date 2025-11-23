@@ -15,6 +15,7 @@ const customersApi = baseApi.injectEndpoints({
                 url: `/customers?${buildParams(params)}`,
                 method: "GET",
             }),
+            providesTags:["customers"]
         }),
         getCustomerById: builder.query({
             query: (id) => ({
@@ -28,6 +29,7 @@ const customersApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
+            invalidatesTags:["customers"]
         }),
         updateCustomerInfo: builder.mutation({
             query: (data) => ({
@@ -36,7 +38,17 @@ const customersApi = baseApi.injectEndpoints({
                 body: data.currentCustomer,
             }),
         }),
+        createCustomerAddress: builder.mutation({
+            query: ({ data, customerId }) => {
+                console.log(customerId);
+                return {
+                    url: `/addresses/customer/${customerId}`,
+                    method: "POST",
+                    body: data,
+                }
+            }
+        })
     }),
 });
 
-export const { useGetAllCustomerQuery, useGetCustomerByIdQuery, useAddCustomerMutation, useUpdateCustomerInfoMutation } = customersApi;
+export const { useGetAllCustomerQuery, useGetCustomerByIdQuery, useAddCustomerMutation, useUpdateCustomerInfoMutation, useCreateCustomerAddressMutation } = customersApi;

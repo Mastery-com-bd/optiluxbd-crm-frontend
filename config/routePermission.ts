@@ -55,12 +55,25 @@ export const routePermissions: Record<string, string[]> = {
     "ADDRESSES UPDATE",
     "ADDRESSES DELETE",
   ],
+  "/dashboard/admin/": [
+    "ADDRESSES VIEW",
+    "ADDRESSES CREATE",
+    "ADDRESSES UPDATE",
+    "ADDRESSES DELETE",
+  ],
 
   // 🧑‍💼 Role Management
   "/dashboard/admin/roles": ["ROLES MANAGE"],
 
   // 💰 ORDERS Management
   "/dashboard/agent/orders/my-orders": [
+    "ORDERS CREATE",
+    "ORDERS VIEW",
+    "ORDERS VIEW OWN",
+    "ORDERS UPDATE",
+    "ORDERS DELETE",
+  ],
+  "/dashboard/agent/orders/create-order": [
     "ORDERS CREATE",
     "ORDERS VIEW",
     "ORDERS VIEW OWN",

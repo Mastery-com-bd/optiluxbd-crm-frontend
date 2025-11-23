@@ -16,6 +16,8 @@ export interface Product {
     id: number;
     name: string;
     price: number;
+    image_url: string,
+    image_public_id: string,
 }
 
 export interface Package {
@@ -142,4 +144,13 @@ export interface OrderItem {
         sku: string;
         discountPrice: string;
     } | null;
+}
+
+export interface Address {
+    id: number,
+    city: string,
+    division: string,
+    post: string,
+    street: string,
+    thana: string,
 }

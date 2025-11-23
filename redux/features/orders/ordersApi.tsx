@@ -47,7 +47,20 @@ const ordersApi = baseApi.injectEndpoints({
                 url: `/orders/my?${buildParams(params)}`,
                 method: "GET"
             })
-        })
+        }),
+        getTopSeller: builder.query({
+            query: () => ({
+                url: "/orders/top-sellers",
+                method: "GET",
+            })
+        }),
+        createOrder: builder.mutation({
+            query: (data) => ({
+                url: "/orders",
+                method: "POST",
+                body: data,
+            })
+        }),
     }),
 });
 export const {
@@ -58,5 +71,7 @@ export const {
     useGetCustomerAllOrdersQuery,
     useGetAgentOrderSummaryQuery,
     useGetAgentOrdersQuery,
+    useGetTopSellerQuery,
+    useCreateOrderMutation,
 
 } = ordersApi;

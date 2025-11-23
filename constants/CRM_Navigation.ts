@@ -171,8 +171,13 @@ export const crmRoutes: NavRoute[] = [
         icon: ClipboardList,
       },
       {
+        title: "Create Order",
+        path: `/dashboard/agent/orders/create-order/${0}`,
+        icon: ClipboardList,
+      },
+      {
         title: "Top Sellers",
-        path: "/dashboard/admin/orders/top-sellers",
+        path: "/dashboard/admin/top-sellers",
         icon: ClipboardList,
       },
       { title: "Processing", path: "/orders/processing", icon: RefreshCcw },

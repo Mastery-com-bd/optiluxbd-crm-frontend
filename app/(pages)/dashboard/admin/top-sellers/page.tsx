@@ -1,5 +1,10 @@
+'use client'
 
-const page = () => {
+import { useGetTopSellerQuery } from "@/redux/features/orders/ordersApi";
+
+const TopSellers = () => {
+    // const { data } = useGetTopSellerQuery();
+    // console.log(data);
     return (
         <div>
             top sellers
@@ -7,4 +12,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default TopSellers;
