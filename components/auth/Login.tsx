@@ -281,7 +281,7 @@ const Login = () => {
       </p>
 
       {/* fast login for development purpose */}
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <Button
           onClick={handleAdmin}
           type="submit"
@@ -306,7 +306,7 @@ const Login = () => {
         >
           {isSubmitting ? "Logging in..." : "Team Leader"}
         </Button>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}
