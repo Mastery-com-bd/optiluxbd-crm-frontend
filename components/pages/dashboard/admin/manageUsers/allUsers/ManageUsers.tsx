@@ -221,15 +221,20 @@ const ManageUsers = () => {
         <Table className="bg-white dark:bg-gray-800">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[60px]"></TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
                 Name
+              </TableHead>
+              <TableHead className="text-gray-800 dark:text-gray-200">
+                User Id
               </TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
                 Email
               </TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
                 Phone
+              </TableHead>
+              <TableHead className="text-gray-800 dark:text-gray-200">
+                Role
               </TableHead>
               <TableHead className="text-gray-800 dark:text-gray-200">
                 Is Active
@@ -258,21 +263,24 @@ const ManageUsers = () => {
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <TableCell>
-                    <Image
-                      src={
-                        user?.avatar_secure_url ??
-                        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
-                      }
-                      alt={user.name}
-                      width={500}
-                      height={500}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-900 dark:text-gray-200">
-                    {user?.name}
+                    <div className="flex items-center gap-1">
+                      <Image
+                        src={
+                          user?.avatar_secure_url ??
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                        alt={user.name}
+                        width={500}
+                        height={500}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      {user?.name}
+                    </div>
                   </TableCell>
 
+                  <TableCell className="text-gray-800 dark:text-gray-200">
+                    {user?.userId}
+                  </TableCell>
                   <TableCell className="text-gray-800 dark:text-gray-200">
                     {user?.email}
                   </TableCell>
