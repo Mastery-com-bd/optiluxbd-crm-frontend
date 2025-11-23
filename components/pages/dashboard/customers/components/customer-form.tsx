@@ -28,25 +28,34 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { TCustomer } from "../allCustomers";
 import { Label } from "@/components/ui/label";
 import { useAddCustomerMutation } from "@/redux/features/customers/cutomersApi";
 import { toast } from "sonner";
+import { TCustomer } from "@/types/customer.types";
 
 const customerFormSchema = z.object({
   name: z.string().min(1, "Full name is required"),
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .regex(/^(?:\+?880|0)1[3-9]\d{8}$/, "Please enter a valid Bangladeshi phone number"),
+    .regex(
+      /^(?:\+?880|0)1[3-9]\d{8}$/,
+      "Please enter a valid Bangladeshi phone number"
+    ),
   address: z.string().optional(),
   district: z.string().optional(),
   thana: z.string().optional(),
   date_of_birth: z.string().optional(),
   profession: z.string().optional(),
   isMarried: z.boolean().optional(),
-  gender: z.enum(["MALE", "FEMALE", "OTHER", "NOT_SPECIFIED"]).default("NOT_SPECIFIED").optional(),
-  customerLevel: z.enum(["BRONZE_PENDING", "BRONZE", "SILVER", "GOLD", "PLATINUM"]).default("BRONZE_PENDING").optional(),
+  gender: z
+    .enum(["MALE", "FEMALE", "OTHER", "NOT_SPECIFIED"])
+    .default("NOT_SPECIFIED")
+    .optional(),
+  customerLevel: z
+    .enum(["BRONZE_PENDING", "BRONZE", "SILVER", "GOLD", "PLATINUM"])
+    .default("BRONZE_PENDING")
+    .optional(),
 });
 
 type CustomerFormValues = z.infer<typeof customerFormSchema>;
@@ -55,36 +64,44 @@ interface CustomerFormProps {
   customer?: TCustomer;
 }
 
-export default function CustomerForm({ customer: initialData }: CustomerFormProps) {
+export default function CustomerForm({
+  customer: initialData,
+}: CustomerFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [addCustomer] = useAddCustomerMutation();
 
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: initialData ? {
-      name: initialData?.name ?? "",
-      phone: initialData?.phone ?? "",
-      address: initialData?.address ?? "",
-      district: initialData?.district ?? "",
-      thana: initialData?.thana ?? "",
-      date_of_birth: initialData?.date_of_birth ?? "",
-      profession: initialData?.profession ?? "",
-      isMarried: initialData?.isMarried ?? false,
-      gender: initialData?.gender as CustomerFormValues["gender"] ?? "NOT_SPECIFIED",
-      customerLevel: initialData?.customerLevel as CustomerFormValues["customerLevel"] ?? "BRONZE_PENDING",
-    } : {
-      name: "Test User",
-      phone: "",
-      address: "",
-      district: "",
-      thana: "",
-      date_of_birth: undefined,
-      profession: undefined,
-      isMarried: undefined,
-      gender: "NOT_SPECIFIED",
-      customerLevel: "BRONZE_PENDING",
-    },
+    defaultValues: initialData
+      ? {
+          name: initialData?.name ?? "",
+          phone: initialData?.phone ?? "",
+          address: initialData?.address ?? "",
+          district: initialData?.district ?? "",
+          thana: initialData?.thana ?? "",
+          date_of_birth: initialData?.date_of_birth ?? "",
+          profession: initialData?.profession ?? "",
+          isMarried: initialData?.isMarried ?? false,
+          gender:
+            (initialData?.gender as CustomerFormValues["gender"]) ??
+            "NOT_SPECIFIED",
+          customerLevel:
+            (initialData?.customerLevel as CustomerFormValues["customerLevel"]) ??
+            "BRONZE_PENDING",
+        }
+      : {
+          name: "Test User",
+          phone: "",
+          address: "",
+          district: "",
+          thana: "",
+          date_of_birth: undefined,
+          profession: undefined,
+          isMarried: undefined,
+          gender: "NOT_SPECIFIED",
+          customerLevel: "BRONZE_PENDING",
+        },
   });
 
   const onSubmit = async (values: CustomerFormValues) => {
@@ -94,7 +111,7 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
 
     try {
       const res = await addCustomer(values).unwrap();
-      console.log("Add Customer Response",res);
+      console.log("Add Customer Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
@@ -103,15 +120,15 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
         router.refresh();
         setIsLoading(false);
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorInfo =
         error?.error ||
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-        toast.dismiss();
-        toast.dismiss();
+      toast.dismiss();
+      toast.dismiss();
       toast.error(errorInfo, { duration: 3000 });
       setIsLoading(false);
     } finally {
@@ -153,7 +170,11 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
                   <FormItem>
                     <FormLabel>Phone Number *</FormLabel>
                     <FormControl>
-                      <Input maxLength={11} placeholder="01XXXXXXXXX" {...field} />
+                      <Input
+                        maxLength={11}
+                        placeholder="01XXXXXXXXX"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -175,8 +196,10 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
                         {...field}
                         onChange={(e) => {
                           let val = e.target.value.replace(/\D/g, "");
-                          if (val.length > 2) val = val.slice(0, 2) + "-" + val.slice(2);
-                          if (val.length > 5) val = val.slice(0, 5) + "-" + val.slice(5, 9);
+                          if (val.length > 2)
+                            val = val.slice(0, 2) + "-" + val.slice(2);
+                          if (val.length > 5)
+                            val = val.slice(0, 5) + "-" + val.slice(5, 9);
                           field.onChange(val);
                         }}
                       />
@@ -192,7 +215,10 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -202,7 +228,9 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
                         <SelectItem value="MALE">Male</SelectItem>
                         <SelectItem value="FEMALE">Female</SelectItem>
                         <SelectItem value="OTHER">Other</SelectItem>
-                        <SelectItem value="NOT_SPECIFIED">Not Specified</SelectItem>
+                        <SelectItem value="NOT_SPECIFIED">
+                          Not Specified
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -317,14 +345,19 @@ export default function CustomerForm({ customer: initialData }: CustomerFormProp
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Customer Level</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="BRONZE_PENDING">Bronze Pending</SelectItem>
+                    <SelectItem value="BRONZE_PENDING">
+                      Bronze Pending
+                    </SelectItem>
                     <SelectItem value="BRONZE">Bronze</SelectItem>
                     <SelectItem value="SILVER">Silver</SelectItem>
                     <SelectItem value="GOLD">Gold</SelectItem>

@@ -1,5 +1,6 @@
 import Footer from "@/components/pages/shared/home/Footer";
 import Navbar from "@/components/pages/shared/home/Navbar";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import ReactProvider from "@/provider/ReactProvider";
@@ -31,14 +32,13 @@ export default function RootLayout({
     <html lang="en">
       <ReactProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
-            disableTransitionOnChange
-          >
+            disableTransitionOnChange>
+            <ServiceWorkerRegistration />
             <Navbar />
             {children}
             <Footer />

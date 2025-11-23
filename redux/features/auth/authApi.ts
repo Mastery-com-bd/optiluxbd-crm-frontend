@@ -64,12 +64,14 @@ const authApi = baseApi.injectEndpoints({
     }),
   }),
 });
-export const { useRegisterMutation } = authApi;
-export const { useLoginMutation } = authApi;
-export const { useLogoutMutation } = authApi;
-export const { useForgetPasswordMutation } = authApi;
-export const { useValidateresetTokenQuery } = authApi;
-export const { useVerifyEmailQuery } = authApi;
-export const { useResendVerificationEmailMutation } = authApi;
-export const { useResetPasswordMutation } = authApi;
-export const { useUpdatePasswordMutation } = authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useForgetPasswordMutation,
+  useValidateresetTokenQuery,
+  useVerifyEmailQuery,
+  useResendVerificationEmailMutation,
+  useResetPasswordMutation,
+  useUpdatePasswordMutation,
+} = authApi;

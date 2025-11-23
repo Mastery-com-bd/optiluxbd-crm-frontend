@@ -16,6 +16,7 @@ export type TAuthUSer = {
   id: number;
   name: string;
   email: string;
+  avatar_secure_url: string | null;
   roles: TUSerRole[];
 };
 

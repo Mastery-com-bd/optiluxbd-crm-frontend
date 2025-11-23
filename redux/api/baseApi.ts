@@ -9,7 +9,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
-import { logOut, setUser, TUSerRole } from "../features/auth/authSlice";
+import { logOut } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: config.next_public_base_api,
@@ -57,6 +57,24 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["user", "products", "combo-package", "settings","customers"],
+  tagTypes: [
+    "user",
+    "products",
+    "combo-package",
+    "settings",
+    "leads",
+    "unassigned-agents",
+    "customers for leaders",
+    "unassigned customers",
+    "customers",
+    "team-members",
+    "team-report",
+    "roles",
+    "permissions",
+    "notifications",
+    "orders",
+    "my activity",
+    "activity",
+  ],
   endpoints: () => ({}),
 });

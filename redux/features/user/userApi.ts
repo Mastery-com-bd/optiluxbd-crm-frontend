@@ -10,6 +10,13 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    getMyProfile: builder.query({
+      query: () => ({
+        url: `/users/profile`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+    }),
     getAllUsers: builder.query({
       query: (params = {}) => ({
         url: `/users?${buildParams(params)}`,
@@ -17,6 +24,20 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
       keepUnusedDataFor: 3000,
+    }),
+    getAllUnassignedAgents: builder.query({
+      query: (params = {}) => ({
+        url: `/users/unassigned-agents?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["unassigned-agents"],
+    }),
+    getUnassignedUsers: builder.query({
+      query: (params = {}) => ({
+        url: `/users/without-roles?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["unassigned-agents"],
     }),
     getASingleUser: builder.query({
       query: (id) => ({
@@ -34,15 +55,19 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    deleteUserImage: builder.mutation({
+      query: (id) => ({
+        url: `/images/users/${id}/avatar`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"],
+    }),
     updateUserInfo: builder.mutation({
-      query: (data) => (
-        console.log(data),
-        {
-          url: `/users/${data.id}`,
-          method: "PUT",
-          body: data.currentUser,
-        }
-      ),
+      query: (data) => ({
+        url: `/users/${data.id}`,
+        method: "PUT",
+        body: data.currentUser,
+      }),
       invalidatesTags: ["user"],
     }),
     updateUSerStatus: builder.mutation({
@@ -87,7 +112,10 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useGetProfileQuery,
+  useGetMyProfileQuery,
   useGetAllUsersQuery,
+  useGetAllUnassignedAgentsQuery,
+  useGetUnassignedUsersQuery,
   useGetASingleUserQuery,
   useUserImageUploadMutation,
   useUpdateUserInfoMutation,
@@ -96,4 +124,5 @@ export const {
   useDeleteUserMutation,
   useSuspendUserMutation,
   useActivateUserMutation,
+  useDeleteUserImageMutation,
 } = authApi;

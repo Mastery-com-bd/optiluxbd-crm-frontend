@@ -1,65 +1,28 @@
 import {
   LayoutDashboard,
   Package,
-  PlusSquare,
-  ListOrdered,
-  Trash2,
-  FileMinus,
-  Tags,
-  Star,
-  Warehouse,
-  Upload,
   ShoppingCart,
-  ClipboardList,
-  CheckCircle,
-  XCircle,
-  RefreshCcw,
-  FileText,
   Users,
-  UserPlus,
-  UserCog,
-  MessageCircle,
-  TrendingUp,
-  Percent,
-  Megaphone,
-  Mail,
-  MessageSquare,
-  Link,
-  CreditCard,
-  DollarSign,
-  RefreshCw,
-  BarChart3,
-  Briefcase,
-  Boxes,
-  Truck,
-  AlertTriangle,
   Users2,
-  Shield,
-  Clock,
-  Wallet,
-  BarChart2,
-  Plug,
-  Package2,
-  Settings,
-  Bell,
-  Lock,
-  FileSearch,
-  HelpCircle,
-  BookOpen,
-  MessageSquareQuoteIcon,
-  PhoneCall,
-  ThumbsUp,
   Gift,
-  PackageSearch,
+  Activity,
 } from "lucide-react";
-
 import { LucideIcon } from "lucide-react";
+
+export interface NavChildRoute {
+  title: string;
+  path: string;
+  roles?: string[];
+  permissions?: string[];
+}
 
 export interface NavRoute {
   title: string;
   path?: string;
-  icon?: LucideIcon; // actual icon component, not string
-  children?: NavRoute[];
+  icon?: LucideIcon;
+  roles?: string[];
+  permissions?: string[];
+  children?: NavChildRoute[];
 }
 
 export const crmRoutes: NavRoute[] = [
@@ -67,284 +30,239 @@ export const crmRoutes: NavRoute[] = [
     title: "Dashboard",
     path: "/dashboard",
     icon: LayoutDashboard,
+    roles: ["ADMIN"],
   },
+
+  // products route
   {
     title: "Products",
     icon: Package,
+    permissions: [
+      "PRODUCTS VIEW",
+      "PRODUCTS CREATE",
+      "PRODUCTS UPDATE",
+      "PRODUCTS DELETE",
+    ],
     children: [
       {
         title: "All Products",
         path: "/dashboard/admin/products/all-products",
-        icon: ListOrdered,
+        permissions: ["PRODUCTS VIEW"],
       },
       {
         title: "Add Product",
         path: "/dashboard/admin/products/add-product",
-        icon: PlusSquare,
+        permissions: ["PRODUCTS CREATE"],
       },
       {
         title: "Draft Products",
         path: "/dashboard/admin/products/drafts",
-        icon: FileMinus,
-      },
-      {
-        title: "Deleted Products",
-        path: "/dashboard/admin/products/deleted",
-        icon: Trash2,
-      },
-      {
-        title: "Reviews",
-        path: "/dashboard/admin/products/reviews",
-        icon: Star,
-      },
-      {
-        title: "Inventory",
-        path: "/dashboard/admin/products/inventory",
-        icon: Warehouse,
-      },
-      {
-        title: "Bulk Upload",
-        path: "/dashboard/admin/products/bulk-upload",
-        icon: Upload,
+        permissions: ["PRODUCTS VIEW"],
       },
     ],
   },
-  {
-    title: "Categories",
-    icon: Tags,
-    children: [
-      {
-        title: "All Categories",
-        path: "/dashboard/categories/all",
-        icon: ListOrdered,
-      },
-      {
-        title: "Add Category",
-        path: "/dashboard/categories/add",
-        icon: PlusSquare,
-      },
-      {
-        title: "Edit Categories",
-        path: "/dashboard/categories/edit",
-        icon: Tags,
-      },
-      {
-        title: "Add Sub Category",
-        path: "/dashboard/categories/sub/add",
-        icon: PlusSquare,
-      },
-      {
-        title: "Edit Sub Categories",
-        path: "/dashboard/categories/sub/edit",
-        icon: Tags,
-      },
-    ],
-  },
+
+  // combo pack route
   {
     title: "Combo Pack",
     icon: Gift,
+    permissions: [
+      "PACKAGES VIEW",
+      "PACKAGES CREATE",
+      "PACKAGES UPDATE",
+      "PACKAGES DELETE",
+    ],
     children: [
       {
         title: "All Combo Pack",
         path: "/dashboard/combo",
-        icon: Boxes,
+        permissions: ["PACKAGES VIEW"],
       },
       {
         title: "Create Combo",
         path: "/dashboard/combo/create-combo",
-        icon: PackageSearch,
+        permissions: ["PACKAGES CREATE", "PRODUCTS VIEW"],
       },
     ],
   },
+
+  // orders route
   {
     title: "Orders",
     icon: ShoppingCart,
+    permissions: [
+      "ORDERS VIEW",
+      "ORDERS CREATE",
+      "ORDERS UPDATE",
+      "ORDERS DELETE",
+      "ORDERS VIEW OWN",
+    ],
     children: [
       {
         title: "All Orders",
         path: "/dashboard/admin/orders",
-        icon: ClipboardList,
+        permissions: ["ORDERS VIEW"],
       },
       {
         title: "My Orders",
         path: "/dashboard/agent/orders/my-orders",
-        icon: ClipboardList,
-      },
-      {
-        title: "Create Order",
-        path: `/dashboard/agent/orders/create-order/${0}`,
-        icon: ClipboardList,
+        permissions: ["ORDERS VIEW OWN"],
+        roles: ["AGENT"],
       },
       {
         title: "Top Sellers",
-        path: "/dashboard/admin/top-sellers",
-        icon: ClipboardList,
+        path: "/dashboard/admin/orders/top-sellers",
+        permissions: ["ORDERS VIEW"],
+        roles: ["ADMIN"],
       },
-      { title: "Processing", path: "/orders/processing", icon: RefreshCcw },
-      { title: "Completed", path: "/orders/completed", icon: CheckCircle },
-      { title: "Cancelled", path: "/orders/cancelled", icon: XCircle },
-      { title: "Returns", path: "/orders/returns", icon: RefreshCw },
-      { title: "Invoices", path: "/orders/invoices", icon: FileText },
     ],
   },
+  // Courier route
+  {
+    title: "Courier",
+    icon: Users,
+    permissions: [
+      "ORDERS VIEW",
+      "ORDERS CREATE",
+      "ORDERS UPDATE",
+      "ORDERS DELETE",
+      "ORDERS VIEW OWN",
+    ],
+    children: [
+      {
+        title: "All Courier",
+        path: "/dashboard/couriar",
+        permissions: ["ORDERS VIEW"],
+      },
+    ],
+  },
+
+  // leads management route
+  {
+    title: "Leads Magement",
+    icon: Users2,
+    permissions: [
+      "ALLOCATIONS ASSIGN LEADER",
+      "ALLOCATIONS DISTRIBUTE",
+      "ALLOCATIONS REPORTS VIEW",
+      "ALLOCATIONS REPORTS VIEW OWN",
+      "ALLOCATIONS VIEW OWN",
+    ],
+    roles: ["ADMIN", "AGENT", "TEAM_LEADER"],
+    children: [
+      {
+        title: "Agent Distribution",
+        path: "/dashboard/leads/admin/assign-agent",
+        roles: ["ADMIN"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
+      {
+        title: "Customer Distribution",
+        path: "/dashboard/leads/admin/assign-customer",
+        roles: ["ADMIN"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
+      {
+        title: "My Team",
+        path: "/dashboard/leads/leaders",
+        roles: ["TEAM_LEADER"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
+      {
+        title: "My Leads",
+        path: "/dashboard/leads/agents",
+        roles: ["AGENT"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
+    ],
+  },
+
+  // customers route
   {
     title: "Customers",
     icon: Users,
+    permissions: [
+      "CUSTOMERS VIEW",
+      "CUSTOMERS CREATE",
+      "CUSTOMERS UPDATE",
+      "CUSTOMERS DELETE",
+    ],
     children: [
-      { title: "All Customers", path: "/dashboard/customers", icon: Users },
+      {
+        title: "All Customers",
+        path: "/dashboard/customers",
+        permissions: ["CUSTOMERS VIEW"],
+      },
       {
         title: "Add Customer",
         path: "/dashboard/customers/add",
-        icon: UserPlus,
-      },
-      { title: "Groups", path: "/dashboard/customers/groups", icon: UserCog },
-      {
-        title: "Feedback",
-        path: "/dashboard/customers/feedback",
-        icon: MessageCircle,
-      },
-      {
-        title: "Support Tickets",
-        path: "/dashboard/customers/tickets",
-        icon: MessageSquare,
+        permissions: ["CUSTOMERS CREATE"],
       },
     ],
   },
-  {
-    title: "Sales & Marketing",
-    icon: TrendingUp,
-    children: [
-      { title: "Discounts", path: "/marketing/discounts", icon: Percent },
-      { title: "Campaigns", path: "/marketing/campaigns", icon: Megaphone },
-      { title: "Email Marketing", path: "/marketing/email", icon: Mail },
-      { title: "SMS Marketing", path: "/marketing/sms", icon: MessageSquare },
-      { title: "Affiliate Program", path: "/marketing/affiliates", icon: Link },
-    ],
-  },
-  {
-    title: "Finance",
-    icon: CreditCard,
-    children: [
-      {
-        title: "Transactions",
-        path: "/finance/transactions",
-        icon: DollarSign,
-      },
-      { title: "Payments", path: "/finance/payments", icon: CreditCard },
-      { title: "Refunds", path: "/finance/refunds", icon: RefreshCcw },
-      { title: "Expenses", path: "/finance/expenses", icon: Briefcase },
-      { title: "Profit & Loss", path: "/finance/profit-loss", icon: BarChart3 },
-    ],
-  },
-  {
-    title: "Inventory & Suppliers",
-    icon: Boxes,
-    children: [
-      { title: "Suppliers", path: "/suppliers", icon: Truck },
-      { title: "Add Supplier", path: "/suppliers/add", icon: PlusSquare },
-      {
-        title: "Purchase Orders",
-        path: "/suppliers/purchase-orders",
-        icon: ClipboardList,
-      },
-      {
-        title: "Stock Transfers",
-        path: "/suppliers/stock-transfers",
-        icon: Package2,
-      },
-      {
-        title: "Low Stock Alerts",
-        path: "/suppliers/low-stock",
-        icon: AlertTriangle,
-      },
-    ],
-  },
+
+  // hr and staff route
   {
     title: "HR & Staff",
     icon: Users2,
+    permissions: ["USERS CREATE", "USERS VIEW", "ROLES MANAGE", "ROLES VIEW"],
+    roles: ["ADMIN"],
     children: [
       {
-        title: "All Employees",
-        path: "/dashboard/hr&staff/staff",
-        icon: Users,
+        title: "All Employee",
+        path: "/dashboard/admin/manage-users",
+        permissions: ["USERS VIEW"],
       },
       {
         title: "Add Employee",
         path: "/dashboard/hr&staff/staff/add",
-        icon: UserPlus,
-      },
-      {
-        title: "All Users",
-        path: "/dashboard/admin/manage-users",
-        icon: Users,
+        permissions: ["USERS CREATE"],
       },
       {
         title: "Roles & Permissions",
         path: "/dashboard/hr&staff/roles",
-        icon: Shield,
-      },
-      {
-        title: "Attendance",
-        path: "/dashboard/hr&staff/staff/attendance",
-        icon: Clock,
-      },
-      {
-        title: "Payroll",
-        path: "/dashboard/hr&staff/staff/payroll",
-        icon: Wallet,
-      },
-      {
-        title: "Performance Review",
-        path: "/dashboard/hr&staff/staff/performance",
-        icon: BarChart2,
+        permissions: ["ROLES MANAGE"],
       },
     ],
   },
   {
-    title: "Integrations",
-    icon: Plug,
+    title: "Activity",
+    icon: Activity,
     children: [
       {
-        title: "Payment Gateways",
-        path: "/integrations/payments",
-        icon: CreditCard,
+        title: "All Activity",
+        path: "/dashboard/activity",
+        permissions: ["AUDIT VIEW"],
+        roles: ["ADMIN"],
       },
       {
-        title: "Shipping Providers",
-        path: "/integrations/shipping",
-        icon: Truck,
+        title: "My Activity",
+        path: "/dashboard/my-activity",
       },
-      { title: "API & Webhooks", path: "/integrations/api", icon: Plug },
-      {
-        title: "Third-Party Apps",
-        path: "/integrations/third-party",
-        icon: Package2,
-      },
-    ],
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    children: [
-      { title: "General Settings", path: "/settings/general", icon: Settings },
-      { title: "Company Settings", path: "/settings/company", icon: Briefcase },
-      { title: "Security", path: "/settings/security", icon: Lock },
-      { title: "Notifications", path: "/settings/notifications", icon: Bell },
-      { title: "System Logs", path: "/settings/logs", icon: FileSearch },
-    ],
-  },
-  {
-    title: "Support",
-    icon: HelpCircle,
-    children: [
-      {
-        title: "Knowledge Base",
-        path: "/support/knowledge-base",
-        icon: BookOpen,
-      },
-      { title: "FAQ", path: "/support/faq", icon: MessageSquareQuoteIcon },
-      { title: "Contact Support", path: "/support/contact", icon: PhoneCall },
-      { title: "Feedback", path: "/support/feedback", icon: ThumbsUp },
     ],
   },
 ];

@@ -2,42 +2,49 @@ import { baseApi } from "@/redux/api/baseApi";
 import { buildParams } from "@/utills/paramsBuilder";
 
 const customersApi = baseApi.injectEndpoints({
-    endpoints: (builder) => ({
-        /* getProfile: builder.query({
+  endpoints: (builder) => ({
+    /* getProfile: builder.query({
           query: () => ({
             url: `/auth/profile`,
             method: "GET",
           }),
           providesTags: ["user"],
         }), */
-        getAllCustomer: builder.query({
-            query: (params = {}) => ({
-                url: `/customers?${buildParams(params)}`,
-                method: "GET",
-            }),
+    getAllCustomer: builder.query({
+      query: (params = {}) => ({
+        url: `/customers?${buildParams(params)}`,
+        method: "GET",
+      }),
             providesTags:["customers"]
-        }),
-        getCustomerById: builder.query({
-            query: (id) => ({
-                url: `/customers/${id}`,
-                method: "GET",
-            }),
-        }),
-        addCustomer: builder.mutation({
-            query: (data) => ({
-                url: `/customers`,
-                method: "POST",
-                body: data,
-            }),
+    }),
+    getUnassignedCustomersByAdmin: builder.query({
+      query: (params = {}) => ({
+        url: `/customers/unassigned?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["unassigned customers", "customers"],
+    }),
+    getCustomerById: builder.query({
+      query: (id) => ({
+        url: `/customers/${id}`,
+        method: "GET",
+      }),
+    }),
+    addCustomer: builder.mutation({
+      query: (data) => ({
+        url: `/customers`,
+        method: "POST",
+        body: data,
+      }),
             invalidatesTags:["customers"]
-        }),
-        updateCustomerInfo: builder.mutation({
-            query: (data) => ({
-                url: `/customers/${data.id}`,
-                method: "PUT",
-                body: data.currentCustomer,
-            }),
-        }),
+    }),
+    updateCustomerInfo: builder.mutation({
+      query: (data) => ({
+        url: `/customers/${data.id}`,
+        method: "PUT",
+        body: data.currentCustomer,
+      }),
+    }),
         createCustomerAddress: builder.mutation({
             query: ({ data, customerId }) => {
                 console.log(customerId);
@@ -48,7 +55,13 @@ const customersApi = baseApi.injectEndpoints({
                 }
             }
         })
-    }),
+  }),
 });
 
-export const { useGetAllCustomerQuery, useGetCustomerByIdQuery, useAddCustomerMutation, useUpdateCustomerInfoMutation, useCreateCustomerAddressMutation } = customersApi;
+export const {
+  useGetAllCustomerQuery,
+  useGetCustomerByIdQuery,
+  useAddCustomerMutation,
+  useUpdateCustomerInfoMutation, useCreateCustomerAddressMutation,
+  useGetUnassignedCustomersByAdminQuery,
+} = customersApi;

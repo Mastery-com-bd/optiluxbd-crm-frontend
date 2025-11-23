@@ -1,0 +1,106 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+
+const mockCouriers = [
+  { id: "c-1001", orderId: "ORD-1001", recipientName: "Ariana", status: "PENDING", createdAt: "2024-10-02T09:00:00.000Z" },
+  { id: "c-1002", orderId: "ORD-1002", recipientName: "Basit", status: "DELIVERED", createdAt: "2024-10-03T09:00:00.000Z" },
+  { id: "c-1003", orderId: "ORD-1003", recipientName: "Chowdhury", status: "IN_TRANSIT", createdAt: "2024-10-04T09:00:00.000Z" },
+];
+
+export default function LocalListCouriers() {
+  const [status, setStatus] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState("1");
+  const [limit, setLimit] = useState("10");
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const qs = { status: status === "all" ? undefined : status, search: search || undefined, page, limit };
+    console.log("GET /api/v1/couriers query:", qs);
+  }
+
+  const filtered = mockCouriers.filter((c) => {
+    const matchStatus = status === "all" ? true : c.status === status;
+    const q = search.trim().toLowerCase();
+    const matchSearch = q ? [c.id, c.orderId, c.recipientName].some((x) => String(x).toLowerCase().includes(q)) : true;
+    return matchStatus && matchSearch;
+  });
+
+  return (
+    <div className="mx-auto p-4 space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Get All Couriers</h1>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>List</CardTitle>
+          <CardDescription>GET /api/v1/couriers</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="md:col-span-1 space-y-2">
+              <Label>Status</Label>
+              <Select value={status} onValueChange={(v)=>setStatus(v)}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="All" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="PENDING">PENDING</SelectItem>
+                  <SelectItem value="IN_TRANSIT">IN_TRANSIT</SelectItem>
+                  <SelectItem value="DELIVERED">DELIVERED</SelectItem>
+                  <SelectItem value="RETURNED">RETURNED</SelectItem>
+                  <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="md:col-span-2 space-y-2">
+              <Label>Search</Label>
+              <Input value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="id, orderId, recipientName..." />
+            </div>
+            <div className="md:col-span-1 space-y-2">
+              <Label>Page</Label>
+              <Input type="number" value={page} onChange={(e)=>setPage(e.target.value)} />
+            </div>
+            <div className="md:col-span-1 space-y-2">
+              <Label>Limit</Label>
+              <Input type="number" value={limit} onChange={(e)=>setLimit(e.target.value)} />
+            </div>
+            <div className="md:col-span-4 flex justify-end">
+              <Button type="submit">Fetch</Button>
+            </div>
+          </form>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Recipient</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((c) => (
+                <TableRow key={c.id}>
+                  <TableCell>{c.id}</TableCell>
+                  <TableCell>{c.orderId}</TableCell>
+                  <TableCell>{c.recipientName}</TableCell>
+                  <TableCell>{c.status}</TableCell>
+                  <TableCell>{new Intl.DateTimeFormat("en-US",{year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(c.createdAt))}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

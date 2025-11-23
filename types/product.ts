@@ -22,18 +22,3 @@ export interface Product {
   sold: number | null;
   rating: number;
 }
-
-export type TComboItem = {
-  productId: number;
-  quantity: number;
-};
-
-export type TComboPack = {
-  name: string;
-  description: string;
-  sku: string;
-  discountPrice: number;
-  is_featured: boolean;
-  tags?: string | string[];
-  items: TComboItem[];
-};

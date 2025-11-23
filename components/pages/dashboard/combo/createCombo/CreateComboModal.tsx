@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { TComboPack } from "@/types/product";
 import {
   Bold,
   Italic,
@@ -37,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateComboMutation } from "@/redux/features/combo/comboApi";
+import { TComboPack } from "@/types/comboPackage";
 
 const CreateComboModal = ({
   selectedProducts,
@@ -65,7 +65,6 @@ const CreateComboModal = ({
     const finalData = { ...data, items: selectedProducts };
     try {
       const res = await createCombo(finalData).unwrap();
-      console.log(res);
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();
@@ -91,7 +90,7 @@ const CreateComboModal = ({
     >
       <DialogTrigger asChild>
         <Button
-          disabled={!selectedProducts.length}
+          disabled={selectedProducts.length < 2}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="w-4 h-4 mr-2" />

@@ -1,0 +1,62 @@
+"use client";
+import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import RecentActivity from "./recentActivity/RecentActivity";
+import UserActivity from "./userActivity/UserActivity";
+import CustomerHistory from "./customerHistory/CustomerHistory";
+import ProductHistory from "./productHistory/ProductHistory";
+import OrderHistory from "./orderHistory/OrderHistory";
+
+const tabs = [
+  "Recent Activity",
+  "User Activity",
+  "Customer History",
+  "Product History",
+  "Order History",
+  "User History",
+];
+
+const Activity = () => {
+  type TTabs =
+    | "Recent Activity"
+    | "User Activity"
+    | "Customer History"
+    | "Product History"
+    | "Order History"
+    | "User History";
+
+  const [activeTab, setActiveTab] = useState<TTabs | string>("Recent Activity");
+
+  return (
+    <CardContent className="p-1 lg:p-8 w-full mt-4 lg:mt-1">
+      <div className="flex flex-col lg:flex-row gap-4 w-full">
+        {/* Sidebar Tabs */}
+        <Card className="lg:h-full p-2 ">
+          <CardContent className="p-2 space-y-2 flex flex-row flex-wrap lg:flex-col">
+            {tabs.map((tab) => (
+              <Button
+                key={tab}
+                variant={activeTab === tab ? "default" : "ghost"}
+                className=" justify-start cursor-pointer"
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Activity Content */}
+        {activeTab === "Recent Activity" && <RecentActivity />}
+        {activeTab === "User Activity" && <UserActivity />}
+        {activeTab === "User History" && <CustomerHistory />}
+        {activeTab === "Customer History" && <CustomerHistory />}
+        {activeTab === "Product History" && <ProductHistory />}
+        {activeTab === "Order History" && <OrderHistory />}
+      </div>
+    </CardContent>
+  );
+};
+
+export default Activity;

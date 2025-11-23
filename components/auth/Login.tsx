@@ -77,13 +77,16 @@ const Login = () => {
                 })) || [],
             },
           })) || [];
+
         const user: TAuthUSer = {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
-        const { role } = getPermissions(res?.data?.userData?.roles);
+        const { role } = getPermissions(res?.data?.userData);
+
         dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, {
@@ -93,7 +96,11 @@ const Login = () => {
         if (redirect) {
           router.push(redirect);
         } else {
-          if (role === "ADMIN") {
+          if (!role.length) {
+            router.push("/activeAccount");
+            return;
+          }
+          if (role.includes("ADMIN")) {
             router.push("/dashboard");
           } else {
             router.push("/dashboard/profile");
@@ -112,7 +119,7 @@ const Login = () => {
 
   const handleAdmin = async () => {
     const data = {
-      email: "thohanur143@gmail.com",
+      email: "admin@gmail.com",
       password: "Password@123",
     };
     try {
@@ -133,6 +140,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         const token = res?.data?.token;
@@ -160,7 +168,7 @@ const Login = () => {
 
   const handleAgent = async () => {
     const data = {
-      email: "agent@gmail.com",
+      email: "agent1@gmail.com",
       password: "Password@123",
     };
     try {
@@ -183,6 +191,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         dispatch(setUser(user as TAuthUSer));
@@ -207,9 +216,9 @@ const Login = () => {
     }
   };
 
-  const handleCustomer = async () => {
+  const handleteamLeader = async () => {
     const data = {
-      email: "customer@gmail.com",
+      email: "teamleader1@gmail.com",
       password: "Password@123",
     };
     try {
@@ -231,6 +240,7 @@ const Login = () => {
           id: res?.data?.userData?.id,
           name: res?.data?.userData?.name,
           email: res?.data?.userData?.email,
+          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
           roles: roles,
         };
         dispatch(setUser(user as TAuthUSer));
@@ -270,7 +280,7 @@ const Login = () => {
         Lets get you signed in. Enter your email and password to continue
       </p>
 
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <Button
           onClick={handleAdmin}
           type="submit"
@@ -288,14 +298,14 @@ const Login = () => {
           {isSubmitting ? "Logging in..." : "Agent"}
         </Button>
         <Button
-          onClick={handleCustomer}
+          onClick={handleteamLeader}
           type="submit"
           disabled={isSubmitting}
           className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
         >
-          {isSubmitting ? "Logging in..." : "Customer"}
+          {isSubmitting ? "Logging in..." : "Team Leader"}
         </Button>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}

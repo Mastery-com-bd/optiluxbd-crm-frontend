@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { NotificationBell } from "@/components/notification/NotificationBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Popover,
@@ -12,11 +13,11 @@ import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
   currentUser,
   logOut,
-  TUSerRole,
+  TAuthUSer,
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
-import { BellDotIcon, MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,12 +31,16 @@ const Navbar: React.FC = () => {
   const [logout] = useLogoutMutation();
   const router = useRouter();
 
+  const { role } = getPermissions(user as TAuthUSer);
+
   const handleLogOut = async () => {
+    const toastId = toast.loading("logging out", { duration: 3000 });
     try {
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
         toast.success(res?.message, {
+          id: toastId,
           duration: 3000,
         });
         router.push("/login");
@@ -46,9 +51,10 @@ const Navbar: React.FC = () => {
         error?.data?.message ||
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
+
   return (
     <div>
       <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
@@ -70,7 +76,7 @@ const Navbar: React.FC = () => {
                     setTheme("light");
                     console.log("clicked sun");
                   }}
-                  className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
+                  className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
                   aria-label="Switch to light mode"
                 >
                   <SunIcon className="w-6 h-6" />
@@ -80,80 +86,23 @@ const Navbar: React.FC = () => {
                     setTheme("dark");
                     console.log("clicked moon");
                   }}
-                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
+                  className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
                   aria-label="Switch to dark mode"
                 >
                   <MoonIcon className="w-6 h-6" />
                 </button>
               </div>
+              <NotificationBell />
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="relative p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <BellDotIcon className="w-6 h-6" />
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white text-[10px] font-bold text-destructive-foreground shadow">
-                      3
-                    </span>
-                    {/* Optional: subtle pulse animation on the badge */}
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                    </span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
-                  <div className="p-4 border-b">
-                    <h4 className="font-semibold text-sm">Notifications</h4>
-                  </div>
-                  <div className="max-h-80 overflow-y-auto">
-                    {/* Mock CRM notifications */}
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-blue-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">New lead assigned</p>
-                        <p className="text-xs text-muted-foreground">
-                          Sarah Johnson just filled the contact form.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          2 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-green-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">Deal won</p>
-                        <p className="text-xs text-muted-foreground">
-                          Acme Corp deal ($45,000) moved to Closed-Won.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          1 hour ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-4 border-b hover:bg-accent/50 transition-colors cursor-pointer">
-                      <div className="mt-1 w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium">Task overdue</p>
-                        <p className="text-xs text-muted-foreground">
-                          Follow-up with TechGlobal is 3 days overdue.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70">
-                          3 hours ago
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-2 border-t">
-                    <button className="w-full text-center text-xs text-primary hover:underline">
-                      View all notifications
-                    </button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background">
+                  <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
                     <Avatar className="w-9 h-9 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage
+                        src={
+                          user?.avatar_secure_url ||
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                      />
                       <AvatarFallback className="bg-linear-to-br from-primary/20 to-primary/40 text-primary-foreground">
                         BI
                       </AvatarFallback>
@@ -163,7 +112,13 @@ const Navbar: React.FC = () => {
                         {user?.name}
                       </span>
                       <span className="text-xs text-muted-foreground/70">
-                        {getPermissions(user?.roles as TUSerRole[]).role}
+                        {role
+                          .map(
+                            (r) =>
+                              r.charAt(0).toUpperCase() +
+                              r.slice(1).toLowerCase()
+                          )
+                          .join(", ")}
                       </span>
                     </div>
                   </button>
@@ -171,7 +126,12 @@ const Navbar: React.FC = () => {
                 <PopoverContent className="w-56 p-2" align="end">
                   <div className="flex items-center gap-3 px-2 py-2">
                     <Avatar className="w-10 h-10">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage
+                        src={
+                          user?.avatar_secure_url ||
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                      />
                       <AvatarFallback>BI</AvatarFallback>
                     </Avatar>
                     <div>

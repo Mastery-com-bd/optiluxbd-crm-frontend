@@ -1,6 +1,5 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +11,36 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  AlertCircle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useAcceptPendingLeadsMutation,
+  useGetAssignCustomersQuery,
+  useGetPendingCustomersQuery,
+  useRejectPendingLeadsMutation,
+  useUpdateLeadStatusMutation,
+} from "@/redux/features/leads/leadsAgentApi";
+import {
   CheckCircle,
   Clock,
-  Copy,
+  Eye,
+  Loader2,
   Mail,
   MapPin,
   Package,
@@ -24,173 +49,169 @@ import {
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import AddAddressDialog from "../addAddressDialog";
 
-interface Order {
-  id: string;
-  orderNumber: string;
-  customerName: string;
+type BatchType = {
+  id: number;
+  leaderId: number;
+  status: string;
+};
+
+interface CustomerAddress {
+  id: number;
+  user_id: number | null;
+  customer_id: number;
+  division: string;
+  city: string;
+  thana: string;
+  post: string;
+  street: string;
+  zone_id: number | null;
+  geo_lat: number | null;
+  geo_lng: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface customer {
+  id: number;
+  name: string;
   phone: string;
-  email: string;
-  address: string;
-  product: string;
-  quantity: number;
-  amount: number;
-  orderDate: string;
-  notes: string;
+  email: null;
+  customerId: string;
+  addresses: CustomerAddress[];
+  assignedAt: string;
+  batch: BatchType;
+  batchId: number;
+  lastContactAt: null;
   status: string;
 }
 
-// Mock data generator
-const generateMockOrders = (count = 10) => {
-  const products = [
-    "Wireless Headphones",
-    "Smart Watch",
-    "Laptop Stand",
-    "USB-C Hub",
-    "Mechanical Keyboard",
-    "Mouse Pad",
-    "Phone Case",
-    "Tablet",
-    "Monitor",
-    "Webcam",
-  ];
-  const cities = [
-    "Dhaka",
-    "Chittagong",
-    "Sylhet",
-    "Rajshahi",
-    "Khulna",
-    "Barisal",
-  ];
-  const firstNames = [
-    "Ahmed",
-    "Fatima",
-    "Karim",
-    "Nadia",
-    "Rahim",
-    "Sadia",
-    "Jamal",
-    "Ayesha",
-    "Farhan",
-    "Zara",
-  ];
-  const lastNames = [
-    "Khan",
-    "Rahman",
-    "Ali",
-    "Chowdhury",
-    "Hossain",
-    "Islam",
-    "Ahmed",
-    "Begum",
-  ];
+interface TCurrentCustomer extends customer {
+  agentId: number;
+  customers: customer[];
+}
 
-  return Array.from({ length: count }, (_, i) => ({
-    id: `ORD-${Date.now()}-${i + 1}`,
-    orderNumber: `#${10000 + i + 1}`,
-    customerName: `${
-      firstNames[Math.floor(Math.random() * firstNames.length)]
-    } ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
-    phone: `+880 1${Math.floor(Math.random() * 900000000 + 100000000)}`,
-    email: `customer${i + 1}@example.com`,
-    address: `${Math.floor(Math.random() * 999 + 1)}, ${
-      cities[Math.floor(Math.random() * cities.length)]
-    }, Bangladesh`,
-    product: products[Math.floor(Math.random() * products.length)],
-    quantity: Math.floor(Math.random() * 3 + 1),
-    amount: Math.floor(Math.random() * 5000 + 1000),
-    orderDate: new Date(
-      Date.now() - Math.floor(Math.random() * 86400000)
-    ).toISOString(),
-    notes:
-      Math.random() > 0.5
-        ? "Please deliver before 5 PM"
-        : "Call before delivery",
-    status: "",
-  }));
-};
+interface PendingLeadsType {
+  id: number;
+  customerId: string;
+  name: string;
+  phone: string;
+  email: null;
+  assignedAt: string;
+  status: string;
+}
 
 const OrderProcessingSystem = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [processedOrders, setProcessedOrders] = useState<Order[]>([]);
-  const [showHistory, setShowHistory] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [customerOutcome, setCustomerOutcome] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null
+  );
 
-  const loadNewOrders = () => {
+  /* Pending Customer Data */
+  const { data: pendingLeads, isLoading: pendingLeadsLoading } =
+    useGetPendingCustomersQuery(undefined);
+  const pendingLeadsData = pendingLeads?.data;
+
+  /* Accept Pending Customer Data */
+  const [acceptPendingLeads, { isLoading: acceptLoading }] =
+    useAcceptPendingLeadsMutation();
+
+  /* Reject Pending Customer Data */
+  const [rejectPendingLeads, { isLoading: rejectLoading }] =
+    useRejectPendingLeadsMutation();
+
+  /* Update Lead Status */
+  const [updateLeadStatus] = useUpdateLeadStatusMutation();
+
+  /* Assigned Customer Data */
+  const { data: assignedLeads, isLoading: assignedLeadsLoading } =
+    useGetAssignCustomersQuery(undefined);
+  const assignedCustomerData: TCurrentCustomer = assignedLeads?.data;
+  const currentCustomer = assignedCustomerData?.customers[0];
+
+  const handleStatusUpdate = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setProcessedOrders([]);
-      setOrders([]);
-      const newOrders = generateMockOrders(10);
-      setOrders(newOrders);
-      setCurrentIndex(0);
-      setShowHistory(false);
+    toast.loading("Updating status...");
+
+    const payload = {
+      customerId: currentCustomer?.id,
+      outcome: customerOutcome,
+      note: note,
+      addressId: selectedAddressId,
+    };
+    if (!customerOutcome || !note) {
+      toast.error("Please select outcome and add note");
       setLoading(false);
-    }, 800);
-  };
-
-  if (orders.length === 0) {
-    const newOrders = generateMockOrders(10);
-    setOrders(newOrders);
-    setLoading(false);
-  }
-
-  const handleStatusUpdate = (status: string) => {
-    setProcessing(true);
-
-    setTimeout(() => {
-      const currentOrder = orders[currentIndex];
-      const processedOrder = {
-        ...currentOrder,
-        status,
-        processedAt: new Date().toISOString(),
-      };
-
-      setProcessedOrders((prev) => [...prev, processedOrder]);
-
-      if (currentIndex < orders.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        setShowHistory(true);
+      return;
+    }
+    try {
+      const res = await updateLeadStatus(payload).unwrap();
+      console.log("Update Lead Status Response", res);
+      if (res?.success) {
+        toast.dismiss();
+        setLoading(false);
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        // Reload the page to reflect the updated status
+        window.location.reload();
       }
-
-      setProcessing(false);
-    }, 500);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return "bg-green-500";
-      case "canceled":
-        return "bg-red-500";
-      case "fake":
-        return "bg-orange-500";
-      case "duplicate":
-        return "bg-yellow-500";
-      default:
-        return "bg-gray-500";
+    } catch (error) {
+      console.log(error);
+      toast.dismiss();
+      toast.error("Failed to update status");
+      setLoading(false);
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return <CheckCircle className="w-4 h-4" />;
-      case "canceled":
-        return <XCircle className="w-4 h-4" />;
-      case "fake":
-        return <AlertCircle className="w-4 h-4" />;
-      case "duplicate":
-        return <Copy className="w-4 h-4" />;
-      default:
-        return null;
+  const handleAccept = async (batchId: number) => {
+    try {
+      const payload = {
+        batchId: batchId,
+      };
+      const res = await acceptPendingLeads(payload).unwrap();
+      console.log("Accept Response", res);
+      if (res?.success) {
+        toast.dismiss();
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  if (loading) {
+  const handleReject = async (batchId: number) => {
+    try {
+      const payload = {
+        batchId: batchId,
+      };
+      const res = await rejectPendingLeads(payload).unwrap();
+      console.log("Reject Response", res);
+      if (res?.success) {
+        toast.dismiss();
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (
+    assignedLeadsLoading ||
+    pendingLeadsLoading ||
+    acceptLoading ||
+    rejectLoading
+  ) {
     return (
       <div className="min-h-screen bg-white dark:bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
@@ -198,7 +219,7 @@ const OrderProcessingSystem = () => {
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
               <p className="text-gray-600 dark:text-gray-300">
-                Loading orders...
+                Loading leads...
               </p>
             </div>
           </CardContent>
@@ -206,306 +227,604 @@ const OrderProcessingSystem = () => {
       </div>
     );
   }
-
-  if (showHistory) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-background p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto">
-          <Card className="shadow-xl pt-0 overflow-hidden ">
-            <CardHeader className="border-b pt-4">
-              <CardTitle className="text-2xl md:text-3xl">
-                Processing Summary
-              </CardTitle>
-              <CardDescription className="text-indigo-100 dark:text-indigo-200">
-                You&apos;ve processed {processedOrders.length} orders
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {processedOrders.map((order, idx) => (
-                  <Card
-                    key={idx}
-                    className="border-2 hover:shadow-md transition-shadow "
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-lg dark:text-gray-100">
-                            {order.orderNumber}
-                          </CardTitle>
-                          <CardDescription className="text-sm dark:text-gray-400">
-                            {order.customerName}
-                          </CardDescription>
-                        </div>
-                        <Badge
-                          className={`${getStatusColor(
-                            order.status
-                          )} text-white flex items-center gap-1 dark:text-gray-100`}
-                        >
-                          {getStatusIcon(order.status)}
-                          {order.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="text-sm space-y-2">
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                        <Package className="w-4 h-4" />
-                        <span>{order.product}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                        <Phone className="w-4 h-4" />
-                        <span className="truncate">{order.phone}</span>
-                      </div>
-                      <div className="font-semibold text-indigo-600 dark:text-indigo-400">
-                        ৳{order.amount.toLocaleString()}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter className=" rounded-2xl mx-5 flex flex-col-reverse sm:flex-row-reverse gap-3 bg-linear-to-r from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-b-xl p-6">
-              <Button
-                onClick={loadNewOrders}
-                disabled={processedOrders.length < 10}
-                className="w-full sm:w-auto "
-              >
-                {processedOrders.length < 10
-                  ? `Processing... (${processedOrders.length}/10)`
-                  : "Load 10 New Orders"}
-              </Button>
-              <Button
-                onClick={() => setShowHistory(false)}
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:border-gray-500 transition-all duration-300 font-medium"
-              >
-                Back to Current Order
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
-  const currentOrder = orders[currentIndex];
+  const activeTab =
+    pendingLeadsData?.customers?.length > 0 ? "Pending" : "Assigned";
 
   return (
-    <div className="min-h-screen  p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
-        {/* Progress Bar */}
-        <Card className="shadow-lg lg:flex-row">
-          <CardHeader className="py-0 w-full lg:w-1/3">
-            <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-              Processing Progress
-            </CardTitle>
-            <CardDescription className="text-sm text-gray-500 dark:text-gray-400">
-              Track your order processing progress
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4 w-full lg:w-2/3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Order {currentIndex + 1} of {orders.length}
-              </span>
-              <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                {Math.round(((currentIndex + 1) / orders.length) * 100)}%
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-              <div
-                className="bg-linear-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 h-3 rounded-full transition-all duration-500"
-                style={{
-                  width: `${((currentIndex + 1) / orders.length) * 100}%`,
-                }}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Current Order Details */}
-        <Card className="shadow-xl overflow-hidden">
-          <CardHeader className="border-b dark:border-gray-700">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div>
-                <CardTitle className="text-2xl md:text-3xl dark:text-gray-100">
-                  {currentOrder.orderNumber}
-                </CardTitle>
-                <CardDescription className="text-indigo-100 dark:text-indigo-200 mt-1">
-                  New Order - Awaiting Processing
-                </CardDescription>
-              </div>
-              <Badge
-                variant="secondary"
-                className="w-fit bg-white text-indigo-600 dark:bg-gray-900 dark:text-indigo-400"
-              >
-                <Clock className="w-4 h-4 mr-1" />
-                {new Date(currentOrder.orderDate).toLocaleString()}
-              </Badge>
-            </div>
-          </CardHeader>
-
-          <CardContent className="pt-6 space-y-6">
-            {/* Customer Information */}
+        {/* Tabs Start */}
+        <Tabs defaultValue={activeTab} className="w-full">
+          <TabsList className="w-full">
+            <TabsTrigger value="Pending">Pending Leads</TabsTrigger>
+            <TabsTrigger value="Assigned">Assigned Leads</TabsTrigger>
+          </TabsList>
+          <TabsContent value="Pending">
+            {/* Pending Leads Tab */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
-                Customer Details :
-              </h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex items-start gap-3 p-3 rounded-lg border">
-                  <User className="w-5 h-5 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Customer Name
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.customerName}
-                    </p>
-                  </div>
+              {pendingLeadsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                  <p className="ml-3 text-gray-600 dark:text-gray-300">
+                    Loading pending leads...
+                  </p>
                 </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg border">
-                  <Phone className="w-5 h-5 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Phone
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.phone}
-                    </p>
+              ) : pendingLeadsData?.customers?.length > 0 ? (
+                <>
+                  {/* Re-imagined Pending Leads Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                        <Package className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                          Pending Leads
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {pendingLeadsData.pendingCount || 0} leads waiting for
+                          acceptance
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="default"
+                        className="bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                        onClick={() => {
+                          handleAccept(pendingLeadsData.batch.id);
+                        }}
+                      >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Accept All
+                      </Button>
+                      <Button
+                        size="default"
+                        className="bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                        onClick={() => {
+                          handleReject(pendingLeadsData.batch.id);
+                        }}
+                      >
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Reject All
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg border md:col-span-2">
-                  <Mail className="w-5 h-5 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Email
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.email}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg border md:col-span-2">
-                  <MapPin className="w-5 h-5 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Delivery Address
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.address}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Order Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2">
-                Order Details
-              </h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                  <Package className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Product
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.product}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                  <div className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 font-bold">
-                    ×
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Quantity
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {currentOrder.quantity}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-lg md:col-span-2">
-                  <div className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 font-bold">
-                    ৳
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Total Amount
-                    </p>
-                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      ৳{currentOrder.amount.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  {/* Table with shadcn/ui components */}
+                  <div className="w-full max-w-7xl mx-auto p-4">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block rounded-md border">
+                      <div className="relative w-full overflow-auto">
+                        <table className="w-full caption-bottom text-sm">
+                          <thead className="[&_tr]:border-b">
+                            <tr className="border-b transition-colors hover:bg-muted/50">
+                              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                Name
+                              </th>
+                              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                Phone
+                              </th>
+                              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                Email
+                              </th>
+                              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                Assigned At
+                              </th>
+                              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                Status
+                              </th>
+                              <th className="h-12 px-4 text-center align-middle font-medium text-muted-foreground">
+                                Actions
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="[&_tr:last-child]:border-0">
+                            {pendingLeadsData.customers.map(
+                              (lead: PendingLeadsType) => (
+                                <tr
+                                  key={lead.id}
+                                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                >
+                                  <td className="p-4 align-middle font-medium">
+                                    <div>
+                                      <p className="font-medium">{lead.name}</p>
+                                      <p className="text-xs text-muted-foreground">
+                                        {lead.customerId}
+                                      </p>
+                                    </div>
+                                  </td>
+                                  <td className="p-4 align-middle">
+                                    {lead.phone || "N/A"}
+                                  </td>
+                                  <td className="p-4 align-middle">
+                                    <span className="truncate block max-w-[150px]">
+                                      {lead.email || "N/A"}
+                                    </span>
+                                  </td>
+                                  <td className="p-4 align-middle">
+                                    {new Date(lead.assignedAt).toLocaleString()}
+                                  </td>
+                                  <td className="p-4 align-middle">
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                    >
+                                      {lead.status}
+                                    </Badge>
+                                  </td>
+                                  <td className="p-4 align-middle text-center">
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-8 w-8 p-0"
+                                        >
+                                          <Eye className="h-4 w-4" />
+                                          <span className="sr-only">
+                                            View details
+                                          </span>
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent className="sm:max-w-[425px]">
+                                        <DialogHeader>
+                                          <DialogTitle>
+                                            Lead Details
+                                          </DialogTitle>
+                                          <DialogDescription>
+                                            Detailed information for {lead.name}
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              Name
+                                            </Label>
+                                            <div className="col-span-3">
+                                              {lead.name}
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              ID
+                                            </Label>
+                                            <div className="col-span-3">
+                                              {lead.customerId}
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              Phone
+                                            </Label>
+                                            <div className="col-span-3">
+                                              {lead.phone || "N/A"}
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              Email
+                                            </Label>
+                                            <div className="col-span-3">
+                                              {lead.email || "N/A"}
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              Assigned
+                                            </Label>
+                                            <div className="col-span-3">
+                                              {new Date(
+                                                lead.assignedAt
+                                              ).toLocaleString()}
+                                            </div>
+                                          </div>
+                                          <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label className="text-right font-medium">
+                                              Status
+                                            </Label>
+                                            <div className="col-span-3">
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                              >
+                                                {lead.status}
+                                              </Badge>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <DialogFooter>
+                                          <DialogClose asChild>
+                                            <Button variant="outline">
+                                              Close
+                                            </Button>
+                                          </DialogClose>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
+                                  </td>
+                                </tr>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
 
-            {/* Special Notes */}
-            {currentOrder.notes && (
-              <Alert className="dark:bg-gray-900 dark:border-gray-700">
-                <AlertCircle className="h-4 w-4 dark:text-gray-400" />
-                <AlertDescription className="dark:text-gray-300">
-                  <strong className="dark:text-gray-200">Note:</strong>{" "}
-                  {currentOrder.notes}
-                </AlertDescription>
-              </Alert>
-            )}
-          </CardContent>
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4">
+                      {pendingLeadsData.customers.map(
+                        (lead: PendingLeadsType) => (
+                          <div
+                            key={lead.id}
+                            className="rounded-lg border bg-card p-4 space-y-3"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <p className="font-medium text-base">
+                                  {lead.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {lead.customerId}
+                                </p>
+                              </div>
+                              <Badge
+                                variant="secondary"
+                                className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                              >
+                                {lead.status}
+                              </Badge>
+                            </div>
 
-          <CardFooter className="flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 py-6">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
-              Select order status:
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
-              <Button
-                onClick={() => handleStatusUpdate("confirmed")}
-                disabled={processing}
-                className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600"
-              >
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Confirm
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("canceled")}
-                disabled={processing}
-                variant="destructive"
-              >
-                <XCircle className="w-4 h-4 mr-2" />
-                Cancel
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("fake")}
-                disabled={processing}
-                className="bg-orange-600 hover:bg-orange-700 text-white dark:bg-orange-700 dark:hover:bg-orange-600"
-              >
-                <AlertCircle className="w-4 h-4 mr-2" />
-                Fake
-              </Button>
-              <Button
-                onClick={() => handleStatusUpdate("duplicate")}
-                disabled={processing}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white dark:bg-yellow-700 dark:hover:bg-yellow-600"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Duplicate
-              </Button>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Phone:
+                                </span>
+                                <span className="font-medium">
+                                  {lead.phone || "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Email:
+                                </span>
+                                <span className="font-medium truncate ml-2 max-w-[180px]">
+                                  {lead.email || "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Assigned:
+                                </span>
+                                <span className="font-medium text-xs">
+                                  {new Date(lead.assignedAt).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Details
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Lead Details</DialogTitle>
+                                  <DialogDescription>
+                                    Detailed information for {lead.name}
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      Name
+                                    </Label>
+                                    <div className="col-span-3">
+                                      {lead.name}
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      ID
+                                    </Label>
+                                    <div className="col-span-3">
+                                      {lead.customerId}
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      Phone
+                                    </Label>
+                                    <div className="col-span-3">
+                                      {lead.phone || "N/A"}
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      Email
+                                    </Label>
+                                    <div className="col-span-3">
+                                      {lead.email || "N/A"}
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      Assigned
+                                    </Label>
+                                    <div className="col-span-3">
+                                      {new Date(
+                                        lead.assignedAt
+                                      ).toLocaleString()}
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label className="text-right font-medium">
+                                      Status
+                                    </Label>
+                                    <div className="col-span-3">
+                                      <Badge
+                                        variant="secondary"
+                                        className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                      >
+                                        {lead.status}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                </div>
+                                <DialogFooter>
+                                  <DialogClose asChild>
+                                    <Button variant="outline">Close</Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <Card className="border-2 border-dashed">
+                  <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+                    <Package className="w-12 h-12 text-gray-400 mb-3" />
+                    <p className="text-gray-600 dark:text-gray-300 font-medium">
+                      No pending leads available
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      All leads have been processed or assigned
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            {processedOrders.length > 0 && (
-              <Button
-                onClick={() => setShowHistory(true)}
-                variant="outline"
-                className="w-full mt-2 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                View Processed Orders ({processedOrders.length})
-              </Button>
-            )}
-          </CardFooter>
-        </Card>
+          </TabsContent>
+          <TabsContent value="Assigned">
+            {/* Current Order Details */}
+            <Card className="shadow-xl overflow-hidden">
+              <CardHeader className="border-b dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-2xl md:text-3xl dark:text-gray-100">
+                      {currentCustomer?.customerId || "N/A"}
+                    </CardTitle>
+                    <CardDescription className="dark:text-indigo-200 mt-1">
+                      Customer ID
+                    </CardDescription>
+                  </div>
+                  <Badge
+                    variant="secondary"
+                    className="w-fit bg-white text-indigo-600 dark:bg-gray-900 dark:text-indigo-400"
+                  >
+                    <Clock className="w-4 h-4 mr-1" />
+                    {currentCustomer?.assignedAt
+                      ? new Date(currentCustomer.assignedAt).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          }
+                        )
+                      : "N/A"}
+                  </Badge>
+                </div>
+              </CardHeader>
+
+              <CardContent className="pt-6 space-y-6">
+                {/* Customer Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
+                    Customer Details :
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
+                      <User className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Customer Name
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.name || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
+                      <Phone className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Phone
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.phone || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg border md:col-span-2">
+                      <Mail className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Email
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.email || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Address Selection */}
+                    <div className="space-y-3 md:col-span-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                          <p className="text-base font-semibold text-gray-800 dark:text-gray-100">
+                            Delivery Address
+                          </p>
+                        </div>
+                        <AddAddressDialog customerId={Number(currentCustomer?.customerId)} />
+                      </div>
+                      {currentCustomer?.addresses?.length > 0 ? (
+                        <div className="space-y-2">
+                          {currentCustomer.addresses.map((addr) => (
+                            <label
+                              key={addr.id}
+                              className="flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                            >
+                              <input
+                                type="radio"
+                                name="address"
+                                value={addr.id}
+                                onChange={(e) =>
+                                  setSelectedAddressId(Number(e.target.value))
+                                }
+                                className="mt-1"
+                              />
+                              <div className="flex-1 text-sm">
+                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                  {addr.street}, {addr.thana}
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                  {addr.city}, {addr.post}, {addr.division}
+                                </p>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          No addresses available
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Information */}
+                {/* <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2">
+                    Order Details
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                      <Package className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Product
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          Product details
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                      <div className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 font-bold">
+                        ×
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Quantity
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          produc Quantuty
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-lg md:col-span-2">
+                      <div className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 font-bold">
+                        ৳
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Total Amount
+                        </p>
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                          ৳99999
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
+
+                {/* Contact Outcome Select */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Contact Outcome
+                  </label>
+                  <Select onValueChange={(value) => setCustomerOutcome(value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select outcome" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={"CONTACTED"}>Contacted</SelectItem>
+                      <SelectItem value={"NO_ORDER"}>No Order</SelectItem>
+                      <SelectItem value={"ORDER_PLACED"}>
+                        Order Placed
+                      </SelectItem>
+                      <SelectItem value={"CANCELLED"}>Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Special Notes */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Order Notes
+                  </label>
+                  <textarea
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    className="w-full min-h-[80px] p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
+                    placeholder="Enter any special notes for this order..."
+                  />
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 py-6">
+                <Button
+                  onClick={() => handleStatusUpdate()}
+                  disabled={loading}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600 cursor-pointer"
+                >
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                  )}
+                  Confirm Status
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
