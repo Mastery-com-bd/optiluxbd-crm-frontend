@@ -6,10 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarDays, DollarSign, Package, Receipt } from "lucide-react";
 import { convertDate } from "@/utills/dateConverter";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
 const MyOrders = ({ order }: { order: TProfileOrderData[] }) => {
-  console.log(order);
   return (
     <div className="w-full lg:w-[60vw] mx-auto bg-gray-200 dark:bg-gray-900">
       <Card className="shadow-lg border bg-transparent">

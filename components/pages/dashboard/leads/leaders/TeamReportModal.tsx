@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetTeamReportQuery } from "@/redux/features/leads/leadsApi";
+import { useGetTeamReportQuery } from "@/redux/features/leads/teamLeaderLeadsApi";
 import {
   Dialog,
   DialogContent,

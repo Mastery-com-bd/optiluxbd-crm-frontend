@@ -9,6 +9,7 @@ export type TUSerRole = {
   role: {
     name: string;
     permissions: TPermission[];
+    id?: number;
   };
 };
 

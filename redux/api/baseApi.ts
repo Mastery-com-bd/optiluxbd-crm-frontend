@@ -75,6 +75,7 @@ export const baseApi = createApi({
     "orders",
     "my activity",
     "activity",
+    "address",
   ],
   endpoints: () => ({}),
 });
