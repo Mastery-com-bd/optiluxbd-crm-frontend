@@ -48,9 +48,9 @@ import {
   User,
   XCircle,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import AddAddressDialog from "../addAddressDialog";
 
 type BatchType = {
   id: number;
@@ -58,13 +58,29 @@ type BatchType = {
   status: string;
 };
 
+interface CustomerAddress {
+  id: number;
+  user_id: number | null;
+  customer_id: number;
+  division: string;
+  city: string;
+  thana: string;
+  post: string;
+  street: string;
+  zone_id: number | null;
+  geo_lat: number | null;
+  geo_lng: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface customer {
   id: number;
   name: string;
   phone: string;
   email: null;
   customerId: string;
-  addresses: [];
+  addresses: CustomerAddress[];
   assignedAt: string;
   batch: BatchType;
   batchId: number;
@@ -91,7 +107,9 @@ const OrderProcessingSystem = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [customerOutcome, setCustomerOutcome] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const router = useRouter();
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null
+  );
 
   /* Pending Customer Data */
   const { data: pendingLeads, isLoading: pendingLeadsLoading } =
@@ -99,10 +117,12 @@ const OrderProcessingSystem = () => {
   const pendingLeadsData = pendingLeads?.data;
 
   /* Accept Pending Customer Data */
-  const [acceptPendingLeads] = useAcceptPendingLeadsMutation();
+  const [acceptPendingLeads, { isLoading: acceptLoading }] =
+    useAcceptPendingLeadsMutation();
 
   /* Reject Pending Customer Data */
-  const [rejectPendingLeads] = useRejectPendingLeadsMutation();
+  const [rejectPendingLeads, { isLoading: rejectLoading }] =
+    useRejectPendingLeadsMutation();
 
   /* Update Lead Status */
   const [updateLeadStatus] = useUpdateLeadStatusMutation();
@@ -121,6 +141,7 @@ const OrderProcessingSystem = () => {
       customerId: currentCustomer?.id,
       outcome: customerOutcome,
       note: note,
+      addressId: selectedAddressId,
     };
     if (!customerOutcome || !note) {
       toast.error("Please select outcome and add note");
@@ -145,7 +166,6 @@ const OrderProcessingSystem = () => {
       toast.error("Failed to update status");
       setLoading(false);
     }
-
   };
 
   const handleAccept = async (batchId: number) => {
@@ -155,12 +175,12 @@ const OrderProcessingSystem = () => {
       };
       const res = await acceptPendingLeads(payload).unwrap();
       console.log("Accept Response", res);
-      if (res?.ok) {
+      if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -174,19 +194,24 @@ const OrderProcessingSystem = () => {
       };
       const res = await rejectPendingLeads(payload).unwrap();
       console.log("Reject Response", res);
-      if (res?.ok) {
+      if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
           duration: 3000,
         });
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (assignedLeadsLoading || pendingLeadsLoading) {
+  if (
+    assignedLeadsLoading ||
+    pendingLeadsLoading ||
+    acceptLoading ||
+    rejectLoading
+  ) {
     return (
       <div className="min-h-screen bg-white dark:bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md dark:bg-gray-800 dark:border-gray-700">
@@ -194,7 +219,7 @@ const OrderProcessingSystem = () => {
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
               <p className="text-gray-600 dark:text-gray-300">
-                Loading orders...
+                Loading leads...
               </p>
             </div>
           </CardContent>
@@ -202,12 +227,14 @@ const OrderProcessingSystem = () => {
       </div>
     );
   }
+  const activeTab =
+    pendingLeadsData?.customers?.length > 0 ? "Pending" : "Assigned";
 
   return (
     <div className="min-h-screen p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Tabs Start */}
-        <Tabs defaultValue="Assigned" className="w-full">
+        <Tabs defaultValue={activeTab} className="w-full">
           <TabsList className="w-full">
             <TabsTrigger value="Pending">Pending Leads</TabsTrigger>
             <TabsTrigger value="Assigned">Assigned Leads</TabsTrigger>
@@ -654,17 +681,49 @@ const OrderProcessingSystem = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 rounded-lg border md:col-span-2">
-                      <MapPin className="w-5 h-5 mt-0.5" />
-                      <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Delivery Address
-                        </p>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">
-                          {/* TODO: Assign Address Properly */}
-                          TODO: Add Address
-                        </p>
+                    {/* Address Selection */}
+                    <div className="space-y-3 md:col-span-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                          <p className="text-base font-semibold text-gray-800 dark:text-gray-100">
+                            Delivery Address
+                          </p>
+                        </div>
+                        <AddAddressDialog customerId={Number(currentCustomer?.customerId)} />
                       </div>
+                      {currentCustomer?.addresses?.length > 0 ? (
+                        <div className="space-y-2">
+                          {currentCustomer.addresses.map((addr) => (
+                            <label
+                              key={addr.id}
+                              className="flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                            >
+                              <input
+                                type="radio"
+                                name="address"
+                                value={addr.id}
+                                onChange={(e) =>
+                                  setSelectedAddressId(Number(e.target.value))
+                                }
+                                className="mt-1"
+                              />
+                              <div className="flex-1 text-sm">
+                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                  {addr.street}, {addr.thana}
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                  {addr.city}, {addr.post}, {addr.division}
+                                </p>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          No addresses available
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
