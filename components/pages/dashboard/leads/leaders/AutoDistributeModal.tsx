@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAutoDistributeCustomerToAgentMutation } from "@/redux/features/leads/leadsApi";
+import { useAutoDistributeCustomerToAgentMutation } from "@/redux/features/leads/teamLeaderLeadsApi";
 import { SendIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";

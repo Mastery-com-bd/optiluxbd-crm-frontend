@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetAllteamsQuery } from "@/redux/features/leadsmanagement/leedsApi";
+import { useGetAllteamsQuery } from "@/redux/features/leads/adminLeedsApi";
 import { useState } from "react";
 import { TTeam } from "@/types/teamleader.types";
 import AgentDataModal from "./AgentDataModal";

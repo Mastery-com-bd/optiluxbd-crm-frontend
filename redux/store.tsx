@@ -3,6 +3,7 @@ import agentProfileSlice from "./features/agent/agentProfileSlice";
 import authReducer from "./features/auth/authSlice";
 import settingReducer from "./features/settings/settingsSlice";
 import comboReducer from "./features/combo/comboSlice";
+import addressReducer from "./features/address/addressSlice";
 import {
   persistReducer,
   persistStore,
@@ -29,6 +30,7 @@ export const store = configureStore({
     agentProfile: agentProfileSlice,
     settings: settingReducer,
     combo: comboReducer,
+    address: addressReducer,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

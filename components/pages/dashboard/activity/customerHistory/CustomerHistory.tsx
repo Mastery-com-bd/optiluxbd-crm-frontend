@@ -44,7 +44,7 @@ const CustomerHistory = () => {
   const handleSearch = (query: string) => {
     setFilters((prev) => ({ ...prev, search: query, page: 1 }));
   };
-  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   if (isLoading) {
     return <UserActivityTableSkeleton />;
