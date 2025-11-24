@@ -2,7 +2,7 @@ export const routePermissions: Record<string, string[]> = {
   //   👤 User Management
   "/dashboard/admin/manage-users": ["USERS VIEW"],
 
-  // 🛍️ Product Management
+  // Product Management
   "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/add-product": ["PRODUCTS CREATE"],
   "/dashboard/admin/products/drafts": ["PRODUCTS VIEW"],
@@ -10,6 +10,10 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/products/inventory": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/reviews": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/bulk-upload": ["PRODUCTS VIEW", "PRODUCTS DELETE"],
+
+  //category management
+  "/dashboard/admin/product-category/parent-category": ["CATEGORIES CREATE", "CATEGORIES VIEW", "CATEGORIES UPDATE", "CATEGORIES DELETE"],
+  "/dashboard/admin/product-category/sub-category": ["SUBCATEGORIES CREATE", "SUBCATEGORIES VIEW", "SUBCATEGORIES UPDATE", "SUBCATEGORIES DELETE"],
 
   // combo management
   "/dashboard/combo": ["PACKAGES VIEW"],

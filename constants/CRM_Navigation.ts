@@ -6,6 +6,7 @@ import {
   Users2,
   Gift,
   Activity,
+  Tags
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -60,6 +61,43 @@ export const crmRoutes: NavRoute[] = [
         permissions: ["PRODUCTS VIEW"],
       },
     ],
+  },
+  //CATEGORIES 
+  {
+    title: "Categories",
+    icon: Tags,
+    permissions: [
+      "CATEGORIES CREATE",
+      "CATEGORIES UPDATE",
+      "CATEGORIES DELETE",
+      "CATEGORIES VIEW",
+      "SUBCATEGORIES CREATE",
+      "SUBCATEGORIES UPDATE",
+      "SUBCATEGORIES DELETE",
+      "SUBCATEGORIES VIEW",
+    ],
+    children: [
+      {
+        title: "Parent Categories",
+        path: "/dashboard/admin/product-category/parent-category",
+        permissions: [
+          "CATEGORIES CREATE",
+          "CATEGORIES UPDATE",
+          "CATEGORIES DELETE",
+          "CATEGORIES VIEW",
+        ]
+      },
+      {
+        title: "Sub Categories",
+        path: "/dashboard/admin/product-category/sub-category",
+        permissions: [
+          "SUBCATEGORIES CREATE",
+          "SUBCATEGORIES UPDATE",
+          "SUBCATEGORIES DELETE",
+          "SUBCATEGORIES VIEW",
+        ]
+      }
+    ]
   },
 
   // combo pack route
