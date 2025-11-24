@@ -110,6 +110,12 @@ export const crmRoutes: NavRoute[] = [
         roles: ["AGENT"],
       },
       {
+        title: "Create Order",
+        path: `/dashboard/agent/orders/create-order/${0}`,
+        permissions: ["ORDERS CREATE"],
+        roles: ["AGENT"],
+      },
+      {
         title: "Top Sellers",
         path: "/dashboard/admin/orders/top-sellers",
         permissions: ["ORDERS VIEW"],
