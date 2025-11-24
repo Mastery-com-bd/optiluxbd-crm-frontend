@@ -22,7 +22,7 @@ import {
 import {
   useAutoDistributeCustomerToAgentMutation,
   useCustomerDistributionToAgentMutation,
-} from "@/redux/features/leads/leadsApi";
+} from "@/redux/features/leads/teamLeaderLeadsApi";
 import { useState } from "react";
 import { toast } from "sonner";
 

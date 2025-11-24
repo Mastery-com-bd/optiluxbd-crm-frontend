@@ -8,7 +8,6 @@ import { convertDate } from "@/utills/dateConverter";
 import { CalendarDays, DollarSign, Package, Receipt } from "lucide-react";
 
 const MyOrders = ({ order }: { order: TProfileOrderData[] }) => {
-  console.log(order);
   return (
     <div className="w-full lg:w-[60vw] mx-auto bg-gray-200 dark:bg-gray-900">
       <Card className="shadow-lg border bg-transparent">
