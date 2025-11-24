@@ -1,6 +1,6 @@
 'use client'
 
-import { useGetTopSellerQuery } from "@/redux/features/orders/ordersApi";
+// import { useGetTopSellerQuery } from "@/redux/features/orders/ordersApi";
 
 const TopSellers = () => {
     // const { data } = useGetTopSellerQuery();

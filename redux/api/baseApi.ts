@@ -76,6 +76,7 @@ export const baseApi = createApi({
     "my activity",
     "activity",
     "category",
+    "subcategories",
   ],
   endpoints: () => ({}),
 });
