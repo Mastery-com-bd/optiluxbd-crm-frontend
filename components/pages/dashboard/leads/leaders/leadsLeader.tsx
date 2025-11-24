@@ -8,7 +8,7 @@ import {
   useGetAllLeadsQuery,
   useGetAllTeamMembersQuery,
   useGetAllUnAssignedCustomersQuery,
-} from "@/redux/features/leads/leadsApi";
+} from "@/redux/features/leads/teamLeaderLeadsApi";
 import Agentcard from "./Agentcard";
 import LeadersDataModal from "./LeadersDataModal";
 import TeamReportModal from "./TeamReportModal";

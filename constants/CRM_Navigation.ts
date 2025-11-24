@@ -291,6 +291,11 @@ export const crmRoutes: NavRoute[] = [
         path: "/dashboard/hr&staff/roles",
         permissions: ["ROLES MANAGE"],
       },
+      {
+        title: "Pending Approval",
+        path: "/dashboard/admin/approve-user",
+        permissions: ["USERS VIEW"],
+      },
     ],
   },
   {

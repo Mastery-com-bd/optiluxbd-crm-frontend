@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useGetAllRolesQuery } from "@/redux/features/roles/roleApi";
@@ -53,7 +52,7 @@ const UserActivity = () => {
   // local state
   const [selectedRole, setSelectedRole] = useState("All");
 
-  const handleSearch = async (val: any) => {
+  const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
   };
 

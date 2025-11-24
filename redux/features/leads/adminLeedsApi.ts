@@ -1,7 +1,7 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { buildParams } from "@/utills/paramsBuilder";
 
-const leedsApi = baseApi.injectEndpoints({
+const adminLeedsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllteams: builder.query({
       query: () => ({
@@ -51,4 +51,4 @@ export const {
   useAssignAGentToLeaderMutation,
   useRemoveAgentsFromALeaderMutation,
   useAssignCustomerToLeadersMutation,
-} = leedsApi;
+} = adminLeedsApi;

@@ -77,6 +77,8 @@ export const baseApi = createApi({
     "activity",
     "category",
     "subcategories",
+    "address",
+    "pending-user",
   ],
   endpoints: () => ({}),
 });

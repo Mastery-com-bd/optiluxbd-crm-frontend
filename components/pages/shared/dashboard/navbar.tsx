@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
         <div className="w-full flex items-center justify-between gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <div className="w-full flex items-center justify-between gap-2">
-            <div className="flex flex-col items-start">
+            <div className="hidden lg:flex flex-col items-start">
               <span className="text-xs text-muted-foreground/80">
                 Good afternoon
               </span>
