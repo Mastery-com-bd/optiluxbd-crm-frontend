@@ -6,9 +6,15 @@ import { IAddress } from "@/types/address.types";
 import EditAddressComponent from "./EditAddressComponent";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import CreateAddressByAdmin from "../admin/manageUsers/singleUSer/CreateAddressByAdmin";
 
-const AddressComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
-  const addresses = userInfo?.addresses as IAddress[];
+type TAddressComponentProps = {
+  userInfo: IProfileInfo;
+  userFor?: string;
+};
+
+const AddressComponent = ({ userInfo, userFor }: TAddressComponentProps) => {
+  const addresses = (userInfo?.addresses as IAddress[]) || [];
   const [createEditing, setCreateEditing] = useState(false);
 
   return (
@@ -36,7 +42,16 @@ const AddressComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
           ))}
         </div>
       ) : (
-        <CreateAddressComponent setCreateEditing={setCreateEditing} />
+        <>
+          {userFor ? (
+            <CreateAddressByAdmin
+              setCreateEditing={setCreateEditing}
+              id={userInfo?.id}
+            />
+          ) : (
+            <CreateAddressComponent setCreateEditing={setCreateEditing} />
+          )}
+        </>
       )}
     </div>
   );

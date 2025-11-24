@@ -26,6 +26,14 @@ const addressApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["address", "user"],
     }),
+    createANewAddressByAdmin: builder.mutation({
+      query: (data) => ({
+        url: `/addresses/${data.id}`,
+        method: "POST",
+        body: data.data,
+      }),
+      invalidatesTags: ["address", "user"],
+    }),
 
     UpdateAddress: builder.mutation({
       query: ({ id, currentAddressInfo }) => ({
@@ -50,6 +58,7 @@ export const {
   useGetMyAddressQuery,
   useGetAddressByIdQuery,
   useCreateANewAddressMutation,
+  useCreateANewAddressByAdminMutation,
   useUpdateAddressMutation,
   useDeleteAddressMutation,
 } = addressApi;

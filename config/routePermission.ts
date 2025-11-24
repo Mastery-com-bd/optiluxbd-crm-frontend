@@ -31,7 +31,7 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/hr&staff/staff/add": ["USERS CREATE"],
 
   // leads management of admin
-  "/dashboard/leads/admin/assign-agent": [
+  "/dashboard/leads/admin/all-teams": [
     "ALLOCATIONS ASSIGN LEADER",
     "ALLOCATIONS DISTRIBUTE",
     "ALLOCATIONS REPORTS VIEW",

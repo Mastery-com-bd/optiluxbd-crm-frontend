@@ -17,7 +17,7 @@ const Profile = () => {
   const userInfo = data?.data;
   const orderInfo = userInfo?.orders;
   const { role } = getPermissions(userInfo as TAuthUSer);
-
+  console.log(userInfo);
   if (isLoading) {
     return <ProfileLoader />;
   }

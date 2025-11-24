@@ -14,6 +14,8 @@ import ProfileLoader from "../../../profile/ProfileLoader";
 import ProfileImage from "../../../profile/ProfileImage";
 import UserInfoEditComponent from "./UserInfoEditCmponent";
 import UserRoleEditComponent from "./UserRoleEditComponent";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AddressComponent from "../../../profile/AddressComponent";
 
 const UserProfile = ({ id }: { id: string }) => {
   // get user information
@@ -126,7 +128,25 @@ const UserProfile = ({ id }: { id: string }) => {
             </div>
           </section>
           {/* Profile Details Section */}
-          <UserInfoEditComponent userInfo={userInfo} />
+          <section className="w-full">
+            <Tabs defaultValue="personal" className="w-full ">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="personal">Personal Info</TabsTrigger>
+                <TabsTrigger value="address">Address</TabsTrigger>
+              </TabsList>
+
+              {/* PERSONAL INFO TAB */}
+              <TabsContent value="personal">
+                <UserInfoEditComponent userInfo={userInfo} />
+              </TabsContent>
+
+              {/* ADDRESS TAB */}
+              <TabsContent value="address">
+                <AddressComponent userInfo={userInfo} userFor="yes" />
+              </TabsContent>
+            </Tabs>
+          </section>
+
           <div>
             <DeleteUSerModal
               handleConfirm={handleConfirm}
