@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useCreateAddressMutation } from "@/redux/features/address/addressAPI";
+
 import { toast } from "sonner";
+import { useCreateAddressMutation } from "@/redux/features/address/addressApi";
 
 interface AddressPayload {
   name: string;
@@ -35,7 +36,13 @@ interface AddressPayload {
   is_default: boolean;
 }
 
-const AddAddressDialog = ({ userId, userName }: { userId: number; userName: string }) => {
+const AddAddressDialog = ({
+  userId,
+  userName,
+}: {
+  userId: number;
+  userName: string;
+}) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<AddressPayload>({
     name: userName,
@@ -73,15 +80,15 @@ const AddAddressDialog = ({ userId, userName }: { userId: number; userName: stri
     setOpen(false);
     try {
       const res = await createAddress({
-  "division": "Dhaka",
-  "city": "Dhaka",
-  "thana": "Dhanmondi",
-  "post": "1209",
-  "street": "Road 27, House 12, Dhanmondi Residential Area",
-  "zone_id": 1,
-  "geo_lat": 23.7465,
-  "geo_lng": 90.3763
-}).unwrap();
+        division: "Dhaka",
+        city: "Dhaka",
+        thana: "Dhanmondi",
+        post: "1209",
+        street: "Road 27, House 12, Dhanmondi Residential Area",
+        zone_id: 1,
+        geo_lat: 23.7465,
+        geo_lng: 90.3763,
+      }).unwrap();
       if (res?.success) {
         toast.success(res?.message, {
           duration: 3000,

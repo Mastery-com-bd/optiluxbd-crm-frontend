@@ -52,7 +52,7 @@ const ManageUsers = () => {
     undefined,
     { refetchOnMountOrArgChange: false }
   );
-  console.log(users);
+
   const roles = roleData?.data || [];
   // get current user and roles
   const userInfo = useAppSelector(currentUser);

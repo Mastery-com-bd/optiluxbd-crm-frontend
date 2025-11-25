@@ -79,6 +79,7 @@ export const baseApi = createApi({
     "subcategories",
     "address",
     "pending-user",
+    "reports",
   ],
   endpoints: () => ({}),
 });
