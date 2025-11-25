@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,56 +8,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from "react";
 
+import { useCreateCustomerAddressMutation } from "@/redux/features/customers/cutomersApi";
 import { toast } from "sonner";
-import { useCreateAddressMutation } from "@/redux/features/address/addressApi";
 
 interface AddressPayload {
-  name: string;
-  user_id: number;
-  address_line1: string;
-  address_line2: string;
+  division: string;
   city: string;
-  state: string;
-  country: string;
-  postal_code: string;
-  phone: string;
-  is_default: boolean;
+  thana: string;
+  post: string;
+  street: string;
+  zone_id: number;
+  geo_lat: number;
+  geo_lng: number;
 }
 
-const AddAddressDialog = ({
-  userId,
-  userName,
-}: {
-  userId: number;
-  userName: string;
-}) => {
+const AddAddressDialog = ({ userId }: { userId: number }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<AddressPayload>({
-    name: userName,
-    user_id: userId,
-    address_line1: "",
-    address_line2: "",
+    division: "",
     city: "",
-    state: "",
-    country: "",
-    postal_code: "",
-    phone: "",
-    is_default: false,
+    thana: "",
+    post: "",
+    street: "",
+    zone_id: 1,
+    geo_lat: 0,
+    geo_lng: 0,
   });
 
-  const [createAddress, { isLoading }] = useCreateAddressMutation();
+  const [createAddress, { isLoading }] = useCreateCustomerAddressMutation();
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,30 +47,27 @@ const AddAddressDialog = ({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (name: keyof AddressPayload, value: string) => {
+  /*   const handleSelectChange = (name: keyof AddressPayload, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCheckboxChange = (checked: boolean) => {
     setForm((prev) => ({ ...prev, is_default: checked }));
-  };
+  }; */
 
   const handleSubmit = async () => {
     // TODO: integrate RTK mutation here
     setLoading(true);
 
+    
+    const payload = {
+      data: form,
+      customerId: userId,
+    };
+
     setOpen(false);
     try {
-      const res = await createAddress({
-        division: "Dhaka",
-        city: "Dhaka",
-        thana: "Dhanmondi",
-        post: "1209",
-        street: "Road 27, House 12, Dhanmondi Residential Area",
-        zone_id: 1,
-        geo_lat: 23.7465,
-        geo_lng: 90.3763,
-      }).unwrap();
+      const res = await createAddress(payload).unwrap();
       if (res?.success) {
         toast.success(res?.message, {
           duration: 3000,
@@ -136,70 +115,69 @@ const AddAddressDialog = ({
           <div className="flex flex-col gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
-              id="name"
-              name="name"
+              id="division"
+              name="division"
               placeholder="Customer Name"
-              value={form.name}
+              value={form.division}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="user_id">User ID</Label>
+            <Label htmlFor="thana">Thana</Label>
             <Input
-              id="user_id"
-              name="user_id"
-              type="number"
-              placeholder={`${userId}`}
-              disabled
-            />
-          </div>
-
-          <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="address_line1">Address Line 1</Label>
-            <Input
-              id="address_line1"
-              name="address_line1"
-              placeholder="123 Main St"
-              value={form.address_line1}
+              id="thana"
+              name="thana"
+              placeholder={form.thana}
+              value={form.thana}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="address_line2">Address Line 2</Label>
+            <Label htmlFor="post">Postal Code</Label>
             <Input
-              id="address_line2"
-              name="address_line2"
-              placeholder="Apt 4B"
-              value={form.address_line2}
+              id="post"
+              name="post"
+              placeholder="1209"
+              value={form.post}
               onChange={handleChange}
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 sm:col-span-2">
             <Label htmlFor="city">City</Label>
             <Input
               id="city"
               name="city"
-              placeholder="Dhaka"
+              placeholder={form.city}
               value={form.city}
               onChange={handleChange}
             />
           </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="state">State</Label>
+          <div className="flex flex-col gap-2 sm:col-span-2">
+            <Label htmlFor="street">Street</Label>
             <Input
-              id="state"
-              name="state"
-              placeholder="Dhaka"
-              value={form.state}
+              id="street"
+              name="street"
+              placeholder={form.street}
+              value={form.street}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2">
+            <Label htmlFor="city">Zone ID</Label>
+            <Input
+              id="zone_id"
+              name="zone_id"
+              placeholder={form.zone_id.toString()}
+              value={form.zone_id.toString()}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
+          {/*  <div className="flex flex-col gap-2">
             <Label htmlFor="country">Country</Label>
             <Select
               value={form.country}
@@ -212,12 +190,11 @@ const AddAddressDialog = ({
                 <SelectItem value="BD">Bangladesh</SelectItem>
                 <SelectItem value="US">United States</SelectItem>
                 <SelectItem value="CA">Canada</SelectItem>
-                {/* Add more as needed */}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <Label htmlFor="postal_code">Postal Code</Label>
             <Input
               id="postal_code"
@@ -238,9 +215,9 @@ const AddAddressDialog = ({
               value={form.phone}
               onChange={handleChange}
             />
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-2 sm:col-span-2">
+          {/*  <div className="flex items-center gap-2 sm:col-span-2">
             <Checkbox
               id="is_default"
               checked={form.is_default}
@@ -249,7 +226,7 @@ const AddAddressDialog = ({
             <Label htmlFor="is_default" className="cursor-pointer">
               Set as default address
             </Label>
-          </div>
+          </div> */}
         </div>
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">

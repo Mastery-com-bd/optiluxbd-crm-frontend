@@ -23,6 +23,13 @@ const couriarApi = baseApi.injectEndpoints({
                 body: data,
             }),
         }),
+        createCouriarFromOrder: builder.mutation({
+            query: (payload) => ({
+                url: `/couriers/from-order`,
+                method: "POST",
+                body: payload,
+            }),
+        }),
         updateCouriarStatus: builder.mutation({
             query: (payload) => ({
                 url: `/couriers/${payload.id}/status`,
@@ -75,6 +82,7 @@ export const {
     useGetCustomerByIdQuery,
     useCreateCouriarMutation,
     useCreateCouriarWithSteadFastMutation,
+    useCreateCouriarFromOrderMutation,
     useUpdateCouriarStatusMutation,
     useCreateSteadFastOrderMutation,
     useLazyCheckStatusByInvoiceQuery,

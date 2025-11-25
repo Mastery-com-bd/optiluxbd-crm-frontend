@@ -1,12 +1,11 @@
-import LocalCreateCourier from '@/components/pages/dashboard/couriar/local-create/localCreate'
-import React from 'react'
+import LocalCreateCourier from "@/components/pages/dashboard/couriar/local-create/localCreate";
 
 const Page = () => {
   return (
     <div>
-        <LocalCreateCourier />
+      <LocalCreateCourier />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
