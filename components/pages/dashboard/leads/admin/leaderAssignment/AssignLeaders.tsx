@@ -38,7 +38,9 @@ const AssignLeaders = () => {
   });
 
   // get all teams
-  const { data, isLoading } = useGetAllteamsQuery(undefined);
+  const { data, isLoading } = useGetAllteamsQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+  });
   const teams = (data?.data as TTeam[]) || [];
   const totalTeams = teams.length;
 
