@@ -79,10 +79,6 @@ const AccessManagement: React.FC = () => {
             </CardHeader>
 
             <CardContent className="space-y-4 flex flex-col h-full">
-              <div className="grow ">
-                <AssignedUsers role={role} />
-              </div>
-
               <div>
                 <h4 className="font-medium text-sm mb-2">Permissions</h4>
                 <ScrollArea className="h-[350px] border rounded-md p-2">
@@ -107,6 +103,9 @@ const AccessManagement: React.FC = () => {
                     </TableBody>
                   </Table>
                 </ScrollArea>
+              </div>
+              <div className="grow ">
+                <AssignedUsers role={role} />
               </div>
             </CardContent>
           </Card>
