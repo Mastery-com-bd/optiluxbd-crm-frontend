@@ -61,6 +61,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   // const currentUser = useAppSelector(currentuserInfo);
   const { role } = getPermissions(userInfo as TAuthUSer);
+  console.log(userInfo);
+  if (isLoading) {
  
  
 

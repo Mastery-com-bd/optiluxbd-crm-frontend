@@ -1,7 +1,7 @@
 import AssignLeaders from "@/components/pages/dashboard/leads/admin/leaderAssignment/AssignLeaders";
 import React from "react";
 
-const AssignLeadersPage = () => {
+const AllTeamsPage = () => {
   return (
     <section>
       <AssignLeaders />
@@ -9,4 +9,4 @@ const AssignLeadersPage = () => {
   );
 };
 
-export default AssignLeadersPage;
+export default AllTeamsPage;
