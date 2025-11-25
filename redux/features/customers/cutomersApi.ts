@@ -8,7 +8,7 @@ const customersApi = baseApi.injectEndpoints({
         url: `/customers?${buildParams(params)}`,
         method: "GET",
       }),
-            providesTags:["customers"]
+      providesTags: ["customers"]
     }),
     getUnassignedCustomersByAdmin: builder.query({
       query: (params = {}) => ({
@@ -29,7 +29,7 @@ const customersApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-            invalidatesTags:["customers"]
+      invalidatesTags: ["customers"]
     }),
     updateCustomerInfo: builder.mutation({
       query: (data) => ({
@@ -38,16 +38,17 @@ const customersApi = baseApi.injectEndpoints({
         body: data.currentCustomer,
       }),
     }),
-        createCustomerAddress: builder.mutation({
-            query: ({ data, customerId }) => {
-                console.log(customerId);
-                return {
-                    url: `/addresses/customer/${customerId}`,
-                    method: "POST",
-                    body: data,
-                }
-            }
-        })
+    createCustomerAddress: builder.mutation({
+      query: ({ data, customerId }) => {
+        console.log(customerId);
+        return {
+          url: `/addresses/customer/${customerId}`,
+          method: "POST",
+          body: data,
+        }
+      },
+      invalidatesTags: ["customers"]
+    })
   }),
 });
 

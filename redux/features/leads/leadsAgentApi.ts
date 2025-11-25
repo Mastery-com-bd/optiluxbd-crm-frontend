@@ -7,6 +7,7 @@ const leadsAgentsApi = baseApi.injectEndpoints({
         url: `/allocations/agent/customers`,
         method: "GET",
       }),
+      providesTags: ["customers"]
     }),
     getPendingCustomers: builder.query({
       query: () => ({

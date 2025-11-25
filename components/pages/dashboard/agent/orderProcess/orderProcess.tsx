@@ -58,6 +58,22 @@ type BatchType = {
   status: string;
 };
 
+interface PackageItem {
+  product: {
+    id: number;
+    name: string;
+    price: string;
+  };
+  quantity: number;
+}
+
+interface Package {
+  id: number;
+  name: string;
+  packagePrice: string;
+  items: PackageItem[];
+}
+
 interface CustomerOrder {
   id: number;
   orderDate: string; // ISO 8601 date string
@@ -71,15 +87,13 @@ interface CustomerOrder {
   shipping_address_city: string;
   shipping_address_post: string;
   shipping_address_division: string;
-  product: {
+  product: null | {
     id: number;
     name: string;
     price: string;
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  package: null | any; // adjust type as needed when package structure is known
+  package: null | Package;
 }
-
 
 interface CustomerAddress {
   id: number;
@@ -714,7 +728,7 @@ const OrderProcessingSystem = () => {
                             Delivery Address
                           </p>
                         </div>
-                        <AddAddressDialog userId={currentCustomer?.id} userName={currentCustomer?.name || ""} />
+                        <AddAddressDialog userId={currentCustomer?.id} />
                       </div>
                       {currentCustomer?.addresses?.length > 0 ? (
                         <div className="space-y-2">
@@ -759,7 +773,7 @@ const OrderProcessingSystem = () => {
                   </h3>
                   {currentCustomer?.orders?.length ? (
                     <div className="grid gap-4">
-                      {currentCustomer.orders.map((order) => (
+                      {currentCustomer.orders.slice(0, 3).map((order) => (
                         <div
                           key={order.id}
                           className="rounded-lg border bg-card p-4 space-y-3"
@@ -767,7 +781,7 @@ const OrderProcessingSystem = () => {
                           <div className="flex items-start justify-between">
                             <div>
                               <p className="font-medium text-base">
-                                {order.product.name}
+                                {order?.product ? order.product.name : order?.package?.name}
                               </p>
                               <p className="text-xs text-muted-foreground">
                                 Order #{order.id} •{" "}
@@ -778,7 +792,7 @@ const OrderProcessingSystem = () => {
                               variant="secondary"
                               className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                             >
-                              ৳{order.totalAmount}
+                             Total: ৳{order.totalAmount}
                             </Badge>
                           </div>
 
@@ -800,27 +814,41 @@ const OrderProcessingSystem = () => {
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                  Unit Price
+                                  {order?.product ? "Unit Price" : "Total Price"}
                                 </p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
-                                  ৳{order.product.price}
+                                  ৳{order?.product ? order.product.price : order?.package?.packagePrice}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-start gap-2">
-                              <div className="w-4 h-4 text-purple-600 dark:text-purple-400 mt-0.5 font-bold">
-                                %
-                              </div>
+                              <Package className="w-4 h-4 text-purple-600 dark:text-purple-400 mt-0.5 shrink-0" />
                               <div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                  Commission
+                                  {order.product ? "Product ID" : "Package ID"}
                                 </p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
-                                  {order.commissionRate} (৳{order.commission})
+                                  {order.product ? order.product.id : order.package?.id}
                                 </p>
                               </div>
                             </div>
                           </div>
+
+                          {order?.package && (
+                            <div className="pt-2 border-t dark:border-gray-700">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                Package Items
+                              </p>
+                              <div className="space-y-2">
+                                {order.package.items.map((item) => (
+                                  <div key={item.product.id} className="flex justify-between text-sm">
+                                    <span>{item.product.name} × {item.quantity}</span>
+                                    <span>৳{item.product.price}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
                           <div className="pt-2 border-t dark:border-gray-700">
                             <p className="text-xs text-gray-500 dark:text-gray-400">
