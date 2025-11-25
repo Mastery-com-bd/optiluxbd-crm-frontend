@@ -19,7 +19,7 @@ import { useAddCustomerMutation } from "@/redux/features/customers/cutomersApi";
 import { toast } from "sonner"; // ✅ Sooner import
 import { useState } from "react";
 
-// ✅ Zod Schema 
+// Zod Schema 
 const customerSchema = z.object({
     name: z.string().min(1, "Name is required"),
     phone: z
@@ -32,10 +32,15 @@ const customerSchema = z.object({
 // Type infer
 type CustomerFormValues = z.infer<typeof customerSchema>;
 type Props = {
-    setId: (id: string) => void;
-    refetch: () => void;
+    setCustomerFilters: (val: any) => void;
+    filters: {
+        search: string,
+        limit: number,
+        page: number,
+    };
+    onSelectCustomer?: (id: number) => void;  // Optional prop
 };
-export function CreateCustomer({ setId, refetch }: Props) {
+export function CreateCustomer({ setCustomerFilters, filters, onSelectCustomer }: Props) {
     const [addCustomer] = useAddCustomerMutation();
     const [open, setOpen] = useState(false);
 
@@ -53,9 +58,10 @@ export function CreateCustomer({ setId, refetch }: Props) {
         try {
             const response = await addCustomer(data).unwrap();
             if (response.success) {
-                setId(response.data.id);
+                setCustomerFilters({ ...filters, search: response.data.name });
                 toast.success("Customer created successfully!", { id: toastId });
                 console.log(response?.data?.id);
+                onSelectCustomer?.(response.data.id);
                 reset();
                 setOpen(false);
             }
