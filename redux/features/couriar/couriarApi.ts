@@ -76,6 +76,7 @@ const couriarApi = baseApi.injectEndpoints({
         }),
 
     }),
+  }),
 });
 
 export const {
