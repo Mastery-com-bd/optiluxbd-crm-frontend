@@ -80,6 +80,7 @@ export const baseApi = createApi({
     "address",
     "pending-user",
     "reports",
+    "couriar",
   ],
   endpoints: () => ({}),
 });

@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ProductReportSkeleton from "./reportSkeleton/ProductReportSkeleton";
 
 export type TProductReportFilter = {
   sortBy: string;
@@ -67,7 +68,6 @@ const ProductReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -85,7 +85,7 @@ const ProductReport = () => {
   };
 
   if (isLoading) {
-    return <h1>loading</h1>;
+    return <ProductReportSkeleton />;
   }
   return (
     <div className="space-y-4">
@@ -172,6 +172,70 @@ const ProductReport = () => {
           <Button variant="destructive" className="px-4" onClick={resetFilters}>
             Reset
           </Button>
+        </div>
+      </div>
+      <div className="flex flex-col items-center">
+        <p className="font-semibold text-gray-900 dark:text-white">
+          {report?.reportType}
+        </p>
+        <p className="flex flex-col space-y-2">
+          <span className="font-semibold text-gray-900 dark:text-white">
+            {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
+            {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+          </span>
+        </p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div
+          className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-sm text-gray-500 dark:text-gray-400">
+            Total Order
+          </h3>
+          <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            {report?.summary?.totalOrders}
+          </p>
+        </div>
+
+        <div
+          className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-sm text-gray-500 dark:text-gray-400">
+            Total Product
+          </h3>
+          <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            {report?.summary?.totalProducts}
+          </p>
+        </div>
+
+        <div
+          className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-sm text-gray-500 dark:text-gray-400">
+            Total Quantity SOld
+          </h3>
+          <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            {report?.summary?.totalQuantitySold}
+          </p>
+        </div>
+
+        <div
+          className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-sm text-gray-500 dark:text-gray-400">
+            Total Revenue
+          </h3>
+          <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            {report?.summary?.totalRevenue}
+          </p>
         </div>
       </div>
     </div>

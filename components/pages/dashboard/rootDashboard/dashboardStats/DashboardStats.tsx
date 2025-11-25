@@ -123,9 +123,9 @@ const DashboardStats = () => {
   return (
     <div className="w-full mx-auto ">
       {/* Header */}
-      <div className="flex items-center justify-end pb-4">
+      {/* <div className="flex items-center justify-end pb-4">
         <DashboardHistoryModal />
-      </div>
+      </div> */}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
