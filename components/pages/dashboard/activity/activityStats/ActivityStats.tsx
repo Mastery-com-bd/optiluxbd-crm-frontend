@@ -35,7 +35,6 @@ const ActivityStats = () => {
     refetchOnMountOrArgChange: false,
   });
   const stats = data?.data as UserActivityStatistics;
-  console.log(filters);
   const actionsData = Object.values(UserAction).map((action) => ({
     name: action,
     value: stats?.byAction?.[action] ?? 0,

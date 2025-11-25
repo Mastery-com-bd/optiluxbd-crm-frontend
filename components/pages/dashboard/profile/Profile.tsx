@@ -59,7 +59,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   // const currentUser = useAppSelector(currentuserInfo);
   const { role } = getPermissions(userInfo as TAuthUSer);
-  console.log(userInfo);
 
   const handleCheckIn = async () => {
     setLoading(true);
@@ -155,8 +154,6 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
-  console.log("All Attendence Data", allAttendenceData);
 
   const [breakLabel, setBreakLabel] = useState<string>("End Break");
 
