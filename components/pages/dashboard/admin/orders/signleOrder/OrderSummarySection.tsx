@@ -75,7 +75,7 @@ export function OrderSummarySection({ order }: { order: OrderData }) {
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         <Image
-                                            src="https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"
+                                            src={product?.image_url || "https://i.ibb.co.com/20p0dwd0/Pet-Food-Supplies.png"}
                                             alt={product?.name || "N/A"}
                                             width={40}
                                             height={40}

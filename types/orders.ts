@@ -16,6 +16,8 @@ export interface Product {
   id: number;
   name: string;
   price: number;
+    image_url: string,
+    image_public_id: string,
 }
 
 export interface Package {
@@ -164,4 +166,14 @@ export interface TProfileOrderData {
   shipping_address_tag: string | null;
   shipping_address_thana: string | null;
   totalAmount: string;
+}
+
+
+export interface Address {
+    id: number,
+    city: string,
+    division: string,
+    post: string,
+    street: string,
+    thana: string,
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,73 +14,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLazyGetCouriarDetailsByIdQuery } from "@/redux/features/couriar/couriarApi";
-import { Barcode, Calendar, DollarSign, MapPin, Package, Search, Truck, User } from "lucide-react";
+import { useLazyCheckStatusByConsignmentIdQuery } from "@/redux/features/couriar/couriarApi";
+import {
+  Barcode,
+  Calendar,
+  DollarSign,
+  MapPin,
+  Package,
+  Search,
+  Truck,
+  User,
+} from "lucide-react";
 import { useState } from "react";
 
-interface CourierDetail {
-  id: number;
-  orderId: number;
-  consignmentId: string | null;
-  trackingCode: string | null;
-  invoice: string;
-  status: string;
-  courierService: string;
-  recipientName: string;
-  recipientPhone: string;
-  recipientAddress: string;
-  codAmount: string;
-  deliveryCharge: string;
-  note: string;
-  createdAt: string;
-  updatedAt: string;
-  order: {
-    id: number;
-    agentId: number;
-    customerId: number;
-    productId: number;
-    packageId: string | null;
-    quantity: number;
-    totalAmount: string;
-    commissionRate: string;
-    commission: string;
-    orderDate: string;
-    batchId: string | null;
-    addressId: string | null;
-    shipping_address_tag: string | null;
-    shipping_address_street: string | null;
-    shipping_address_thana: string | null;
-    shipping_address_city: string | null;
-    shipping_address_post: string | null;
-    shipping_address_division: string | null;
-    shipping_address_geo_lat: string | null;
-    shipping_address_geo_lng: string | null;
-    customer: {
-      id: number;
-      name: string;
-      phone: string;
-    };
-    agent: {
-      id: number;
-      name: string;
-    };
-    product: {
-      id: number;
-      name: string;
-      price: string;
-    };
-    package: string | null;
-  };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  returns: any[];
-}
-
-export default function LocalGetById() {
+export default function SteadfastStatusByConsignmentId() {
   const [id, setId] = useState("");
-  const [data, setData] = useState<CourierDetail | null>(null);
+  const [data, setData] = useState<any | null>(null);
 
   const [trigger, { data: detail, isFetching }] =
-    useLazyGetCouriarDetailsByIdQuery();
+    useLazyCheckStatusByConsignmentIdQuery();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,6 +40,7 @@ export default function LocalGetById() {
     if (result.data) {
       console.log("Result Data:", result.data.data);
       setData(result.data.data);
+      console.log(data);
     }
   }
 
@@ -117,7 +71,9 @@ export default function LocalGetById() {
       <div className="max-w-3xl mx-auto px-4 py-6 md:py-10">
         <div className="flex items-center gap-3 mb-6">
           <Truck className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Courier Lookup</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            Steadfast Status by Consignment ID
+          </h1>
         </div>
 
         <Card className="shadow-sm">
@@ -126,9 +82,14 @@ export default function LocalGetById() {
             <CardDescription>Enter courier ID to fetch details</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-3"
+            >
               <div className="flex-1">
-                <Label htmlFor="courier-id" className="sr-only">Courier ID</Label>
+                <Label htmlFor="courier-id" className="sr-only">
+                  Courier ID
+                </Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
@@ -140,7 +101,11 @@ export default function LocalGetById() {
                   />
                 </div>
               </div>
-              <Button type="submit" disabled={isFetching || !id.trim()} className="w-full sm:w-auto">
+              <Button
+                type="submit"
+                disabled={isFetching || !id.trim()}
+                className="w-full sm:w-auto"
+              >
                 {isFetching ? "Searching..." : "Search"}
               </Button>
             </form>
@@ -163,10 +128,14 @@ export default function LocalGetById() {
             <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
-                  <CardTitle className="text-lg md:text-xl">Courier Details</CardTitle>
+                  <CardTitle className="text-lg md:text-xl">
+                    Courier Details
+                  </CardTitle>
                   <CardDescription>ID: {data.id}</CardDescription>
                 </div>
-                <Badge className={statusColor(data.status)}>{data.status}</Badge>
+                <Badge className={statusColor(data.status)}>
+                  {data.status}
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -233,7 +202,9 @@ export default function LocalGetById() {
                   <div>
                     <p className="text-sm text-gray-500">Created</p>
                     <p className="font-medium">
-                      {data.createdAt ? new Date(data.createdAt).toLocaleString() : "—"}
+                      {data.createdAt
+                        ? new Date(data.createdAt).toLocaleString()
+                        : "—"}
                     </p>
                   </div>
                 </div>
@@ -244,7 +215,9 @@ export default function LocalGetById() {
                   <Separator />
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Note</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{data.note}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      {data.note}
+                    </p>
                   </div>
                 </>
               )}
