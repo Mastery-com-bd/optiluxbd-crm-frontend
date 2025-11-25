@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Eye, Pencil, Trash2 } from "lucide-react"
-import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi"
+import { useAddSubCategoryMutation, useDeleteSubCategoryMutation, useGetSubcategoryQuery, useUpdateSubCategoryMutation } from "@/redux/features/category/categoryApi"
 import AddSubcategory from "@/components/pages/dashboard/admin/category/child/AddSubCategory"
+import DeleteCategory from "@/components/pages/dashboard/admin/category/parent/DeleteCategory"
 
 
 type SubCategoryItem = {
@@ -29,16 +30,18 @@ type SubCategoryItem = {
 }
 
 const SubCategory = () => {
-    const { data: subcategories, isLoading, isError } = useGetSubcategoryQuery(undefined)
+    const [addSubcategory] = useAddSubCategoryMutation();
+    const [updateSubcategory] = useUpdateSubCategoryMutation();
+    const { data: subcategories, isLoading, isError } = useGetSubcategoryQuery(undefined);
+    const [deleteCategory, { isLoading: isDeleting }] = useDeleteSubCategoryMutation();
 
     if (isLoading) return <p className="p-4">Loading subcategories...</p>
     if (isError) return <p className="p-4 text-red-500">Failed to load subcategories.</p>
-
     return (
         <div className="p-6 space-y-4">
             <div className="flex justify-between">
                 <h2 className="text-2xl font-semibold">Subcategories</h2>
-                <AddSubcategory />
+                <AddSubcategory func={addSubcategory} opt="create" />
             </div>
 
             <div className="rounded-md border ">
@@ -67,8 +70,8 @@ const SubCategory = () => {
                                 <TableCell>
                                     <div className="flex items-center justify-center gap-2">
                                         {/* <SubCategoryDetails subcategory={sub} /> */}
-                                        {/* <UpdateSubCategory subcategory={sub} /> */}
-                                        {/* <DeleteSubCategory id={sub.id} /> */}
+                                        <AddSubcategory func={updateSubcategory} opt="update" subCategory={sub} />
+                                        <DeleteCategory id={sub.id} func={deleteCategory} isLoading={isDeleting} />
                                     </div>
                                 </TableCell>
                             </TableRow>
