@@ -40,14 +40,13 @@ const customersApi = baseApi.injectEndpoints({
     }),
     createCustomerAddress: builder.mutation({
       query: ({ data, customerId }) => {
-        console.log(customerId);
         return {
           url: `/addresses/customer/${customerId}`,
           method: "POST",
           body: data,
         }
       },
-      invalidatesTags: ["customers"]
+      invalidatesTags:["address"]
     })
   }),
 });
@@ -56,6 +55,7 @@ export const {
   useGetAllCustomerQuery,
   useGetCustomerByIdQuery,
   useAddCustomerMutation,
-  useUpdateCustomerInfoMutation, useCreateCustomerAddressMutation,
+  useUpdateCustomerInfoMutation,
+  useCreateCustomerAddressMutation,
   useGetUnassignedCustomersByAdminQuery,
 } = customersApi;

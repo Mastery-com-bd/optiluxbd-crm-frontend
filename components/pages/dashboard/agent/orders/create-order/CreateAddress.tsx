@@ -34,10 +34,9 @@ type AddressFormValues = z.infer<typeof addressSchema>;
 
 type Props = {
     id: number | null | string;
-    refetch: () => void;
 };
 
-const CreateAddress = ({ id, refetch }: Props) => {
+const CreateAddress = ({ id}: Props) => {
     const [addAddress] = useCreateCustomerAddressMutation();
     const [open, setOpen] = useState(false);
 
@@ -66,7 +65,6 @@ const CreateAddress = ({ id, refetch }: Props) => {
             toast.success("Address created successfully", { id: toastId });
             reset();
             setOpen(false);
-            refetch();
         } catch (error: unknown) {
             console.error("Create address failed:", error);
             toast.error("Failed to create address", { id: toastId });

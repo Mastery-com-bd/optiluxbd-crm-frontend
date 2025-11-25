@@ -73,7 +73,7 @@ const AllProducts = () => {
     setFilters({ ...filters, search: val });
   };
 
-  const debouncedLog = debounce(handleSearch, 100, { leading: false });
+  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
   const handleDelete = async (id: number) => {
     try {
