@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,65 +7,115 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import { toast } from "sonner";
+import { useCreateAddressMutation } from "@/redux/features/address/addressApi";
 
 interface AddressPayload {
-  name: string
-  user_id: number
-  address_line1: string
-  address_line2: string
-  city: string
-  state: string
-  country: string
-  postal_code: string
-  phone: string
-  is_default: boolean
+  name: string;
+  user_id: number;
+  address_line1: string;
+  address_line2: string;
+  city: string;
+  state: string;
+  country: string;
+  postal_code: string;
+  phone: string;
+  is_default: boolean;
 }
 
-const AddAddressDialog = ({ customerId }: { customerId: number }) => {
-  const [open, setOpen] = useState(false)
+const AddAddressDialog = ({
+  userId,
+  userName,
+}: {
+  userId: number;
+  userName: string;
+}) => {
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState<AddressPayload>({
-    name: '',
-    user_id: customerId,
-    address_line1: '',
-    address_line2: '',
-    city: '',
-    state: '',
-    country: '',
-    postal_code: '',
-    phone: '',
+    name: userName,
+    user_id: userId,
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",
+    country: "",
+    postal_code: "",
+    phone: "",
     is_default: false,
-  })
+  });
+
+  const [createAddress, { isLoading }] = useCreateAddressMutation();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSelectChange = (name: keyof AddressPayload, value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleCheckboxChange = (checked: boolean) => {
-    setForm((prev) => ({ ...prev, is_default: checked }))
-  }
+    setForm((prev) => ({ ...prev, is_default: checked }));
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // TODO: integrate RTK mutation here
-    console.log('Submit address:', form)
-    setOpen(false)
-  }
+    setLoading(true);
+
+    setOpen(false);
+    try {
+      const res = await createAddress({
+        division: "Dhaka",
+        city: "Dhaka",
+        thana: "Dhanmondi",
+        post: "1209",
+        street: "Road 27, House 12, Dhanmondi Residential Area",
+        zone_id: 1,
+        geo_lat: 23.7465,
+        geo_lng: 90.3763,
+      }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        setLoading(false);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { duration: 3000 });
+      setLoading(false);
+    }
+  };
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center p-4">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="ml-2 text-sm text-muted-foreground">
+          Creating address...
+        </span>
+      </div>
+    );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -100,7 +150,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
               id="user_id"
               name="user_id"
               type="number"
-              placeholder={`${customerId}`}
+              placeholder={`${userId}`}
               disabled
             />
           </div>
@@ -132,7 +182,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
             <Input
               id="city"
               name="city"
-              placeholder="New York"
+              placeholder="Dhaka"
               value={form.city}
               onChange={handleChange}
             />
@@ -143,7 +193,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
             <Input
               id="state"
               name="state"
-              placeholder="NY"
+              placeholder="Dhaka"
               value={form.state}
               onChange={handleChange}
             />
@@ -153,15 +203,15 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
             <Label htmlFor="country">Country</Label>
             <Select
               value={form.country}
-              onValueChange={(val) => handleSelectChange('country', val)}
+              onValueChange={(val) => handleSelectChange("country", val)}
             >
               <SelectTrigger id="country">
-                <SelectValue placeholder="Select country" />
+                <SelectValue defaultValue="BD" placeholder="Select country" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="BD">Bangladesh</SelectItem>
                 <SelectItem value="US">United States</SelectItem>
                 <SelectItem value="CA">Canada</SelectItem>
-                <SelectItem value="BD">Bangladesh</SelectItem>
                 {/* Add more as needed */}
               </SelectContent>
             </Select>
@@ -184,7 +234,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
               id="phone"
               name="phone"
               type="tel"
-              placeholder="+1 234 567 8900"
+              placeholder="01712345678"
               value={form.phone}
               onChange={handleChange}
             />
@@ -204,6 +254,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
+            disabled={loading}
             type="button"
             variant="outline"
             onClick={() => setOpen(false)}
@@ -212,6 +263,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
             Cancel
           </Button>
           <Button
+            disabled={loading}
             type="button"
             onClick={handleSubmit}
             className="w-full sm:w-auto"
@@ -221,7 +273,7 @@ const AddAddressDialog = ({ customerId }: { customerId: number }) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddAddressDialog
+export default AddAddressDialog;

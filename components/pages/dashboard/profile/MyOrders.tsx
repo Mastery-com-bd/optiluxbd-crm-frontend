@@ -1,11 +1,11 @@
 "use client";
 
-import { TProfileOrderData } from "@/types/orders";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CalendarDays, DollarSign, Package, Receipt } from "lucide-react";
+import { TProfileOrderData } from "@/types/orders";
 import { convertDate } from "@/utills/dateConverter";
-import { Badge } from "@/components/ui/badge";
+import { CalendarDays, DollarSign, Package, Receipt } from "lucide-react";
 
 const MyOrders = ({ order }: { order: TProfileOrderData[] }) => {
   return (
@@ -25,7 +25,7 @@ const MyOrders = ({ order }: { order: TProfileOrderData[] }) => {
           ) : (
             <ScrollArea className="max-h-[650px] pr-3">
               <div className="space-y-4">
-                {order.map((item) => (
+                {order?.map((item) => (
                   <Card
                     key={item.id}
                     className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition dark:bg-gray-700"
