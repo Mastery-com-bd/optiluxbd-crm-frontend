@@ -14,6 +14,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import SearchAgentInput from "./inputFields/SearchAgentInput";
 import SearchLeaderFields from "./inputFields/SearchLeaderFields";
+import TeamReportSkeleton from "./reportSkeleton/TeamReportSkeleton";
 
 export type TAgentReportFilter = {
   sortBy: string;
@@ -61,7 +62,7 @@ const AgentReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-
+  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -78,79 +79,141 @@ const AgentReport = () => {
   };
 
   if (isLoading) {
-    return <h1>loading</h1>;
+    return <TeamReportSkeleton />;
   }
   return (
     <div className="space-y-4">
-      <div className="flex items-end justify-between gap-4">
-        <SearchAgentInput reportFilter={filters} setReportFilter={setFilters} />
-        <SearchLeaderFields
-          reportFilter={filters}
-          setReportFilter={setFilters}
-        />
-        {/* Start Date */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600 dark:text-gray-300">
-            Start Date
-          </label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {format(startDate, "yyyy-MM-dd")}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={startDate}
-                onSelect={(date: any) => date && setStartDate(date)}
-                disabled={(date) => date > new Date()}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+      <div className="space-y-4">
+        <div className="flex items-end justify-between gap-4">
+          <SearchAgentInput
+            reportFilter={filters}
+            setReportFilter={setFilters}
+          />
+          <SearchLeaderFields
+            reportFilter={filters}
+            setReportFilter={setFilters}
+          />
+          {/* Start Date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-600 dark:text-gray-300">
+              Start Date
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="justify-start">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {format(startDate, "yyyy-MM-dd")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={(date: any) => date && setStartDate(date)}
+                  disabled={(date) => date > new Date()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
-        {/* End Date */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600 dark:text-gray-300">
-            End Date
-          </label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {format(endDate, "yyyy-MM-dd")}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={(date: any) => date && setEndDate(date)}
-                disabled={(date) => date > new Date()}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+          {/* End Date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-600 dark:text-gray-300">
+              End Date
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="justify-start">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {format(endDate, "yyyy-MM-dd")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={(date: any) => date && setEndDate(date)}
+                  disabled={(date) => date > new Date()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-transparent">Reset</label>
-          <Button variant="destructive" className="px-4" onClick={resetFilters}>
-            Reset
-          </Button>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-transparent">Reset</label>
+            <Button
+              variant="destructive"
+              className="px-4"
+              onClick={resetFilters}
+            >
+              Reset
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center">
-        <p className="font-semibold text-gray-900 dark:text-white">
-          {report?.reportType}
-        </p>
-        <p className="flex flex-col space-y-2">
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-            {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
-          </span>
-        </p>
+        <div className="flex flex-col items-center">
+          <p className="font-semibold text-gray-900 dark:text-white">
+            {report?.reportType}
+          </p>
+          <p className="flex flex-col space-y-2">
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
+              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+            </span>
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div
+            className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+          >
+            <h3 className="text-sm text-gray-500 dark:text-gray-400">
+              Total Agents
+            </h3>
+            <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {report?.summary?.totalAgents}
+            </p>
+          </div>
+
+          <div
+            className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+          >
+            <h3 className="text-sm text-gray-500 dark:text-gray-400">
+              Total Commissions
+            </h3>
+            <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {report?.summary?.totalCommission}
+            </p>
+          </div>
+
+          <div
+            className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+          >
+            <h3 className="text-sm text-gray-500 dark:text-gray-400">
+              Total Orders
+            </h3>
+            <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {report?.summary?.totalOrders}
+            </p>
+          </div>
+
+          <div
+            className="border rounded-xl p-4 shadow-sm 
+                  bg-white dark:bg-gray-900 
+                  border-gray-200 dark:border-gray-700"
+          >
+            <h3 className="text-sm text-gray-500 dark:text-gray-400">
+              Total Revenue
+            </h3>
+            <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {report?.summary?.totalRevenue}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
