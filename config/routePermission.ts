@@ -1,8 +1,9 @@
 export const routePermissions: Record<string, string[]> = {
   //   👤 User Management
   "/dashboard/admin/manage-users": ["USERS VIEW"],
+  "/dashboard/admin/approve-user": ["USERS VIEW"],
 
-  // 🛍️ Product Management
+  // Product Management
   "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/add-product": ["PRODUCTS CREATE"],
   "/dashboard/admin/products/drafts": ["PRODUCTS VIEW"],
@@ -10,6 +11,10 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/products/inventory": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/reviews": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/bulk-upload": ["PRODUCTS VIEW", "PRODUCTS DELETE"],
+
+  //category management
+  "/dashboard/admin/product-category/parent-category": ["CATEGORIES CREATE", "CATEGORIES VIEW", "CATEGORIES UPDATE", "CATEGORIES DELETE"],
+  "/dashboard/admin/product-category/sub-category": ["SUBCATEGORIES CREATE", "SUBCATEGORIES VIEW", "SUBCATEGORIES UPDATE", "SUBCATEGORIES DELETE"],
 
   // combo management
   "/dashboard/combo": ["PACKAGES VIEW"],
@@ -22,6 +27,7 @@ export const routePermissions: Record<string, string[]> = {
 
   // 💰 ORDERS Management
   "/dashboard/agent/orders/my-orders": ["ORDERS VIEW OWN"],
+  "/dashboard/agent/orders/create-order": ["ORDERS CREATE"],
   "/dashboard/admin/orders/top-sellers": ["ORDERS VIEW"],
   "/dashboard/admin/orders": ["ORDERS VIEW"],
 

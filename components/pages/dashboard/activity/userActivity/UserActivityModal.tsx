@@ -16,8 +16,9 @@ import { Card } from "@/components/ui/card";
 import ActivityListSkeleton from "../ActivityListSkeleton";
 import PaginationControls from "@/components/ui/paginationComponent";
 import UserActivityExpandItem from "./UserActivityExpandItem";
+import { Input } from "@/components/ui/input";
 
-const UserActivityModal = ({ id, name }: { id: number; name: string }) => {
+const UserActivityModal = ({ id }: { id: number; name: string }) => {
   const [open, setOpen] = useState(false);
   const [entityType, setEntityType] = useState("All");
   const [action, setAction] = useState("All");
@@ -41,6 +42,19 @@ const UserActivityModal = ({ id, name }: { id: number; name: string }) => {
   };
   // Filters inside child
 
+  const handleReset = () => {
+    setFilters({
+      entityType: "",
+      action: "",
+      startDate: "",
+      endDate: "",
+      limit: 50,
+      page: 1,
+    });
+    setEntityType("All");
+    setAction("All");
+  };
+
   return (
     <>
       {/* This button stays INSIDE CHILD */}
@@ -52,15 +66,14 @@ const UserActivityModal = ({ id, name }: { id: number; name: string }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           className="
-             w-full rounded-xl 
-            bg-white dark:bg-gray-900
-            text-gray-900 dark:text-gray-100
-            max-h-[90vh] overflow-y-auto py-2 
-          "
+     w-full lg:max-w-4xl rounded-xl 
+     bg-white dark:bg-gray-900
+     text-gray-900 dark:text-gray-100
+     max-h-[90vh] overflow-y-auto py-2 px-6
+  "
         >
-          <h1>{name}`s Activity logs</h1>
           {/* FILTER BAR */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col lg:flex-row items-end justify-between">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -161,6 +174,43 @@ const UserActivityModal = ({ id, name }: { id: number; name: string }) => {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
+            {/* start date */}
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                Start Date
+              </label>
+              <Input
+                type="date"
+                value={filters.startDate ? filters.startDate.split("T")[0] : ""}
+                max={new Date().toISOString().split("T")[0]}
+                className="w-full border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200"
+                onChange={(e) => {
+                  const date = e.target.value;
+                  const iso = date ? `${date}T00:00:00Z` : "";
+                  setFilters((prev) => ({ ...prev, startDate: iso, page: 1 }));
+                }}
+              />
+            </div>
+            {/* end date */}
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                End Date
+              </label>
+              <Input
+                type="date"
+                value={filters.endDate ? filters.endDate.split("T")[0] : ""}
+                max={new Date().toISOString().split("T")[0]}
+                className="w-full border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200"
+                onChange={(e) => {
+                  const date = e.target.value;
+                  const iso = date ? `${date}T23:59:59Z` : "";
+                  setFilters((prev) => ({ ...prev, endDate: iso, page: 1 }));
+                }}
+              />
+            </div>
+            <Button className="cursor-pointer" onClick={handleReset}>
+              Reset
+            </Button>
           </div>
           <Card className="p-0 border-none bg-transparent">
             {isLoading ? (

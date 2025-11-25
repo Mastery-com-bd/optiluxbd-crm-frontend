@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAssignAGentToLeaderMutation } from "@/redux/features/leadsmanagement/leedsApi";
+import { useAssignAGentToLeaderMutation } from "@/redux/features/leads/adminLeedsApi";
 import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
 import { TTeam } from "@/types/teamleader.types";
 import { TUser } from "@/types/user/user.types";

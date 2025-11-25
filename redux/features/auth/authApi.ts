@@ -1,4 +1,6 @@
+import { TRejectApiType } from "@/components/pages/dashboard/admin/approve-user/ApproveUSerAction";
 import { baseApi } from "@/redux/api/baseApi";
+import { buildParams } from "@/utills/paramsBuilder";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -31,7 +33,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     verifyEmail: builder.query({
       query: (token) => ({
-        url: `auth/verify-email/${token}`,
+        url: `/auth/verify-email/${token}`,
         method: "GET",
       }),
     }),
@@ -44,7 +46,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     validateresetToken: builder.query({
       query: (token) => ({
-        url: `auth/reset-password/${token}/validate`,
+        url: `/auth/reset-password/${token}/validate`,
         method: "GET",
       }),
     }),
@@ -62,6 +64,28 @@ const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    getPendingApproveUser: builder.query({
+      query: (params = {}) => ({
+        url: `/auth/users/pending-approval?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["pending-user"],
+    }),
+    acceptUserApprooval: builder.mutation({
+      query: (id) => ({
+        url: `/auth/users/${id}/approve`,
+        method: "POST",
+      }),
+      invalidatesTags: ["pending-user"],
+    }),
+    rejectUserApprooval: builder.mutation({
+      query: ({ data, id }: TRejectApiType) => ({
+        url: `/auth/users/${id}/reject`,
+        method: "POST",
+        body: data && data,
+      }),
+      invalidatesTags: ["pending-user"],
+    }),
   }),
 });
 export const {
@@ -74,4 +98,7 @@ export const {
   useResendVerificationEmailMutation,
   useResetPasswordMutation,
   useUpdatePasswordMutation,
+  useGetPendingApproveUserQuery,
+  useAcceptUserApproovalMutation,
+  useRejectUserApproovalMutation,
 } = authApi;

@@ -75,6 +75,10 @@ export const baseApi = createApi({
     "orders",
     "my activity",
     "activity",
+    "category",
+    "subcategories",
+    "address",
+    "pending-user",
   ],
   endpoints: () => ({}),
 });

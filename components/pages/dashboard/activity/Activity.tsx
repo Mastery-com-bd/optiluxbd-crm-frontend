@@ -7,33 +7,34 @@ import UserActivity from "./userActivity/UserActivity";
 import CustomerHistory from "./customerHistory/CustomerHistory";
 import ProductHistory from "./productHistory/ProductHistory";
 import OrderHistory from "./orderHistory/OrderHistory";
+import ActivityStats from "./activityStats/ActivityStats";
 
 const tabs = [
+  "Statistics",
   "Recent Activity",
   "User Activity",
   "Customer History",
   "Product History",
   "Order History",
-  "User History",
 ];
 
 const Activity = () => {
   type TTabs =
+    | "Statistics"
     | "Recent Activity"
     | "User Activity"
     | "Customer History"
     | "Product History"
-    | "Order History"
-    | "User History";
+    | "Order History";
 
-  const [activeTab, setActiveTab] = useState<TTabs | string>("Recent Activity");
+  const [activeTab, setActiveTab] = useState<TTabs | string>("Statistics");
 
   return (
-    <CardContent className="p-1 lg:p-8 w-full mt-4 lg:mt-1">
-      <div className="flex flex-col lg:flex-row gap-4 w-full">
+    <CardContent className="p-1 lg:p-8 w-full ">
+      <div className=" w-full">
         {/* Sidebar Tabs */}
         <Card className="lg:h-full p-2 ">
-          <CardContent className="p-2 space-y-2 flex flex-row flex-wrap lg:flex-col">
+          <CardContent className="p-2 space-y-2 flex flex-wrap ">
             {tabs.map((tab) => (
               <Button
                 key={tab}
@@ -48,9 +49,9 @@ const Activity = () => {
         </Card>
 
         {/* Activity Content */}
+        {activeTab === "Statistics" && <ActivityStats />}
         {activeTab === "Recent Activity" && <RecentActivity />}
         {activeTab === "User Activity" && <UserActivity />}
-        {activeTab === "User History" && <CustomerHistory />}
         {activeTab === "Customer History" && <CustomerHistory />}
         {activeTab === "Product History" && <ProductHistory />}
         {activeTab === "Order History" && <OrderHistory />}

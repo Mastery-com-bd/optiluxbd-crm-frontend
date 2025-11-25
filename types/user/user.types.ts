@@ -10,11 +10,13 @@ export type TRole = {
 
 export type TUser = {
   id: number;
+  userId: string;
   name: string;
   email: string;
   phone: string;
   avatar_secure_url: string | null;
   email_verified: boolean;
+  is_approved: boolean;
   phone_verified: boolean;
   is_active: boolean;
   status: TStatus;

@@ -58,6 +58,29 @@ type BatchType = {
   status: string;
 };
 
+interface CustomerOrder {
+  id: number;
+  orderDate: string; // ISO 8601 date string
+  quantity: number;
+  totalAmount: string;
+  commission: string;
+  commissionRate: string;
+  shipping_address_tag: string;
+  shipping_address_street: string;
+  shipping_address_thana: string;
+  shipping_address_city: string;
+  shipping_address_post: string;
+  shipping_address_division: string;
+  product: {
+    id: number;
+    name: string;
+    price: string;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  package: null | any; // adjust type as needed when package structure is known
+}
+
+
 interface CustomerAddress {
   id: number;
   user_id: number | null;
@@ -81,6 +104,7 @@ interface customer {
   email: null;
   customerId: string;
   addresses: CustomerAddress[];
+  orders: CustomerOrder[];
   assignedAt: string;
   batch: BatchType;
   batchId: number;
@@ -690,7 +714,7 @@ const OrderProcessingSystem = () => {
                             Delivery Address
                           </p>
                         </div>
-                        <AddAddressDialog customerId={Number(currentCustomer?.customerId)} />
+                        <AddAddressDialog userId={currentCustomer?.id} userName={currentCustomer?.name || ""} />
                       </div>
                       {currentCustomer?.addresses?.length > 0 ? (
                         <div className="space-y-2">
@@ -729,50 +753,96 @@ const OrderProcessingSystem = () => {
                 </div>
 
                 {/* Order Information */}
-                {/* <div className="space-y-4">
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2">
-                    Order Details
+                    Order History
                   </h3>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                      <Package className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5" />
-                      <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Product
-                        </p>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">
-                          Product details
-                        </p>
-                      </div>
+                  {currentCustomer?.orders?.length ? (
+                    <div className="grid gap-4">
+                      {currentCustomer.orders.map((order) => (
+                        <div
+                          key={order.id}
+                          className="rounded-lg border bg-card p-4 space-y-3"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="font-medium text-base">
+                                {order.product.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                Order #{order.id} •{" "}
+                                {new Date(order.orderDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            >
+                              ৳{order.totalAmount}
+                            </Badge>
+                          </div>
+
+                          <div className="grid gap-3 md:grid-cols-3">
+                            <div className="flex items-start gap-2">
+                              <Package className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5" />
+                              <div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  Quantity
+                                </p>
+                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                  {order.quantity}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 font-bold">
+                                ৳
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  Unit Price
+                                </p>
+                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                  ৳{order.product.price}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="w-4 h-4 text-purple-600 dark:text-purple-400 mt-0.5 font-bold">
+                                %
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  Commission
+                                </p>
+                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                  {order.commissionRate} (৳{order.commission})
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="pt-2 border-t dark:border-gray-700">
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Shipping Address
+                            </p>
+                            <p className="text-sm text-gray-900 dark:text-gray-100">
+                              {order.shipping_address_street},{" "}
+                              {order.shipping_address_thana},{" "}
+                              {order.shipping_address_city},{" "}
+                              {order.shipping_address_division} -{" "}
+                              {order.shipping_address_post}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                      <div className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 font-bold">
-                        ×
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Quantity
-                        </p>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">
-                          produc Quantuty
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-lg md:col-span-2">
-                      <div className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 font-bold">
-                        ৳
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Total Amount
-                        </p>
-                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                          ৳99999
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      No orders found for this customer.
+                    </p>
+                  )}
+                </div>
 
                 {/* Contact Outcome Select */}
                 <div className="space-y-2">

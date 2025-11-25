@@ -80,7 +80,7 @@ const UserActionDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
           <MoreVertical className="w-5 h-5" />
         </button>
       </DropdownMenuTrigger>
@@ -90,7 +90,10 @@ const UserActionDropdown = ({
             href={`/dashboard/admin/manage-users/${id}`}
             className="flex w-full cursor-pointer items-center gap-2"
           >
-            <Button variant="ghost" className="text-left hover:bg-transparent">
+            <Button
+              variant="ghost"
+              className="text-left hover:bg-transparent cursor-pointer"
+            >
               View Details
             </Button>
           </Link>
