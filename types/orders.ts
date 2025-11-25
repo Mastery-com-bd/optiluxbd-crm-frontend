@@ -16,12 +16,13 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-    image_url: string,
-    image_public_id: string,
+  image_url: string,
+  image_public_id: string,
 }
 
 export interface Package {
   id: number;
+  name: string;
   // Add more fields if needed
 }
 
@@ -170,10 +171,10 @@ export interface TProfileOrderData {
 
 
 export interface Address {
-    id: number,
-    city: string,
-    division: string,
-    post: string,
-    street: string,
-    thana: string,
+  id: number,
+  city: string,
+  division: string,
+  post: string,
+  street: string,
+  thana: string,
 }
