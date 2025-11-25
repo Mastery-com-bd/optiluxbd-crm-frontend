@@ -78,7 +78,6 @@ const AddSubcategory = ({ func, opt, subCategory }: Props) => {
         },
     })
 
-    // Populate form if update
     useEffect(() => {
         if (isUpdate && subCategory) {
             form.reset({
@@ -101,9 +100,9 @@ const AddSubcategory = ({ func, opt, subCategory }: Props) => {
         const payload = isUpdating && subCategory
             ? { id: subCategory.id, data: values }
             : values;
-
+        console.log({...payload});
         toast.promise(
-            func(payload)
+            func({ ...payload })
                 .then(() => {
                     setOpen(false)
                     form.reset()

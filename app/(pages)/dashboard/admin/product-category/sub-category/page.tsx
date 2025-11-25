@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Eye, Pencil, Trash2 } from "lucide-react"
-import { useAddSubCategoryMutation, useGetSubcategoryQuery, useUpdateSubCategoryMutation } from "@/redux/features/category/categoryApi"
+import { useAddSubCategoryMutation, useDeleteSubCategoryMutation, useGetSubcategoryQuery, useUpdateSubCategoryMutation } from "@/redux/features/category/categoryApi"
 import AddSubcategory from "@/components/pages/dashboard/admin/category/child/AddSubCategory"
+import DeleteCategory from "@/components/pages/dashboard/admin/category/parent/DeleteCategory"
 
 
 type SubCategoryItem = {
@@ -31,7 +32,8 @@ type SubCategoryItem = {
 const SubCategory = () => {
     const [addSubcategory] = useAddSubCategoryMutation();
     const [updateSubcategory] = useUpdateSubCategoryMutation();
-    const { data: subcategories, isLoading, isError } = useGetSubcategoryQuery(undefined)
+    const { data: subcategories, isLoading, isError } = useGetSubcategoryQuery(undefined);
+    const [deleteCategory, { isLoading: isDeleting }] = useDeleteSubCategoryMutation();
 
     if (isLoading) return <p className="p-4">Loading subcategories...</p>
     if (isError) return <p className="p-4 text-red-500">Failed to load subcategories.</p>
@@ -69,7 +71,7 @@ const SubCategory = () => {
                                     <div className="flex items-center justify-center gap-2">
                                         {/* <SubCategoryDetails subcategory={sub} /> */}
                                         <AddSubcategory func={updateSubcategory} opt="update" subCategory={sub} />
-                                        {/* <DeleteSubCategory id={sub.id} /> */}
+                                        <DeleteCategory id={sub.id} func={deleteCategory} isLoading={isDeleting} />
                                     </div>
                                 </TableCell>
                             </TableRow>
