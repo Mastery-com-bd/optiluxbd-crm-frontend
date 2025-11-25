@@ -13,9 +13,7 @@ import {
   useStartBreakMutation,
 } from "@/redux/features/attendence/attendenceAPI";
 import { TAuthUSer, TUSerRole } from "@/redux/features/auth/authSlice";
-import {
-  useGetMyProfileQuery
-} from "@/redux/features/user/userApi";
+import { useGetMyProfileQuery } from "@/redux/features/user/userApi";
 import { TStatus } from "@/types/user/user.types";
 import { convertDate } from "@/utills/dateConverter";
 import { getPermissions } from "@/utills/getPermissionAndRole";
@@ -62,11 +60,7 @@ const Profile = () => {
   // const currentUser = useAppSelector(currentuserInfo);
   const { role } = getPermissions(userInfo as TAuthUSer);
   console.log(userInfo);
-  if (isLoading) {
- 
- 
 
- 
   const handleCheckIn = async () => {
     setLoading(true);
 
