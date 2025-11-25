@@ -39,6 +39,19 @@ const MyActivity = () => {
     total: 0,
   };
 
+  const handleReset = () => {
+    setFilters({
+      entityType: "",
+      action: "",
+      startDate: "",
+      endDate: "",
+      limit: 50,
+      page: 1,
+    });
+    setEntityType("All");
+    setAction("All");
+  };
+
   return (
     <CardContent className=" w-full">
       <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
@@ -141,44 +154,41 @@ const MyActivity = () => {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="flex flex-col ">
-            <label className="text-gray-700 dark:text-gray-200 text-sm mb-1">
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
               Start Date
             </label>
             <Input
               type="date"
-              value={filters.startDate}
-              onChange={(e) =>
-                setFilters({ ...filters, startDate: e.target.value })
-              }
+              value={filters.startDate ? filters.startDate.split("T")[0] : ""}
+              max={new Date().toISOString().split("T")[0]}
+              className="w-full border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200"
+              onChange={(e) => {
+                const date = e.target.value;
+                const iso = date ? `${date}T00:00:00Z` : "";
+                setFilters((prev) => ({ ...prev, startDate: iso, page: 1 }));
+              }}
             />
           </div>
-          <div className="flex flex-col  ">
-            <label className="text-gray-700 dark:text-gray-200 text-sm mb-1">
+          {/* end date */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
               End Date
             </label>
             <Input
               type="date"
-              value={filters.endDate}
-              onChange={(e) =>
-                setFilters({ ...filters, endDate: e.target.value })
-              }
+              value={filters.endDate ? filters.endDate.split("T")[0] : ""}
+              max={new Date().toISOString().split("T")[0]}
+              className="w-full border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200"
+              onChange={(e) => {
+                const date = e.target.value;
+                const iso = date ? `${date}T23:59:59Z` : "";
+                setFilters((prev) => ({ ...prev, endDate: iso, page: 1 }));
+              }}
             />
           </div>
           <div>
-            <Button
-              onClick={() =>
-                setFilters({
-                  entityType: "",
-                  action: "",
-                  startDate: "",
-                  endDate: "",
-                  limit: 50,
-                  page: 1,
-                })
-              }
-              className="w-full sm:w-auto px-6"
-            >
+            <Button className="cursor-pointer" onClick={handleReset}>
               Reset
             </Button>
           </div>

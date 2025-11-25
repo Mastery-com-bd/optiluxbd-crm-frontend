@@ -3,13 +3,6 @@ import { buildParams } from "@/utills/paramsBuilder";
 
 const customersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    /* getProfile: builder.query({
-          query: () => ({
-            url: `/auth/profile`,
-            method: "GET",
-          }),
-          providesTags: ["user"],
-        }), */
     getAllCustomer: builder.query({
       query: (params = {}) => ({
         url: `/customers?${buildParams(params)}`,

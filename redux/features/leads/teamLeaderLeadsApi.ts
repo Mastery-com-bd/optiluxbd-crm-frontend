@@ -1,6 +1,6 @@
 import { baseApi } from "@/redux/api/baseApi";
 
-const leadsApi = baseApi.injectEndpoints({
+const teamLeaderLeadsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllLeads: builder.query({
       query: () => ({
@@ -109,4 +109,4 @@ export const {
   useAutoDistributeCustomerToAgentMutation,
   useAcceptBatchMutation,
   useRejectBatchMutation,
-} = leadsApi;
+} = teamLeaderLeadsApi;

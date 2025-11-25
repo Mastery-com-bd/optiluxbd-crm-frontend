@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRemoveAgentsFromALeaderMutation } from "@/redux/features/leadsmanagement/leedsApi";
+import { useRemoveAgentsFromALeaderMutation } from "@/redux/features/leads/adminLeedsApi";
 import { TTeamMember } from "@/types/teamleader.types";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";

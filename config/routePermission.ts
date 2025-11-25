@@ -1,6 +1,7 @@
 export const routePermissions: Record<string, string[]> = {
   //   👤 User Management
   "/dashboard/admin/manage-users": ["USERS VIEW"],
+  "/dashboard/admin/approve-user": ["USERS VIEW"],
 
   // Product Management
   "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
@@ -35,7 +36,7 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/hr&staff/staff/add": ["USERS CREATE"],
 
   // leads management of admin
-  "/dashboard/leads/admin/assign-agent": [
+  "/dashboard/leads/admin/all-teams": [
     "ALLOCATIONS ASSIGN LEADER",
     "ALLOCATIONS DISTRIBUTE",
     "ALLOCATIONS REPORTS VIEW",

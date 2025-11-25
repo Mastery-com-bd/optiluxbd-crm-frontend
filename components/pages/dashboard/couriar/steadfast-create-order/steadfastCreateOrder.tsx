@@ -2,33 +2,91 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useCreateSteadFastOrderMutation } from "@/redux/features/couriar/couriarApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+
+const formSchema = z.object({
+  invoice: z.string().min(1, "Invoice is required"),
+  recipient_name: z.string().min(1, "Recipient name is required"),
+  recipient_phone: z
+    .string()
+    .min(1, "Recipient phone is required")
+    .regex(
+      /^(\+8801|01)[0-9]{9}$/,
+      "Must be a valid Bangladeshi number (e.g. +8801XXXXXXXXX or 01XXXXXXXXX)"
+    ),
+  recipient_address: z.string().min(1, "Recipient address is required"),
+  cod_amount: z.string().min(1, "COD amount is required"),
+  note: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 export default function SteadfastCreateOrder() {
-  const [form, setForm] = useState({
-    invoice: "",
-    recipient_name: "",
-    recipient_phone: "",
-    recipient_address: "",
-    cod_amount: "",
-    note: "",
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      invoice: "",
+      recipient_name: "",
+      recipient_phone: "",
+      recipient_address: "",
+      cod_amount: "",
+      note: "",
+    },
   });
-  function handleChange<K extends keyof typeof form>(key: K, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    console.log("POST /api/v1/couriers/steadfast/create-order payload:", form);
-  }
+
+  const [createSteadFastOrder] = useCreateSteadFastOrderMutation();
+  const router = useRouter();
+
+  const onSubmit = async (values: FormValues) => {
+
+    const payload = {
+      ...values,
+      cod_amount: Number(values.cod_amount),
+    }
+
+    toast.loading("Saving courier...");
+    try {
+      const res = await createSteadFastOrder(payload).unwrap();
+      console.log("Create Steadfast Order Response", res);
+      if (res?.success) {
+        toast.dismiss();
+        toast.success(res?.message, { duration: 3000 });
+        router.refresh();
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.dismiss();
+      toast.error(errorInfo, { duration: 3000 });
+    }
+  };
+
   return (
     <div className="mx-auto p-4 space-y-4">
       <div className="flex items-center justify-between">
@@ -42,67 +100,102 @@ export default function SteadfastCreateOrder() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
-            <div className="col-span-2 space-y-2">
-              <Label>Recipient Name</Label>
-              <Input
-                value={form.recipient_name}
-                onChange={(e) => handleChange("recipient_name", e.target.value)}
-                placeholder="John"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <FormField
+                control={form.control}
+                name="recipient_name"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Recipient Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label>Invoice</Label>
-              <Input
-                value={form.invoice}
-                onChange={(e) => handleChange("invoice", e.target.value)}
-                placeholder="INV-1001"
+              <FormField
+                control={form.control}
+                name="invoice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Invoice</FormLabel>
+                    <FormControl>
+                      <Input placeholder="INV-1001" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label>Recipient Phone</Label>
-              <Input
-                value={form.recipient_phone}
-                onChange={(e) =>
-                  handleChange("recipient_phone", e.target.value)
-                }
-                placeholder="+8801XXXXXXXXX"
+              <FormField
+                control={form.control}
+                name="recipient_phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recipient Phone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+8801XXXXXXXXX" maxLength={11} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="md:col-span-2 space-y-2">
-              <Label>Recipient Address</Label>
-              <Textarea
-                value={form.recipient_address}
-                onChange={(e) =>
-                  handleChange("recipient_address", e.target.value)
-                }
-                placeholder="Address..."
+              <FormField
+                control={form.control}
+                name="recipient_address"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Recipient Address</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Address..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label>COD Amount</Label>
-              <Input
-                type="number"
-                value={form.cod_amount}
-                onChange={(e) => handleChange("cod_amount", e.target.value)}
-                placeholder="0"
+              <FormField
+                control={form.control}
+                name="cod_amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>COD Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="0" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="md:col-span-2 space-y-2">
-              <Label>Note (optional)</Label>
-              <Textarea
-                value={form.note}
-                onChange={(e) => handleChange("note", e.target.value)}
-                placeholder="Notes..."
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Note (optional)</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Notes..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="md:col-span-2 flex justify-end">
-              <Button type="submit">Submit</Button>
-            </div>
-          </form>
+              <div className="md:col-span-2 flex justify-end">
+                <Button
+                  disabled={form.formState.isSubmitting}
+                  type="submit"
+                >
+                  {form.formState.isSubmitting && (
+                    <Loader2 className="animate-spin" />
+                  )}
+                  {form.formState.isSubmitting ? "Saving..." : "Submit"}
+                </Button>
+              </div>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

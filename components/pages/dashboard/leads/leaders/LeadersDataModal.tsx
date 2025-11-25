@@ -22,7 +22,7 @@ import {
 import {
   useAutoDistributeCustomerToAgentMutation,
   useCustomerDistributionToAgentMutation,
-} from "@/redux/features/leads/leadsApi";
+} from "@/redux/features/leads/teamLeaderLeadsApi";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -156,10 +156,16 @@ const LeadersDataModal = ({ open, onClose, assigneeIds, customers }: Props) => {
           </Card>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="cursor-pointer"
+          >
             Cancel
           </Button>
-          <Button onClick={() => handleAssign()}>Confirm</Button>
+          <Button onClick={() => handleAssign()} className="cursor-pointer">
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

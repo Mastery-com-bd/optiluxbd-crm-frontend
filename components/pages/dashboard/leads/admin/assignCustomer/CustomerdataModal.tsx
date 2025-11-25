@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAssignCustomerToLeadersMutation } from "@/redux/features/leadsmanagement/leedsApi";
+import { useAssignCustomerToLeadersMutation } from "@/redux/features/leads/adminLeedsApi";
 import { TCustomer } from "@/types/customer.types";
 import { TTeam } from "@/types/teamleader.types";
 import { Dispatch, SetStateAction, useState } from "react";

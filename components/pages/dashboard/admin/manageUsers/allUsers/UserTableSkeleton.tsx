@@ -49,7 +49,7 @@ const UserTableSkeleton = () => {
           </thead>
 
           <tbody>
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 10 }).map((_, i) => (
               <tr
                 key={i}
                 className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"

@@ -1,67 +1,257 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useLazyGetCouriarDetailsByIdQuery } from "@/redux/features/couriar/couriarApi";
+import { Barcode, Calendar, DollarSign, MapPin, Package, Search, Truck, User } from "lucide-react";
 import { useState } from "react";
 
-const mockDetail = {
-  id: "c-1001",
-  orderId: "ORD-1001",
-  recipientName: "Ariana",
-  recipientPhone: "+8801XXXXXXXXX",
-  recipientAddress: "Dhaka, Bangladesh",
-  status: "PENDING",
-  codAmount: 1200,
-  deliveryCharge: 80,
-  createdAt: "2024-10-02T09:00:00.000Z",
-};
+interface CourierDetail {
+  id: number;
+  orderId: number;
+  consignmentId: string | null;
+  trackingCode: string | null;
+  invoice: string;
+  status: string;
+  courierService: string;
+  recipientName: string;
+  recipientPhone: string;
+  recipientAddress: string;
+  codAmount: string;
+  deliveryCharge: string;
+  note: string;
+  createdAt: string;
+  updatedAt: string;
+  order: {
+    id: number;
+    agentId: number;
+    customerId: number;
+    productId: number;
+    packageId: string | null;
+    quantity: number;
+    totalAmount: string;
+    commissionRate: string;
+    commission: string;
+    orderDate: string;
+    batchId: string | null;
+    addressId: string | null;
+    shipping_address_tag: string | null;
+    shipping_address_street: string | null;
+    shipping_address_thana: string | null;
+    shipping_address_city: string | null;
+    shipping_address_post: string | null;
+    shipping_address_division: string | null;
+    shipping_address_geo_lat: string | null;
+    shipping_address_geo_lng: string | null;
+    customer: {
+      id: number;
+      name: string;
+      phone: string;
+    };
+    agent: {
+      id: number;
+      name: string;
+    };
+    product: {
+      id: number;
+      name: string;
+      price: string;
+    };
+    package: string | null;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  returns: any[];
+}
 
 export default function LocalGetById() {
   const [id, setId] = useState("");
-  const [data, setData] = useState<typeof mockDetail | null>(null);
+  const [data, setData] = useState<CourierDetail | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  const [trigger, { data: detail, isFetching }] =
+    useLazyGetCouriarDetailsByIdQuery();
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log(`GET /api/v1/couriers/${id}`);
-    setData(mockDetail);
+    const result = await trigger(id);
+    if (result.data) {
+      console.log("Result Data:", result.data.data);
+      setData(result.data.data);
+    }
   }
 
+  const statusColor = (status: string) => {
+    switch (status) {
+      case "DELIVERED":
+        return "bg-green-100 text-green-800";
+      case "PENDING":
+      case "PICKED_UP":
+      case "IN_TRANSIT":
+      case "OUT_FOR_DELIVERY":
+        return "bg-yellow-100 text-yellow-800";
+      case "CANCELLED":
+        return "bg-red-100 text-red-800";
+      case "RETURNED":
+        return "bg-purple-100 text-purple-800";
+      case "PARTIAL_DELIVERED":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // console.log("Details Data:",detail.data)
+
   return (
-    <div className="mx-auto p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Get Courier by ID</h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-3xl mx-auto px-4 py-6 md:py-10">
+        <div className="flex items-center gap-3 mb-6">
+          <Truck className="w-6 h-6 text-primary" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Courier Lookup</h1>
+        </div>
+
+        <Card className="shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg md:text-xl">Search Courier</CardTitle>
+            <CardDescription>Enter courier ID to fetch details</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <Label htmlFor="courier-id" className="sr-only">Courier ID</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    id="courier-id"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                    placeholder="e.g. c-1001"
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <Button type="submit" disabled={isFetching || !id.trim()} className="w-full sm:w-auto">
+                {isFetching ? "Searching..." : "Search"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {isFetching && (
+          <Card className="mt-6 shadow-sm">
+            <CardContent className="p-6 space-y-4">
+              <Skeleton className="h-5 w-1/3" />
+              <Skeleton className="h-5 w-1/2" />
+              <Skeleton className="h-5 w-2/3" />
+              <Skeleton className="h-5 w-1/4" />
+            </CardContent>
+          </Card>
+        )}
+
+        {data && !isFetching && (
+          <Card className="mt-6 shadow-sm">
+            <CardHeader className="pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <CardTitle className="text-lg md:text-xl">Courier Details</CardTitle>
+                  <CardDescription>ID: {data.id}</CardDescription>
+                </div>
+                <Badge className={statusColor(data.status)}>{data.status}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <Package className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-gray-500">Order ID</p>
+                    <p className="font-medium">{data.orderId}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Barcode className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-gray-500">Tracking Code</p>
+                    <p className="font-medium">{data.trackingCode || "—"}</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-start gap-3">
+                <User className="w-5 h-5 text-gray-400 mt-0.5" />
+                <div className="flex-1 grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Recipient Name</p>
+                    <p className="font-medium">{data.recipientName}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="font-medium">{data.recipientPhone}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
+                <div>
+                  <p className="text-sm text-gray-500">Delivery Address</p>
+                  <p className="font-medium">{data.recipientAddress}</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid sm:grid-cols-3 gap-4">
+                <div className="flex items-start gap-3">
+                  <DollarSign className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-gray-500">COD Amount</p>
+                    <p className="font-medium">BDT {data.codAmount}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <DollarSign className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-gray-500">Delivery Charge</p>
+                    <p className="font-medium">BDT {data.deliveryCharge}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-gray-500">Created</p>
+                    <p className="font-medium">
+                      {data.createdAt ? new Date(data.createdAt).toLocaleString() : "—"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {data.note && (
+                <>
+                  <Separator />
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Note</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">{data.note}</p>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Detail</CardTitle>
-          <CardDescription>GET /api/v1/couriers/:id</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="md:col-span-2 space-y-2">
-              <Label>Courier ID</Label>
-              <Input value={id} onChange={(e)=>setId(e.target.value)} placeholder="c-1001" />
-            </div>
-            <div className="md:col-span-1 flex items-end">
-              <Button type="submit" className="w-full">Fetch</Button>
-            </div>
-          </form>
-          {data && (
-            <div className="rounded-md border p-3 text-sm">
-              <div><strong>ID:</strong> {data.id}</div>
-              <div><strong>Order:</strong> {data.orderId}</div>
-              <div><strong>Recipient:</strong> {data.recipientName} ({data.recipientPhone})</div>
-              <div><strong>Address:</strong> {data.recipientAddress}</div>
-              <div><strong>Status:</strong> {data.status}</div>
-              <div><strong>COD:</strong> BDT {data.codAmount}</div>
-              <div><strong>Charge:</strong> BDT {data.deliveryCharge}</div>
-              <div><strong>Created:</strong> {new Intl.DateTimeFormat("en-US",{year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(data.createdAt))}</div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 }

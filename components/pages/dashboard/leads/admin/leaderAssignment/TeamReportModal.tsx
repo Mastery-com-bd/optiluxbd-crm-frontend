@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetAdminTeamReportsQuery } from "@/redux/features/leadsmanagement/leedsApi";
+import { useGetAdminTeamReportsQuery } from "@/redux/features/leads/adminLeedsApi";
 import { TTeam } from "@/types/teamleader.types";
 import { useState } from "react";
 import {

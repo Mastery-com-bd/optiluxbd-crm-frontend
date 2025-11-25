@@ -280,6 +280,7 @@ const Login = () => {
         Lets get you signed in. Enter your email and password to continue
       </p>
 
+      {/* fast login for development purpose */}
       <div className="flex items-center justify-between">
         <Button
           onClick={handleAdmin}
