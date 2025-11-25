@@ -88,7 +88,11 @@ const AgentDataModal = ({
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
       <DialogTrigger asChild>
-        <Button disabled={!selectedTeam} onClick={() => setOpenModal(true)}>
+        <Button
+          disabled={!selectedTeam}
+          onClick={() => setOpenModal(true)}
+          className="cursor-pointer"
+        >
           Assign Agent
         </Button>
       </DialogTrigger>
@@ -165,17 +169,22 @@ const AgentDataModal = ({
               onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
             />
           </div>
-          <DialogFooter className="mt-4 flex justify-end gap-2">
+          <DialogFooter className="mt-4 flex justify-end gap-2 ">
             <Button
               variant="outline"
               onClick={() => {
                 setSelectedAgentId(null);
                 setOpenModal(false);
               }}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
-            <Button disabled={!selectedAgentId} onClick={handleConfirmAssign}>
+            <Button
+              disabled={!selectedAgentId}
+              onClick={handleConfirmAssign}
+              className="cursor-pointer"
+            >
               Assign
             </Button>
           </DialogFooter>

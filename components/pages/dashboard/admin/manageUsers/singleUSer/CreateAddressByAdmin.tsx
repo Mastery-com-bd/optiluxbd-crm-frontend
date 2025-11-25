@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,11 +11,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { bangladeshData } from "@/constants/DivisionDataset";
-import { useCreateANewAddressMutation } from "@/redux/features/address/addressApi";
-import { toast } from "sonner";
+import { useCreateANewAddressByAdminMutation } from "@/redux/features/address/addressApi";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 
-// Zod Schema Validation
 const addressSchema = z.object({
   division: z.string().min(1, "Division is required"),
   city: z.string().min(1, "District is required"),
@@ -29,12 +28,14 @@ const addressSchema = z.object({
 
 type AddressFormValues = z.infer<typeof addressSchema>;
 
-const CreateAddressComponent = ({
+const CreateAddressByAdmin = ({
   setCreateEditing,
+  id,
 }: {
   setCreateEditing: Dispatch<SetStateAction<boolean>>;
+  id: number;
 }) => {
-  const [createAddress] = useCreateANewAddressMutation();
+  const [createAddress] = useCreateANewAddressByAdminMutation();
   const {
     register,
     handleSubmit,
@@ -55,8 +56,12 @@ const CreateAddressComponent = ({
   const thanas = districts.find((d) => d.city === selectedCity)?.thanas || [];
 
   const onSubmit = async (data: AddressFormValues) => {
+    const addressComponent = {
+      data,
+      id,
+    };
     try {
-      const res = await createAddress(data).unwrap();
+      const res = await createAddress(addressComponent).unwrap();
       if (res?.success) {
         toast.success(res?.message, { duration: 3000 });
         reset();
@@ -173,4 +178,4 @@ const CreateAddressComponent = ({
   );
 };
 
-export default CreateAddressComponent;
+export default CreateAddressByAdmin;

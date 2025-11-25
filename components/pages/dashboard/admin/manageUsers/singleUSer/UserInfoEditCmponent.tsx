@@ -108,10 +108,7 @@ const UserInfoEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
             <p className="text-sm text-gray-500 dark:text-gray-400">Active</p>
             <p className="font-medium">{userInfo?.is_active ? "Yes" : "No"}</p>
           </div>
-          {/* <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Address</p>
-            <p className="font-medium">{userInfo?.address ?? "no address"}</p>
-          </div> */}
+
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">UserID</p>
             <p className="font-medium">{userInfo?.userId ?? "no id"}</p>

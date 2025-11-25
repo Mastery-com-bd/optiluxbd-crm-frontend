@@ -281,7 +281,7 @@ const Login = () => {
       </p>
 
       {/* fast login for development purpose */}
-      {/* <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <Button
           onClick={handleAdmin}
           type="submit"
