@@ -8,12 +8,10 @@ import {
     TableRow,
     TableCell,
 } from '@/components/ui/table'
-import { useGetAllCategoryQuery } from '@/redux/features/category/categoryApi';
+import { useDeleteCategoryMutation, useGetAllCategoryQuery } from '@/redux/features/category/categoryApi';
 import DeleteCategory from '@/components/pages/dashboard/admin/category/parent/DeleteCategory';
 import UpdateCategory from '@/components/pages/dashboard/admin/category/parent/UpdateCategory';
 import CategoryDetails from '@/components/pages/dashboard/admin/category/parent/DetailsModal';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import AddCategory from '@/components/pages/dashboard/admin/category/parent/AddCategory';
 
 type Category = {
@@ -27,7 +25,7 @@ type Category = {
 
 export default function ParentCategory() {
     const { data: categories, isLoading, isError, } = useGetAllCategoryQuery(undefined);
-
+    const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation()
     if (isLoading) return <div className="p-4">Loading...</div>
     if (isError) return <div className="p-4 text-red-500">Failed to load categories.</div>
 
@@ -60,7 +58,7 @@ export default function ParentCategory() {
                                     <div className="flex gap-2 justify-center">
                                         <CategoryDetails {...category} />
                                         <UpdateCategory {...category} />
-                                        <DeleteCategory id={category.id} />
+                                        <DeleteCategory func={deleteCategory} id={category.id} isLoading={isDeleting} />
                                     </div>
                                 </TableCell>
                             </TableRow>
