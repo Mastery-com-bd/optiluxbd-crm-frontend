@@ -1,0 +1,122 @@
+"use client";
+
+import { Dispatch, SetStateAction, useState } from "react";
+import { TProductReportFilter } from "../ProductReport";
+import { useGetAllProductQuery } from "@/redux/features/products/productsApi";
+import { Product } from "@/types/product";
+import { debounce } from "@/utills/debounce";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { Check } from "lucide-react";
+
+const SearchProductFields = ({
+  reportFilter,
+  setReportFilter,
+}: {
+  reportFilter: TProductReportFilter;
+  setReportFilter: Dispatch<SetStateAction<TProductReportFilter>>;
+}) => {
+  const [showUserList, setShowUserList] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+  const [filters, setFilters] = useState({
+    search: "",
+    sortBy: "created_at",
+    order: "desc",
+    limit: 5,
+    page: 1,
+  });
+  const { data, isLoading } = useGetAllProductQuery(filters, {
+    refetchOnMountOrArgChange: false,
+  });
+  const products = data?.data?.products as Product[];
+
+  const handleSearch = async (val: string) => {
+    setFilters({ ...filters, search: val });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
+  return (
+    <div className="w-full sm:w-1/2 relative">
+      <Input
+        type="text"
+        placeholder="Search by product name or SKU"
+        value={filters.search}
+        onChange={(e) => debouncedLog(e.target.value)}
+        onFocus={() => setShowUserList(true)}
+        onBlur={() => setTimeout(() => setShowUserList(false), 150)}
+        className="w-full text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
+      />
+      {showUserList && filters.search.trim() && (
+        <div className="absolute top-10 bg-gray-700 p-2 rounded-xl">
+          {filters.search.trim() ? (
+            isLoading ? (
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            ) : products.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No users found.</p>
+            ) : (
+              products.map((product: Product) => (
+                <div
+                  key={product?.id}
+                  onClick={() => {
+                    const id = product?.id.toString();
+
+                    if (selectedProductId === id) {
+                      setSelectedProductId(null);
+                      setReportFilter({ ...reportFilter, productId: "" });
+                      return;
+                    }
+
+                    setSelectedProductId(id);
+                    setReportFilter({ ...reportFilter, productId: id });
+                  }}
+                  className={`flex items-center justify-between py-2 px-3 cursor-pointer transition rounded-md mb-1
+              ${
+                selectedProductId === product?.id.toString()
+                  ? "bg-indigo-50 dark:bg-indigo-900/40 border border-indigo-500"
+                  : "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+              }
+            `}
+                >
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={
+                        product?.image_url ||
+                        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&q=80&w=687"
+                      }
+                      alt={product?.name}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-medium text-sm text-gray-900 dark:text-gray-100">
+                        {product?.name} ({product?.sku})
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {product?.category}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedProductId === product?.id.toString() && (
+                    <Check className="text-green-600 w-5 h-5" />
+                  )}
+                </div>
+              ))
+            )
+          ) : null}
+
+          {showUserList && !products?.length && (
+            <div className="absolute top-full left-0 w-full mt-1 p-3 bg-white dark:bg-gray-800 shadow-lg border rounded-md text-sm text-gray-500">
+              No product found
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchProductFields;
