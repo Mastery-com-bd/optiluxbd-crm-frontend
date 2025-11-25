@@ -306,7 +306,7 @@ const Login = () => {
         >
           {isSubmitting ? "Logging in..." : "Team Leader"}
         </Button>
-      </div> */}
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}
