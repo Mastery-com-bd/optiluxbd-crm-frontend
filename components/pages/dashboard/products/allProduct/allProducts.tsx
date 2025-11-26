@@ -40,6 +40,7 @@ import {
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 
 const AllProducts = () => {
   const user = useAppSelector(currentUser);
@@ -56,7 +57,7 @@ const AllProducts = () => {
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
   // const [viewMode, setViewMode] = useState("list");
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  // const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteProduct] = useDeleteProductMutation();
   const { data: productRes, isLoading } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -73,6 +74,8 @@ const AllProducts = () => {
     setFilters({ ...filters, search: val });
   };
   //category
+  const { data: categories } = useGetSubcategoryQuery(undefined);
+
 
 
 
@@ -188,13 +191,9 @@ const AllProducts = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Home & Office">Home & Office</SelectItem>
-                  <SelectItem value="Fashion">Fashion</SelectItem>
-                  <SelectItem value="Fitness">Fitness</SelectItem>
-                  <SelectItem value="Gaming">Gaming</SelectItem>
-                  <SelectItem value="Furniture">Furniture</SelectItem>
-                  <SelectItem value="Toys">Toys</SelectItem>
+                  {
+                    categories?.map((category:{id:number, name:string}) => <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>)
+                  }
                 </SelectContent>
               </Select>
 
