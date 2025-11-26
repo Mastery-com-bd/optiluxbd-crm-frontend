@@ -163,17 +163,27 @@ const CreateOrderForm = () => {
 
     const onSubmit = async (data: OrderFormValues) => {
         const toastId = toast.loading("Creating order...");
+        
+        const baseData = {
+            agentId: data.agentId,
+            customerId: data.customerId,
+            addressId: data.addressId,
+            quantity: data.quantity
+        };
+
         const finalData =
             orderType === "product"
-                ? { ...data, productId: Number(data.productId) }
-                : { ...data, packageId: Number(data.packageId) };
-
+                ? { ...baseData, productId: data.productId ? Number(data.productId) : undefined }
+                : { ...baseData, packageId: data.packageId ? Number(data.packageId) : undefined };
+        console.log(finalData);
         try {
             await createOrder(finalData).unwrap();
-            toast.success("Order placed successfully!", { id: toastId });
+            toast.success("Order placed successfully", { id: toastId });
             reset();
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            toast.error("Order failed", { id: toastId });
+            toast.error(err?.data?.message || "Something went wrong", { id: toastId });
         }
     };
 
