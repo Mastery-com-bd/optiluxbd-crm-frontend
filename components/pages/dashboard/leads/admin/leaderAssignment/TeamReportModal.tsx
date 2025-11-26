@@ -25,7 +25,6 @@ const TeamReportModal = ({ teams }: { teams: TTeam[] }) => {
   const [filters, setFilters] = useState({});
   const { data, isLoading } = useGetAdminTeamReportsQuery(filters);
   const reportData = data?.data;
-  console.log(reportData);
 
   const vieTeamReportHandler = (id: string) => {
     setFilters({ leaderId: id });

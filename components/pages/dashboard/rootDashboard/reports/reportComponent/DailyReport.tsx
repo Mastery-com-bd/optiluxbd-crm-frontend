@@ -13,43 +13,45 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import DailyReportSkeleton from "./reportSkeleton/DailyReportSkeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
-  PieChart,
-  Pie,
-  Cell,
+  ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 interface Tsummary {
-  activeAgents: number;
   totalOrders: number;
   newOrders: number;
-  pendingOrders: number;
   deliveredOrders: number;
-  cancelledOrders: number;
   returnedOrders: number;
-  netRevenue: number;
+  cancelledOrders: number;
+  pendingOrders: number;
+  totalRevenue: number;
   totalCommission: number;
+  totalDeliveryCharge: number;
+  netRevenue: number;
+  activeAgents: number;
+  newCustomers: number;
+  totalUniqueCustomers: number;
+  overallDeliveryRate: string;
+  overallReturnRate: string;
   topAgentId: number;
   topAgentOrderCount: number;
+  topProductId: number;
+  topProductOrderCount: number;
   topCourierService: string;
-  totalRevenue?: number;
-  topCourierOrderCount?: number;
+  topCourierOrderCount: number;
 }
+
+const COLORS = ["#4ade80", "#facc15", "#f87171", "#60a5fa", "#c084fc"];
 
 const DailyReport = () => {
   const today = new Date();
@@ -78,30 +80,7 @@ const DailyReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  const summaryData = report?.summary;
-
-  const orderStatusData = [
-    {
-      name: "Delivered",
-      value: summaryData?.deliveredOrders || 0,
-      color: "#10b981",
-    },
-    {
-      name: "Pending",
-      value: summaryData?.pendingOrders || 0,
-      color: "#f59e0b",
-    },
-    {
-      name: "Cancelled",
-      value: summaryData?.cancelledOrders || 0,
-      color: "#ef4444",
-    },
-    {
-      name: "Returned",
-      value: summaryData?.returnedOrders || 0,
-      color: "#6366f1",
-    },
-  ];
+  const summaryData = report?.summary as Tsummary;
 
   const resetFilters = () => {
     setFilters({
@@ -114,17 +93,60 @@ const DailyReport = () => {
     setDate(today);
   };
 
-  const topAgentsData = [
+  const orderData = [
+    { name: "New Orders", value: summaryData.newOrders },
+    { name: "Delivered Orders", value: summaryData.deliveredOrders },
+    { name: "Returned Orders", value: summaryData.returnedOrders },
+    { name: "Cancelled Orders", value: summaryData.cancelledOrders },
+    { name: "Pending Orders", value: summaryData.pendingOrders },
+  ];
+
+  const topData = [
     {
-      name: `Agent ${summaryData?.topAgentId}`,
-      orders: summaryData?.topAgentOrderCount || 0,
+      name: `Top Agent (${summaryData.topAgentId}) Orders`,
+      value: summaryData.topAgentOrderCount,
+    },
+    {
+      name: `Top Product (${summaryData.topProductId}) Orders`,
+      value: summaryData.topProductOrderCount,
+    },
+    {
+      name: `Top Courier (${summaryData.topCourierService}) Orders`,
+      value: summaryData.topCourierOrderCount,
     },
   ];
 
-  const topCourierData = [
+  const metrics = [
+    { title: "Total Orders", value: summaryData.totalOrders },
     {
-      name: summaryData?.topCourierService,
-      orders: summaryData?.topCourierOrderCount || 0,
+      title: "Total Revenue",
+      value: `$${summaryData.totalRevenue.toLocaleString()}`,
+    },
+    {
+      title: "Total Commission",
+      value: `$${summaryData.totalCommission.toLocaleString()}`,
+    },
+    {
+      title: "Total Delivery Charge",
+      value: `$${summaryData.totalDeliveryCharge.toLocaleString()}`,
+    },
+    {
+      title: "Net Revenue",
+      value: `$${summaryData.netRevenue.toLocaleString()}`,
+    },
+    { title: "Active Agents", value: summaryData.activeAgents },
+    { title: "New Customers", value: summaryData.newCustomers },
+    {
+      title: "Total Unique Customers",
+      value: summaryData.totalUniqueCustomers,
+    },
+    {
+      title: "Overall Delivery Rate",
+      value: `${summaryData.overallDeliveryRate}%`,
+    },
+    {
+      title: "Overall Return Rate",
+      value: `${summaryData.overallReturnRate}%`,
     },
   ];
 
@@ -180,85 +202,61 @@ const DailyReport = () => {
           </p>
         </div>
       </div>
-
-      <div className="space-y-6">
-        <Card className="h-[350px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+        {metrics.map((metric, idx) => (
+          <Card key={idx} className="bg-gray-800 dark:bg-gray-700">
+            <CardHeader>
+              <CardTitle>{metric.title}</CardTitle>
+            </CardHeader>
+            <CardContent>{metric.value}</CardContent>
+          </Card>
+        ))}
+      </div>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <Card className="bg-gray-800 dark:bg-gray-700">
           <CardHeader>
-            <CardTitle>Top Agent Orders</CardTitle>
+            <CardTitle>Order Status Distribution</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topAgentsData}>
-                <XAxis dataKey="name" stroke="currentColor" />
-                <YAxis stroke="currentColor" />
-                <Tooltip />
-                <Bar dataKey="orders" fill="#6366f1" radius={[6, 6, 0, 0]} />
+              <PieChart>
+                <Pie
+                  data={orderData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {orderData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip /> <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card className="bg-gray-800 dark:bg-gray-700">
+          <CardHeader>
+            <CardTitle>Top Performance</CardTitle>{" "}
+          </CardHeader>{" "}
+          <CardContent className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={topData}>
+                <XAxis dataKey="name" stroke="#cbd5e1" />
+                <YAxis stroke="#cbd5e1" /> <Tooltip /> <Legend />
+                <Bar dataKey="value" fill="#60a5fa" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
-
-      {/* Detailed Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Daily Order Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Orders Type</TableHead>
-                  <TableHead>Count</TableHead>
-                  <TableHead>Revenue / Commission</TableHead>
-                  <TableHead>Top Agent</TableHead>
-                  <TableHead>Top Courier</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Total Orders</TableCell>
-                  <TableCell>{summaryData.totalOrders}</TableCell>
-                  <TableCell>{summaryData.netRevenue.toFixed(2)}</TableCell>
-                  <TableCell>{`Agent ${summaryData.topAgentId}`}</TableCell>
-                  <TableCell>{summaryData.topCourierService}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Delivered Orders</TableCell>
-                  <TableCell>{summaryData.deliveredOrders}</TableCell>
-                  <TableCell>
-                    {summaryData.totalRevenue?.toFixed(2) ?? "-"}
-                  </TableCell>
-                  <TableCell>{`Agent ${summaryData.topAgentId}`}</TableCell>
-                  <TableCell>{summaryData.topCourierService}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Pending Orders</TableCell>
-                  <TableCell>{summaryData.pendingOrders}</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Cancelled Orders</TableCell>
-                  <TableCell>{summaryData.cancelledOrders}</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Returned Orders</TableCell>
-                  <TableCell>{summaryData.returnedOrders}</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>-</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
