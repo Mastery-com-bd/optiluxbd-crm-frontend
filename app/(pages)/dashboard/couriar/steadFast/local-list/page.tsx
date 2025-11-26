@@ -1,4 +1,4 @@
-import LocalListCouriers from '@/components/pages/dashboard/couriar/local-list/localList'
+import LocalListCouriers from '@/components/pages/dashboard/couriar/steadFast/local-list/localList'
 import React from 'react'
 
 const Page = () => {

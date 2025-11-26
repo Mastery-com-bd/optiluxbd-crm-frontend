@@ -1,4 +1,4 @@
-import LocalCreateCourier from "@/components/pages/dashboard/couriar/local-create/localCreate";
+import LocalCreateCourier from "@/components/pages/dashboard/couriar/steadFast/local-create/localCreate";
 
 const Page = () => {
   return (

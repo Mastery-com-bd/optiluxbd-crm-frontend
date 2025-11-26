@@ -1,4 +1,4 @@
-import SteadfastCreateOrder from '@/components/pages/dashboard/couriar/steadfast-create-order/steadfastCreateOrder'
+import SteadfastCreateOrder from '@/components/pages/dashboard/couriar/steadFast/steadfast-create-order/steadfastCreateOrder'
 import React from 'react'
 
 const Page = () => {

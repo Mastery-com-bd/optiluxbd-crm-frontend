@@ -31,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLazyGetAllCouriarQuery } from "@/redux/features/couriar/couriarApi";
+import { useGetAllCouriarQuery } from "@/redux/features/couriar/couriarApi";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 
@@ -79,17 +79,18 @@ export default function LocalListCouriers() {
     limit,
   };
 
-  const [trigger, { data: detail, isFetching }] = useLazyGetAllCouriarQuery();
+  // const [trigger, { data: detail, isFetching }] = useGetAllCouriarQuery();
+  const {data, isLoading} = useGetAllCouriarQuery(query);
 
-  console.log("Courier Detail", detail?.data);
+  console.log("Courier Detail", data);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    await trigger(query); // manually trigger fetch
+    // await trigger(query); // manually trigger fetch
   }
 
-  if (isFetching) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;    
 
   return (
     <div className="mx-auto p-4 space-y-4">
@@ -164,7 +165,7 @@ export default function LocalListCouriers() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {detail?.data?.map((c: CourierDetail) => (
+          {data?.map((c: CourierDetail) => (
             <TableRow key={c.id}>
               <TableCell>{c.id}</TableCell>
               <TableCell>{c.orderId}</TableCell>

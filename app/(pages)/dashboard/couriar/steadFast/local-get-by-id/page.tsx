@@ -1,4 +1,4 @@
-import LocalGetById from '@/components/pages/dashboard/couriar/local-get-by-id/localGetById'
+import LocalGetById from '@/components/pages/dashboard/couriar/steadFast/local-get-by-id/localGetById'
 import React from 'react'
 
 const Page = () => {
