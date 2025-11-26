@@ -19,6 +19,7 @@ import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { Role } from "@/types/role.types";
 import AssignedUsers from "./AssignedUsers";
+import RolesSkeleton from "./RolesSkeleton";
 
 const AccessManagement: React.FC = () => {
   // get current user
@@ -32,15 +33,9 @@ const AccessManagement: React.FC = () => {
   );
   const roles: Role[] = roleData?.data || [];
 
-  if (roleIsLoading)
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[60vh]">
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <Shield className="h-5 w-5 animate-pulse" />
-          <span className="text-sm">Loading roles…</span>
-        </div>
-      </div>
-    );
+  if (roleIsLoading) {
+    return <RolesSkeleton />;
+  }
 
   return (
     <div className="p-6 space-y-6">

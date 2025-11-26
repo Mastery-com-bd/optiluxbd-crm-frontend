@@ -63,6 +63,8 @@ const CreateComboModal = ({
         .filter(Boolean);
     }
     const finalData = { ...data, items: selectedProducts };
+    console.log(finalData);
+    return;
     try {
       const res = await createCombo(finalData).unwrap();
       if (res?.success) {
@@ -71,6 +73,7 @@ const CreateComboModal = ({
         setOpen(false);
       }
     } catch (error: any) {
+      console.log(error);
       const errorInfo =
         error?.error ||
         error?.data?.errors[0]?.message ||

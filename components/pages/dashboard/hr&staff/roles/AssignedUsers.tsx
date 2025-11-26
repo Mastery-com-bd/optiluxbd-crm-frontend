@@ -20,6 +20,8 @@ import { TUser } from "@/types/user/user.types";
 import Image from "next/image";
 import { useAssignRoleToUserMutation } from "@/redux/features/roles/roleApi";
 import { toast } from "sonner";
+import Link from "next/link";
+import DeleteRoleModal from "./DeleteRoleModal";
 
 type TUnassignedUserProps = {
   role: Role;
@@ -35,6 +37,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
   });
   const unAssignedUsers = data?.data || [];
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [assignRoleToUser] = useAssignRoleToUserMutation();
@@ -87,20 +90,22 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
         <Users className="h-4 w-4" /> Assigned Users
       </h4>
 
-      {/* CONTENT AREA — takes all available height */}
       <div className="flex flex-col justify-between h-full p-2 rounded">
-        {/* Assigned user list (scrollable + consistent) */}
         <div className="flex-1 overflow-y-auto">
           {role.users.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {role.users.map((ru) => (
-                <Badge
-                  key={ru.id}
-                  variant="secondary"
-                  className="max-w-[150px] truncate"
-                >
-                  {ru.user.name}
-                </Badge>
+              {role?.users?.map((ru) => (
+                <div key={ru.id} className="relative group p-1 ">
+                  <Link href={`/dashboard/admin/manage-users/${ru?.user?.id}`}>
+                    <Badge
+                      variant="secondary"
+                      className="max-w-[170px] truncate pr-6 cursor-pointer"
+                    >
+                      {ru.user.name}
+                    </Badge>
+                  </Link>
+                  <DeleteRoleModal user={ru?.user} roleId={role?.id} />
+                </div>
               ))}
             </div>
           ) : (
@@ -202,10 +207,10 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
                 {/* SUBMIT BUTTON */}
                 <Button
                   disabled={loading}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   onClick={() => handleAddUser(role.id)}
                 >
-                  {loading ? "Adding User..." : "Add User"}
+                  {loading ? "Assigning Role..." : "Assign Role"}
                 </Button>
               </div>
             </DialogContent>
