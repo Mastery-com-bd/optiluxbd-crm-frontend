@@ -57,6 +57,7 @@ const AssignLeaders = () => {
       refetchOnMountOrArgChange: false,
     });
   const customers = (unAssignedCustomer?.data as TCustomer[]) || [];
+  const totalCustomer = unAssignedCustomer?.meta?.totalCustomers ?? 0;
   const customersPagination = unAssignedCustomer?.pagination || {
     page: 1,
     totalPages: 1,
@@ -105,7 +106,7 @@ const AssignLeaders = () => {
               Total Customers
             </p>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {0}
+              {totalCustomer}
             </p>
           </div>
 

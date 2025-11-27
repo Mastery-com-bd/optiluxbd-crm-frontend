@@ -2,7 +2,7 @@
 "use client";
 
 import { useGetAgentReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import {
   Popover,
@@ -15,6 +15,33 @@ import { Calendar } from "@/components/ui/calendar";
 import SearchAgentInput from "./inputFields/SearchAgentInput";
 import SearchLeaderFields from "./inputFields/SearchLeaderFields";
 import TeamReportSkeleton from "./reportSkeleton/TeamReportSkeleton";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TAgentReport } from "@/types/report/agentReportType";
+
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#A28CF0",
+  "#FF6584",
+];
 
 export type TAgentReportFilter = {
   sortBy: string;
@@ -32,7 +59,7 @@ const AgentReport = () => {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date>(today);
-
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [filters, setFilters] = useState<TAgentReportFilter>({
     sortBy: "created_at",
     order: "desc",
@@ -62,7 +89,7 @@ const AgentReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
+
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -77,6 +104,20 @@ const AgentReport = () => {
     setStartDate(firstDayOfMonth);
     setEndDate(today);
   };
+
+  const agents = (report?.data as TAgentReport[]) || [];
+
+  const toggleRow = (id: number) => {
+    setExpandedRows((prev) =>
+      prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]
+    );
+  };
+
+  // Pie chart data: top 5 agents by totalSalesAmount
+  const pieData = [...agents]
+    .sort((a, b) => b.totalSalesAmount - a.totalSalesAmount)
+    .slice(0, 5)
+    .map((a) => ({ name: a.agentName, value: a.totalSalesAmount }));
 
   if (isLoading) {
     return <TeamReportSkeleton />;
@@ -214,6 +255,128 @@ const AgentReport = () => {
             </p>
           </div>
         </div>
+      </div>
+      <div className="space-y-4">
+        <Card className="w-full h-80">
+          <CardContent className="w-full h-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={100}
+                  label
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => Number(value).toLocaleString()}
+                />
+                <Legend verticalAlign="bottom" />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Agent ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Total Orders</TableHead>
+                <TableHead>Delivered</TableHead>
+                <TableHead>Pending</TableHead>
+                <TableHead>Total Sales</TableHead>
+                <TableHead>Commission</TableHead>
+                <TableHead>Average Order Value</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {agents.map((agent) => (
+                <React.Fragment key={agent.agentId}>
+                  <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <TableCell>{agent.agentUserId}</TableCell>
+                    <TableCell>{agent.agentName}</TableCell>
+                    <TableCell>{agent.agentEmail}</TableCell>
+                    <TableCell>{agent.agentPhone}</TableCell>
+                    <TableCell>{agent.totalOrders}</TableCell>
+                    <TableCell>{agent.deliveredOrders}</TableCell>
+                    <TableCell>{agent.pendingOrders}</TableCell>
+                    <TableCell>
+                      {Number(agent.totalSalesAmount).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      {Number(agent.totalCommission).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      {Number(agent.averageOrderValue).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        className="text-blue-500 hover:underline"
+                        onClick={() => toggleRow(agent.agentId)}
+                      >
+                        {expandedRows.includes(agent.agentId)
+                          ? "Hide Orders"
+                          : "View Orders"}
+                      </button>
+                    </TableCell>
+                  </TableRow>
+
+                  {expandedRows.includes(agent.agentId) && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={11}
+                        className="bg-gray-50 dark:bg-gray-900 p-4"
+                      >
+                        <Table className="w-full">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Order ID</TableHead>
+                              <TableHead>Product</TableHead>
+                              <TableHead>Customer</TableHead>
+                              <TableHead>Quantity</TableHead>
+                              <TableHead>Total Amount</TableHead>
+                              <TableHead>Commission</TableHead>
+                              <TableHead>Order Date</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {agent.orders.map((order) => (
+                              <TableRow key={order.id}>
+                                <TableCell>{order.id}</TableCell>
+                                <TableCell>{order.product.name}</TableCell>
+                                <TableCell>{order.customer.name}</TableCell>
+                                <TableCell>{order.quantity}</TableCell>
+                                <TableCell>
+                                  {Number(order.totalAmount).toLocaleString()}
+                                </TableCell>
+                                <TableCell>
+                                  {Number(order.commission).toLocaleString()}
+                                </TableCell>
+                                <TableCell>
+                                  {new Date(
+                                    order.orderDate
+                                  ).toLocaleDateString()}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
     </div>
   );

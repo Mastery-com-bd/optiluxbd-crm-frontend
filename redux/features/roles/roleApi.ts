@@ -40,25 +40,19 @@ const rolesApi = baseApi.injectEndpoints({
       invalidatesTags: ["roles", "user", "permissions"],
     }),
     assignRoleToUser: builder.mutation({
-      query: ({ roleId, data }) => (
-        console.log(roleId),
-        {
-          url: `/roles/${roleId}/assign`,
-          method: "POST",
-          body: data,
-        }
-      ),
+      query: ({ roleId, data }) => ({
+        url: `/roles/${roleId}/assign`,
+        method: "POST",
+        body: data,
+      }),
       invalidatesTags: ["roles", "user", "permissions"],
     }),
     removeRoleFromUser: builder.mutation({
-      query: ({ roleId, data }) => (
-        console.log(roleId),
-        {
-          url: `/roles/${roleId}/remove`,
-          method: "POST",
-          body: data,
-        }
-      ),
+      query: ({ roleId, data }) => ({
+        url: `/roles/${roleId}/remove`,
+        method: "POST",
+        body: data,
+      }),
       invalidatesTags: ["roles", "user", "permissions"],
     }),
   }),

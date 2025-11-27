@@ -22,12 +22,28 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { format } from "date-fns";
 import DashboardHistoryModal from "./DashboardHistoryModal";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useGetOverviewReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
 
 const DashboardStats = () => {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const { data, isLoading } = useGetOverviewReportsQuery(
+    {
+      startDate: format(firstDayOfMonth, "yyyy-MM-dd"),
+      endDate: format(today, "yyyy-MM-dd"),
+    },
+    {
+      refetchOnMountOrArgChange: false,
+    }
+  );
+  const overview = data?.data;
+  console.log(data);
+
   const salesData = [
     { month: "Jan", online: 1200, instore: 2100, projected: 3100 },
     { month: "Feb", online: 1400, instore: 2300, projected: 2800 },
@@ -120,6 +136,7 @@ const DashboardStats = () => {
         return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
+
   return (
     <div className="w-full mx-auto ">
       {/* Header */}
@@ -128,15 +145,15 @@ const DashboardStats = () => {
       </div> */}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-5 mb-6">
         <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                $125K
+                {overview?.agentPerformance?.summary?.totalOrders ?? 0}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Sales
+                Total Orders
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -149,10 +166,10 @@ const DashboardStats = () => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                2,358
+                {overview?.agentPerformance?.summary?.totalRevenue ?? 0}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Orders Placed
+                Total Revenue
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
@@ -165,10 +182,10 @@ const DashboardStats = () => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                839
+                {overview?.productPerformance?.summary?.totalQuantitySold ?? 0}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Active Customers
+                Total Quantity Sold
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
@@ -181,10 +198,26 @@ const DashboardStats = () => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                41
+                {overview?.courierPerformance?.summary?.totalShipments ?? 0}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Refund Requests
+                Total Shipment
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
+              <RefreshCw className="w-6 h-6 text-amber-600 dark:text-amber-300" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                {overview?.geographicDistribution?.summary?.totalLocations ?? 0}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Total Location
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
