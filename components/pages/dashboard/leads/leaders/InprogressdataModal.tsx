@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { convertDate } from "@/utills/dateConverter";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export interface TCreator {
   id: number;
@@ -95,7 +96,20 @@ const InprogressdataModal = () => {
   return (
     <div>
       {/* Open Modal Button */}
-      <Button onClick={() => setOpen(true)}>View Progress Report</Button>
+      <Tooltip >
+        <TooltipTrigger asChild>
+          <Button className="cursor-pointer" onClick={() => setOpen(true)}>View Progress Report</Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>
+            You have{" "}
+            <span className={reports?.length === 0 ? "text-red-600" : "text-green-600"}>
+              {reports?.length}
+            </span>{" "}
+            reports.
+          </p>
+        </TooltipContent>
+      </Tooltip>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg">
@@ -143,7 +157,7 @@ const InprogressdataModal = () => {
                     <span>
                       {item?.startDate
                         ? convertDate(new Date(item?.startDate as string))
-                            .creationDate
+                          .creationDate
                         : "no start date"}
                     </span>
 
@@ -151,7 +165,7 @@ const InprogressdataModal = () => {
                     <span>
                       {item?.endDate
                         ? convertDate(new Date(item?.endDate as string))
-                            .creationDate
+                          .creationDate
                         : "no end date"}
                     </span>
                   </div>
