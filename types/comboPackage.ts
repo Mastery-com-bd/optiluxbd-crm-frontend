@@ -21,7 +21,7 @@ export type TComboPackage = {
   description: string;
   sku: string;
   discountPrice: string;
-  totalPrice: string;
+  packagePrice: string;
   savingsAmount: string;
   savingsPercent: string;
   is_active: boolean;
@@ -49,7 +49,7 @@ export interface TCombo {
   sku: string;
   description: string;
   tags: string[];
-  totalPrice: string;
+  packagePrice: string;
   discountPrice: number;
   savingsAmount: string;
   savingsPercent: string;
@@ -58,6 +58,5 @@ export interface TCombo {
   image_url: string | null;
   image_public_id: string | null;
   created_at: string;
-  updated_at: string;
   items: TComboPackageItem[];
 }

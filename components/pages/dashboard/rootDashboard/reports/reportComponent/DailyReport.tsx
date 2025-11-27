@@ -26,32 +26,7 @@ import {
   YAxis,
   ResponsiveContainer,
 } from "recharts";
-
-interface Tsummary {
-  totalOrders: number;
-  newOrders: number;
-  deliveredOrders: number;
-  returnedOrders: number;
-  cancelledOrders: number;
-  pendingOrders: number;
-  totalRevenue: number;
-  totalCommission: number;
-  totalDeliveryCharge: number;
-  netRevenue: number;
-  activeAgents: number;
-  newCustomers: number;
-  totalUniqueCustomers: number;
-  overallDeliveryRate: string;
-  overallReturnRate: string;
-  topAgentId: number;
-  topAgentOrderCount: number;
-  topProductId: number;
-  topProductOrderCount: number;
-  topCourierService: string;
-  topCourierOrderCount: number;
-}
-
-const COLORS = ["#4ade80", "#facc15", "#f87171", "#60a5fa", "#c084fc"];
+import { Tsummary } from "@/types/report/TDailyReportSummaryType";
 
 const DailyReport = () => {
   const today = new Date();
@@ -80,6 +55,7 @@ const DailyReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
+  console.log(report);
   const summaryData = report?.summary as Tsummary;
 
   const resetFilters = () => {
@@ -93,61 +69,43 @@ const DailyReport = () => {
     setDate(today);
   };
 
-  const orderData = [
-    { name: "New Orders", value: summaryData.newOrders },
-    { name: "Delivered Orders", value: summaryData.deliveredOrders },
-    { name: "Returned Orders", value: summaryData.returnedOrders },
-    { name: "Cancelled Orders", value: summaryData.cancelledOrders },
-    { name: "Pending Orders", value: summaryData.pendingOrders },
-  ];
-
-  const topData = [
-    {
-      name: `Top Agent (${summaryData.topAgentId}) Orders`,
-      value: summaryData.topAgentOrderCount,
-    },
-    {
-      name: `Top Product (${summaryData.topProductId}) Orders`,
-      value: summaryData.topProductOrderCount,
-    },
-    {
-      name: `Top Courier (${summaryData.topCourierService}) Orders`,
-      value: summaryData.topCourierOrderCount,
-    },
-  ];
-
   const metrics = [
-    { title: "Total Orders", value: summaryData.totalOrders },
-    {
-      title: "Total Revenue",
-      value: `$${summaryData.totalRevenue.toLocaleString()}`,
-    },
-    {
-      title: "Total Commission",
-      value: `$${summaryData.totalCommission.toLocaleString()}`,
-    },
+    { title: "Total Orders", value: summaryData?.totalOrders },
+    { title: "New Orders", value: summaryData?.newOrders },
+    { title: "Delivered Orders", value: summaryData?.deliveredOrders },
+    { title: "Returned Orders", value: summaryData?.returnedOrders },
+    { title: "Cancelled Orders", value: summaryData?.cancelledOrders },
+    { title: "Pending Orders", value: summaryData?.pendingOrders },
+    { title: "Net Revenue", value: `$${summaryData?.netRevenue}` },
+    { title: "Total Revenue", value: `$${summaryData?.totalRevenue}` },
+    { title: "Total Commission", value: `$${summaryData?.totalCommission}` },
     {
       title: "Total Delivery Charge",
-      value: `$${summaryData.totalDeliveryCharge.toLocaleString()}`,
+      value: `$${summaryData?.totalDeliveryCharge}`,
     },
-    {
-      title: "Net Revenue",
-      value: `$${summaryData.netRevenue.toLocaleString()}`,
-    },
-    { title: "Active Agents", value: summaryData.activeAgents },
-    { title: "New Customers", value: summaryData.newCustomers },
+    { title: "Active Agents", value: summaryData?.activeAgents },
+    { title: "New Customers", value: summaryData?.newCustomers },
     {
       title: "Total Unique Customers",
-      value: summaryData.totalUniqueCustomers,
+      value: summaryData?.totalUniqueCustomers,
     },
     {
       title: "Overall Delivery Rate",
-      value: `${summaryData.overallDeliveryRate}%`,
+      value: `${summaryData?.overallDeliveryRate}%`,
     },
     {
       title: "Overall Return Rate",
-      value: `${summaryData.overallReturnRate}%`,
+      value: `${summaryData?.overallReturnRate}%`,
     },
+    { title: "Top Agent ID", value: summaryData?.topAgentId ?? "N/A" },
+    { title: "Top Agent Orders", value: summaryData?.topAgentOrderCount },
+    { title: "Top Product ID", value: summaryData?.topProductId ?? "N/A" },
+    { title: "Top Product Orders", value: summaryData?.topProductOrderCount },
+    {
+      title: "Top Courier Service",
+      value: summaryData?.topCourierService ?? "N/A",
+    },
+    { title: "Top Courier Orders", value: summaryData?.topCourierOrderCount },
   ];
 
   if (isLoading) {
@@ -202,60 +160,139 @@ const DailyReport = () => {
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-        {metrics.map((metric, idx) => (
-          <Card key={idx} className="bg-gray-800 dark:bg-gray-700">
-            <CardHeader>
-              <CardTitle>{metric.title}</CardTitle>
-            </CardHeader>
-            <CardContent>{metric.value}</CardContent>
-          </Card>
-        ))}
-      </div>
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <Card className="bg-gray-800 dark:bg-gray-700">
-          <CardHeader>
-            <CardTitle>Order Status Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={orderData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  label
-                >
-                  {orderData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
+      <div className="space-y-6 p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+          {metrics.map((metric, i) => {
+            let numericValue = 0;
+            let displayValue = "0";
+
+            if (metric.value !== null && metric.value !== undefined) {
+              if (typeof metric.value === "number") {
+                numericValue = metric.value;
+                displayValue = metric.value.toString();
+              } else if (typeof metric.value === "string") {
+                const parsed = parseFloat(metric.value.replace(/[^\d.]/g, ""));
+                numericValue = isNaN(parsed) ? 0 : parsed;
+                displayValue = displayValue = isNaN(parsed)
+                  ? "0"
+                  : metric.value;
+              }
+            }
+
+            const isRate = metric.title.toLowerCase().includes("rate");
+
+            return (
+              <div
+                key={i}
+                className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm flex flex-col items-center justify-center"
+              >
+                <p className="text-gray-500 dark:text-gray-400 text-sm text-center">
+                  {metric.title}
+                </p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white mt-1 text-center">
+                  {displayValue}
+                </p>
+                {isRate && (
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded mt-2">
+                    <div
+                      className="bg-green-500 h-2 rounded"
+                      style={{ width: `${numericValue}%` }}
                     />
-                  ))}
-                </Pie>
-                <Tooltip /> <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 dark:bg-gray-700">
-          <CardHeader>
-            <CardTitle>Top Performance</CardTitle>{" "}
-          </CardHeader>{" "}
-          <CardContent className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topData}>
-                <XAxis dataKey="name" stroke="#cbd5e1" />
-                <YAxis stroke="#cbd5e1" /> <Tooltip /> <Legend />
-                <Bar dataKey="value" fill="#60a5fa" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700">
+            <CardHeader>
+              <CardTitle>Order Status Distribution</CardTitle>
+            </CardHeader>
+            <CardContent className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: "New Orders", value: summaryData?.newOrders },
+                      {
+                        name: "Delivered Orders",
+                        value: summaryData?.deliveredOrders,
+                      },
+                      {
+                        name: "Returned Orders",
+                        value: summaryData?.returnedOrders,
+                      },
+                      {
+                        name: "Cancelled Orders",
+                        value: summaryData?.cancelledOrders,
+                      },
+                      {
+                        name: "Pending Orders",
+                        value: summaryData?.pendingOrders,
+                      },
+                    ]}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label
+                  >
+                    {[
+                      "#60a5fa",
+                      "#10b981",
+                      "#f43f5e",
+                      "#fbbf24",
+                      "#8b5cf6",
+                    ].map((color, index) => (
+                      <Cell key={index} fill={color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          <Card className="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700">
+            <CardHeader>
+              <CardTitle>Top Performance</CardTitle>
+            </CardHeader>
+            <CardContent className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={[
+                    {
+                      name: `Top Agent (${summaryData?.topAgentId ?? "N/A"})`,
+                      value: summaryData?.topAgentOrderCount,
+                    },
+                    {
+                      name: `Top Product (${
+                        summaryData?.topProductId ?? "N/A"
+                      })`,
+                      value: summaryData?.topProductOrderCount,
+                    },
+                    {
+                      name: `Top Courier (${
+                        summaryData?.topCourierService ?? "N/A"
+                      })`,
+                      value: summaryData?.topCourierOrderCount,
+                    },
+                  ]}
+                >
+                  <XAxis dataKey="name" stroke="#6b7280" />
+                  <YAxis stroke="#6b7280" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

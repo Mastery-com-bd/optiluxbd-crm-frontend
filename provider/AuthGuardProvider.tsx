@@ -30,6 +30,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
+
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     Promise.resolve().then(() => {
@@ -70,11 +71,20 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Find required permission for current route
-    const requiredPerms = Object.entries(routePermissions).find(([route]) =>
-      pathname.startsWith(route)
-    )?.[1];
+    let requiredPerms: string[] = routePermissions[pathname] ?? [];
+    // If exact match not found, check for nested routes (startsWith)
+    if (requiredPerms.length === 0) {
+      const dynamicMatch = Object.entries(routePermissions).find(([route]) =>
+        pathname.startsWith(route + "/")
+      );
+      requiredPerms = dynamicMatch?.[1] ?? [];
+    }
 
+    // If no required permissions found → redirect
+    if (!requiredPerms) {
+      router.replace("/dashboard/profile");
+      return;
+    }
     // If route not in permission map → redirect to profile
     if (!requiredPerms) {
       router.replace("/dashboard/profile");

@@ -42,7 +42,10 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { TProductPerformance } from "@/types/report/productReportdataTypes";
+import {
+  TProductPerformance,
+  TProductReportSuymmary,
+} from "@/types/report/productReportdataTypes";
 
 // COLORS (auto‑cycled)
 const COLORS = [
@@ -102,7 +105,10 @@ const ProductReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
+  console.log(report);
   const products = (report?.data as TProductPerformance[]) || [];
+  const summary = report?.summary as TProductReportSuymmary;
+
   const revenueData = products.map((p) => ({
     name: p.productName,
     value: p.totalRevenue,
@@ -237,58 +243,59 @@ const ProductReport = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
               Total Order
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalOrders}
+              {summary?.totalOrders}
             </p>
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
               Total Product
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalProducts}
+              {summary?.totalProducts}
             </p>
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
               Total Quantity SOld
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalQuantitySold}
+              {summary?.totalQuantitySold}
             </p>
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
               Total Revenue
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalRevenue}
+              {summary?.totalRevenue.toFixed(2)}
             </p>
           </div>
         </div>
       </div>
+
       <div className="space-y-4">
         <Card>
           <CardHeader>
@@ -326,7 +333,21 @@ const ProductReport = () => {
                 <BarChart data={orderData}>
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip
+                    wrapperClassName="rounded-lg overflow-hidden"
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-color)",
+                      backgroundColor: "var(--bg-color)",
+                      color: "var(--text-color)",
+                    }}
+                    labelStyle={{
+                      color: "var(--text-color)",
+                    }}
+                    itemStyle={{
+                      color: "var(--text-color)",
+                    }}
+                  />
                   <Legend />
                   <Bar dataKey="orders">
                     {orderData.map((entry, index) => (
@@ -359,16 +380,16 @@ const ProductReport = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products.map((p) => (
-                    <TableRow key={p.productId}>
-                      <TableCell>{p.productName}</TableCell>
-                      <TableCell>{p.productCategory}</TableCell>
-                      <TableCell>{p.totalOrders}</TableCell>
-                      <TableCell>{p.totalQuantitySold}</TableCell>
-                      <TableCell>{p.totalRevenue.toFixed(2)}</TableCell>
-                      <TableCell>{p.totalCommissionPaid.toFixed(2)}</TableCell>
-                      <TableCell>{p.deliverySuccessRate}%</TableCell>
-                      <TableCell>{p.returnRate}%</TableCell>
+                  {products.map((p, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{p?.productName}</TableCell>
+                      <TableCell>{p?.productCategory}</TableCell>
+                      <TableCell>{p?.totalOrders}</TableCell>
+                      <TableCell>{p?.totalQuantitySold}</TableCell>
+                      <TableCell>{p?.totalRevenue.toFixed(2)}</TableCell>
+                      <TableCell>{p?.totalCommissionPaid.toFixed(2)}</TableCell>
+                      <TableCell>{p?.deliverySuccessRate}%</TableCell>
+                      <TableCell>{p?.returnRate}%</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

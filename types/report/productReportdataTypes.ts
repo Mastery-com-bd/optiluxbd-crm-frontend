@@ -1,4 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export type TProductReportSuymmary = {
+  totalOrders: number;
+  totalProducts: number;
+  totalQuantitySold: number;
+  totalRevenue: number;
+};
+
 export type TProductPerformance = {
   productId: number;
   productName: string;
