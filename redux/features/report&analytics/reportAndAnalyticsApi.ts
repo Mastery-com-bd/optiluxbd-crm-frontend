@@ -3,6 +3,7 @@ import { buildParams } from "@/utills/paramsBuilder";
 
 const reportAndAnalyticsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // agents report
     getAgentReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/agent?${buildParams(params)}`,
@@ -10,6 +11,7 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // teams report
     getTeamReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/team?${buildParams(params)}`,
@@ -17,6 +19,15 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // get team hourly target
+    getTeamHourlyTarget: builder.query({
+      query: (params = {}) => ({
+        url: `/reports/team/hourly-target?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["reports"],
+    }),
+    // couriar report
     getCurrierReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/courier?${buildParams(params)}`,
@@ -24,6 +35,7 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // products report
     getProductsReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/product?${buildParams(params)}`,
@@ -31,6 +43,7 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // package report
     getPackagesReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/package?${buildParams(params)}`,
@@ -38,6 +51,7 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // geographic report
     getGeographicReport: builder.query({
       query: (params = {}) => ({
         url: `/reports/geographic?${buildParams(params)}`,
@@ -45,6 +59,7 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // daily report
     getDailyReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/daily?${buildParams(params)}`,
@@ -52,9 +67,18 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    // overview report
     getOverviewReports: builder.query({
       query: (params = {}) => ({
         url: `/reports/overview?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["reports"],
+    }),
+    // hourly team report hourly
+    getHourlyTeamReport: builder.query({
+      query: (params = {}) => ({
+        url: `/reports/hourly-team?${buildParams(params)}`,
         method: "GET",
       }),
       providesTags: ["reports"],
@@ -64,10 +88,12 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
 export const {
   useGetAgentReportsQuery,
   useGetTeamReportsQuery,
+  useGetTeamHourlyTargetQuery,
   useGetCurrierReportsQuery,
   useGetProductsReportsQuery,
   useGetPackagesReportsQuery,
   useGetGeographicReportQuery,
   useGetDailyReportsQuery,
   useGetOverviewReportsQuery,
+  useGetHourlyTeamReportQuery,
 } = reportAndAnalyticsApi;

@@ -20,6 +20,27 @@ import {
 } from "@/components/ui/select";
 import { useGetCurrierReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
 import CuriarSkeleton from "./reportSkeleton/CuriarSkeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { TCourierPerformanceItem } from "@/types/report/couriarServiceDataType";
 
 export type TCoriarReportFilter = {
   sortBy: string;
@@ -63,7 +84,8 @@ const CourierReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
+  const rows = (report?.data as TCourierPerformanceItem[]) || [];
+
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -76,6 +98,17 @@ const CourierReport = () => {
     setStartDate(firstDayOfMonth);
     setEndDate(today);
   };
+
+  const pieColors = [
+    "#6366f1",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+    "#3b82f6",
+    "#8b5cf6",
+    "#14b8a6",
+    "#f43f5e",
+  ];
 
   if (isLoading) {
     return <CuriarSkeleton />;
@@ -230,6 +263,140 @@ const CourierReport = () => {
             </p>
           </div>
         </div>
+      </div>
+      <div className="space-y-8">
+        {/* 1️⃣ TOTAL SHIPMENTS BAR CHART */}
+        <div className="flex justify-between gap-8">
+          {/* 1️⃣ TOTAL SHIPMENTS BAR CHART */}
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Total Shipments by Courier</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={rows}>
+                  <XAxis dataKey="courierService" stroke="currentColor" />
+                  <YAxis stroke="currentColor" />
+                  <Tooltip
+                    wrapperClassName="rounded-lg overflow-hidden"
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "1px solid var(--border-color)",
+                      backgroundColor: "var(--bg-color)",
+                      color: "var(--text-color)",
+                    }}
+                    labelStyle={{
+                      color: "var(--text-color)",
+                    }}
+                    itemStyle={{
+                      color: "var(--text-color)",
+                    }}
+                  />
+
+                  <defs>
+                    <linearGradient
+                      id="shipmentsColor"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.9} />
+                      <stop
+                        offset="95%"
+                        stopColor="#6366f1"
+                        stopOpacity={0.3}
+                      />
+                    </linearGradient>
+                  </defs>
+
+                  <Bar
+                    dataKey="totalShipments"
+                    fill="url(#shipmentsColor)"
+                    radius={[6, 6, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* 2️⃣ DELIVERY SUCCESS PIE CHART */}
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Delivery Success Share</CardTitle>
+            </CardHeader>
+            <CardContent className="h-80">
+              <ResponsiveContainer width="70%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={rows}
+                    dataKey="deliveredShipments"
+                    nameKey="courierService"
+                    outerRadius={115}
+                    label
+                    isAnimationActive={false}
+                  >
+                    {rows.map((_, idx) => (
+                      <Cell
+                        key={idx}
+                        fill={pieColors[idx % pieColors.length]}
+                        stroke="#ffffff"
+                        strokeWidth={1}
+                      />
+                    ))}
+                  </Pie>
+
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 3️⃣ FULL DATA TABLE */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Courier Statistics Table</CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Courier</TableHead>
+                    <TableHead>Total Shipments</TableHead>
+                    <TableHead>Delivered</TableHead>
+                    <TableHead>Pending</TableHead>
+                    <TableHead>Returned</TableHead>
+                    <TableHead>Cancelled</TableHead>
+                    <TableHead>COD Amount</TableHead>
+                    <TableHead>Delivery Charge</TableHead>
+                    <TableHead>Success Rate (%)</TableHead>
+                    <TableHead>Avg Charge</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {rows.map((item: TCourierPerformanceItem, i) => (
+                    <TableRow key={i}>
+                      <TableCell>{item.courierService}</TableCell>
+                      <TableCell>{item.totalShipments}</TableCell>
+                      <TableCell>{item.deliveredShipments}</TableCell>
+                      <TableCell>{item.pendingShipments}</TableCell>
+                      <TableCell>{item.returnedShipments}</TableCell>
+                      <TableCell>{item.cancelledShipments}</TableCell>
+                      <TableCell>{item.totalCODAmount}</TableCell>
+                      <TableCell>{item.totalDeliveryCharge}</TableCell>
+                      <TableCell>{item.deliverySuccessRate}%</TableCell>
+                      <TableCell>{item.averageDeliveryCharge}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

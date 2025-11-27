@@ -63,8 +63,6 @@ const TeamReport = () => {
   const report = data?.data;
   const teams = data?.data?.data as TTeamReport[];
 
-  console.log(teams);
-  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",

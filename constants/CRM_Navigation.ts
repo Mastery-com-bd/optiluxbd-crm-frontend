@@ -6,7 +6,7 @@ import {
   Users2,
   Gift,
   Activity,
-  Tags
+  Tags,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -34,35 +34,7 @@ export const crmRoutes: NavRoute[] = [
     roles: ["ADMIN"],
   },
 
-  // products route
-  {
-    title: "Products",
-    icon: Package,
-    permissions: [
-      "PRODUCTS VIEW",
-      "PRODUCTS CREATE",
-      "PRODUCTS UPDATE",
-      "PRODUCTS DELETE",
-    ],
-    children: [
-      {
-        title: "All Products",
-        path: "/dashboard/admin/products/all-products",
-        permissions: ["PRODUCTS VIEW"],
-      },
-      {
-        title: "Add Product",
-        path: "/dashboard/admin/products/add-product",
-        permissions: ["PRODUCTS CREATE"],
-      },
-      {
-        title: "Draft Products",
-        path: "/dashboard/admin/products/drafts",
-        permissions: ["PRODUCTS VIEW"],
-      },
-    ],
-  },
-  //CATEGORIES 
+  //CATEGORIES
   {
     title: "Categories",
     icon: Tags,
@@ -85,7 +57,7 @@ export const crmRoutes: NavRoute[] = [
           "CATEGORIES UPDATE",
           "CATEGORIES DELETE",
           "CATEGORIES VIEW",
-        ]
+        ],
       },
       {
         title: "Sub Categories",
@@ -95,9 +67,38 @@ export const crmRoutes: NavRoute[] = [
           "SUBCATEGORIES UPDATE",
           "SUBCATEGORIES DELETE",
           "SUBCATEGORIES VIEW",
-        ]
-      }
-    ]
+        ],
+      },
+    ],
+  },
+
+  // products route
+  {
+    title: "Products",
+    icon: Package,
+    permissions: [
+      "PRODUCTS VIEW",
+      "PRODUCTS CREATE",
+      "PRODUCTS UPDATE",
+      "PRODUCTS DELETE",
+    ],
+    children: [
+      {
+        title: "All Products",
+        path: "/dashboard/admin/products/all-products",
+        permissions: ["PRODUCTS VIEW"],
+      },
+      {
+        title: "Add Product",
+        path: "/dashboard/admin/products/add-product",
+        permissions: ["PRODUCTS CREATE"],
+      },
+      // {
+      //   title: "Draft Products",
+      //   path: "/dashboard/admin/products/drafts",
+      //   permissions: ["PRODUCTS VIEW"],
+      // },
+    ],
   },
 
   // combo pack route

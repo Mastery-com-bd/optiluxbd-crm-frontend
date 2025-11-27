@@ -58,7 +58,7 @@ const PackageReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
+
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
