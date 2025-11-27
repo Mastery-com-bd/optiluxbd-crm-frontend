@@ -153,7 +153,7 @@ export const {
     useGetAllCouriarQuery,
     useCreateCouriarWithSteadFastMutation,
     useCreateCouriarFromOrderMutation,
-    useLazyGetCouriarDetailsByIdQuery,
+    useGetCouriarDetailsByIdQuery,
     useUpdateCouriarStatusMutation,
     useLazyCheckStatusByInvoiceQuery,
     useLazyCheckStatusByConsignmentIdQuery,
@@ -162,5 +162,6 @@ export const {
     useCreateSteadfastReturnRequestMutation,
     useGetAllSteadfastReturnRequestQuery,
     useLazyGetSteadfastReturnRequestByIdQuery,
+    useCreateBulkSteadFastFromOrderMutation,
 
 } = couriarApi;
