@@ -55,7 +55,6 @@ const DailyReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
   const summaryData = report?.summary as Tsummary;
 
   const resetFilters = () => {
@@ -112,9 +111,9 @@ const DailyReport = () => {
     return <DailyReportSkeleton />;
   }
   return (
-    <div className="space-y-4">
-      <div className="space-y-4">
-        <div className="flex items-end justify-between gap-4">
+    <div className="space-y-4 ">
+      <div className="space-y-4 px-6">
+        <div className="flex items-end gap-4">
           {/* Start Date */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600 dark:text-gray-300">

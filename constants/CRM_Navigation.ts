@@ -29,9 +29,21 @@ export interface NavRoute {
 export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
-    path: "/dashboard",
     icon: LayoutDashboard,
+    permissions: ["REPORTS VIEW"],
     roles: ["ADMIN"],
+    children: [
+      {
+        title: "All Overview",
+        path: "/dashboard",
+        permissions: ["REPORTS VIEW"],
+      },
+      {
+        title: "All Reports",
+        path: "/dashboard/reports",
+        permissions: ["REPORTS VIEW"],
+      },
+    ],
   },
 
   //CATEGORIES

@@ -102,7 +102,7 @@ const GeographicReport = () => {
     return <GeographicSkeleton />;
   }
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       <div className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           {/* divission */}
@@ -224,8 +224,13 @@ const GeographicReport = () => {
           </p>
           <p className="flex flex-col space-y-2">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+              {report?.period.startDate
+                ? format(new Date(report?.period.startDate), "yyyy-MM-dd")
+                : "No date"}{" "}
+              →{" "}
+              {report?.period.endDate
+                ? format(new Date(report?.period.endDate), "yyyy-MM-dd")
+                : "No date"}
             </span>
           </p>
         </div>

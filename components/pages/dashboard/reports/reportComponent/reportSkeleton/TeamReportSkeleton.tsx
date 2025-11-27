@@ -10,7 +10,7 @@ import {
 
 const TeamReportSkeleton = () => {
   return (
-    <section>
+    <section className="p-6">
       <div className="space-y-6">
         <div className="flex flex-col lg:flex-row items-end justify-between gap-4">
           <div className="w-full sm:w-1/3">
@@ -80,7 +80,7 @@ const TeamReportSkeleton = () => {
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-8 ">
         {Array.from({ length: 1 }).map((_, i) => (
           <div
             key={i}

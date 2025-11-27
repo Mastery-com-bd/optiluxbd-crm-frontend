@@ -11,7 +11,7 @@ import {
 
 const CuriarSkeleton = () => {
   return (
-    <div className="space-y-8 animate-pulse">
+    <div className="space-y-8 animate-pulse p-6">
       <div className="flex flex-col lg:flex-row items-end justify-between gap-4">
         <div className="w-full lg:w-36">
           <Skeleton className="h-10 w-full rounded-md" />

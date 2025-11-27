@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const GeographicSkeleton = () => {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="space-y-6 animate-pulse p-6">
       <div className="space-y-4">
         <div className="flex items-end justify-between gap-4 flex-wrap">
           {/* Division */}
@@ -67,7 +67,7 @@ const GeographicSkeleton = () => {
         </div>
       </div>
 
-      <div className="space-y-8 p-6 ">
+      <div className="space-y-8  ">
         <Card>
           <CardHeader>
             <CardTitle>

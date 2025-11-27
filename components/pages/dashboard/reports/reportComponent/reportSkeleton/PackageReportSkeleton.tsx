@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const PackageReportSkeleton = () => {
   return (
-    <section>
+    <section className="p-6">
       <div className="space-y-6">
         {/* 🔍 Filters Row */}
         <div className="flex flex-col sm:flex-row items-end justify-between gap-4">

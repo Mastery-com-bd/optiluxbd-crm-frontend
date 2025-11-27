@@ -110,7 +110,6 @@ const AgentReport = () => {
   };
 
   const agents = (report?.data as TAgentReport[]) || [];
-  console.log(agents);
   const summary = report?.summary as TAgentReportSummary;
 
   const toggleRow = (id: number) => {
@@ -130,7 +129,7 @@ const AgentReport = () => {
   }
   return (
     <div className="space-y-4">
-      <div className="space-y-4">
+      <div className="space-y-4 px-6">
         <div className="flex items-end justify-between gap-4">
           <SearchAgentInput
             reportFilter={filters}
@@ -203,8 +202,13 @@ const AgentReport = () => {
           </p>
           <p className="flex flex-col space-y-2">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+              {report?.period?.startDate
+                ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
+                : "No date"}{" "}
+              →
+              {report?.period?.endDate
+                ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
+                : "No date"}
             </span>
           </p>
         </div>
@@ -262,7 +266,7 @@ const AgentReport = () => {
           </div>
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 p-6">
         <Card className="w-full h-80">
           <CardContent className="w-full h-full">
             <ResponsiveContainer width="100%" height="100%">

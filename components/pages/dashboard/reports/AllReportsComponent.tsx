@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import AllOverview from "./reportComponent/AllOverview";
 import DailyReport from "./reportComponent/DailyReport";
 import AgentReport from "./reportComponent/AgentReport";
 import TeamReport from "./reportComponent/TeamReport";
@@ -18,7 +17,6 @@ import PackageReport from "./reportComponent/PackageReport";
 import CourierReport from "./reportComponent/CourierReport";
 import GeographicReport from "./reportComponent/GeographicReport";
 const tabs = [
-  "All Overview",
   "Daily Reports",
   "Agent Report",
   "Team Report",
@@ -28,7 +26,6 @@ const tabs = [
   "Geographic Report",
 ];
 type TTabs =
-  | "All Overview"
   | "Daily Reports"
   | "Agent Report"
   | "Team Report"
@@ -38,10 +35,10 @@ type TTabs =
   | "Geographic Report";
 
 const AllReportsComponent = () => {
-  const [activeTab, setActiveTab] = useState<TTabs | string>("All Overview");
+  const [activeTab, setActiveTab] = useState<TTabs | string>("Daily Reports");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pt-4">
       {/* Dropdown */}
       <div className="flex items-center justify-center">
         <DropdownMenu>
@@ -70,7 +67,6 @@ const AllReportsComponent = () => {
       </div>
       {/* report table */}
       <div>
-        {activeTab === "All Overview" && <AllOverview />}
         {activeTab === "Daily Reports" && <DailyReport />}
         {activeTab === "Agent Report" && <AgentReport />}
         {activeTab === "Team Report" && <TeamReport />}

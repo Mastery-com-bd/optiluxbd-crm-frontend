@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductReportSkeleton = () => {
   return (
-    <div className="space-y-4 animate-pulse">
+    <div className="space-y-4 animate-pulse p-6">
       <div className="flex flex-col lg:flex-row items-end justify-between gap-4">
         <div className="w-full ">
           <Skeleton className="h-10 w-full rounded-md" />

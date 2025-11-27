@@ -23,7 +23,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import PackageReportSkeleton from "./reportSkeleton/PackageReportSkeleton";
+import PackageReportSkeleton from "../../reports/reportComponent/reportSkeleton/PackageReportSkeleton";
 
 const AllOverview = () => {
   const today = new Date();
@@ -58,7 +58,7 @@ const AllOverview = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-
+  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",

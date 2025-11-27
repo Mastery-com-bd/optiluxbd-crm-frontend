@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useGetPackagesReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
-import { format } from "date-fns";
+
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
+
 import {
   Popover,
   PopoverContent,
@@ -11,33 +12,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import SearchPackageInput from "./inputFields/SearchPackageInput";
-import PackageReportSkeleton from "./reportSkeleton/PackageReportSkeleton";
+import SearchLeaderFields from "./inputFields/SearchLeaderFields";
+import { TAgentReportFilter } from "./AgentReport";
+import { useGetTeamReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
+import { TTeamReport } from "@/types/report/teamReport.types";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import TeamReportSkeleton from "./reportSkeleton/TeamReportSkeleton";
 
-export type TPackageReportFIlter = {
-  sortBy: string;
-  order: string;
-  limit: number;
-  page: number;
-  startDate: string;
-  endDate: string;
-  packageId: string;
-};
-
-const PackageReport = () => {
+const TeamReport = () => {
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date>(today);
 
-  const [filters, setFilters] = useState<TPackageReportFIlter>({
+  const [filters, setFilters] = useState<TAgentReportFilter>({
     sortBy: "created_at",
     order: "desc",
     limit: 10,
     page: 1,
     startDate: format(firstDayOfMonth, "yyyy-MM-dd"),
     endDate: format(today, "yyyy-MM-dd"),
-    packageId: "",
+    teamLeaderId: "",
   });
 
   useEffect(() => {
@@ -54,10 +57,11 @@ const PackageReport = () => {
     });
   }, [startDate, endDate]);
 
-  const { data, isLoading } = useGetPackagesReportsQuery(filters, {
+  const { data, isLoading } = useGetTeamReportsQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
+  const teams = (data?.data?.data as TTeamReport[]) || [];
 
   const resetFilters = () => {
     setFilters({
@@ -67,24 +71,23 @@ const PackageReport = () => {
       page: 1,
       startDate: format(firstDayOfMonth, "yyyy-MM-dd"),
       endDate: format(today, "yyyy-MM-dd"),
-      packageId: "",
+      teamLeaderId: "",
     });
     setStartDate(firstDayOfMonth);
     setEndDate(today);
   };
 
   if (isLoading) {
-    return <PackageReportSkeleton />;
+    return <TeamReportSkeleton />;
   }
   return (
     <div className="space-y-4">
-      <div className="space-y-4">
+      <div className="space-y-4 px-6">
         <div className="flex items-end justify-between gap-4">
-          <SearchPackageInput
+          <SearchLeaderFields
             reportFilter={filters}
             setReportFilter={setFilters}
           />
-
           {/* Start Date */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600 dark:text-gray-300">
@@ -148,41 +151,59 @@ const PackageReport = () => {
           </p>
           <p className="flex flex-col space-y-2">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+              {report?.period?.startDate
+                ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
+                : "No date"}{" "}
+              →{" "}
+              {report?.period?.endDate
+                ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
+                : "No date"}
             </span>
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
-              Total Order
+              Total Teams
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalOrders}
+              {report?.summary?.totalTeams}
             </p>
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
-              Total Package
+              Total Agents
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalPackages}
+              {report?.summary?.totalAgents}
             </p>
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
+                  border-gray-200 dark:border-gray-700"
+          >
+            <h3 className="text-sm text-gray-500 dark:text-gray-400">
+              Today’s Total Sale
+            </h3>
+            <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {report?.summary?.todaysTotalSale}
+            </p>
+          </div>
+
+          <div
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
@@ -194,8 +215,71 @@ const PackageReport = () => {
           </div>
         </div>
       </div>
+
+      <div className="space-y-8 p-6">
+        {teams.map((team, index) => (
+          <div key={index} className="border rounded-xl p-4 shadow-sm">
+            {/* Team Header */}
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold">{team?.teamName}</h2>
+              <p className="text-sm text-gray-500">
+                Leader: {team?.teamLeaderName} ({team?.teamLeaderUserId})
+              </p>
+              <p className="text-xs text-gray-400">{team?.teamLeaderEmail}</p>
+            </div>
+
+            {/* Table */}
+            <Table>
+              <TableCaption>
+                Total Agents: {team?.totalAgents} | Active: {team?.activeAgents}
+              </TableCaption>
+
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Rank</TableHead>
+                  <TableHead>Agent ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Today`s Orders</TableHead>
+                  <TableHead>Single Orders</TableHead>
+                  <TableHead>Double Orders</TableHead>
+                  <TableHead>Payment Count</TableHead>
+                  <TableHead>Paid Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {team.agents.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={9}
+                      className="text-center text-gray-500"
+                    >
+                      No Agents Found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  team.agents.map((agent) => (
+                    <TableRow key={agent?.id}>
+                      <TableCell>{agent?.orderRank}</TableCell>
+                      <TableCell>{agent?.userId}</TableCell>
+                      <TableCell>{agent?.name}</TableCell>
+                      <TableCell>{agent?.email}</TableCell>
+                      <TableCell>{agent?.todaysOrder}</TableCell>
+                      <TableCell>{agent?.singleOrder}</TableCell>
+                      <TableCell>{agent?.doubleOrder}</TableCell>
+                      <TableCell>{agent?.paymentCount}</TableCell>
+                      <TableCell>{agent?.paidAmount}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default PackageReport;
+export default TeamReport;
