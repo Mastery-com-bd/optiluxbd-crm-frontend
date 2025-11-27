@@ -1,202 +1,209 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import {
+    Input
+} from "@/components/ui/input";
+import {
+    Label
+} from "@/components/ui/label";
+import {
+    Button
+} from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardHeader,
-    CardTitle,
+    CardTitle
 } from "@/components/ui/card";
 import {
     Select,
     SelectTrigger,
     SelectValue,
     SelectContent,
-    SelectItem,
+    SelectItem
 } from "@/components/ui/select";
 import { debounce } from "@/utills/debounce";
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
-import { useParams } from "next/navigation";
 import {
-    useGetCustomerByIdQuery,
-    useGetAllCustomerQuery,
+    useGetAllCustomerQuery
 } from "@/redux/features/customers/cutomersApi";
+import {
+    useGetCustomerAddressQuery
+} from "@/redux/features/address/customerAddress";
 import { useGetAllProductQuery } from "@/redux/features/products/productsApi";
+import { useGetAllPackageQuery } from "@/redux/features/package/packageApi";
+import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
 import { CreateCustomer } from "./CreateCustomer";
 import CreateAddress from "./CreateAddress";
-import Loading from "@/components/pages/shared/Loading";
-import { Address, Product } from "@/types/orders";
-import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
 import { toast } from "sonner";
-import { useGetAllPackageQuery } from "@/redux/features/package/packageApi";
+import { Address, Package, Product } from "@/types/orders";
+import { TCustomer } from "@/types/customer.types";
 
+
+// Zod Schema
 const orderSchema = z.object({
     agentId: z.number(),
+    customerId: z.number(),
     addressId: z.number(),
     productId: z.string().optional(),
     packageId: z.string().optional(),
-    quantity: z.number().min(1),
+    quantity: z.number().min(1)
 });
+
 type OrderFormValues = z.infer<typeof orderSchema>;
 
 const CreateOrderForm = () => {
     const user = useAppSelector(currentUser);
 
-    const [customerIdState, setCustomerIdState] = useState<number | null>(null);
-    const [productIdState, setProductIdState] = useState<number | null>(null);
-    const [packageIdState, setPackageIdState] = useState<number | null>(null);
-    const [addressIdState, setAddressIdState] = useState<number | null>(null);
-
-    const [customerName, setCustomerName] = useState("");
-    const [productName, setProductName] = useState("");
-    const [packageName, setPackageName] = useState("");
-    const [addressLabel, setAddressLabel] = useState("");
-
-    const [customerInputValue, setCustomerInputValue] = useState("");
-    const [productSearch, setProductSearch] = useState("");
-    const [packageSearch, setPackageSearch] = useState("");
-
-    const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
-    const [showProductSuggestions, setShowProductSuggestions] = useState(false);
-    const [showPackageSuggestions, setShowPackageSuggestions] = useState(false);
+    const [searchInputs, setSearchInputs] = useState({
+        customer: "",
+        product: "",
+        pack: ""
+    });
 
     const [orderType, setOrderType] = useState<"product" | "package">("product");
-    const [id, setId] = useState<string | undefined>("");
-    const { customerId } = useParams();
-
-    useEffect(() => {
-        if (typeof customerId === "string") {
-            Promise.resolve().then(() => setId(customerId));
-        }
-    }, [customerId]);
-
-    const {
-        data: customerData,
-        isLoading: customerLoading,
-        refetch: refetchCustomer,
-    } = useGetCustomerByIdQuery(id, { skip: id == "0" });
-
-    const addresses: Address[] = customerData?.data?.addresses ?? [];
-
-    useEffect(() => {
-        if (customerData?.data?.id) {
-            Promise.resolve().then(() => {
-                setCustomerIdState(customerData.data.id);
-                setCustomerName(customerData.data.name);
-            });
-        }
-    }, [customerData?.data?.id]);
 
     const {
         register,
         handleSubmit,
         setValue,
         reset,
-        formState: { errors },
+        watch,
+        control,
+        formState: { errors }
     } = useForm<OrderFormValues>({
         resolver: zodResolver(orderSchema),
-        defaultValues: {
-            quantity: 1,
-        },
+        defaultValues: { quantity: 1 }
     });
 
+    // Agent set
     useEffect(() => {
         if (user?.id) {
             setValue("agentId", user.id);
         }
     }, [user?.id]);
 
-    // Customer Search
+    // Watch for selected customerId
+    const customerId = watch("customerId");
+
+    // Customer API
     const [customerFilters, setCustomerFilters] = useState({
         search: "",
         limit: 5,
-        page: 1,
+        page: 1
     });
-    const { data: customerListData } = useGetAllCustomerQuery(customerFilters);
-    const handleCustomerSearch = debounce((val: string) => {
-        setCustomerFilters((prev) => ({ ...prev, search: val }));
-    }, 1000);
 
-    // Product Search
+    const {
+        data: customerData,
+        isLoading: loadingCustomers
+    } = useGetAllCustomerQuery(customerFilters);
+
+    const customerDebounce = debounce((v: string) => {
+        setCustomerFilters(prev => ({ ...prev, search: v }));
+    }, 500);
+
+    const customers = customerData?.data || [];
+
+    // Address API (Dynamic by selected customer)
+    const {
+        data: addressData,
+        isLoading: loadingAddresses
+    } = useGetCustomerAddressQuery(customerId, {
+        skip: !customerId,
+        refetchOnMountOrArgChange: true
+    });
+
+    const addresses = addressData?.data || [];
+
+    // Product API
     const [productFilters, setProductFilters] = useState({
         search: "",
         limit: 5,
-        page: 1,
+        page: 1
     });
-    const { data: productData, isLoading: productLoading } = useGetAllProductQuery(productFilters);
-    const handleProductSearch = debounce((val: string) => {
-        setProductFilters((prev) => ({ ...prev, search: val }));
-    }, 1000);
 
-    // Package Search
+    const {
+        data: productData,
+        isLoading: loadingProducts
+    } = useGetAllProductQuery(productFilters);
+
+    const productDebounce = debounce((v: string) => {
+        setProductFilters(prev => ({ ...prev, search: v }));
+    }, 500);
+
+    const products = productData?.data?.products || [];
+
+    // Package API
     const [packageFilters, setPackageFilters] = useState({
         search: "",
         limit: 5,
-        page: 1,
+        page: 1
     });
-    const { data: packageData } = useGetAllPackageQuery(packageFilters);
-    const handlePackageSearch = debounce((val: string) => {
-        setPackageFilters((prev) => ({ ...prev, search: val }));
-    }, 1000);
 
+    const {
+        data: packageData,
+        isLoading: loadingPackages
+    } = useGetAllPackageQuery(packageFilters, {
+        skip: orderType === "product"
+    });
+
+    const packageDebounce = debounce((v: string) => {
+        setPackageFilters(prev => ({ ...prev, search: v }));
+    }, 500);
+
+    const packages = packageData?.data?.packages || [];
+
+    // Place Order
     const [createOrder] = useCreateOrderMutation();
 
-    const onSubmit = async (formData: OrderFormValues) => {
-        if (!customerIdState) {
-            toast.error("Please select a customer.");
-            return;
-        }
-
+    const onSubmit = async (data: OrderFormValues) => {
+        const toastId = toast.loading("Creating order...");
+        
         const baseData = {
-            agentId: user?.id ?? 0,
-            customerId: customerIdState,
-            addressId: formData.addressId,
-            quantity: formData.quantity,
+            agentId: data.agentId,
+            customerId: data.customerId,
+            addressId: data.addressId,
+            quantity: data.quantity
         };
 
-        const data =
+        const finalData =
             orderType === "product"
-                ? { ...baseData, productId: Number(formData.productId) }
-                : { ...baseData, packageId: Number(formData.packageId) };
-        const toastId = toast.loading("Creating order...");
+                ? { ...baseData, productId: data.productId ? Number(data.productId) : undefined }
+                : { ...baseData, packageId: data.packageId ? Number(data.packageId) : undefined };
+        console.log(finalData);
         try {
-            await createOrder(data).unwrap();
-            toast.success("Order created successfully!", { id: toastId });
+            await createOrder(finalData).unwrap();
+            toast.success("Order placed successfully", { id: toastId });
             reset();
-            setProductSearch("");
-            setProductName("");
-            setProductIdState(null);
-            setPackageSearch("");
-            setPackageName("");
-            setPackageIdState(null);
-        } catch (error: any) {
-            toast.error("Failed to create order.", { id: toastId });
-            console.error("Create order error:", error);
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            toast.error(err?.data?.message || "Something went wrong", { id: toastId });
         }
     };
 
-    if (customerLoading) return <Loading />;
-
     return (
         <>
+            {/* Top bar */}
             <div className="max-w-4xl mx-auto py-4 flex justify-end gap-4">
-                <CreateCustomer setId={setId} refetch={refetchCustomer} />
-                {customerIdState && (
-                    <CreateAddress id={customerIdState} refetch={refetchCustomer} />
-                )}
+                <CreateCustomer
+                    setCustomerFilters={setCustomerFilters}
+                    filters={customerFilters}
+                    onSelectCustomer={(id: number) => setValue("customerId", id)}
+                />
+                {customerId && <CreateAddress id={customerId} />}
             </div>
+
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="max-w-4xl mx-auto py-6">
-                    <Card className="border dark:border-zinc-700 shadow-md">
+                    <Card>
                         <CardHeader>
-                            <CardTitle className="text-xl font-bold">Create New Order</CardTitle>
+                            <CardTitle>Create Order</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid md:grid-cols-2 gap-6">
@@ -204,202 +211,205 @@ const CreateOrderForm = () => {
                                 {/* Order Type */}
                                 <div className="md:col-span-2">
                                     <Label>Order Type</Label>
-                                    <div className="flex gap-6 mt-2">
-                                        <label className="flex items-center gap-2">
+                                    <div className="flex gap-4 mt-2">
+                                        <label className="flex items-center gap-1">
                                             <input
                                                 type="radio"
                                                 value="product"
                                                 checked={orderType === "product"}
                                                 onChange={() => setOrderType("product")}
                                             />
-                                            Product Order
+                                            Product
                                         </label>
-                                        <label className="flex items-center gap-2">
+                                        <label className="flex items-center gap-1">
                                             <input
                                                 type="radio"
                                                 value="package"
                                                 checked={orderType === "package"}
                                                 onChange={() => setOrderType("package")}
                                             />
-                                            Package Order
+                                            Package
                                         </label>
                                     </div>
                                 </div>
 
                                 {/* Customer */}
-                                <div className="relative">
+                                <div>
                                     <Label>Customer</Label>
-                                    {customerIdState ? (
-                                        <div className="flex gap-2">
-                                            <Input value={customerName} readOnly />
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                onClick={() => {
-                                                    setCustomerIdState(null);
-                                                    setCustomerName("");
-                                                    setCustomerInputValue("");
-                                                    setId("0");
-                                                }}
+                                    <Controller
+                                        control={control}
+                                        name="customerId"
+                                        rules={{ required: "Customer is required" }}
+                                        render={({ field }) => (
+                                            <Select
+                                                onValueChange={val => field.onChange(Number(val))}
+                                                value={field.value?.toString()}
                                             >
-                                                Change
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <Input
-                                                placeholder="Search customer"
-                                                value={customerInputValue}
-                                                onChange={(e) => {
-                                                    const val = e.target.value;
-                                                    setCustomerInputValue(val);
-                                                    setShowCustomerSuggestions(true);
-                                                    handleCustomerSearch(val);
-                                                }}
-                                            />
-                                            {showCustomerSuggestions &&
-                                                customerListData?.data?.length > 0 && (
-                                                    <div className="absolute z-50 w-full bg-white dark:bg-zinc-900 shadow border dark:border-zinc-700 max-h-60 overflow-y-auto rounded-md mt-2">
-                                                        {customerListData.data.map((cust: any) => (
-                                                            <div
-                                                                key={cust.id}
-                                                                className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                                                                onClick={() => {
-                                                                    setCustomerIdState(cust.id);
-                                                                    setCustomerName(cust.name);
-                                                                    setCustomerInputValue(cust.name);
-                                                                    setShowCustomerSuggestions(false);
-                                                                    setId(cust.id.toString());
-                                                                }}
-                                                            >
-                                                                {cust.name} ({cust.mobile})
-                                                            </div>
-                                                        ))}
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choose Customer" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <div>
+                                                        <Input
+                                                            placeholder="Search customer..."
+                                                            value={searchInputs.customer}
+                                                            onChange={e => {
+                                                                const val = e.target.value;
+                                                                setSearchInputs(p => ({ ...p, customer: val }));
+                                                                customerDebounce(val);
+                                                            }}
+                                                        />
                                                     </div>
-                                                )}
-                                        </div>
+                                                    {loadingCustomers ? (
+                                                        <p className="px-3 py-2 text-sm">Loading customers...</p>
+                                                    ) : customers.length === 0 ? (
+                                                        <p className="px-3 py-2 text-sm text-muted-foreground">No customers found.</p>
+                                                    ) : (
+                                                        customers.map((c: TCustomer) => (
+                                                            <SelectItem key={c.id} value={c.id.toString()}>
+                                                                {c.name}
+                                                            </SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errors.customerId && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.customerId.message}</p>
                                     )}
                                 </div>
 
                                 {/* Address */}
                                 <div>
                                     <Label>Shipping Address</Label>
-                                    {addresses.length > 0 ? (
-                                        <Select
-                                            onValueChange={(val) => {
-                                                setAddressIdState(Number(val));
-                                                setValue("addressId", Number(val));
-                                                const found = addresses.find((a) => a.id === Number(val));
-                                                if (found) {
-                                                    setAddressLabel(`${found.city}, ${found.street}`);
-                                                }
-                                            }}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select address..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {addresses.map((a) => (
-                                                    <SelectItem key={a.id} value={String(a.id)}>
-                                                        {a.city}, {a.street}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    ) : customerIdState ? (
-                                        <div className="mt-4 text-red-600">
-                                            No addresses found. Please add an address.
-                                        </div>
-                                    ) : null}
+                                    <Controller
+                                        control={control}
+                                        name="addressId"
+                                        rules={{ required: "Address is required" }}
+                                        render={({ field }) => (
+                                            <Select
+                                                onValueChange={val => field.onChange(Number(val))}
+                                                value={field.value?.toString()}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Choose Address" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {loadingAddresses ? (
+                                                        <p className="px-3 py-2 text-sm">Loading addresses...</p>
+                                                    ) : addresses.length === 0 ? (
+                                                        <p className="px-3 py-2 text-sm text-muted-foreground">No address found.</p>
+                                                    ) : (
+                                                        addresses.map((a: Address) => (
+                                                            <SelectItem key={a.id} value={a.id.toString()}>
+                                                                {a.city}, {a.thana}, {a.street}
+                                                            </SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
                                     {errors.addressId && (
-                                        <p className="text-sm text-red-500">
-                                            {errors.addressId.message}
-                                        </p>
+                                        <p className="text-red-500 text-sm mt-1">{errors.addressId.message}</p>
                                     )}
                                 </div>
 
-                                {/* Product or Package */}
-                                {orderType === "product" ? (
-                                    <div className="relative">
+                                {/* Product */}
+                                {orderType === "product" && (
+                                    <div>
                                         <Label>Product</Label>
-                                        <Input
-                                            placeholder="Search product..."
-                                            value={productSearch}
-                                            onChange={(e) => {
-                                                setProductSearch(e.target.value);
-                                                setShowProductSuggestions(true);
-                                                handleProductSearch(e.target.value);
-                                            }}
-                                        />
-                                        <Input className="hidden" {...register("productId")} />
-                                        {showProductSuggestions &&
-                                            productData?.data?.products?.length > 0 && (
-                                                <div className="absolute z-50 w-full bg-white dark:bg-zinc-900 shadow border dark:border-zinc-700 max-h-60 overflow-y-auto rounded-md mt-2">
-                                                    {productData.data.products.map((product: Product) => (
-                                                        <div
-                                                            key={product.id}
-                                                            className="flex items-center gap-3 p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                                                            onClick={() => {
-                                                                setValue("productId", product.id.toString());
-                                                                setProductName(product.name);
-                                                                setProductIdState(product.id);
-                                                                setProductSearch(product.name);
-                                                                setShowProductSuggestions(false);
-                                                            }}
-                                                        >
-                                                            <img
-                                                                src={product.image_url}
-                                                                alt={product.name}
-                                                                className="w-10 h-10 object-cover rounded"
+                                        <Controller
+                                            control={control}
+                                            name="productId"
+                                            rules={{ required: "Product is required" }}
+                                            render={({ field }) => (
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    value={field.value}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Choose Product" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <div>
+                                                            <Input
+                                                                placeholder="Search product..."
+                                                                value={searchInputs.product}
+                                                                onChange={e => {
+                                                                    const val = e.target.value;
+                                                                    setSearchInputs(p => ({ ...p, product: val }));
+                                                                    productDebounce(val);
+                                                                }}
                                                             />
-                                                            <span>{product.name}</span>
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                        {loadingProducts ? (
+                                                            <p className="px-3 py-2 text-sm">Loading products...</p>
+                                                        ) : products.length === 0 ? (
+                                                            <p className="text-sm text-muted-foreground px-3 py-2">No product found.</p>
+                                                        ) : (
+                                                            products.map((product: Product) => (
+                                                                <SelectItem key={product.id} value={product.id.toString()}>
+                                                                    {product.name}
+                                                                </SelectItem>
+                                                            ))
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
                                             )}
+                                        />
                                         {errors.productId && (
-                                            <p className="text-sm text-red-500 mt-1">
-                                                {errors.productId.message}
-                                            </p>
+                                            <p className="text-sm text-red-500 mt-1">{errors.productId.message}</p>
                                         )}
                                     </div>
-                                ) : (
-                                    <div className="relative">
+                                )}
+
+                                {/* Package */}
+                                {orderType === "package" && (
+                                    <div>
                                         <Label>Package</Label>
-                                        <Input
-                                            placeholder="Search package..."
-                                            value={packageSearch}
-                                            onChange={(e) => {
-                                                setPackageSearch(e.target.value);
-                                                setShowPackageSuggestions(true);
-                                                handlePackageSearch(e.target.value);
-                                            }}
-                                        />
-                                        <Input className="hidden" {...register("packageId")} />
-                                        {showPackageSuggestions &&
-                                            packageData?.data?.packages?.length > 0 && (
-                                                <div className="absolute z-50 w-full bg-white dark:bg-zinc-900 shadow border dark:border-zinc-700 max-h-60 overflow-y-auto rounded-md mt-2">
-                                                    {packageData.data.packages.map((pkg: any) => (
-                                                        <div
-                                                            key={pkg.id}
-                                                            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                                                            onClick={() => {
-                                                                setValue("packageId", pkg.id.toString());
-                                                                setPackageName(pkg.name);
-                                                                setPackageIdState(pkg.id);
-                                                                setPackageSearch(pkg.name);
-                                                                setShowPackageSuggestions(false);
-                                                            }}
-                                                        >
-                                                            {pkg.name}
+                                        <Controller
+                                            control={control}
+                                            name="packageId"
+                                            rules={{ required: "Package is required" }}
+                                            render={({ field }) => (
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    value={field.value}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Choose Package" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <div>
+                                                            <Input
+                                                                placeholder="Search package..."
+                                                                value={searchInputs.pack}
+                                                                onChange={e => {
+                                                                    const val = e.target.value;
+                                                                    setSearchInputs(p => ({ ...p, pack: val }));
+                                                                    packageDebounce(val);
+                                                                }}
+                                                            />
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                        {loadingPackages ? (
+                                                            <p className="px-3 py-2 text-sm">Loading packages...</p>
+                                                        ) : packages.length === 0 ? (
+                                                            <p className="text-sm text-muted-foreground px-3 py-2">No package found.</p>
+                                                        ) : (
+                                                            packages.map((p: Package) => (
+                                                                <SelectItem key={p.id} value={p.id.toString()}>
+                                                                    {p.name}
+                                                                </SelectItem>
+                                                            ))
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
                                             )}
+                                        />
                                         {errors.packageId && (
-                                            <p className="text-sm text-red-500 mt-1">
-                                                {errors.packageId.message}
-                                            </p>
+                                            <p className="text-sm text-red-500 mt-1">{errors.packageId.message}</p>
                                         )}
                                     </div>
                                 )}
@@ -407,19 +417,15 @@ const CreateOrderForm = () => {
                                 {/* Quantity */}
                                 <div>
                                     <Label>Quantity</Label>
-                                    <Input
-                                        type="number"
-                                        {...register("quantity", { valueAsNumber: true })}
-                                    />
+                                    <Input type="number" {...register("quantity", { valueAsNumber: true })} />
                                     {errors.quantity && (
-                                        <p className="text-sm text-red-500 mt-1">
-                                            {errors.quantity.message}
-                                        </p>
+                                        <p className="text-sm text-red-500 mt-1">{errors.quantity.message}</p>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="text-end pt-8">
+                            {/* Submit */}
+                            <div className="text-end pt-6">
                                 <Button type="submit">Submit Order</Button>
                             </div>
                         </CardContent>

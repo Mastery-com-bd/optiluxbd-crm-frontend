@@ -173,6 +173,7 @@ export const crmRoutes: NavRoute[] = [
       "ORDERS DELETE",
       "ORDERS VIEW OWN",
     ],
+    roles: ["ADMIN", "LEADER"],
     children: [
       {
         title: "All Courier",

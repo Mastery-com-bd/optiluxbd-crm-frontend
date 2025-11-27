@@ -71,6 +71,13 @@ const categoryApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["subcategories"],
         }),
+
+        getCategoryAndSubcategory: builder.query({
+            query: (id) => ({
+                url: `/categories/${id}`,
+                method: "GET",
+            })
+        })
     }),
 });
 
@@ -86,4 +93,6 @@ export const {
     useDeleteSubCategoryMutation,
     useUpdateSubCategoryMutation,
     useAddSubCategoryMutation,
+
+    useGetCategoryAndSubcategoryQuery,
 } = categoryApi;

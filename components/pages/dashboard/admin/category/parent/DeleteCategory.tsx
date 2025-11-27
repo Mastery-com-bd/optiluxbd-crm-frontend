@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -11,22 +12,22 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import { Button } from "@/components/ui/button"
-import { useDeleteCategoryMutation } from "@/redux/features/category/categoryApi"
 import { Trash2 } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 
 type Props = {
-    id: number
+    id: number,
+    func: (values: any) => Promise<any>,
+    isLoading: boolean,
 }
 
-const DeleteCategory = ({ id }: Props) => {
-    const [deleteCategory, { isLoading }] = useDeleteCategoryMutation()
+const DeleteCategory = ({ id, func, isLoading }: Props) => {
     const [open, setOpen] = useState(false)
 
     async function onDelete() {
         try {
-            toast.promise(deleteCategory(id).unwrap(), {
+            toast.promise(func(id), {
                 loading: "Deleting category...",
                 success: "Category deleted successfully!",
                 error: "Failed to delete category.",
