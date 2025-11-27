@@ -42,6 +42,14 @@ const adminLeedsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["leads", "unassigned customers", "customers"],
     }),
+    assignTeamtarget: builder.mutation({
+      query: (data) => ({
+        url: `/allocation/admin/team/target`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["leads", "unassigned customers", "customers"],
+    }),
   }),
 });
 
@@ -51,4 +59,5 @@ export const {
   useAssignAGentToLeaderMutation,
   useRemoveAgentsFromALeaderMutation,
   useAssignCustomerToLeadersMutation,
+  useAssignTeamtargetMutation,
 } = adminLeedsApi;

@@ -61,7 +61,6 @@ const SearchLeaderFields = ({
                   key={user.id}
                   onClick={() => {
                     const id = user.id.toString();
-                    console.log(id);
                     if (selectedLeaderId === id) {
                       setSelectedLeaderId(null);
                       setReportFilter({ ...reportFilter, teamLeaderId: "" });
