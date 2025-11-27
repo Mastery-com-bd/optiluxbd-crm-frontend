@@ -14,66 +14,77 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateSteadFastOrderMutation } from "@/redux/features/couriar/couriarApi";
+import { useCreateCouriarWithSteadFastMutation } from "@/redux/features/couriar/couriarApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
-  invoice: z.string().min(1, "Invoice is required"),
-  recipient_name: z.string().min(1, "Recipient name is required"),
-  recipient_phone: z
+  orderId: z.string().min(1, "Order ID is required"),
+  recipientName: z.string().min(1, "Recipient name is required"),
+  recipientPhone: z.string().min(1, "Recipient phone is required"),
+  recipientAddress: z.string().min(1, "Recipient address is required"),
+  codAmount: z
     .string()
-    .min(1, "Recipient phone is required")
-    .regex(
-      /^(\+8801|01)[0-9]{9}$/,
-      "Must be a valid Bangladeshi number (e.g. +8801XXXXXXXXX or 01XXXXXXXXX)"
-    ),
-  recipient_address: z.string().min(1, "Recipient address is required"),
-  cod_amount: z.string().min(1, "COD amount is required"),
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "COD amount must be a non-negative number",
+    })
+    .min(1, "COD amount is required"),
+  deliveryCharge: z
+    .string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Delivery charge must be a non-negative number",
+    })
+    .min(1, "Delivery charge is required"),
   note: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function SteadfastCreateOrder() {
+export default function LocalCreateWithSteadfast() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      invoice: "",
-      recipient_name: "",
-      recipient_phone: "",
-      recipient_address: "",
-      cod_amount: "",
+      orderId: "",
+      recipientName: "",
+      recipientPhone: "",
+      recipientAddress: "",
+      codAmount: "",
+      deliveryCharge: "",
       note: "",
     },
   });
 
-  const [createSteadFastOrder] = useCreateSteadFastOrderMutation();
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [createCouriarWithSteadFast] = useCreateCouriarWithSteadFastMutation();
 
   const onSubmit = async (values: FormValues) => {
-
-    const payload = {
-      ...values,
-      cod_amount: Number(values.cod_amount),
-    }
-
+    setIsLoading(true);
     toast.loading("Saving courier...");
+
     try {
-      const res = await createSteadFastOrder(payload).unwrap();
-      console.log("Create Steadfast Order Response", res);
+      const payload = {
+        ...values,
+        orderId: Number(values.orderId),
+        codAmount: Number(values.codAmount),
+        deliveryCharge: Number(values.deliveryCharge),
+      };
+      const res = await createCouriarWithSteadFast(payload).unwrap();
+      console.log("Create Courier Response", res);
       if (res?.success) {
         toast.dismiss();
-        toast.success(res?.message, { duration: 3000 });
-        router.refresh();
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        form.reset();
+        setIsLoading(false);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -83,20 +94,24 @@ export default function SteadfastCreateOrder() {
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
       toast.dismiss();
+      form.reset();
       toast.error(errorInfo, { duration: 3000 });
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="mx-auto p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Create Steadfast Order</h1>
+        <h1 className="text-xl font-semibold">Create Courier with Steadfast</h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Steadfast Order</CardTitle>
+          <CardTitle>Local + Steadfast</CardTitle>
           <CardDescription>
-            POST /api/v1/couriers/steadfast/create-order
+            POST /api/v1/couriers/with-steadfast
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -107,12 +122,12 @@ export default function SteadfastCreateOrder() {
             >
               <FormField
                 control={form.control}
-                name="recipient_name"
+                name="recipientName"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>Recipient Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} />
+                      <Input placeholder="Jane Doe" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,12 +135,12 @@ export default function SteadfastCreateOrder() {
               />
               <FormField
                 control={form.control}
-                name="invoice"
+                name="orderId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Invoice</FormLabel>
+                    <FormLabel>Order ID</FormLabel>
                     <FormControl>
-                      <Input placeholder="INV-1001" {...field} />
+                      <Input placeholder="ORD-1002" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,12 +148,12 @@ export default function SteadfastCreateOrder() {
               />
               <FormField
                 control={form.control}
-                name="recipient_phone"
+                name="recipientPhone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Recipient Phone</FormLabel>
                     <FormControl>
-                      <Input placeholder="+8801XXXXXXXXX" maxLength={11} {...field} />
+                      <Input placeholder="+8801XXXXXXXXX" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -146,7 +161,7 @@ export default function SteadfastCreateOrder() {
               />
               <FormField
                 control={form.control}
-                name="recipient_address"
+                name="recipientAddress"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
                     <FormLabel>Recipient Address</FormLabel>
@@ -159,10 +174,23 @@ export default function SteadfastCreateOrder() {
               />
               <FormField
                 control={form.control}
-                name="cod_amount"
+                name="codAmount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>COD Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="0" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="deliveryCharge"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Delivery Charge</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0" {...field} />
                     </FormControl>
@@ -184,15 +212,12 @@ export default function SteadfastCreateOrder() {
                 )}
               />
               <div className="md:col-span-2 flex justify-end">
-                <Button
-                  disabled={form.formState.isSubmitting}
-                  type="submit"
-                >
-                  {form.formState.isSubmitting && (
-                    <Loader2 className="animate-spin" />
-                  )}
-                  {form.formState.isSubmitting ? "Saving..." : "Submit"}
-                </Button>
+                <div className="md:col-span-2 flex justify-end">
+                  <Button disabled={isLoading} type="submit">
+                    {isLoading && <Loader2 className="animate-spin" />}
+                    {isLoading ? "Saving..." : "Submit"}
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>
