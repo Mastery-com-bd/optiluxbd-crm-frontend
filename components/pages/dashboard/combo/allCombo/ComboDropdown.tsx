@@ -52,14 +52,17 @@ const ComboDropdown = ({ id, activity }: { id: number; activity: boolean }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
           <MoreVertical className="w-5 h-5" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem className="flex items-center gap-2">
           <Link href={`/dashboard/combo/${id}`}>
-            <Button variant="ghost" className="text-left hover:bg-transparent">
+            <Button
+              variant="ghost"
+              className="text-left hover:bg-transparent cursor-pointer"
+            >
               View Details
             </Button>
           </Link>

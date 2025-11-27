@@ -79,6 +79,7 @@ const UserRoleEditComponent = ({ userInfo }: { userInfo: IProfileInfo }) => {
       userId: userInfo?.id,
     };
     const toastId = toast.loading("removing role status");
+
     try {
       const res = await removeRoleFromUser({ roleId, data }).unwrap();
       if (res?.success) {

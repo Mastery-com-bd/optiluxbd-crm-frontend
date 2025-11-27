@@ -58,7 +58,7 @@ const AllOverview = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
+
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -329,7 +329,7 @@ const AllOverview = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {report.agentPerformance.topAgents.map((agent: any) => (
+                    {report?.agentPerformance?.topAgents.map((agent: any) => (
                       <tr
                         key={agent.id}
                         className="border-t border-gray-200 dark:border-gray-700"

@@ -12,7 +12,7 @@ const DashboardHome = () => {
   const [activeTab, setActiveTab] = useState<TTabs | string>("All Statistics");
 
   return (
-    <div className="min-h-screen px-4 md:p-6 lg:px-8 ">
+    <div className="min-h-screen px-4 md:p-6 lg:px-8 space-y-4">
       <div className="flex items-center gap-1">
         {tabs.map((tab) => (
           <Button

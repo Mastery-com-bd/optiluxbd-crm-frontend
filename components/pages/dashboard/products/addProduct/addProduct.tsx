@@ -31,6 +31,7 @@ import {
   useAddProductImageMutation,
   useAddProductMutation,
 } from "@/redux/features/products/productsApi"
+import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery } from "@/redux/features/category/categoryApi"
 
 const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
@@ -67,6 +68,7 @@ const AddProduct = () => {
     handleSubmit,
     control,
     reset,
+    watch,
     formState: { errors },
   } = useForm<InferedFormData>({
     resolver: zodResolver(productSchema),
@@ -142,7 +144,14 @@ const AddProduct = () => {
     setImage(null)
     setPreviewUrl(null)
   }
+  const { data: categories, data: isCategoryLoading } = useGetAllCategoryQuery(undefined);
 
+  const [parentCategory, setParentCategory] = useState<number | null>(null);
+  const { data: subcategoriesData, isLoading: isSubcategoryLoading } = useGetCategoryAndSubcategoryQuery(
+    parentCategory,
+    { skip: !parentCategory, refetchOnMountOrArgChange: true, }
+  )
+  const subCategories = subcategoriesData?.subCategories;
   return (
     <div className="min-h-screen bg-background text-foreground p-4 lg:p-8">
       <div className="max-w-6xl w-full mx-auto">
@@ -318,16 +327,27 @@ const AddProduct = () => {
                     name="category"
                     rules={{ required: true }}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setParentCategory(Number(value));
+                        }}
+                        value={field.value}
+                      >
                         <SelectTrigger className="mt-2">
                           <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="electronics">Electronics</SelectItem>
-                          <SelectItem value="furniture">Furniture</SelectItem>
-                          <SelectItem value="fashion">Fashion</SelectItem>
-                          <SelectItem value="home">Home</SelectItem>
-                        </SelectContent>
+                        {
+                          <SelectContent>
+                            {
+                              categories?.map((cat: { id: number; name: string }) => (
+                                <SelectItem key={cat.id} value={String(cat.id)}>
+                                  {cat.name}
+                                </SelectItem>
+                              ))
+                            }
+                          </SelectContent>
+                        }
                       </Select>
                     )}
                   />
@@ -342,13 +362,26 @@ const AddProduct = () => {
                     name="subCategory"
                     rules={{ required: true }}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={!parentCategory}
+                      >
                         <SelectTrigger className="mt-2">
                           <SelectValue placeholder="Pick a sub category" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="chairs">Chairs</SelectItem>
-                          <SelectItem value="tables">Tables</SelectItem>
+                          {isSubcategoryLoading ? (
+                            <div>
+                              Loading subcategories...
+                            </div>
+                          ) : (
+                            subCategories?.map((sub: { id: number; name: string }) => (
+                              <SelectItem key={sub.id} value={sub.name}>
+                                {sub.name}
+                              </SelectItem>
+                            ))
+                          )}
                         </SelectContent>
                       </Select>
                     )}

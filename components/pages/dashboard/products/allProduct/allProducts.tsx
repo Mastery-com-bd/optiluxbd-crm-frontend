@@ -40,6 +40,7 @@ import {
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 
 const AllProducts = () => {
   const user = useAppSelector(currentUser);
@@ -55,8 +56,8 @@ const AllProducts = () => {
 
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
-  const [viewMode, setViewMode] = useState("list");
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  // const [viewMode, setViewMode] = useState("list");
+  // const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteProduct] = useDeleteProductMutation();
   const { data: productRes, isLoading } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -72,6 +73,11 @@ const AllProducts = () => {
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };
+  //category
+  const { data: categories } = useGetSubcategoryQuery(undefined);
+
+
+
 
   const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
@@ -115,21 +121,21 @@ const AllProducts = () => {
     </div>
   );
 
-  const toggleSelectAll = () => {
-    if (selectedProducts.length === PRODUCTS.length) {
-      setSelectedProducts([]);
-    } else {
-      setSelectedProducts(PRODUCTS.map((p: any) => p.id));
-    }
-  };
+  // const toggleSelectAll = () => {
+  //   if (selectedProducts.length === PRODUCTS.length) {
+  //     setSelectedProducts([]);
+  //   } else {
+  //     setSelectedProducts(PRODUCTS.map((p: any) => p.id));
+  //   }
+  // };
 
-  const toggleSelectProduct = (id: number) => {
-    if (selectedProducts.includes(id)) {
-      setSelectedProducts(selectedProducts.filter((pid) => pid !== id));
-    } else {
-      setSelectedProducts([...selectedProducts, id]);
-    }
-  };
+  // const toggleSelectProduct = (id: number) => {
+  //   if (selectedProducts.includes(id)) {
+  //     setSelectedProducts(selectedProducts.filter((pid) => pid !== id));
+  //   } else {
+  //     setSelectedProducts([...selectedProducts, id]);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
@@ -185,13 +191,9 @@ const AllProducts = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Home & Office">Home & Office</SelectItem>
-                  <SelectItem value="Fashion">Fashion</SelectItem>
-                  <SelectItem value="Fitness">Fitness</SelectItem>
-                  <SelectItem value="Gaming">Gaming</SelectItem>
-                  <SelectItem value="Furniture">Furniture</SelectItem>
-                  <SelectItem value="Toys">Toys</SelectItem>
+                  {
+                    categories?.map((category:{id:number, name:string}) => <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>)
+                  }
                 </SelectContent>
               </Select>
 
@@ -231,7 +233,7 @@ const AllProducts = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border bg-muted">
-                    <th className="px-4 py-3 text-left">
+                    {/* <th className="px-4 py-3 text-left">
                       <input
                         type="checkbox"
                         className="rounded border-border"
@@ -241,7 +243,7 @@ const AllProducts = () => {
                         }
                         onChange={toggleSelectAll}
                       />
-                    </th>
+                    </th> */}
                     {[
                       "Product",
                       "SKU",
@@ -268,20 +270,20 @@ const AllProducts = () => {
                       key={product.id}
                       className="border-b border-muted hover:bg-muted/50 transition-colors"
                     >
-                      <td className="px-4 py-3">
+                      {/* <td className="px-4 py-3">
                         <input
                           type="checkbox"
                           className="rounded border-border"
                           checked={selectedProducts.includes(product.id)}
                           onChange={() => toggleSelectProduct(product.id)}
                         />
-                      </td>
+                      </td> */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Image
                             src={
                               product?.image_url ||
-                              "https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"
+                              "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
                             }
                             alt={product.name}
                             width={48}

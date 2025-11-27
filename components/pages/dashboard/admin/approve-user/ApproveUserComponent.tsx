@@ -41,8 +41,6 @@ const ApproveUserComponent = () => {
     totalPages: 1,
     total: 0,
   };
-  console.log(users);
-  console.log(pagination);
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
