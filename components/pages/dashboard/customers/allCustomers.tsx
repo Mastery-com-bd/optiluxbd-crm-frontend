@@ -1,8 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
+import { TCustomer } from "@/types/customer.types";
 import { debounce } from "@/utills/debounce";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +20,6 @@ import { useState } from "react";
 import CustomerTable from "./components/customerTable";
 import CustomerPagination from "./components/pagination";
 import TableSkeleton from "./tableSchaliton";
-import { TCustomer } from "@/types/customer.types";
 
 // Define the customer type
 
@@ -74,8 +72,8 @@ export default function AllCustomersPage() {
 
         {/* Filter Panel */}
         <Card className="border-0.5 bg-transparent shadow-none">
-          <CardContent className="p-0">
-            <div className="flex items-end justify-between ">
+          <CardContent className="p-0 space-y-8">
+            <div className="flex flex-col gap-5">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -88,7 +86,7 @@ export default function AllCustomersPage() {
                 />
               </div>
               {/* Customer Level Filter */}
-              <div className=" grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+              <div className="flex flex-wrap items-center gap-5">
                 <div className="sm:col-span-1">
                   <Label className="text-md font-semibold mb-1">Level</Label>
                   <Select
@@ -213,9 +211,9 @@ export default function AllCustomersPage() {
                   </Button>
                 </div>
               </div>
-              <div className="text-muted-foreground text-sm">
-                Showing {data?.pagination.limit} of {data?.pagination.total}{" "}
-              </div>
+            </div>
+            <div className="text-muted-foreground text-sm">
+              Showing {data?.pagination.limit} of {data?.pagination.total}{" "}
             </div>
           </CardContent>
         </Card>
