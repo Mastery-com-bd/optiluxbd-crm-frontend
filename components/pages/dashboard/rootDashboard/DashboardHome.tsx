@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DashboardStats from "./dashboardStats/DashboardStats";
-import AllReportsComponent from "./reports/AllReportsComponent";
+import AllOverview from "./dashboardStats/AllOverview";
 
-const tabs = ["All Statistics", "All Reports"];
-type TTabs = "All Statistics" | "All Reports";
+const tabs = ["All Statistics", "All Overview"];
+type TTabs = "All Statistics" | "All Overview";
 
 const DashboardHome = () => {
   const [activeTab, setActiveTab] = useState<TTabs | string>("All Statistics");
@@ -26,7 +26,7 @@ const DashboardHome = () => {
         ))}
       </div>
       {activeTab === "All Statistics" && <DashboardStats />}
-      {activeTab === "All Reports" && <AllReportsComponent />}
+      {activeTab === "All Overview" && <AllOverview />}
     </div>
   );
 };

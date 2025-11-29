@@ -29,9 +29,21 @@ export interface NavRoute {
 export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
-    path: "/dashboard",
     icon: LayoutDashboard,
+    permissions: ["REPORTS VIEW"],
     roles: ["ADMIN"],
+    children: [
+      {
+        title: "All Overview",
+        path: "/dashboard",
+        permissions: ["REPORTS VIEW"],
+      },
+      {
+        title: "All Reports",
+        path: "/dashboard/reports",
+        permissions: ["REPORTS VIEW"],
+      },
+    ],
   },
 
   //CATEGORIES
@@ -120,7 +132,7 @@ export const crmRoutes: NavRoute[] = [
       {
         title: "Create Combo",
         path: "/dashboard/combo/create-combo",
-        permissions: ["PACKAGES CREATE", "PRODUCTS VIEW"],
+        permissions: ["PACKAGES CREATE"],
       },
     ],
   },
@@ -176,8 +188,23 @@ export const crmRoutes: NavRoute[] = [
     roles: ["ADMIN", "LEADER"],
     children: [
       {
-        title: "All Courier",
-        path: "/dashboard/couriar",
+        title: "Local",
+        path: "/dashboard/couriar/local",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "Steadfast",
+        path: "/dashboard/couriar/steadFast",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "Pathao",
+        path: "/dashboard/couriar/pathao",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "RedX",
+        path: "/dashboard/couriar/redx",
         permissions: ["ORDERS VIEW"],
       },
     ],

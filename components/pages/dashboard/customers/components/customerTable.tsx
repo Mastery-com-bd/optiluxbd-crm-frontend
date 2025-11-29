@@ -91,12 +91,12 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {customers.map((customer, idx) => (
+            {customers.map((customer) => (
               <TableRow key={customer.id} className="group">
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <div className="h-6 w-6 flex items-center justify-center rounded-sm border text-primary font-semibold text-sm">
-                      {idx + 1}
+                    <div className="h-6 w-fit px-2 flex items-center justify-center rounded-sm border text-primary font-semibold text-sm">
+                      {customer.id}
                     </div>
                     <div>
                       <p className="font-medium text-foreground">
