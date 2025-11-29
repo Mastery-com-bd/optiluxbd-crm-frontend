@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export type TProductReportSuymmary = {
-  totalOrders: number;
+export type TProductPerformanceSummary = {
   totalProducts: number;
-  totalQuantitySold: number;
+  totalOrders: number;
   totalRevenue: number;
+  totalQuantitySold: number;
 };
 
-export type TProductPerformanceItem = {
+export interface IProductPerformanceItem {
   productId: number;
   productName: string;
   productSKU: string;
@@ -19,8 +18,8 @@ export type TProductPerformanceItem = {
   totalRevenue: number;
   totalCommissionPaid: number;
   uniqueCustomers: number;
-  agents: Record<string, any>;
-  cities: Record<string, any>;
+  agents: Record<string, unknown>;
+  cities: Record<string, unknown>;
   deliverySuccessRate: string;
   returnRate: string;
   averageOrderValue: string;
@@ -28,9 +27,9 @@ export type TProductPerformanceItem = {
   topAgentSales: number;
   topSalesCity: string | null;
   topSalesCityCount: number;
-};
+}
 
-export type TProductPerformence = {
-  summary: TProductReportSuymmary;
-  topProducts: TProductPerformanceItem[];
+export type TProductPerformance = {
+  summary: TProductPerformanceSummary;
+  topProducts: IProductPerformanceItem[];
 };

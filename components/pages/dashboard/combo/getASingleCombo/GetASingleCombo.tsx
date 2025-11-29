@@ -59,7 +59,7 @@ const GetASingleCombo = ({ id }: { id: string }) => {
   const [tagInput, setTagInput] = useState(formData?.tags.join(", ") || "");
 
   useEffect(() => {
-    if (formData?.tags) {
+    if (formData?.tags?.length) {
       Promise.resolve().then(() => {
         setTagInput(formData.tags.join(", "));
       });
@@ -178,7 +178,7 @@ const GetASingleCombo = ({ id }: { id: string }) => {
               </p>
               <p className="font-semibold text-green-600 dark:text-green-400 flex items-center gap-1">
                 <DollarSign className="w-4 h-4" />
-                {parseFloat(ComboPackage?.totalPrice).toLocaleString()} ৳
+                {parseFloat(ComboPackage?.packagePrice).toLocaleString()} ৳
               </p>
             </div>
             <div className="space-y-1">

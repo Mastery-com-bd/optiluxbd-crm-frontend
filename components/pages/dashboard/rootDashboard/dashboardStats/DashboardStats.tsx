@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
   ArrowUp,
+  CalendarIcon,
   CreditCard,
   Download,
   Plus,
@@ -23,26 +25,94 @@ import {
   YAxis,
 } from "recharts";
 import { format } from "date-fns";
-import DashboardHistoryModal from "./DashboardHistoryModal";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useGetOverviewReportsQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
+import { useEffect, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  AllReportData,
+  TAgentPerformanceType,
+} from "@/types/overAllReport/agentPerformanceType";
+import { TCouriarperformanceType } from "@/types/overAllReport/couriarPerformanceType";
+import { TGeographicPerformance } from "@/types/overAllReport/geographicOerformance";
+import AgentPerformence from "../allOverviewComponents/AgentPerformence";
+import { TProductPerformence } from "@/types/report/productReportdataTypes";
+import ProductPerofrmence from "../allOverviewComponents/ProductPerofrmence";
+import CouriarPerformence from "../allOverviewComponents/CouriarPerformence";
+import GeographicalComponent from "../allOverviewComponents/GeographicalComponent";
+
+const tabs = [
+  "Agent Performence",
+  "Product Performence",
+  "Courier Performence",
+  "Geographical Distribution",
+];
+type TTabs =
+  | "Agent Performence"
+  | "Product Performence"
+  | "Courier Performence"
+  | "Geographical Distribution";
 
 const DashboardStats = () => {
+  const [activeTab, setActiveTab] = useState<TTabs | string>(
+    "Agent Performence"
+  );
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const { data, isLoading } = useGetOverviewReportsQuery(
-    {
+  const [startDate, setStartDate] = useState<Date>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date>(today);
+
+  // get all overview data module
+  const [filters, setFilters] = useState({
+    sortBy: "created_at",
+    order: "desc",
+    limit: 10,
+    page: 1,
+    startDate: format(firstDayOfMonth, "yyyy-MM-dd"),
+    endDate: format(today, "yyyy-MM-dd"),
+  });
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      if (!startDate || !endDate) return;
+      setFilters((prev: any) => ({
+        ...prev,
+        startDate: format(startDate, "yyyy-MM-dd"),
+        endDate: format(endDate, "yyyy-MM-dd"),
+        page: 1,
+      }));
+    });
+  }, [startDate, endDate]);
+  const { data, isLoading } = useGetOverviewReportsQuery(filters, {
+    refetchOnMountOrArgChange: false,
+  });
+  const report = data?.data || AllReportData;
+  const agentPerformance = report?.agentPerformance as TAgentPerformanceType;
+  const couriarPerformance =
+    report?.courierPerformance as TCouriarperformanceType;
+  const profuctPerformance = report?.productPerformance as TProductPerformence;
+  const geographicDistribution =
+    report?.geographicDistribution as TGeographicPerformance;
+  const resetFilters = () => {
+    setFilters({
+      sortBy: "created_at",
+      order: "desc",
+      limit: 10,
+      page: 1,
       startDate: format(firstDayOfMonth, "yyyy-MM-dd"),
       endDate: format(today, "yyyy-MM-dd"),
-    },
-    {
-      refetchOnMountOrArgChange: false,
-    }
-  );
-  const overview = data?.data;
-  console.log(data);
+    });
+    setStartDate(firstDayOfMonth);
+    setEndDate(today);
+  };
+
+  const COLORS = ["#4f46e5", "#10b981", "#f59e0b", "#ef4444"];
 
   const salesData = [
     { month: "Jan", online: 1200, instore: 2100, projected: 3100 },
@@ -124,6 +194,10 @@ const DashboardStats = () => {
     { name: "Nina Patel", calls: 198, conversions: 82, rate: "41%" },
   ];
 
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Delivered":
@@ -138,98 +212,106 @@ const DashboardStats = () => {
   };
 
   return (
-    <div className="w-full mx-auto ">
-      {/* Header */}
-      {/* <div className="flex items-center justify-end pb-4">
-        <DashboardHistoryModal />
-      </div> */}
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-5 mb-6">
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {overview?.agentPerformance?.summary?.totalOrders ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Orders
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-              <CreditCard className="w-6 h-6 text-indigo-600 dark:text-indigo-300" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {overview?.agentPerformance?.summary?.totalRevenue ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Revenue
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
-              <ShoppingCart className="w-6 h-6 text-teal-600 dark:text-teal-300" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {overview?.productPerformance?.summary?.totalQuantitySold ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Quantity Sold
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600 dark:text-blue-300" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {overview?.courierPerformance?.summary?.totalShipments ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Shipment
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-              <RefreshCw className="w-6 h-6 text-amber-600 dark:text-amber-300" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {overview?.geographicDistribution?.summary?.totalLocations ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Location
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-              <RefreshCw className="w-6 h-6 text-amber-600 dark:text-amber-300" />
-            </div>
-          </div>
-        </Card>
+    <section className="w-full mx-auto space-y-4">
+      <div className="flex flex-col items-center">
+        <p className="font-semibold text-gray-900 dark:text-white">
+          {report?.reportType}
+        </p>
+        <p className="flex flex-col space-y-2">
+          <span className="font-semibold text-gray-900 dark:text-white">
+            {report?.period?.startDate
+              ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
+              : "No date"}{" "}
+            →{" "}
+            {report?.period?.endDate
+              ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
+              : "No date"}
+          </span>
+        </p>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-        {/* Sales Distribution Pie Chart */}
+      <div className="flex items-end gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-600 dark:text-gray-300">
+            Start Date
+          </label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="justify-start">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {format(startDate, "yyyy-MM-dd")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={startDate}
+                onSelect={(date: any) => date && setStartDate(date)}
+                disabled={(date) => date > new Date()}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-600 dark:text-gray-300">
+            End Date
+          </label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="justify-start">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {format(endDate, "yyyy-MM-dd")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={endDate}
+                onSelect={(date: any) => date && setEndDate(date)}
+                disabled={(date) => date > new Date()}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-transparent">Reset</label>
+          <Button variant="destructive" className="px-4" onClick={resetFilters}>
+            Reset
+          </Button>
+        </div>
+      </div>
+
+      {/* tabs button */}
+      <div className="flex items-center gap-1">
+        {tabs.map((tab) => (
+          <Button
+            key={tab}
+            variant={activeTab === tab ? "default" : "ghost"}
+            className=" justify-start cursor-pointer"
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </Button>
+        ))}
+      </div>
+
+      {activeTab === "Agent Performence" && (
+        <AgentPerformence agentPerformance={agentPerformance} />
+      )}
+      {activeTab === "Product Performence" && (
+        <ProductPerofrmence profuctPerformance={profuctPerformance} />
+      )}
+      {activeTab === "Courier Performence" && (
+        <CouriarPerformence couriarPerformance={couriarPerformance} />
+      )}
+      {activeTab === "Geographical Distribution" && (
+        <GeographicalComponent
+          geographicDistribution={geographicDistribution}
+        />
+      )}
+
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
           <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">
             Total Sales
@@ -277,8 +359,6 @@ const DashboardStats = () => {
             ))}
           </div>
         </Card>
-
-        {/* Sales Analytics Chart */}
         <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -348,8 +428,6 @@ const DashboardStats = () => {
           </ResponsiveContainer>
         </Card>
       </div>
-
-      {/* Call Center Executives */}
       <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 mb-6 rounded-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
@@ -366,7 +444,7 @@ const DashboardStats = () => {
               key={index}
               className="group relative p-5 bg-linear-to-br from-indigo-50 dark:from-indigo-950 via-white dark:via-gray-800 to-purple-50 dark:to-purple-950 rounded-xl border border-indigo-100 dark:border-indigo-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
-              {/* Header */}
+
               <div className="flex items-center justify-between mb-4">
                 <Avatar className="w-10 h-10 shadow-md">
                   <AvatarImage src="https://github.com/shadcn.png" />
@@ -381,13 +459,9 @@ const DashboardStats = () => {
                   </p>
                 </div>
               </div>
-
-              {/* Name */}
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 text-sm truncate">
                 {exec.name}
               </h3>
-
-              {/* Metrics */}
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">
@@ -416,8 +490,6 @@ const DashboardStats = () => {
                   </span>
                 </div>
               </div>
-
-              {/* Progress bar */}
               <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
@@ -428,10 +500,7 @@ const DashboardStats = () => {
           ))}
         </div>
       </Card>
-
-      {/* Tables Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Product Inventory */}
         <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -504,8 +573,6 @@ const DashboardStats = () => {
             </table>
           </div>
         </Card>
-
-        {/* Recent Orders */}
         <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -566,8 +633,8 @@ const DashboardStats = () => {
             ))}
           </div>
         </Card>
-      </div>
-    </div>
+      </div> */}
+    </section>
   );
 };
 

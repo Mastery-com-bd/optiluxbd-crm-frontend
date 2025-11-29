@@ -1,12 +1,18 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-const ProductReportSkeleton = () => {
+const TeamReportSkeleton = () => {
   return (
-    <section>
+    <section className="p-6">
       <div className="space-y-6">
-        {/* 🔍 Filters Row */}
-        <div className="flex flex-col sm:flex-row items-end justify-between gap-4">
-          {/* Search */}
+        <div className="flex flex-col lg:flex-row items-end justify-between gap-4">
           <div className="w-full sm:w-1/3">
             <Skeleton className="h-10 w-full rounded-md" />
           </div>
@@ -30,13 +36,11 @@ const ProductReportSkeleton = () => {
           </div>
         </div>
 
-        {/* Report Title */}
         <div className="flex flex-col items-center gap-2">
           <Skeleton className="h-5 w-40 rounded-md" />
           <Skeleton className="h-4 w-56 rounded-md" />
         </div>
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div
             className="border rounded-xl p-4 shadow-sm 
@@ -75,8 +79,51 @@ const ProductReportSkeleton = () => {
           </div>
         </div>
       </div>
+
+      <div className="space-y-8 ">
+        {Array.from({ length: 1 }).map((_, i) => (
+          <div
+            key={i}
+            className="border rounded-xl p-4 shadow-sm 
+                     bg-white dark:bg-gray-900 
+                     border-gray-200 dark:border-gray-700"
+          >
+            <div className="mb-4 space-y-2">
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-4 w-52" />
+              <Skeleton className="h-3 w-44" />
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {Array.from({
+                    length: 9,
+                  }).map((_, th) => (
+                    <TableHead key={th}>
+                      <Skeleton className="h-4 w-20" />
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {Array.from({ length: 8 }).map((_, row) => (
+                  <TableRow key={row}>
+                    {Array.from({ length: 9 }).map((_, col) => (
+                      <TableCell key={col}>
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
 
-export default ProductReportSkeleton;
+export default TeamReportSkeleton;

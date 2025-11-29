@@ -23,7 +23,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import PackageReportSkeleton from "./reportSkeleton/PackageReportSkeleton";
+import PackageReportSkeleton from "../../reports/reportComponent/reportSkeleton/PackageReportSkeleton";
 
 const AllOverview = () => {
   const today = new Date();
@@ -58,7 +58,7 @@ const AllOverview = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-
+  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -329,17 +329,21 @@ const AllOverview = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {report?.agentPerformance?.topAgents.map((agent: any) => (
-                      <tr
-                        key={agent.id}
-                        className="border-t border-gray-200 dark:border-gray-700"
-                      >
-                        <td className="px-3 py-2">{agent.name}</td>
-                        <td className="px-3 py-2">{agent.totalOrders}</td>
-                        <td className="px-3 py-2">${agent.totalRevenue}</td>
-                        <td className="px-3 py-2">${agent.totalCommission}</td>
-                      </tr>
-                    ))}
+                    {report?.agentPerformance?.topAgents.map(
+                      (agent: any, index: number) => (
+                        <tr
+                          key={index}
+                          className="border-t border-gray-200 dark:border-gray-700"
+                        >
+                          <td className="px-3 py-2">{agent.name}</td>
+                          <td className="px-3 py-2">{agent.totalOrders}</td>
+                          <td className="px-3 py-2">${agent.totalRevenue}</td>
+                          <td className="px-3 py-2">
+                            ${agent.totalCommission}
+                          </td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -376,9 +380,9 @@ const AllOverview = () => {
                   </thead>
                   <tbody>
                     {report.productPerformance.topProducts.map(
-                      (product: any) => (
+                      (product: any, index: number) => (
                         <tr
-                          key={product.id}
+                          key={index}
                           className="border-t border-gray-200 dark:border-gray-700"
                         >
                           <td className="px-3 py-2">{product.name}</td>
@@ -421,9 +425,9 @@ const AllOverview = () => {
                   </thead>
                   <tbody>
                     {report.geographicDistribution.topLocations.map(
-                      (loc: any) => (
+                      (loc: any, index: number) => (
                         <tr
-                          key={loc.id}
+                          key={index}
                           className="border-t border-gray-200 dark:border-gray-700"
                         >
                           <td className="px-3 py-2">{loc.name}</td>

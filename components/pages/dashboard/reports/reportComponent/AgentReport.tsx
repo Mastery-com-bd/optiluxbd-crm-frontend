@@ -32,7 +32,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TAgentReport } from "@/types/report/agentReportType";
+import {
+  TAgentReport,
+  TAgentReportSummary,
+} from "@/types/report/agentReportType";
+import AgentReportSkeleton from "./reportSkeleton/AgentReportSkeleton";
 
 const COLORS = [
   "#0088FE",
@@ -89,7 +93,7 @@ const AgentReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-
+  console.log(report);
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
@@ -106,6 +110,7 @@ const AgentReport = () => {
   };
 
   const agents = (report?.data as TAgentReport[]) || [];
+  const summary = report?.summary as TAgentReportSummary;
 
   const toggleRow = (id: number) => {
     setExpandedRows((prev) =>
@@ -120,11 +125,11 @@ const AgentReport = () => {
     .map((a) => ({ name: a.agentName, value: a.totalSalesAmount }));
 
   if (isLoading) {
-    return <TeamReportSkeleton />;
+    return <AgentReportSkeleton />;
   }
   return (
     <div className="space-y-4">
-      <div className="space-y-4">
+      <div className="space-y-4 px-6">
         <div className="flex items-end justify-between gap-4">
           <SearchAgentInput
             reportFilter={filters}
@@ -197,8 +202,13 @@ const AgentReport = () => {
           </p>
           <p className="flex flex-col space-y-2">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+              {report?.period?.startDate
+                ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
+                : "No date"}{" "}
+              →
+              {report?.period?.endDate
+                ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
+                : "No date"}
             </span>
           </p>
         </div>
@@ -212,7 +222,7 @@ const AgentReport = () => {
               Total Agents
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalAgents}
+              {summary?.totalAgents}
             </p>
           </div>
 
@@ -225,7 +235,7 @@ const AgentReport = () => {
               Total Commissions
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalCommission}
+              {summary?.totalCommission.toFixed(2)}
             </p>
           </div>
 
@@ -238,7 +248,7 @@ const AgentReport = () => {
               Total Orders
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalOrders}
+              {summary?.totalOrders}
             </p>
           </div>
 
@@ -251,12 +261,12 @@ const AgentReport = () => {
               Total Revenue
             </h3>
             <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              {report?.summary?.totalRevenue}
+              {summary?.totalRevenue.toFixed(2)}
             </p>
           </div>
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 p-6">
         <Card className="w-full h-80">
           <CardContent className="w-full h-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -293,7 +303,7 @@ const AgentReport = () => {
                 <TableHead>Pending</TableHead>
                 <TableHead>Total Sales</TableHead>
                 <TableHead>Commission</TableHead>
-                <TableHead>Average Order Value</TableHead>
+                <TableHead>Average Order</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -301,35 +311,31 @@ const AgentReport = () => {
               {agents.map((agent) => (
                 <React.Fragment key={agent.agentId}>
                   <TableRow className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <TableCell>{agent.agentUserId}</TableCell>
-                    <TableCell>{agent.agentName}</TableCell>
-                    <TableCell>{agent.agentEmail}</TableCell>
-                    <TableCell>{agent.agentPhone}</TableCell>
-                    <TableCell>{agent.totalOrders}</TableCell>
-                    <TableCell>{agent.deliveredOrders}</TableCell>
-                    <TableCell>{agent.pendingOrders}</TableCell>
+                    <TableCell>{agent?.agentUserId}</TableCell>
+                    <TableCell>{agent?.agentName}</TableCell>
+                    <TableCell>{agent?.agentEmail}</TableCell>
+                    <TableCell>{agent?.agentPhone}</TableCell>
+                    <TableCell>{agent?.totalOrders}</TableCell>
+                    <TableCell>{agent?.deliveredOrders}</TableCell>
+                    <TableCell>{agent?.pendingOrders}</TableCell>
+                    <TableCell>{agent?.totalSalesAmount.toFixed(2)}</TableCell>
+                    <TableCell>{agent?.totalCommission.toFixed(2)}</TableCell>
                     <TableCell>
-                      {Number(agent.totalSalesAmount).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      {Number(agent.totalCommission).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      {Number(agent.averageOrderValue).toLocaleString()}
+                      {Number(agent?.averageOrderValue).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <button
                         className="text-blue-500 hover:underline"
-                        onClick={() => toggleRow(agent.agentId)}
+                        onClick={() => toggleRow(agent?.agentId)}
                       >
-                        {expandedRows.includes(agent.agentId)
+                        {expandedRows.includes(agent?.agentId)
                           ? "Hide Orders"
                           : "View Orders"}
                       </button>
                     </TableCell>
                   </TableRow>
 
-                  {expandedRows.includes(agent.agentId) && (
+                  {expandedRows.includes(agent?.agentId) && (
                     <TableRow>
                       <TableCell
                         colSpan={11}
@@ -349,20 +355,20 @@ const AgentReport = () => {
                           </TableHeader>
                           <TableBody>
                             {agent.orders.map((order) => (
-                              <TableRow key={order.id}>
-                                <TableCell>{order.id}</TableCell>
-                                <TableCell>{order.product.name}</TableCell>
-                                <TableCell>{order.customer.name}</TableCell>
-                                <TableCell>{order.quantity}</TableCell>
+                              <TableRow key={order?.id}>
+                                <TableCell>{order?.id}</TableCell>
+                                <TableCell>{order?.product?.name}</TableCell>
+                                <TableCell>{order?.customer?.name}</TableCell>
+                                <TableCell>{order?.quantity}</TableCell>
                                 <TableCell>
-                                  {Number(order.totalAmount).toLocaleString()}
+                                  {Number(order?.totalAmount).toLocaleString()}
                                 </TableCell>
                                 <TableCell>
-                                  {Number(order.commission).toLocaleString()}
+                                  {Number(order?.commission).toLocaleString()}
                                 </TableCell>
                                 <TableCell>
                                   {new Date(
-                                    order.orderDate
+                                    order?.orderDate
                                   ).toLocaleDateString()}
                                 </TableCell>
                               </TableRow>
