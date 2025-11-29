@@ -216,7 +216,7 @@ const AllCombo = () => {
                     <div>
                       <p className="text-muted-foreground">Price</p>
                       <p className="font-medium">
-                        {item?.totalPrice} <span className="text-xl">৳</span>
+                        {item?.packagePrice} <span className="text-xl">৳</span>
                       </p>
                     </div>
 

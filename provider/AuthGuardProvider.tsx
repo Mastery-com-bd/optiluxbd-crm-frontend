@@ -13,18 +13,23 @@ const alwaysAllowedRoutes = [
   "/dashboard/settings",
   "/dashboard/couriar",
   "/dashboard/couriar/steadFast",
+  "/dashboard/couriar/steadFast/create",
+  "/dashboard/couriar/steadFast/id/52",
+  "/dashboard/couriar/steadFast/id/53",
+  "/dashboard/couriar/steadFast/id/54",
   "/dashboard/couriar/pathao",
   "/dashboard/couriar/redx",
-  "/dashboard/couriar/steadFast/local-create",
-  "/dashboard/couriar/steadFast/local-with-steadfast",
-  "/dashboard/couriar/steadFast/local-update-status",
-  "/dashboard/couriar/steadFast/local-list",
+  "/dashboard/couriar/test/local-create",
+  "/dashboard/couriar/test/local-with-steadfast",
+  "/dashboard/couriar/test/local-update-status",
+  "/dashboard/couriar/test/local-list",
+  "/dashboard/couriar/test/local-get-by-id",
   "/dashboard/couriar/steadFast/local-get-by-id",
-  "/dashboard/couriar/steadFast/steadfast-create-order",
-  "/dashboard/couriar/steadFast/steadfast-bulk-order",
-  "/dashboard/couriar/steadFast/steadfast-status-invoice",
-  "/dashboard/couriar/steadFast/steadfast-balance",
-  "/dashboard/couriar/steadFast/steadfast-return-request",
+  "/dashboard/couriar/test/steadfast-create-order",
+  "/dashboard/couriar/test/steadfast-bulk-order",
+  "/dashboard/couriar/test/steadfast-status-invoice",
+  "/dashboard/couriar/test/steadfast-balance",
+  "/dashboard/couriar/test/steadfast-return-request",
   "/dashboard/my-activity",
 ];
 
@@ -73,11 +78,20 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Find required permission for current route
-    const requiredPerms = Object.entries(routePermissions).find(([route]) =>
-      pathname.startsWith(route)
-    )?.[1];
+    let requiredPerms: string[] = routePermissions[pathname] ?? [];
+    // If exact match not found, check for nested routes (startsWith)
+    if (requiredPerms.length === 0) {
+      const dynamicMatch = Object.entries(routePermissions).find(([route]) =>
+        pathname.startsWith(route + "/")
+      );
+      requiredPerms = dynamicMatch?.[1] ?? [];
+    }
 
+    // If no required permissions found → redirect
+    if (!requiredPerms) {
+      router.replace("/dashboard/profile");
+      return;
+    }
     // If route not in permission map → redirect to profile
     if (!requiredPerms) {
       router.replace("/dashboard/profile");

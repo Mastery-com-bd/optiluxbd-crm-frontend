@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type TProductPerformance = {
+export type TProductReportSuymmary = {
+  totalOrders: number;
+  totalProducts: number;
+  totalQuantitySold: number;
+  totalRevenue: number;
+};
+
+export type TProductPerformanceItem = {
   productId: number;
   productName: string;
   productSKU: string;
@@ -21,4 +28,9 @@ export type TProductPerformance = {
   topAgentSales: number;
   topSalesCity: string | null;
   topSalesCityCount: number;
+};
+
+export type TProductPerformence = {
+  summary: TProductReportSuymmary;
+  topProducts: TProductPerformanceItem[];
 };

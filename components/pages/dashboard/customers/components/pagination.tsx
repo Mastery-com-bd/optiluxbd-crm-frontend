@@ -92,7 +92,7 @@ const CustomerPagination = ({
   };
 
   return (
-    <Pagination className="mt-4 py-2">
+    <Pagination className="my-4 pb-6">
       <PaginationContent className="flex-wrap justify-center gap-1">
         <PaginationItem>
           <PaginationPrevious

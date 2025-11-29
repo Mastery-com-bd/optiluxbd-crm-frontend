@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,24 +32,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  useCreateSteadfastReturnRequestMutation,
-  useGetAllCouriarQuery,
-} from "@/redux/features/couriar/couriarApi";
+import { useGetAllCouriarQuery } from "@/redux/features/couriar/couriarApi";
 import {
   CheckCircle,
   Clock,
   EllipsisVertical,
-  Loader2,
   Mail,
   Package,
   Phone,
   Truck,
   Users,
-  XCircle,
+  XCircle
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import CouriarDashboardHeader from "../components/couriarDashboardHeader";
+import CourierDashboardSkeleton from "./steadfastDashboardSkeleton";
 
 interface CustomerData {
   id: number;
@@ -91,7 +79,7 @@ interface OrderData {
   quantity: number;
 }
 
-interface ParcelData {
+interface CouriarResponseProps {
   id: number;
   invoice: string;
   courierService: string;
@@ -163,7 +151,6 @@ const statusBackgroundColor: Record<
 
 export default function SteadFastDashboard() {
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
 
   const counts = mockParcels.reduce((acc, p) => {
     acc[p.status] = (acc[p.status] || 0) + 1;
@@ -182,52 +169,25 @@ export default function SteadFastDashboard() {
     limit: 10,
   };
 
-  const [returnRequest] = useCreateSteadfastReturnRequestMutation();
   const { data, isLoading: couriarIsLoading } = useGetAllCouriarQuery(payload);
-  const couriarData: ParcelData[] = data?.data;
+  const couriarData: CouriarResponseProps[] = data?.data;
 
-  console.log("Couriar DB Response:", data);
+  const handleRefund = () => {
+    toast.success("Comming Soon!");
+  };
 
   if (couriarIsLoading) {
-    return <div>Loading...</div>;
+    return <CourierDashboardSkeleton />;
   }
-
-  const handleReturnRequest = async (id: string) => {
-    const payload = {
-      consignment_id: id,
-      reason: "Customer refused delivery",
-    };
-    setIsLoading(true);
-    toast.loading("Creating return request...");
-
-    try {
-      const res = await returnRequest(payload).unwrap();
-      console.log("Return Request Response", res);
-      if (res?.success) {
-        toast.dismiss();
-        toast.success(res?.message, {
-          duration: 3000,
-        });
-        setIsLoading(false);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.message ||
-        error?.data?.errors[0]?.message ||
-        "Something went wrong!";
-      toast.dismiss();
-      toast.dismiss();
-      toast.error(errorInfo, { duration: 3000 });
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6 p-6">
+      <CouriarDashboardHeader
+        title="SteadFast Courier Dashboard"
+        desc="Manage and track all your courier parcels in one place."
+        buttonText="Create Courier"
+        link="/dashboard/couriar/steadFast/create"
+      />
       {/* Metrics Cards Row 1 */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -425,60 +385,26 @@ export default function SteadFastDashboard() {
                     </Dialog>
                   </TableCell>
                   <TableCell>
-                    {isLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <EllipsisVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              console.log("View details:", parcel.id)
-                            }
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <EllipsisVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/dashboard/couriar/steadFast/id/${parcel.id}`}
                           >
                             View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              console.log("Return request:", parcel.id)
-                            }
-                          >
-                            <AlertDialog>
-                              <AlertDialogTrigger>Open</AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Are you absolutely sure?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete your account and remove
-                                    your data from our servers.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction>
-                                    Continue
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              console.log("Refund request:", parcel.id)
-                            }
-                          >
-                            Refund Request
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
+                          </Link>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => handleRefund()}>
+                          Refund Request
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))}
