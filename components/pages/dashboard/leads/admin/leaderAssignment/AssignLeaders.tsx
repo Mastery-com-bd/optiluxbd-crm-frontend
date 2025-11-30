@@ -122,7 +122,10 @@ const AssignLeaders = () => {
           </div>
         </CardContent>
         <CardContent className=" flex flex-wrap lg:flex-nowrap items-center justify-between">
-          <TeamReportModal teams={teams} />
+          <TeamReportModal
+            setSelectedTeam={setSelectedTeam}
+            selectedTeam={selectedTeam}
+          />
           <AgentDataModal
             setSelectedTeam={setSelectedTeam}
             selectedTeam={selectedTeam}

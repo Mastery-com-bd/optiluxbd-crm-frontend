@@ -14,7 +14,6 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import SearchAgentInput from "./inputFields/SearchAgentInput";
 import SearchLeaderFields from "./inputFields/SearchLeaderFields";
-import TeamReportSkeleton from "./reportSkeleton/TeamReportSkeleton";
 import {
   PieChart,
   Pie,
@@ -83,7 +82,6 @@ const AgentReport = () => {
         ...prev,
         startDate: format(startDate, "yyyy-MM-dd"),
         endDate: format(endDate, "yyyy-MM-dd"),
-
         page: 1,
       }));
     });
@@ -93,7 +91,7 @@ const AgentReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
+
   const resetFilters = () => {
     setFilters({
       sortBy: "created_at",
