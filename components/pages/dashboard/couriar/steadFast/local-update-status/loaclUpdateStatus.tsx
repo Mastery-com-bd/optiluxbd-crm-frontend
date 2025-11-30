@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUpdateCouriarStatusMutation } from "@/redux/features/couriar/couriarApi";
+import { useUpdateCouriarStatusMutation } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -13,7 +13,7 @@ const couriarApi = baseApi.injectEndpoints({
         }),
 
         /* fetches customer details from customer record. with couriar details ✅ */
-        getAllCouriar: builder.query({
+        getAllSteadfastCouriar: builder.query({
             query: (payload) => ({
                 url: `/couriers/?${payload.status ? `status=${payload.status}` : null}&${payload.search ? `search=${payload.search}` : null}&page=${payload.page}&limit=${payload.limit}`,
                 method: "GET",
@@ -150,7 +150,7 @@ const couriarApi = baseApi.injectEndpoints({
 
 export const {
     useCreateCouriarMutation,
-    useGetAllCouriarQuery,
+    useGetAllSteadfastCouriarQuery,
     useCreateCouriarWithSteadFastMutation,
     useCreateCouriarFromOrderMutation,
     useGetCouriarDetailsByIdQuery,

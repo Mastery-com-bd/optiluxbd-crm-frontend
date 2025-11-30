@@ -18,6 +18,7 @@ const alwaysAllowedRoutes = [
   "/dashboard/couriar/steadFast/id/53",
   "/dashboard/couriar/steadFast/id/54",
   "/dashboard/couriar/pathao",
+  "/dashboard/couriar/pathao/create",
   "/dashboard/couriar/redx",
   "/dashboard/couriar/test/local-create",
   "/dashboard/couriar/test/local-with-steadfast",

@@ -1,9 +1,11 @@
-import React from 'react'
+import PathaoDashboard from "@/components/pages/dashboard/couriar/pathao/pathaoDashboard";
 
 const Page = () => {
   return (
-    <div>Pathao Page</div>
-  )
-}
+    <div>
+      <PathaoDashboard />
+    </div>
+  );
+};
 
-export default Page
+export default Page;

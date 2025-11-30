@@ -1,4 +1,4 @@
-import LocalCreateWithSteadfast from "@/components/pages/dashboard/couriar/steadFast/local-with-steadfast/localWithSteadfast";
+import LocalCreateWithSteadfast from "@/components/pages/dashboard/couriar/steadFast/create/create";
 import React from "react";
 
 const Page = () => {
