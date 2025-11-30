@@ -188,8 +188,23 @@ export const crmRoutes: NavRoute[] = [
     roles: ["ADMIN", "LEADER"],
     children: [
       {
-        title: "All Courier",
-        path: "/dashboard/couriar",
+        title: "Local",
+        path: "/dashboard/couriar/local",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "Steadfast",
+        path: "/dashboard/couriar/steadFast",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "Pathao",
+        path: "/dashboard/couriar/pathao",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
+        title: "RedX",
+        path: "/dashboard/couriar/redx",
         permissions: ["ORDERS VIEW"],
       },
     ],

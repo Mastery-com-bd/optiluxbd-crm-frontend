@@ -136,13 +136,13 @@ const couriarApi = baseApi.injectEndpoints({
         }), */
 
         /* Create Bulk Steadfast Order */
-        /* createBulkSteadFastOrder: builder.mutation({
-            query: (payload) => ({
+        createBulkSteadFastOrder: builder.mutation({
+            query: (body) => ({
                 url: `/couriers/steadfast/bulk-order`,
                 method: "POST",
-                body: payload,
+                body,
             }),
-        }), */
+        }),
 
     }),
 })
@@ -153,7 +153,7 @@ export const {
     useGetAllCouriarQuery,
     useCreateCouriarWithSteadFastMutation,
     useCreateCouriarFromOrderMutation,
-    useLazyGetCouriarDetailsByIdQuery,
+    useGetCouriarDetailsByIdQuery,
     useUpdateCouriarStatusMutation,
     useLazyCheckStatusByInvoiceQuery,
     useLazyCheckStatusByConsignmentIdQuery,
@@ -162,5 +162,7 @@ export const {
     useCreateSteadfastReturnRequestMutation,
     useGetAllSteadfastReturnRequestQuery,
     useLazyGetSteadfastReturnRequestByIdQuery,
+    useCreateBulkSteadFastOrderMutation,
+    useCreateBulkSteadFastFromOrderMutation,
 
 } = couriarApi;
