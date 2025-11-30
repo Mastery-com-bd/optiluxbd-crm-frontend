@@ -12,6 +12,7 @@ import TeamReportModal from "./TeamReportModal";
 import { useGetUnassignedCustomersByAdminQuery } from "@/redux/features/customers/cutomersApi";
 import { TCustomer } from "@/types/customer.types";
 import CustomerdataModal from "../assignCustomer/CustomerdataModal";
+import AssignTarget from "../assignTarget/AssignTarget";
 
 export interface TTeamReport {
   batch: {
@@ -134,6 +135,10 @@ const AssignLeaders = () => {
             isLoading={unAssignedCustomerLoading}
             setFilters={setFilters}
             filters={filters}
+          />
+          <AssignTarget
+            setSelectedTeam={setSelectedTeam}
+            selectedTeam={selectedTeam}
           />
         </CardContent>
       </Card>

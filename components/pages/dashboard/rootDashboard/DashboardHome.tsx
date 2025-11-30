@@ -97,78 +97,82 @@ const DashboardHome = () => {
 
   return (
     <section className="w-full mx-auto space-y-8 p-6">
-      <div className="space-y-4">
-        <div className="flex flex-col items-center">
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {report?.reportType}
-          </p>
-          <p className="flex flex-col space-y-2">
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {report?.period?.startDate
-                ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
-                : "No date"}{" "}
-              →{" "}
-              {report?.period?.endDate
-                ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
-                : "No date"}
-            </span>
-          </p>
-        </div>
-        <div className="flex items-end gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Start Date
-            </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="justify-start">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {format(startDate, "yyyy-MM-dd")}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={(date: any) => date && setStartDate(date)}
-                  disabled={(date) => date > new Date()}
-                />
-              </PopoverContent>
-            </Popover>
+      <div className="space-y-6">
+        {/* filter and headers */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center ">
+            <p className="font-semibold text-gray-900 dark:text-white">
+              {report?.reportType}
+            </p>
+            <p className="flex flex-col space-y-2">
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {report?.period?.startDate
+                  ? format(new Date(report?.period?.startDate), "yyyy-MM-dd")
+                  : "No date"}{" "}
+                →{" "}
+                {report?.period?.endDate
+                  ? format(new Date(report?.period?.endDate), "yyyy-MM-dd")
+                  : "No date"}
+              </span>
+            </p>
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              End Date
-            </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="justify-start">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {format(endDate, "yyyy-MM-dd")}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={endDate}
-                  onSelect={(date: any) => date && setEndDate(date)}
-                  disabled={(date) => date > new Date()}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+          <div className="flex items-end gap-4 ">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-gray-600 dark:text-gray-300">
+                Start Date
+              </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="justify-start">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {format(startDate, "yyyy-MM-dd")}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={(date: any) => date && setStartDate(date)}
+                    disabled={(date) => date > new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-gray-600 dark:text-gray-300">
+                End Date
+              </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="justify-start">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {format(endDate, "yyyy-MM-dd")}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={(date: any) => date && setEndDate(date)}
+                    disabled={(date) => date > new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-transparent">Reset</label>
-            <Button
-              variant="destructive"
-              className="px-4"
-              onClick={resetFilters}
-            >
-              Reset
-            </Button>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-transparent">Reset</label>
+              <Button
+                variant="destructive"
+                className="px-4"
+                onClick={resetFilters}
+              >
+                Reset
+              </Button>
+            </div>
           </div>
         </div>
+        {/* tabs and buttons */}
         <div className="flex items-center justify-center gap-1">
           {tabs.map((tab) => (
             <Button
