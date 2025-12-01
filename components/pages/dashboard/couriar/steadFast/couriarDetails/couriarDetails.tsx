@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   useCreateSteadfastReturnRequestMutation,
   useGetCouriarDetailsByIdQuery,
-} from "@/redux/features/couriar/couriarApi";
+} from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import {
   Barcode,
   Calendar,

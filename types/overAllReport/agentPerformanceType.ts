@@ -21,12 +21,9 @@ export interface OrderCustomer {
   email: string | null;
 }
 
-export interface OrderProduct {
+export interface OrderCategory {
   id: number;
   name: string;
-  sku: string;
-  price: string; // "37692.17"
-  subCategory: OrderSubCategory;
 }
 
 export interface OrderSubCategory {
@@ -35,9 +32,12 @@ export interface OrderSubCategory {
   category: OrderCategory;
 }
 
-export interface OrderCategory {
+export interface OrderProduct {
   id: number;
   name: string;
+  sku: string;
+  price: string; // "37692.17"
+  subCategory: OrderSubCategory;
 }
 
 export interface OrderCourier {

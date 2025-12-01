@@ -25,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCreateBulkSteadFastOrderMutation } from "@/redux/features/couriar/couriarApi";
 import { PlaceBulkOrder } from "../../couriar/bulkOrder/PlaceBulkOrder";
 export function OrderTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

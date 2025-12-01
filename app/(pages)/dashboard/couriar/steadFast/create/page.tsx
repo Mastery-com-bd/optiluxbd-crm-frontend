@@ -1,9 +1,9 @@
-import LocalCreateWithSteadfast from "@/components/pages/dashboard/couriar/steadFast/local-with-steadfast/localWithSteadfast";
+import CreateSteadFastCouriar from "@/components/pages/dashboard/couriar/steadFast/create/create";
 
 const page = () => {
   return (
     <div>
-      <LocalCreateWithSteadfast />
+      <CreateSteadFastCouriar />
     </div>
   );
 };
