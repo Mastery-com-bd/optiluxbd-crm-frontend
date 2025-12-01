@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateCouriarMutation } from "@/redux/features/couriar/couriarApi";
+import { useCreateCouriarMutation } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";

@@ -76,4 +76,5 @@ export const routePermissions: Record<string, string[]> = {
 
   // route permission
   "/dashboard/reports": ["REPORTS VIEW"],
+  "/dashboard/hourly-report": ["REPORTS VIEW"],
 };

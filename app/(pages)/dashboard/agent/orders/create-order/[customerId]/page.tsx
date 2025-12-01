@@ -1,16 +1,13 @@
-'use client'
+"use client";
 
 import CreateOrderForm from "@/components/pages/dashboard/agent/orders/create-order/CreateOrderForm";
 
-
 const CreateOrder = () => {
-
-    return (
-        <div>
-            create order
-            <CreateOrderForm />
-        </div>
-    );
+  return (
+    <div>
+      <CreateOrderForm />
+    </div>
+  );
 };
 
 export default CreateOrder;
