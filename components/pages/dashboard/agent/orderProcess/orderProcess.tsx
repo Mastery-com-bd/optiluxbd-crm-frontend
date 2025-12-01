@@ -51,6 +51,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import AddAddressDialog from "../addAddressDialog";
+import CreateOrderForm from "../orders/create-order/CreateOrderForm";
 
 type BatchType = {
   id: number;
@@ -735,7 +736,7 @@ const OrderProcessingSystem = () => {
                           {currentCustomer.addresses.map((addr) => (
                             <label
                               key={addr.id}
-                              className="flex items-start gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                              className="flex items-center gap-4 p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 cursor-pointer"
                             >
                               <input
                                 type="radio"
@@ -744,15 +745,54 @@ const OrderProcessingSystem = () => {
                                 onChange={(e) =>
                                   setSelectedAddressId(Number(e.target.value))
                                 }
-                                className="mt-1"
+                                className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
                               />
-                              <div className="flex-1 text-sm">
-                                <p className="font-medium text-gray-900 dark:text-gray-100">
-                                  {addr.street}, {addr.thana}
-                                </p>
-                                <p className="text-gray-500 dark:text-gray-400">
-                                  {addr.city}, {addr.post}, {addr.division}
-                                </p>
+                              <div className="w-full flex items-center justify-between min-w-0">
+                                <div>
+                                  {/* Primary address line */}
+                                  <p className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+                                    {addr.street}
+                                  </p>
+                                  {/* Secondary locality */}
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {addr.thana}, {addr.city} – {addr.post}
+                                  </p>
+                                </div>
+                                {/* Metadata row */}
+                                <div className="gap-4 text-xs text-gray-500 dark:text-gray-400 space-y-1.5">
+                                  {/* Division badge */}
+                                  <div className="">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                      {addr.division}
+                                    </span>
+                                  </div>
+                                  {addr.zone_id && (
+                                    <span>
+                                      Zone{" "}
+                                      <span className="font-medium">
+                                        {addr.zone_id}
+                                      </span>
+                                    </span>
+                                  )}
+                                  {addr.geo_lat && addr.geo_lng && (
+                                    <span>
+                                      Lat:{" "}
+                                      <span className="font-medium">
+                                        {addr.geo_lat}
+                                      </span>
+                                      , Lng:{" "}
+                                      <span className="font-medium">
+                                        {addr.geo_lng}
+                                      </span>
+                                    </span>
+                                  )}
+                                  <span>
+                                    ID:{" "}
+                                    <span className="font-medium">
+                                      {addr.id}
+                                    </span>
+                                  </span>
+                                </div>
                               </div>
                             </label>
                           ))}
@@ -768,9 +808,25 @@ const OrderProcessingSystem = () => {
 
                 {/* Order Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2">
-                    Order History
-                  </h3>
+                  <div className="w-full flex justify-between items-center border-b dark:border-gray-700 ">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
+                      Order History
+                    </h3>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mb-2"
+                        >
+                          <Package className="w-4 h-4 mr-2" />
+                          Create Order
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <CreateOrderForm showAddCustomer={false} existingCustomerId={currentCustomer?.id} />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                   {currentCustomer?.orders?.length ? (
                     <div className="grid gap-4">
                       {currentCustomer.orders.slice(0, 3).map((order) => (
@@ -781,7 +837,9 @@ const OrderProcessingSystem = () => {
                           <div className="flex items-start justify-between">
                             <div>
                               <p className="font-medium text-base">
-                                {order?.product ? order.product.name : order?.package?.name}
+                                {order?.product
+                                  ? order.product.name
+                                  : order?.package?.name}
                               </p>
                               <p className="text-xs text-muted-foreground">
                                 Order #{order.id} •{" "}
@@ -792,7 +850,7 @@ const OrderProcessingSystem = () => {
                               variant="secondary"
                               className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                             >
-                             Total: ৳{order.totalAmount}
+                              Total: ৳{order.totalAmount}
                             </Badge>
                           </div>
 
@@ -814,10 +872,15 @@ const OrderProcessingSystem = () => {
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                  {order?.product ? "Unit Price" : "Total Price"}
+                                  {order?.product
+                                    ? "Unit Price"
+                                    : "Total Price"}
                                 </p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
-                                  ৳{order?.product ? order.product.price : order?.package?.packagePrice}
+                                  ৳
+                                  {order?.product
+                                    ? order.product.price
+                                    : order?.package?.packagePrice}
                                 </p>
                               </div>
                             </div>
@@ -828,7 +891,9 @@ const OrderProcessingSystem = () => {
                                   {order.product ? "Product ID" : "Package ID"}
                                 </p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
-                                  {order.product ? order.product.id : order.package?.id}
+                                  {order.product
+                                    ? order.product.id
+                                    : order.package?.id}
                                 </p>
                               </div>
                             </div>
@@ -841,8 +906,13 @@ const OrderProcessingSystem = () => {
                               </p>
                               <div className="space-y-2">
                                 {order.package.items.map((item) => (
-                                  <div key={item.product.id} className="flex justify-between text-sm">
-                                    <span>{item.product.name} × {item.quantity}</span>
+                                  <div
+                                    key={item.product.id}
+                                    className="flex justify-between text-sm"
+                                  >
+                                    <span>
+                                      {item.product.name} × {item.quantity}
+                                    </span>
                                     <span>৳{item.product.price}</span>
                                   </div>
                                 ))}

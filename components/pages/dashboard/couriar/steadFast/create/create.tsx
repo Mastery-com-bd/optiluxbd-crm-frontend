@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateCouriarWithSteadFastMutation } from "@/redux/features/couriar/couriarApi";
+import { useCreateCouriarWithSteadFastMutation } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -48,7 +48,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function LocalCreateWithSteadfast() {
+export default function CreateSteadFastCouriar() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
