@@ -158,7 +158,10 @@ const CreateCombo = () => {
               </Select>
             </div>
             {permissions.includes("PACKAGES CREATE") && (
-              <CreateComboModal selectedProducts={selectedProducts} />
+              <CreateComboModal
+                selectedProducts={selectedProducts}
+                setSelectedProducts={setSelectedProducts}
+              />
             )}
           </div>
         </Card>
