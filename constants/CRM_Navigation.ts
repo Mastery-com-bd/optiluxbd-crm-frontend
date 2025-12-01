@@ -7,6 +7,7 @@ import {
   Gift,
   Activity,
   Tags,
+  MessageCircleWarning,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -299,6 +300,23 @@ export const crmRoutes: NavRoute[] = [
         title: "Add Customer",
         path: "/dashboard/customers/add",
         permissions: ["CUSTOMERS CREATE"],
+      },
+    ],
+  },
+  {
+    title: "Complaint",
+    icon: MessageCircleWarning,
+    // permissions: [
+    //   "COMPLAIN VIEW",
+    //   "COMPLAIN CREATE",
+    //   "COMPLAIN UPDATE",
+    //   "COMPLAIN DELETE",
+    // ],
+    children: [
+      {
+        title: "Report user's complain",
+        path: "/dashboard/agent/complaint",
+        // permissions: ["COMPLAINT CREATE", "COMPLAINT VIEW", "COMPLAINT UPDATE", "COMPLAINT DELETE"],
       },
     ],
   },
