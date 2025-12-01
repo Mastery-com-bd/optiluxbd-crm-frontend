@@ -17,7 +17,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { convertDate } from "@/utills/dateConverter";
 import { toast } from "sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface TCreator {
   id: number;
@@ -96,14 +100,20 @@ const InprogressdataModal = () => {
   return (
     <div>
       {/* Open Modal Button */}
-      <Tooltip >
+      <Tooltip>
         <TooltipTrigger asChild>
-          <Button className="cursor-pointer" onClick={() => setOpen(true)}>View Progress Report</Button>
+          <Button className="cursor-pointer" onClick={() => setOpen(true)}>
+            View Progress Report
+          </Button>
         </TooltipTrigger>
         <TooltipContent>
           <p>
             You have{" "}
-            <span className={reports?.length === 0 ? "text-red-600" : "text-green-600"}>
+            <span
+              className={
+                reports?.length === 0 ? "text-red-600" : "text-green-600"
+              }
+            >
               {reports?.length}
             </span>{" "}
             reports.
@@ -157,7 +167,7 @@ const InprogressdataModal = () => {
                     <span>
                       {item?.startDate
                         ? convertDate(new Date(item?.startDate as string))
-                          .creationDate
+                            .creationDate
                         : "no start date"}
                     </span>
 
@@ -165,7 +175,7 @@ const InprogressdataModal = () => {
                     <span>
                       {item?.endDate
                         ? convertDate(new Date(item?.endDate as string))
-                          .creationDate
+                            .creationDate
                         : "no end date"}
                     </span>
                   </div>
@@ -175,10 +185,16 @@ const InprogressdataModal = () => {
                 <DialogFooter className="flex justify-between">
                   {hasReport && (
                     <div className="flex gap-2">
-                      <Button variant="destructive" onClick={handleReject}>
+                      <Button
+                        variant="destructive"
+                        onClick={handleReject}
+                        className="cursor-pointer"
+                      >
                         Reject
                       </Button>
-                      <Button onClick={handleAccept}>Accept</Button>
+                      <Button onClick={handleAccept} className="cursor-pointer">
+                        Accept
+                      </Button>
                     </div>
                   )}
                 </DialogFooter>

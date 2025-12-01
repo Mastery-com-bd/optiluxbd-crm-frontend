@@ -2,6 +2,7 @@ import { baseApi } from "@/redux/api/baseApi";
 
 const teamLeaderLeadsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // get all leadds assigned to the leader
     getAllLeads: builder.query({
       query: () => ({
         url: `/allocations/leader/customers`,
@@ -9,6 +10,7 @@ const teamLeaderLeadsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["customers for leaders"],
     }),
+    // get all team members to a team
     getAllTeamMembers: builder.query({
       query: () => ({
         url: `/allocations/leader/team`,
@@ -16,13 +18,15 @@ const teamLeaderLeadsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["team-members"],
     }),
+    // get in progress leads
     getAllInProgressLeads: builder.query({
       query: () => ({
         url: `/allocations/leader/inprogress`,
         method: "GET",
       }),
-      providesTags: ["customers for leaders", "unassigned customers"],
+      providesTags: ["pending-leads"],
     }),
+    // get team report
     getTeamReport: builder.query({
       query: () => ({
         url: `/allocations/leader/reports`,
@@ -30,6 +34,7 @@ const teamLeaderLeadsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["team-report"],
     }),
+    // get unassigned customer
     getAllUnAssignedCustomers: builder.query({
       query: () => ({
         url: `/allocations/leader/customers/unassigned`,
@@ -37,20 +42,22 @@ const teamLeaderLeadsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["unassigned customers"],
     }),
+    // customer distribute to agent
     customerDistributionToAgent: builder.mutation({
       query: (data) => ({
         url: `/allocations/leader/distribute`,
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["unassigned customers", "team-members"],
+      invalidatesTags: ["unassigned customers"],
     }),
+
     autoDistributeCustomerToAgent: builder.mutation({
       query: () => ({
         url: `/allocations/leader/auto-distribute`,
         method: "POST",
       }),
-      invalidatesTags: ["unassigned customers", "team-members"],
+      invalidatesTags: ["unassigned customers"],
     }),
     acceptBatch: builder.mutation({
       query: (data) => ({
@@ -76,26 +83,6 @@ const teamLeaderLeadsApi = baseApi.injectEndpoints({
         "customers for leaders",
       ],
     }),
-    /*  getRoleById: builder.query({
-            query: (id) => ({
-                url: `/roles/${id}`,
-                method: "GET",
-            }),
-        }),
-        addRole: builder.mutation({
-            query: (data) => ({
-                url: `/roles`,
-                method: "POST",
-                body: data,
-            }),
-        }),
-        updateRoleInfo: builder.mutation({
-            query: (data) => ({
-                url: `/roles/${data.id}/permissions`,
-                method: "PATCH",
-                body: data.permissions,
-            }),
-        }), */
   }),
 });
 

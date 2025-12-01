@@ -4,14 +4,13 @@ const HourlyReportSkeleton = () => {
   return (
     <div className="space-y-4 w-full">
       {/* Top Filters Row */}
-      <div className="flex flex-wrap items-end justify-between gap-4 w-full">
-        {/* Leader List Placeholder */}
-        <div className="w-40">
+      <div className="flex items-end justify-between gap-4 w-full">
+        <div className="w-full ">
           <Skeleton className="h-10 w-full" />
         </div>
 
         {/* Gap Select */}
-        <div className="w-40">
+        <div className="w-72">
           <Skeleton className="h-10 w-full" />
         </div>
 
@@ -29,7 +28,6 @@ const HourlyReportSkeleton = () => {
 
         {/* Reset Button */}
         <div className="flex flex-col gap-1">
-          <Skeleton className="h-4 w-10" />
           <Skeleton className="h-10 w-20" />
         </div>
       </div>

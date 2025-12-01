@@ -3,16 +3,13 @@ import { CalendarIcon } from "lucide-react";
 
 const HourlyTeamtargetSkeleton = () => {
   return (
-    <div className="flex items-end justify-between gap-4 flex-wrap">
-      {/* LeaderList Skeleton */}
-      <div className="flex flex-col gap-1 w-40">
-        <Skeleton className="h-4 w-24" />
+    <div className="flex items-end justify-between gap-4">
+      <div className="w-full">
         <Skeleton className="h-10 w-full" />
       </div>
 
       {/* Select Gap Skeleton */}
-      <div className="flex flex-col gap-1 w-40">
-        <Skeleton className="h-4 w-20" />
+      <div className="flex flex-col gap-1 w-72">
         <Skeleton className="h-10 w-full" />
       </div>
 
@@ -27,7 +24,6 @@ const HourlyTeamtargetSkeleton = () => {
 
       {/* Reset Button Skeleton */}
       <div className="flex flex-col gap-1">
-        <Skeleton className="h-4 w-10 opacity-0" /> {/* hidden label */}
         <Skeleton className="h-10 w-20" />
       </div>
     </div>

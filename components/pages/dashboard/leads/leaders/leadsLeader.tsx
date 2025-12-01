@@ -20,16 +20,17 @@ import LeaderDataTable from "./LeaderDataTable";
 const LeadsLeader = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedWorkers, setSelectedWorkers] = useState<number | null>(null);
+  // get all leads for the leader
   const { data, isLoading } = useGetAllLeadsQuery(undefined);
+  const allLeads = data?.data;
+  // get all team members for the leader
   const { data: teamMembersData, isLoading: teamMembersLoading } =
     useGetAllTeamMembersQuery(undefined);
-
-  const { data: unassignedCustomerData, isLoading: unAssignedCustomerLoading } =
-    useGetAllUnAssignedCustomersQuery(undefined);
-
-  const allLeads = data?.data;
   const teamMembers = teamMembersData?.data;
   const members = teamMembers?.members;
+  // get unassigned customer for the leader
+  const { data: unassignedCustomerData, isLoading: unAssignedCustomerLoading } =
+    useGetAllUnAssignedCustomersQuery(undefined);
   const unAssignedCustomer = unassignedCustomerData?.data || [];
 
   const toggleWorker = (id: number) => {
@@ -115,8 +116,9 @@ const LeadsLeader = () => {
                   <Button
                     disabled={!selectedWorkers}
                     onClick={() => setModalOpen(true)}
+                    className="cursor-pointer"
                   >
-                    <SendIcon className="mr-2 h-4 w-4" /> Assign to agents
+                    <SendIcon className="mr-2 h-4 w-4 " /> Assign to agents
                   </Button>
                 </div>
               </CardContent>
@@ -141,7 +143,11 @@ const LeadsLeader = () => {
               assigneeIds={selectedWorkers as number}
               customers={allLeads?.customers}
             />
-            <LeaderDataTable members={members} setModalOpen={setModalOpen} setSelectedWorkers={setSelectedWorkers} />
+            <LeaderDataTable
+              members={members}
+              setModalOpen={setModalOpen}
+              setSelectedWorkers={setSelectedWorkers}
+            />
           </>
         )}
       </div>
