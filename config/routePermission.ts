@@ -76,5 +76,9 @@ export const routePermissions: Record<string, string[]> = {
 
   // route permission
   "/dashboard/reports": ["REPORTS VIEW"],
+
+
+  //complain permission
+  // "/dashboard/agent/complaint":["COMPLAIN CREATE, COMPLAIN VIEW", "COMPLAIN UPDATE", "COMPLAIN DELETE"]
   "/dashboard/hourly-report": ["REPORTS VIEW"],
 };
