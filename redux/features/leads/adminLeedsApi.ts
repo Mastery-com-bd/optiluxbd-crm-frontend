@@ -44,7 +44,7 @@ const adminLeedsApi = baseApi.injectEndpoints({
     }),
     assignTeamtarget: builder.mutation({
       query: (data) => ({
-        url: `/allocation/admin/team/target`,
+        url: `/allocations/admin/team/target`,
         method: "POST",
         body: data,
       }),

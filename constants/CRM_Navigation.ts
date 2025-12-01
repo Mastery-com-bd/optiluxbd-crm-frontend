@@ -39,6 +39,11 @@ export const crmRoutes: NavRoute[] = [
         permissions: ["REPORTS VIEW"],
       },
       {
+        title: "Hourly Reports",
+        path: "/dashboard/hourly-report",
+        permissions: ["REPORTS VIEW"],
+      },
+      {
         title: "All Reports",
         path: "/dashboard/reports",
         permissions: ["REPORTS VIEW"],

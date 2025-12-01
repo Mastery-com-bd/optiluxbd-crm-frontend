@@ -44,6 +44,7 @@ import {
 } from "recharts";
 import { TProductReportSuymmary } from "@/types/report/productReportdataTypes";
 import { IProductPerformanceItem } from "@/types/overAllReport/productPerformanceType";
+import { useGetAllCategoryQuery } from "@/redux/features/category/categoryApi";
 
 // COLORS (auto‑cycled)
 const COLORS = [
@@ -103,9 +104,13 @@ const ProductReport = () => {
     refetchOnMountOrArgChange: false,
   });
   const report = data?.data;
-  console.log(report);
   const products = (report?.data as IProductPerformanceItem[]) || [];
   const summary = report?.summary as TProductReportSuymmary;
+
+  // get all categories
+  const { data: categoryData, isLoading: categoryLoading } =
+    useGetAllCategoryQuery(undefined, { refetchOnMountOrArgChange: false });
+  const categories = categoryData || [];
 
   const revenueData = products.map((p) => ({
     name: p.productName,
@@ -159,16 +164,23 @@ const ProductReport = () => {
               <SelectTrigger className="w-40" aria-label="Category Filter">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="Electronics">Electronics</SelectItem>
-                <SelectItem value="Home & Office">Home & Office</SelectItem>
-                <SelectItem value="Fashion">Fashion</SelectItem>
-                <SelectItem value="Fitness">Fitness</SelectItem>
-                <SelectItem value="Gaming">Gaming</SelectItem>
-                <SelectItem value="Furniture">Furniture</SelectItem>
-                <SelectItem value="Toys">Toys</SelectItem>
-              </SelectContent>
+              {categoryLoading ? (
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  loading
+                </SelectContent>
+              ) : (
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map(
+                    (item: { name: string; slug: string }, index: number) => (
+                      <SelectItem key={index} value={item?.slug}>
+                        {item?.name}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              )}
             </Select>
           </div>
           {/* Start Date */}
