@@ -44,10 +44,14 @@ export interface OrderData {
   shipping_address_tag: string | null;
   shipping_address_line1: string | null;
   shipping_address_line2: string | null;
-  shipping_address_city: string | null;
   shipping_address_postcode: string | null;
   shipping_address_geo_lat: string | null;
   shipping_address_geo_lng: string | null;
+  shipping_address_street: string | null;
+  shipping_address_thana: string | null,
+  shipping_address_city: string | null,
+  shipping_address_post: string | null,
+  shipping_address_division: string | null,
 
   agentId: number;
   customerId: number;

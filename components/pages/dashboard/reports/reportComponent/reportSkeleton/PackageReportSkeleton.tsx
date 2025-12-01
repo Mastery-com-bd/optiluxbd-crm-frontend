@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-const CuriarSkeleton = () => {
+const PackageReportSkeleton = () => {
   return (
-    <section>
+    <section className="p-6">
       <div className="space-y-6">
         {/* 🔍 Filters Row */}
         <div className="flex flex-col sm:flex-row items-end justify-between gap-4">
@@ -64,19 +64,10 @@ const CuriarSkeleton = () => {
             <Skeleton className="h-4 w-28 mb-2" />
             <Skeleton className="h-7 w-24" />
           </div>
-
-          <div
-            className="border rounded-xl p-4 shadow-sm 
-                        bg-white dark:bg-gray-900 
-                        border-gray-200 dark:border-gray-700"
-          >
-            <Skeleton className="h-4 w-24 mb-2" />
-            <Skeleton className="h-7 w-20" />
-          </div>
         </div>
       </div>
     </section>
   );
 };
 
-export default CuriarSkeleton;
+export default PackageReportSkeleton;

@@ -1,4 +1,5 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,13 +12,23 @@ import {
 } from "@/components/ui/select";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
-import { Eye } from "lucide-react";
+import { Eye, X } from "lucide-react";
 import Loading from "@/components/pages/shared/Loading";
 import { OrderData } from "@/types/orders";
 import Link from "next/link";
 import { formatCurrency } from "@/utills/formatCurrency";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useCreateBulkSteadFastOrderMutation } from "@/redux/features/couriar/couriarApi";
+import { PlaceBulkOrder } from "../../couriar/bulkOrder/PlaceBulkOrder";
 export function OrderTable() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filters, setFilters] = useState({
     sortBy: "orderDate",
     limit: 10,
@@ -25,6 +36,9 @@ export function OrderTable() {
     search: "",
   });
 
+  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [courierOrders, setCourierOrders] = useState<any[]>([]);
   const { data, isLoading } = useGetAllOrdersQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
@@ -35,6 +49,35 @@ export function OrderTable() {
     total: 0,
   };
 
+  const toggleSelection = (orderId: number) => {
+    setSelectedOrders((prev) =>
+      prev.includes(orderId)
+        ? prev.filter((id) => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    const currentOrderIds = orders.map((order: OrderData) => order.id);
+    const allSelected = currentOrderIds.every((id: number) =>
+      selectedOrders.includes(id)
+    );
+    if (allSelected) {
+      setSelectedOrders((prev) =>
+        prev.filter((id) => !currentOrderIds.includes(id))
+      );
+    } else {
+      const newSelections = currentOrderIds.filter(
+        (id: number) => !selectedOrders.includes(id)
+      );
+      setSelectedOrders((prev) => [...prev, ...newSelections]);
+    }
+  };
+
+  const allPageOrdersSelected =
+    orders.length > 0 &&
+    orders.every((order: OrderData) => selectedOrders.includes(order.id));
+
   const formatDate = (d: string | Date) =>
     new Date(d).toLocaleDateString(undefined, {
       year: "numeric",
@@ -42,13 +85,52 @@ export function OrderTable() {
       day: "numeric",
     });
 
+
+  const handleBookToCourier = () => {
+    const processedOrders = orders
+      .filter((order: { id: number }) => selectedOrders.includes(order.id))
+      .map((order: OrderData) => {
+        const invoice = `INV-${order.id}`;
+        const recipient_name = order.customer?.name ?? "Unknown";
+        const recipient_phone = order.customer?.phone ?? "N/A";
+        const cod_amount = String(Number(order.totalAmount) + 100);
+
+        const parts = [
+          order.shipping_address_street,
+          order.shipping_address_thana,
+          order.shipping_address_city,
+          order.shipping_address_post,
+          order.shipping_address_division,
+        ].filter(Boolean);
+
+        const recipient_address = parts.length > 0
+          ? parts.join(", ")
+          : "No address provided";
+
+        return {
+          invoice,
+          recipient_name,
+          recipient_phone,
+          recipient_address,
+          cod_amount,
+        };
+      });
+
+    setCourierOrders(processedOrders);
+    setIsDialogOpen(true);
+  };
+
   return (
-    <div className="p-4 bg-white dark:bg-muted rounded-xl border shadow-sm mt-5 transition-all">
-      {/* Header */}
+    <div className="p-4 dark:bg-muted/50 rounded-xl border shadow-sm mt-5 transition-all">
+      {/* process bulk order */}
+      <PlaceBulkOrder
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        orders={courierOrders}
+      />
 
       {/* Filter Options */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
-        {/* Agent Filter */}
         <Input
           type="number"
           placeholder="Agent ID"
@@ -60,8 +142,6 @@ export function OrderTable() {
             }))
           }
         />
-
-        {/* Customer Filter */}
         <Input
           type="number"
           placeholder="Customer ID"
@@ -73,8 +153,6 @@ export function OrderTable() {
             }))
           }
         />
-
-        {/* Product Filter */}
         <Input
           type="number"
           placeholder="Product ID"
@@ -86,8 +164,6 @@ export function OrderTable() {
             }))
           }
         />
-
-        {/* Package Filter */}
         <Input
           type="number"
           placeholder="Package ID"
@@ -99,20 +175,16 @@ export function OrderTable() {
             }))
           }
         />
-
-        {/* Date From */}
         <Input
           type="date"
-          onChange={(e) => {
+          onChange={(e) =>
             setFilters((f) => ({
               ...f,
               from: e.target.value || undefined,
               page: 1,
-            }));
-          }}
+            }))
+          }
         />
-
-        {/* Date To */}
         <Input
           type="date"
           onChange={(e) =>
@@ -123,10 +195,10 @@ export function OrderTable() {
             }))
           }
         />
-
-        {/* Sort By */}
         <Select
-          onValueChange={(val) => setFilters((f) => ({ ...f, sortBy: val }))}
+          onValueChange={(val) =>
+            setFilters((f) => ({ ...f, sortBy: val }))
+          }
           defaultValue="orderDate"
         >
           <SelectTrigger>
@@ -138,8 +210,6 @@ export function OrderTable() {
             <SelectItem value="totalAmount">Total Amount</SelectItem>
           </SelectContent>
         </Select>
-
-        {/* Sort Order */}
         <Select
           onValueChange={(val) =>
             setFilters((f) => ({ ...f, sort: val as "asc" | "desc" }))
@@ -156,6 +226,27 @@ export function OrderTable() {
         </Select>
       </div>
 
+      {/* Bulk Actions */}
+      {selectedOrders.length > 0 && (
+        <div className="mb-2 flex items-center gap-4 text-sm text-muted-foreground">
+          <span>{selectedOrders.length} selected</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSelectedOrders([])}
+          >
+            <X className="w-4 h-4 mr-1" />
+            Deselect All
+          </Button>
+          <Button
+            onClick={handleBookToCourier}
+            className="cursor-pointer"
+          >
+            book to courier
+          </Button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="w-full overflow-x-auto">
         {isLoading ? (
@@ -163,109 +254,126 @@ export function OrderTable() {
             <Loading />
           </div>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-muted">
-                <th className="px-4 py-3 text-left">
-                  <input type="checkbox" className="rounded border-border" />
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-border bg-muted">
+                <TableHead className="px-4 py-3">
+                  <input
+                    type="checkbox"
+                    className="rounded border-border cursor-pointer"
+                    checked={allPageOrdersSelected}
+                    onChange={toggleSelectAll}
+                  />
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
                   Order ID
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
                   Date
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
                   Customer
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
                   Quantity
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
                   Total Amount
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
                   Commission
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
                   Commission Rate
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
+                </TableHead>
+                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
                   Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders?.length === 0 ? (
-                <tr>
-                  <td
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.length === 0 ? (
+                <TableRow>
+                  <TableCell
                     colSpan={9}
                     className="text-center py-6 text-muted-foreground"
                   >
                     No orders found.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
-                orders?.map((order: OrderData) => (
-                  <tr
-                    key={order.id}
-                    className="border-b border-muted hover:bg-muted/40 transition-colors"
-                  >
-                    <td className="px-4 py-3">
-                      <input
-                        type="checkbox"
-                        className="rounded border-border"
-                      />
-                    </td>
-                    <td className="px-4 py-3 font-medium">{order.id}</td>
-                    <td className="px-4 py-3">{formatDate(order.orderDate)}</td>
-                    <td className="px-4 py-3 flex items-center gap-2">
-                      {/* {order.customer?.avatar ? (
-                                                <Image src={"https://i.ibb.co.com/pKnCKD0/user6.png"} alt={order.customer.name ?? `Customer ${order.customerId}`} width={28} height={28} className="rounded-full" />
-                                            ) : (
-                                                <span className="w-7" />
-                                            )} */}
-                      <span>
-                        {order.customer?.name ?? `Customer ${order.customerId}`}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">{order.quantity}</td>
-                    <td className="px-4 py-3 text-right">
-                      {formatCurrency(order.totalAmount)}
-                    </td>
-                    <td className="px-4 py-3 text-right">{order.commission}</td>
-                    <td className="px-4 py-3 text-right">
-                      {order.commissionRate}%
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-center gap-1">
-                        <Link href={`/dashboard/admin/orders/${order.id}`}>
-                          <Button
-                            variant="ghost"
-                            className="cursor-pointer"
-                            size="icon"
-                            title="View"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                orders.map((order: OrderData) => {
+                  const isSelected = selectedOrders.includes(order.id);
+                  return (
+                    <TableRow
+                      key={order.id}
+                      className={`border-b border-muted hover:bg-muted/40 transition-colors ${isSelected ? "bg-muted/30" : ""
+                        }`}
+                    >
+                      <TableCell className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          className="rounded border-border cursor-pointer"
+                          checked={isSelected}
+                          onChange={() => toggleSelection(order.id)}
+                        />
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {order.id}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        {formatDate(order.orderDate)}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        {order.customer?.name ??
+                          `Customer ${order.customerId}`}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        {order.quantity}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        {formatCurrency(order.totalAmount)}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        {formatCurrency(order.commission)}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        {order.commissionRate}%
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-1">
+                          <Link href={`/dashboard/admin/orders/${order.id}`}>
+                            <Button
+                              variant="ghost"
+                              className="cursor-pointer"
+                              size="icon"
+                              title="View"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         )}
       </div>
 
       {/* Pagination Controls */}
       <PaginationControls
         pagination={pagination}
-        onPrev={() =>
-          setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }))
-        }
-        onNext={() => setFilters((f) => ({ ...f, page: f.page + 1 }))}
+        onPrev={() => {
+          setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }));
+          setSelectedOrders([]); // optional: clear selections when changing pages
+        }}
+        onNext={() => {
+          setFilters((f) => ({ ...f, page: f.page + 1 }));
+          setSelectedOrders([]); // optional
+        }}
       />
     </div>
   );

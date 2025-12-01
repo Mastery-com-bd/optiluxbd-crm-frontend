@@ -24,6 +24,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+import { config } from "@/config";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -281,32 +282,34 @@ const Login = () => {
       </p>
 
       {/* fast login for development purpose */}
-      <div className="flex items-center justify-between">
-        <Button
-          onClick={handleAdmin}
-          type="submit"
-          disabled={isSubmitting}
-          className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
-        >
-          {isSubmitting ? "Logging in..." : "Admin"}
-        </Button>
-        <Button
-          onClick={handleAgent}
-          type="submit"
-          disabled={isSubmitting}
-          className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
-        >
-          {isSubmitting ? "Logging in..." : "Agent"}
-        </Button>
-        <Button
-          onClick={handleteamLeader}
-          type="submit"
-          disabled={isSubmitting}
-          className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
-        >
-          {isSubmitting ? "Logging in..." : "Team Leader"}
-        </Button>
-      </div>
+      {config.next_public_fast_login === "development" && (
+        <div className="flex items-center justify-between">
+          <Button
+            onClick={handleAdmin}
+            type="submit"
+            disabled={isSubmitting}
+            className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
+          >
+            {isSubmitting ? "Logging in..." : "Admin"}
+          </Button>
+          <Button
+            onClick={handleAgent}
+            type="submit"
+            disabled={isSubmitting}
+            className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
+          >
+            {isSubmitting ? "Logging in..." : "Agent"}
+          </Button>
+          <Button
+            onClick={handleteamLeader}
+            type="submit"
+            disabled={isSubmitting}
+            className=" bg-yellow-500 dark:bg-yellow-600 hover:bg-[#ffc500] dark:hover:bg-yellow-500 text-white cursor-pointer"
+          >
+            {isSubmitting ? "Logging in..." : "Team Leader"}
+          </Button>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email */}

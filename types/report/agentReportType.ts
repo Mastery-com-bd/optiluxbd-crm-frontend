@@ -74,6 +74,13 @@ export type Order = {
   courier: Courier;
 };
 
+export type TAgentReportSummary = {
+  totalAgents: number;
+  totalCommission: number;
+  totalOrders: number;
+  totalRevenue: number;
+};
+
 export type TAgentReport = {
   agentId: number;
   agentUserId: string;

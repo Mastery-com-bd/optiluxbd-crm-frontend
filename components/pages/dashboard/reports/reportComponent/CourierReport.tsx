@@ -114,7 +114,7 @@ const CourierReport = () => {
     return <CuriarSkeleton />;
   }
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       <div className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           <div>
@@ -206,15 +206,20 @@ const CourierReport = () => {
           </p>
           <p className="flex flex-col space-y-2">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {format(new Date(report?.period.startDate), "yyyy-MM-dd")} →{" "}
-              {format(new Date(report?.period.endDate), "yyyy-MM-dd")}
+              {report?.period.startDate
+                ? format(new Date(report?.period.startDate), "yyyy-MM-dd")
+                : "No date"}{" "}
+              →{" "}
+              {report?.period.startDate
+                ? format(new Date(report?.period.endDate), "yyyy-MM-dd")
+                : "No date"}
             </span>
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
@@ -226,8 +231,8 @@ const CourierReport = () => {
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
@@ -239,8 +244,8 @@ const CourierReport = () => {
           </div>
 
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
@@ -251,8 +256,8 @@ const CourierReport = () => {
             </p>
           </div>
           <div
-            className="border rounded-xl p-4 shadow-sm 
-                  bg-white dark:bg-gray-900 
+            className="border rounded-xl p-4 shadow-sm
+                  bg-white dark:bg-gray-900
                   border-gray-200 dark:border-gray-700"
           >
             <h3 className="text-sm text-gray-500 dark:text-gray-400">
