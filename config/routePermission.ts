@@ -30,18 +30,18 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/combo": ["PACKAGES VIEW"],
   "/dashboard/combo/create-combo": ["PACKAGES CREATE"],
 
-  // 🧾 Customer Management
+  // Customer Management
   "/dashboard/customers": ["CUSTOMERS VIEW"],
   "/dashboard/customers/add": ["CUSTOMERS CREATE"],
   "dashboard/customers/id/": ["CUSTOMERS UPDATE"],
 
-  // 💰 ORDERS Management
+  // ORDERS Management
   "/dashboard/agent/orders/my-orders": ["ORDERS VIEW OWN"],
   "/dashboard/agent/orders/create-order": ["ORDERS CREATE"],
   "/dashboard/admin/orders/top-sellers": ["ORDERS VIEW"],
   "/dashboard/admin/orders": ["ORDERS VIEW"],
 
-  // 💸 role Management
+  // role Management
   "/dashboard/hr&staff/roles": ["ROLES MANAGE"],
   "/dashboard/hr&staff/staff/add": ["USERS CREATE"],
 
@@ -80,5 +80,5 @@ export const routePermissions: Record<string, string[]> = {
 
 
   //complain permission
-  // "/dashboard/agent/complaint":["COMPLAIN CREATE, COMPLAIN VIEW", "COMPLAIN UPDATE", "COMPLAIN DELETE"]
+  "/dashboard/agent/complaint": ["COMPLAIN VIEW", "COMPLAIN CREATE", "COMPLAIN UPDATE", "COMPLAIN DELETE"]
 };

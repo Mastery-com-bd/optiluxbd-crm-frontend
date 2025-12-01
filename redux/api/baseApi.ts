@@ -81,6 +81,7 @@ export const baseApi = createApi({
     "pending-user",
     "reports",
     "couriar",
+    "complain",
   ],
   endpoints: () => ({}),
 });
