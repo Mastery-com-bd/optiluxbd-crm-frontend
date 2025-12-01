@@ -12,7 +12,7 @@ const Skeleton = ({ className = "" }) => (
   <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
 );
 
-export default function SteadfastDashboardSkeleton() {
+export default function PathaoDashboardSkeleton() {
   return (
     <div className="space-y-6 p-6">
       {/* Header Skeleton */}

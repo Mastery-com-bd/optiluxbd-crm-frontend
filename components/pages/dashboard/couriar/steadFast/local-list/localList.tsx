@@ -31,33 +31,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllCouriarQuery } from "@/redux/features/couriar/couriarApi";
+import { useGetAllSteadfastCouriarQuery } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
-
-/* const mockCouriers = [
-  {
-    id: "c-1001",
-    orderId: "ORD-1001",
-    recipientName: "Ariana",
-    status: "PENDING",
-    createdAt: "2024-10-02T09:00:00.000Z",
-  },
-  {
-    id: "c-1002",
-    orderId: "ORD-1002",
-    recipientName: "Basit",
-    status: "DELIVERED",
-    createdAt: "2024-10-03T09:00:00.000Z",
-  },
-  {
-    id: "c-1003",
-    orderId: "ORD-1003",
-    recipientName: "Chowdhury",
-    status: "IN_TRANSIT",
-    createdAt: "2024-10-04T09:00:00.000Z",
-  },
-]; */
 
 interface CourierDetail {
   id: string;
@@ -80,7 +56,7 @@ export default function LocalListCouriers() {
   };
 
   // const [trigger, { data: detail, isFetching }] = useGetAllCouriarQuery();
-  const {data, isLoading} = useGetAllCouriarQuery(query);
+  const { data, isLoading } = useGetAllSteadfastCouriarQuery(query);
 
   console.log("Courier Detail", data);
 
@@ -90,7 +66,7 @@ export default function LocalListCouriers() {
     // await trigger(query); // manually trigger fetch
   }
 
-  if (isLoading) return <div>Loading...</div>;    
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="mx-auto p-4 space-y-4">

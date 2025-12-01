@@ -21,7 +21,7 @@ interface AddressPayload {
   thana: string;
   post: string;
   street: string;
-  zone_id: number;
+  zone_id?: number;
   geo_lat: number;
   geo_lng: number;
 }
@@ -34,7 +34,6 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
     thana: "",
     post: "",
     street: "",
-    zone_id: 1,
     geo_lat: 0,
     geo_lng: 0,
   });
@@ -47,19 +46,9 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  /*   const handleSelectChange = (name: keyof AddressPayload, value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (checked: boolean) => {
-    setForm((prev) => ({ ...prev, is_default: checked }));
-  }; */
-
   const handleSubmit = async () => {
-    // TODO: integrate RTK mutation here
     setLoading(true);
 
-    
     const payload = {
       data: form,
       customerId: userId,
@@ -113,11 +102,11 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
 
         <div className="grid gap-4 py-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="division">Division</Label>
             <Input
               id="division"
               name="division"
-              placeholder="Customer Name"
+              placeholder="Dhaka"
               value={form.division}
               onChange={handleChange}
             />
@@ -128,7 +117,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             <Input
               id="thana"
               name="thana"
-              placeholder={form.thana}
+              placeholder="Dhaka"
               value={form.thana}
               onChange={handleChange}
             />
@@ -139,7 +128,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             <Input
               id="post"
               name="post"
-              placeholder="1209"
+              placeholder="1203"
               value={form.post}
               onChange={handleChange}
             />
@@ -150,7 +139,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             <Input
               id="city"
               name="city"
-              placeholder={form.city}
+              placeholder="Dhaka"
               value={form.city}
               onChange={handleChange}
             />
@@ -160,7 +149,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             <Input
               id="street"
               name="street"
-              placeholder={form.street}
+              placeholder="123 Main St"
               value={form.street}
               onChange={handleChange}
             />
@@ -171,62 +160,10 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             <Input
               id="zone_id"
               name="zone_id"
-              placeholder={form.zone_id.toString()}
-              value={form.zone_id.toString()}
+              placeholder="1"
               onChange={(e) => handleChange(e)}
             />
           </div>
-
-          {/*  <div className="flex flex-col gap-2">
-            <Label htmlFor="country">Country</Label>
-            <Select
-              value={form.country}
-              onValueChange={(val) => handleSelectChange("country", val)}
-            >
-              <SelectTrigger id="country">
-                <SelectValue defaultValue="BD" placeholder="Select country" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="BD">Bangladesh</SelectItem>
-                <SelectItem value="US">United States</SelectItem>
-                <SelectItem value="CA">Canada</SelectItem>
-              </SelectContent>
-            </Select>
-          </div> */}
-
-          {/* <div className="flex flex-col gap-2">
-            <Label htmlFor="postal_code">Postal Code</Label>
-            <Input
-              id="postal_code"
-              name="postal_code"
-              placeholder="10001"
-              value={form.postal_code}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="phone">Phone</Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              placeholder="01712345678"
-              value={form.phone}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/*  <div className="flex items-center gap-2 sm:col-span-2">
-            <Checkbox
-              id="is_default"
-              checked={form.is_default}
-              onCheckedChange={handleCheckboxChange}
-            />
-            <Label htmlFor="is_default" className="cursor-pointer">
-              Set as default address
-            </Label>
-          </div> */}
         </div>
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">

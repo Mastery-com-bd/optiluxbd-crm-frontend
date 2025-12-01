@@ -28,7 +28,7 @@ const Leadercard = ({
       )}
 
       <CardHeader>
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
           <div>
             <CardTitle className="text-lg font-semibold">
               {team?.leader?.name}
@@ -39,6 +39,7 @@ const Leadercard = ({
 
           {/* View Details Link */}
           <Link
+            className="flex items-center"
             href={`/dashboard/leads/admin/all-teams/${team?.leader?.id}`}
             onClick={(e) => e.stopPropagation()}
           >
