@@ -9,8 +9,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { useCreateBulkSteadFastOrderMutation } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
 import { Label } from "@/components/ui/label";
-import { useCreateBulkSteadFastOrderMutation } from "@/redux/features/couriar/couriarApi";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 

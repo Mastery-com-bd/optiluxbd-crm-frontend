@@ -32,7 +32,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllSteadfastCouriarQuery } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
+import { PathaoCouriarDashboardPrpos } from "@/lib/interface";
+import { useGetAllPathaoCouriarQuery } from "@/redux/features/couriar/pathao/pathaoCouriarAPI";
 import {
   CheckCircle,
   Clock,
@@ -48,8 +49,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import CouriarDashboardHeader from "../components/couriarDashboardHeader";
-import SteadfastDashboardSkeleton from "./steadfastDashboardSkeleton";
-import { SteadfastCouriarDashboardProps } from "@/lib/interface";
+import PathaoDashboardSkeleton from "./pathaoDashboardSkeleton";
 
 // Mock data
 const mockParcels = Array.from({ length: 50 }, (_, i) => ({
@@ -113,24 +113,26 @@ export default function SteadFastDashboard() {
     limit: 10,
   };
 
-  const { data, isLoading: couriarIsLoading } = useGetAllSteadfastCouriarQuery(payload);
-  const couriarData: SteadfastCouriarDashboardProps[] = data?.data;
+  const { data, isLoading: couriarIsLoading } = useGetAllPathaoCouriarQuery(payload);
+  const couriarData: PathaoCouriarDashboardPrpos[] = data?.data;
+
+  console.log("Pathao Couriar Data:", couriarData);
 
   const handleRefund = () => {
     toast.success("Comming Soon!");
   };
 
   if (couriarIsLoading) {
-    return <SteadfastDashboardSkeleton />;
+    return <PathaoDashboardSkeleton />;
   }
 
   return (
     <div className="space-y-6 p-6">
       <CouriarDashboardHeader
-        title="SteadFast Courier Dashboard"
+        title="Pathao Courier Dashboard"
         desc="Manage and track all your courier parcels in one place."
         buttonText="Create Courier"
-        link="/dashboard/couriar/steadFast/create"
+        link="/dashboard/couriar/pathao/create"
       />
       {/* Metrics Cards Row 1 */}
       <div className="grid gap-4 md:grid-cols-3">
@@ -233,7 +235,7 @@ export default function SteadFastDashboard() {
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            {/* <TableBody>
               {couriarData.map((parcel) => (
                 <TableRow key={parcel.id}>
                   <TableCell className="font-mono text-xs">
@@ -317,11 +319,11 @@ export default function SteadFastDashboard() {
                           <div className="grid gap-2 text-sm">
                             <div className="flex items-center gap-2">
                               <Phone className="h-4 w-4 text-muted-foreground" />
-                              <span>{parcel.order.agent?.phone || "—"}</span>
+                              <span>{parcel.order.agent?.phone}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Mail className="h-4 w-4 text-muted-foreground" />
-                              <span>{parcel.order.agent?.email || "—"}</span>
+                              <span>{parcel.order.agent?.email}</span>
                             </div>
                           </div>
                         </div>
@@ -352,7 +354,7 @@ export default function SteadFastDashboard() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
           </Table>
 
           {/* Pagination */}
