@@ -83,6 +83,13 @@ const reportAndAnalyticsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["reports"],
     }),
+    getHourlyTeamTarget: builder.query({
+      query: (params = {}) => ({
+        url: `/reports/team/hourly-target?${buildParams(params)}`,
+        method: "GET",
+      }),
+      providesTags: ["reports"],
+    }),
   }),
 });
 export const {
@@ -96,4 +103,5 @@ export const {
   useGetDailyReportsQuery,
   useGetOverviewReportsQuery,
   useGetHourlyTeamReportQuery,
+  useGetHourlyTeamTargetQuery,
 } = reportAndAnalyticsApi;

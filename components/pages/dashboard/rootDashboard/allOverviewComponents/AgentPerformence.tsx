@@ -35,9 +35,9 @@ const AgentPerformence = ({
     let totalSales = 0;
 
     topAgents.forEach((agent) => {
-      agent.orders.forEach((order) => {
-        const categoryName = order.product.subCategory.category.name;
-        const amount = parseFloat(order.totalAmount);
+      agent?.orders.forEach((order) => {
+        const categoryName = order?.product?.subCategory?.category?.name;
+        const amount = parseFloat(order?.totalAmount);
         categoryMap[categoryName] = (categoryMap[categoryName] || 0) + amount;
         totalSales += amount;
       });
@@ -59,9 +59,9 @@ const AgentPerformence = ({
 
     topAgents.forEach((agent) => {
       agent.orders.forEach((order) => {
-        const date = new Date(order.orderDate);
+        const date = new Date(order?.orderDate);
         const monthKey = date.toLocaleString("default", { month: "short" });
-        const amount = parseFloat(order.totalAmount) / 1000; // Scale down for chart
+        const amount = parseFloat(order?.totalAmount) / 1000; // Scale down for chart
 
         if (!monthlyData[monthKey]) {
           monthlyData[monthKey] = { online: 0, instore: 0, projected: 0 };
@@ -107,7 +107,7 @@ const AgentPerformence = ({
         const productId = order.product.id.toString();
         if (!productMap[productId]) {
           productMap[productId] = {
-            ...order.product,
+            ...order?.product,
             totalStock: 0,
           };
         }
@@ -127,7 +127,7 @@ const AgentPerformence = ({
   const getRecentOrders = () => {
     const allOrders: Order[] = [];
     topAgents.forEach((agent) => {
-      allOrders.push(...agent.orders);
+      allOrders.push(...agent?.orders);
     });
 
     return allOrders
@@ -137,12 +137,13 @@ const AgentPerformence = ({
       )
       .slice(0, 5)
       .map((order) => ({
-        id: `#ORD-${order.id.toString().padStart(4, "0")}`,
-        customer: order.customer.name,
-        date: new Date(order.orderDate).toLocaleDateString(),
-        amount: `৳${parseFloat(order.totalAmount).toFixed(2)}`,
+        id: `#ORD-${order?.id.toString().padStart(4, "0")}`,
+        customer: order?.customer?.name,
+        date: new Date(order?.orderDate).toLocaleDateString(),
+        amount: `৳${parseFloat(order?.totalAmount).toFixed(2)}`,
         status:
-          order.courier?.status || (order.quantity > 0 ? "Pending" : "Unknown"),
+          order?.courier?.status ||
+          (order?.quantity > 0 ? "Pending" : "Unknown"),
       }));
   };
 
@@ -289,11 +290,11 @@ const AgentPerformence = ({
                       style={{ backgroundColor: item.color }}
                     ></div>
                     <span className="text-sm text-gray-600 dark:text-gray-300">
-                      {item.name}
+                      {item?.name}
                     </span>
                   </div>
                   <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {item.value}%
+                    {item?.value}%
                   </span>
                 </div>
               ))}
@@ -399,10 +400,10 @@ const AgentPerformence = ({
                   </div>
                 </div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 text-sm truncate">
-                  {agent.agentName}
+                  {agent?.agentName}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 truncate">
-                  {agent.agentEmail}
+                  {agent?.agentEmail}
                 </p>
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between items-center">
@@ -410,7 +411,7 @@ const AgentPerformence = ({
                       Total Orders
                     </span>
                     <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {agent.totalOrders}
+                      {agent?.totalOrders}
                     </span>
                   </div>
 
@@ -419,7 +420,7 @@ const AgentPerformence = ({
                       Delivered
                     </span>
                     <span className="font-semibold text-green-600 dark:text-green-400">
-                      {agent.deliveredOrders}
+                      {agent?.deliveredOrders}
                     </span>
                   </div>
 
@@ -428,7 +429,7 @@ const AgentPerformence = ({
                       Delivery Rate
                     </span>
                     <span className="font-semibold text-purple-600 dark:text-purple-400">
-                      {agent.deliveryRate}%
+                      {agent?.deliveryRate}%
                     </span>
                   </div>
 
@@ -437,7 +438,7 @@ const AgentPerformence = ({
                       Sales Amount
                     </span>
                     <span className="font-semibold text-indigo-600 dark:text-indigo-400">
-                      ৳{agent.totalSalesAmount.toFixed(0)}
+                      ৳{agent?.totalSalesAmount.toFixed(0)}
                     </span>
                   </div>
 
@@ -446,7 +447,7 @@ const AgentPerformence = ({
                       Commission
                     </span>
                     <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                      ৳{agent.totalCommission.toFixed(2)}
+                      ৳{agent?.totalCommission.toFixed(2)}
                     </span>
                   </div>
 
@@ -455,14 +456,14 @@ const AgentPerformence = ({
                       Avg Order Value
                     </span>
                     <span className="font-semibold text-blue-600 dark:text-blue-400">
-                      ৳{parseFloat(agent.averageOrderValue).toFixed(0)}
+                      ৳{parseFloat(agent?.averageOrderValue).toFixed(0)}
                     </span>
                   </div>
                 </div>
                 <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
-                    style={{ width: `${parseFloat(agent.deliveryRate)}%` }}
+                    style={{ width: `${parseFloat(agent?.deliveryRate)}%` }}
                   />
                 </div>
               </div>
@@ -502,21 +503,21 @@ const AgentPerformence = ({
                       className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                     >
                       <td className="py-3 px-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {product.name}
+                        {product?.name}
                       </td>
                       <td className="py-3 px-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-                        {product.stock}
+                        {product?.stock}
                       </td>
                       <td className="py-3 px-2 text-sm text-center">
                         <span className="inline-flex items-center gap-1">
                           <span className="text-amber-500">★</span>
                           <span className="text-gray-900 dark:text-gray-100 font-medium">
-                            {product.ratings}
+                            {product?.ratings}
                           </span>
                         </span>
                       </td>
                       <td className="py-3 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">
-                        {product.price}
+                        {product?.price}
                       </td>
                     </tr>
                   ))}
@@ -540,26 +541,26 @@ const AgentPerformence = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        {order.id}
+                        {order?.id}
                       </span>
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full border ${getStatusColor(
-                          order.status
+                          order?.status
                         )}`}
                       >
-                        {order.status}
+                        {order?.status}
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                      {order.customer}
+                      {order?.customer}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
-                      {order.date}
+                      {order?.date}
                     </p>
                   </div>
                   <div className="text-right ml-4">
                     <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                      {order.amount}
+                      {order?.amount}
                     </p>
                   </div>
                 </div>
