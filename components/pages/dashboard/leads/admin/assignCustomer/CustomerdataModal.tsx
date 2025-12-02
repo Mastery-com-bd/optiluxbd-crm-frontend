@@ -70,7 +70,6 @@ const CustomerdataModal = ({
   const [loading, setLoading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All");
 
-  console.log(selectedCustomerIds.length);
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
   };

@@ -33,6 +33,9 @@ const alwaysAllowedRoutes = [
   "/dashboard/couriar/test/steadfast-return-request",
   "/dashboard/my-activity",
   "/dashboard/agent/complaint",
+  "/dashboard/reminders",
+  "/dashboard/reminders/customer-reminders",
+  "/dashboard/reminders/upcoming-reminders",
 ];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
