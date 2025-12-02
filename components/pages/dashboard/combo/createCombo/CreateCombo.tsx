@@ -33,11 +33,13 @@ const CreateCombo = () => {
     limit: 10,
     page: 1,
     status: "ACTIVE",
+    in_stock: true,
   });
   // get all products
   const { data, isLoading } = useGetAllProductQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
+
   const products = data?.data?.products as Product[];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
   // local state

@@ -31,23 +31,32 @@ export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    permissions: ["REPORTS VIEW"],
-    roles: ["ADMIN"],
+    permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+    roles: ["ADMIN", "TEAM_LEADER"],
     children: [
       {
         title: "All Overview",
         path: "/dashboard",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
       },
       {
         title: "Hourly Reports",
         path: "/dashboard/hourly-report",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
       },
       {
         title: "All Reports",
         path: "/dashboard/reports",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
+      },
+      {
+        title: "Agents Report",
+        path: "/dashboard/agents-report",
+        permissions: ["AGENT-REPORTS VIEW"],
+        roles: ["TEAM_LEADER", "ADMIN"],
       },
     ],
   },

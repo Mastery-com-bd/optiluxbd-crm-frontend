@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
                   <MoonIcon className="w-6 h-6" />
                 </button>
               </div>
-              <NotificationBell />
+              {/* <NotificationBell /> */}
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
