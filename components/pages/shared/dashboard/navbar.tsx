@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
   currentUser,
@@ -39,6 +40,7 @@ const Navbar: React.FC = () => {
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
+        dispatch(baseApi.util.resetApiState());
         toast.success(res?.message, {
           id: toastId,
           duration: 3000,

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
   currentUser,
@@ -53,6 +54,7 @@ export default function Navbar() {
       const res = await logout(undefined).unwrap();
       if (res?.success) {
         dispatch(logOut());
+        dispatch(baseApi.util.resetApiState());
         toast.success(res?.message, {
           id: toastId,
           duration: 3000,
@@ -83,14 +85,16 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
         "fixed max-w-full w-full z-50 backdrop-blur-md bg-black/40 border-b border-white/10 ",
-        "text-white",
-      )}>
+        "text-white"
+      )}
+    >
       <div className="max-w-[1444px] mx-auto px-4 ">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             href="/"
-            className="text-yellow-400 font-bold text-xl flex items-center gap-2">
+            className="text-yellow-400 font-bold text-xl flex items-center gap-2"
+          >
             <Image
               src={"/images/OptiluxBD.png"}
               alt="optiluxBD"
@@ -107,8 +111,9 @@ export default function Navbar() {
                 href="/products"
                 className={cn(
                   "hover:text-yellow-400 transition",
-                  pathname === "/products" && "text-yellow-400",
-                )}>
+                  pathname === "/products" && "text-yellow-400"
+                )}
+              >
                 Products
               </Link>
             </li>
@@ -117,8 +122,9 @@ export default function Navbar() {
                 href="/all-user"
                 className={cn(
                   "hover:text-yellow-400 transition",
-                  pathname === "/products" && "text-yellow-400",
-                )}>
+                  pathname === "/products" && "text-yellow-400"
+                )}
+              >
                 Products
               </Link>
             </li>
@@ -151,7 +157,8 @@ export default function Navbar() {
                   console.log("clicked sun");
                 }}
                 className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
-                aria-label="Switch to light mode">
+                aria-label="Switch to light mode"
+              >
                 <SunIcon className="w-6 h-6" />
               </button>
               <NotificationBell />
@@ -161,7 +168,8 @@ export default function Navbar() {
                   console.log("clicked moon");
                 }}
                 className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
-                aria-label="Switch to dark mode">
+                aria-label="Switch to dark mode"
+              >
                 <MoonIcon className="w-6 h-6" />
               </button>
             </div>
@@ -173,7 +181,8 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-black/80 text-white border border-gray-700 space-y-1">
+                className="bg-black/80 text-white border border-gray-700 space-y-1"
+              >
                 <DropdownMenuItem>
                   <Link href="/products" className="w-full block">
                     Products
@@ -199,7 +208,8 @@ export default function Navbar() {
                     <Link
                       hidden={!user}
                       href={dashboardRoute}
-                      className="w-full block text-orange-400">
+                      className="w-full block text-orange-400"
+                    >
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
@@ -213,7 +223,8 @@ export default function Navbar() {
                   <DropdownMenuItem>
                     <Link
                       href="/login"
-                      className="w-full text-yellow-300 flex items-center">
+                      className="w-full text-yellow-300 flex items-center"
+                    >
                       <LogIn size={16} className="mr-2" />
                       Login
                     </Link>
@@ -233,7 +244,8 @@ export default function Navbar() {
                   console.log("clicked sun");
                 }}
                 className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                aria-label="Switch to light mode">
+                aria-label="Switch to light mode"
+              >
                 <SunIcon className="w-6 h-6" />
               </button>
               <button
@@ -242,7 +254,8 @@ export default function Navbar() {
                   console.log("clicked moon");
                 }}
                 className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                aria-label="Switch to dark mode">
+                aria-label="Switch to dark mode"
+              >
                 <MoonIcon className="w-6 h-6" />
               </button>
             </div>
@@ -252,7 +265,8 @@ export default function Navbar() {
                   <Button
                     className="bg-orange-500 hover:bg-orange-600 text-white flex gap-2 cursor-pointer"
                     size="sm"
-                    variant="default">
+                    variant="default"
+                  >
                     <LayoutDashboard size={16} />
                     Dashboard
                   </Button>
@@ -260,7 +274,8 @@ export default function Navbar() {
                 <Button
                   onClick={handleLogOut}
                   variant="ghost"
-                  className="text-red-400 hover:text-white p-2 cursor-pointer">
+                  className="text-red-400 hover:text-white p-2 cursor-pointer"
+                >
                   <LogOut size={18} />
                 </Button>
               </>
@@ -268,7 +283,8 @@ export default function Navbar() {
               <Link href="/login">
                 <Button
                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold cursor-pointer"
-                  size="sm">
+                  size="sm"
+                >
                   <LogIn size={16} className="mr-2" /> Login
                 </Button>
               </Link>

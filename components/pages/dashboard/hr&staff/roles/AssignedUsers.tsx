@@ -31,6 +31,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
   // get unassigned users
   const [filters, setFilters] = useState({
     search: "",
+    limit: 5,
   });
   const { data, isLoading } = useGetUnassignedUsersQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -68,6 +69,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
         toast.success(res?.message, { duration: 3000 });
         setFilters({
           search: "",
+          limit: 5,
         });
         setSelectedUserId(null);
         setLoading(false);
@@ -90,10 +92,10 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
         <Users className="h-4 w-4" /> Assigned Users
       </h4>
 
-      <div className="flex flex-col justify-between h-full p-2 rounded">
+      <div className="flex flex-col justify-between h-full rounded ">
         <div className="flex-1 overflow-y-auto">
           {role.users.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap">
               {role?.users?.map((ru) => (
                 <div key={ru.id} className="relative group p-1 ">
                   <Link href={`/dashboard/admin/manage-users/${ru?.user?.id}`}>
@@ -120,7 +122,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
             onOpenChange={(value) => {
               setOpen(value);
               if (!value) {
-                setFilters({ search: "" });
+                setFilters({ search: "", limit: 5 });
                 setSelectedUserId(null);
                 setLoading(false);
               }
@@ -130,7 +132,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 w-full"
+                className="flex items-center gap-2 w-full cursor-pointer"
               >
                 <UserPlus className="h-4 w-4" /> Add User
               </Button>
@@ -150,11 +152,7 @@ const AssignedUsers = ({ role }: TUnassignedUserProps) => {
                 />
 
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto">
-                  {!filters.search.trim() ? (
-                    <p className="text-sm text-muted-foreground">
-                      Type to search users...
-                    </p>
-                  ) : isLoading ? (
+                  {isLoading ? (
                     <p className="text-sm text-muted-foreground">Loading...</p>
                   ) : unAssignedUsers.length === 0 ? (
                     <p className="text-sm text-muted-foreground">

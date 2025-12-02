@@ -134,6 +134,7 @@ const CustomerdataModal = ({
         toast.success(res?.message, { duration: 3000 });
         setOpenModal(false);
         setSelectedTeam(null);
+        setCount(0);
         setLoading(false);
       }
     } catch (error: any) {
