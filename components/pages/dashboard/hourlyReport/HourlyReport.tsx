@@ -13,7 +13,7 @@ const HourlyReport = () => {
     "Team Hourly Report"
   );
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-6">
       <div className="flex items-center gap-1">
         {tabs.map((tab) => (
           <Button

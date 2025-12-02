@@ -40,6 +40,12 @@ export interface OrderProduct {
   subCategory: OrderSubCategory;
 }
 
+export interface TOrderPackage {
+  id: number;
+  name: string;
+  packagePrice: string;
+}
+
 export interface OrderCourier {
   id: number;
   status: string;
@@ -76,8 +82,8 @@ export interface Order {
   shipping_address_geo_lng: string | null;
   agent: OrderAgent;
   customer: OrderCustomer;
-  product: OrderProduct;
-  package: any | null;
+  product: OrderProduct | null;
+  package: TOrderPackage | null;
   courier: OrderCourier;
 }
 

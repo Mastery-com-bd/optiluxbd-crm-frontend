@@ -3,7 +3,6 @@
 import { Card } from "@/components/ui/card";
 import {
   Order,
-  OrderProduct,
   TAgentPerformanceType,
 } from "@/types/overAllReport/agentPerformanceType";
 import { ArrowUp, ClipboardList, Coins, DollarSign, Users } from "lucide-react";
@@ -36,7 +35,10 @@ const AgentPerformence = ({
 
     topAgents.forEach((agent) => {
       agent?.orders.forEach((order) => {
-        const categoryName = order?.product?.subCategory?.category?.name;
+        // Handle both product and package data
+        const categoryName =
+          order?.product?.subCategory?.category?.name ||
+          (order?.package ? "Packages" : "Uncategorized");
         const amount = parseFloat(order?.totalAmount);
         categoryMap[categoryName] = (categoryMap[categoryName] || 0) + amount;
         totalSales += amount;
@@ -99,27 +101,53 @@ const AgentPerformence = ({
 
   // Get unique products from all orders
   const getProductInventory = () => {
-    const productMap: { [key: string]: OrderProduct & { totalStock: number } } =
-      {};
+    const itemMap: {
+      [key: string]: {
+        name: string;
+        totalStock: number;
+        price: string;
+        type: "product" | "package";
+      };
+    } = {};
 
     topAgents.forEach((agent) => {
       agent.orders.forEach((order) => {
-        const productId = order.product.id.toString();
-        if (!productMap[productId]) {
-          productMap[productId] = {
-            ...order?.product,
-            totalStock: 0,
-          };
+        // Handle products
+        if (order?.product) {
+          const productId = `product-${order.product.id}`;
+          if (!itemMap[productId]) {
+            itemMap[productId] = {
+              name: order.product.name,
+              totalStock: 0,
+              price: order.product.price,
+              type: "product",
+            };
+          }
+          itemMap[productId].totalStock += order.quantity;
         }
-        productMap[productId].totalStock += order.quantity;
+
+        // Handle packages
+        if (order?.package) {
+          const packageId = `package-${order.package.id}`;
+          if (!itemMap[packageId]) {
+            itemMap[packageId] = {
+              name: order.package.name,
+              totalStock: 0,
+              price: order.package.packagePrice,
+              type: "package",
+            };
+          }
+          itemMap[packageId].totalStock += order.quantity;
+        }
       });
     });
 
-    return Object.values(productMap).map((product) => ({
-      name: product.name,
-      stock: product.totalStock,
+    return Object.values(itemMap).map((item) => ({
+      name: item.name,
+      stock: item.totalStock,
       ratings: (4.0 + Math.random()).toFixed(1),
-      price: `৳${parseFloat(product.price).toFixed(2)}`,
+      price: `৳${parseFloat(item.price).toFixed(2)}`,
+      type: item.type,
     }));
   };
 
@@ -463,7 +491,7 @@ const AgentPerformence = ({
                 <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
-                    style={{ width: `${parseFloat(agent?.deliveryRate)}%` }}
+                    style={{ width: `${parseFloat(agent.deliveryRate)}%` }}
                   />
                 </div>
               </div>
