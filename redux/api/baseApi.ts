@@ -84,6 +84,7 @@ export const baseApi = createApi({
     "unassigned-user",
     "assigned-leads",
     "pending-leads",
+    "complain",
   ],
   endpoints: () => ({}),
 });
