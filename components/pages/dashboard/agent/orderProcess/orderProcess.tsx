@@ -37,21 +37,28 @@ import {
   useUpdateLeadStatusMutation,
 } from "@/redux/features/leads/leadsAgentApi";
 import {
+  ArrowBigUpDash,
+  Calendar1Icon,
   CheckCircle,
   Clock,
   Eye,
+  GraduationCapIcon,
   Loader2,
   Mail,
   MapPin,
   Package,
   Phone,
+  Trash2,
   User,
+  Users2,
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import AddAddressDialog from "../addAddressDialog";
 import CreateOrderForm from "../orders/create-order/CreateOrderForm";
+import { Input } from "@/components/ui/input";
+import { useUpdateCustomerInfoMutation } from "@/redux/features/customers/cutomersApi";
 
 type BatchType = {
   id: number;
@@ -112,6 +119,11 @@ interface CustomerAddress {
   updated_at: string;
 }
 
+interface CustomField {
+  fieldName: string;
+  fieldValue: string;
+}
+
 interface customer {
   id: number;
   name: string;
@@ -125,6 +137,12 @@ interface customer {
   batchId: number;
   lastContactAt: null;
   status: string;
+  date_of_birth: string | null;
+  profession: string | null;
+  isMarried: boolean | null;
+  customFields: {
+    data: CustomField[] | null;
+  };
 }
 
 interface TCurrentCustomer extends customer {
@@ -143,13 +161,6 @@ interface PendingLeadsType {
 }
 
 const OrderProcessingSystem = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [customerOutcome, setCustomerOutcome] = useState<string>("");
-  const [note, setNote] = useState<string>("");
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null
-  );
-
   /* Pending Customer Data */
   const { data: pendingLeads, isLoading: pendingLeadsLoading } =
     useGetPendingCustomersQuery(undefined);
@@ -166,13 +177,70 @@ const OrderProcessingSystem = () => {
   /* Update Lead Status */
   const [updateLeadStatus] = useUpdateLeadStatusMutation();
 
+  /* Upadte Customer Information */
+  const [updateCustomerInfo] = useUpdateCustomerInfoMutation();
+
   /* Assigned Customer Data */
   const { data: assignedLeads, isLoading: assignedLeadsLoading } =
     useGetAssignCustomersQuery(undefined);
   const assignedCustomerData: TCurrentCustomer = assignedLeads?.data;
   const currentCustomer = assignedCustomerData?.customers[0];
+  const currentCustomerCustomFields = currentCustomer?.customFields?.data;
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [customerOutcome, setCustomerOutcome] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null
+  );
+  const [additionalInfo, setAdditionalInfo] = useState<CustomField[]>([]);
+
+  /* Handle Add Additional Info */
+  const handleAddAdditionalInfo = async (
+    data: { fieldName: string; fieldValue: string }[]
+  ) => {
+    setLoading(true);
+    toast.loading("Updating additional info...");
+
+    const payload = {
+      id: currentCustomer?.id,
+      customerData: {
+        customFields: {
+          data: [...(currentCustomerCustomFields || []), ...data],
+        },
+      },
+    };
+
+    console.log(payload);
+
+    try {
+      const res = await updateCustomerInfo(payload).unwrap();
+      if (res?.success) {
+        toast.dismiss();
+        setLoading(false);
+        toast.success(res?.message, {
+          duration: 3000,
+        });
+        setAdditionalInfo([]);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.dismiss();
+      toast.error("Failed to update additional info");
+      setLoading(false);
+    }
+  };
 
   const handleStatusUpdate = async () => {
+    if (additionalInfo?.length) {
+      handleAddAdditionalInfo(additionalInfo);
+      return;
+    }
+
+    if (!customerOutcome) {
+      return toast.error("Please select outcome");
+    }
+
     setLoading(true);
     toast.loading("Updating status...");
 
@@ -182,14 +250,10 @@ const OrderProcessingSystem = () => {
       note: note,
       addressId: selectedAddressId,
     };
-    if (!customerOutcome || !note) {
-      toast.error("Please select outcome and add note");
-      setLoading(false);
-      return;
-    }
+
     try {
       const res = await updateLeadStatus(payload).unwrap();
-      console.log("Update Lead Status Response", res);
+
       if (res?.success) {
         toast.dismiss();
         setLoading(false);
@@ -709,7 +773,7 @@ const OrderProcessingSystem = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 rounded-lg border md:col-span-2">
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
                       <Mail className="w-5 h-5 mt-0.5" />
                       <div>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -720,90 +784,207 @@ const OrderProcessingSystem = () => {
                         </p>
                       </div>
                     </div>
-                    {/* Address Selection */}
-                    <div className="space-y-3 md:col-span-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                          <p className="text-base font-semibold text-gray-800 dark:text-gray-100">
-                            Delivery Address
-                          </p>
-                        </div>
-                        <AddAddressDialog userId={currentCustomer?.id} />
-                      </div>
-                      {currentCustomer?.addresses?.length > 0 ? (
-                        <div className="space-y-2">
-                          {currentCustomer.addresses.map((addr) => (
-                            <label
-                              key={addr.id}
-                              className="flex items-center gap-4 p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 cursor-pointer"
-                            >
-                              <input
-                                type="radio"
-                                name="address"
-                                value={addr.id}
-                                onChange={(e) =>
-                                  setSelectedAddressId(Number(e.target.value))
-                                }
-                                className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <div className="w-full flex items-center justify-between min-w-0">
-                                <div>
-                                  {/* Primary address line */}
-                                  <p className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-                                    {addr.street}
-                                  </p>
-                                  {/* Secondary locality */}
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    {addr.thana}, {addr.city} – {addr.post}
-                                  </p>
-                                </div>
-                                {/* Metadata row */}
-                                <div className="gap-4 text-xs text-gray-500 dark:text-gray-400 space-y-1.5">
-                                  {/* Division badge */}
-                                  <div className="">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                                      {addr.division}
-                                    </span>
-                                  </div>
-                                  {addr.zone_id && (
-                                    <span>
-                                      Zone{" "}
-                                      <span className="font-medium">
-                                        {addr.zone_id}
-                                      </span>
-                                    </span>
-                                  )}
-                                  {addr.geo_lat && addr.geo_lng && (
-                                    <span>
-                                      Lat:{" "}
-                                      <span className="font-medium">
-                                        {addr.geo_lat}
-                                      </span>
-                                      , Lng:{" "}
-                                      <span className="font-medium">
-                                        {addr.geo_lng}
-                                      </span>
-                                    </span>
-                                  )}
-                                  <span>
-                                    ID:{" "}
-                                    <span className="font-medium">
-                                      {addr.id}
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          No addresses available
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
+                      <Calendar1Icon className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Date Of Birth
                         </p>
-                      )}
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.date_of_birth || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
+                      <GraduationCapIcon className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Profession
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.profession || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg border">
+                      <Users2 className="w-5 h-5 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Married Status
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {currentCustomer?.isMarried || "N/A"}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                  <div>
+                    <div className="w-full flex justify-between items-center border-b dark:border-gray-700 ">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
+                        Additional Information
+                      </h3>
+                      <Button
+                        onClick={() =>
+                          setAdditionalInfo([
+                            ...additionalInfo,
+                            { fieldName: "", fieldValue: "" },
+                          ])
+                        }
+                        size="sm"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mb-2"
+                      >
+                        Add New
+                      </Button>
+                    </div>
+                    <div className="w-full flex flex-col gap-4 mt-4">
+                      {currentCustomerCustomFields?.map(
+                        (
+                          item: { fieldName: string; fieldValue: string },
+                          index: number
+                        ) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 p-3 rounded-lg border bg-gray-50 dark:bg-gray-800"
+                          >
+                            <div className="flex-1 space-y-1">
+                              <p className="text-sm text-gray-900 dark:text-gray-100">
+                                {item.fieldName}
+                              </p>
+                            </div>
+                            <div className="flex-1 space-y-1">
+                              <p className="text-sm text-gray-900 dark:text-gray-100">
+                                {item.fieldValue}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                    <div className="w-full flex flex-col gap-4 mt-4">
+                      {additionalInfo?.map((item, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input
+                            value={item.fieldName}
+                            onChange={(e) => {
+                              const newInfo = [...additionalInfo];
+                              newInfo[index].fieldName = e.target.value;
+                              setAdditionalInfo(newInfo);
+                            }}
+                            placeholder="Field name"
+                            className="flex-1"
+                          />
+                          <span className="text-gray-500 dark:text-gray-400">
+                            :
+                          </span>
+                          <Input
+                            value={item.fieldValue}
+                            onChange={(e) => {
+                              const newInfo = [...additionalInfo];
+                              newInfo[index].fieldValue = e.target.value;
+                              setAdditionalInfo(newInfo);
+                            }}
+                            placeholder="Field value"
+                            className="flex-1"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              const newInfo = additionalInfo.filter(
+                                (_, i) => i !== index
+                              );
+                              setAdditionalInfo(newInfo);
+                            }}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Address Selection */}
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between border-b">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      <p className="text-base font-semibold text-gray-800 dark:text-gray-100">
+                        Delivery Address
+                      </p>
+                    </div>
+                    <AddAddressDialog userId={currentCustomer?.id} />
+                  </div>
+                  {currentCustomer?.addresses?.length > 0 ? (
+                    <div className="space-y-2">
+                      {currentCustomer.addresses.map((addr) => (
+                        <label
+                          key={addr.id}
+                          className="flex items-center gap-4 p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 cursor-pointer"
+                        >
+                          <input
+                            type="radio"
+                            name="address"
+                            value={addr.id}
+                            onChange={(e) =>
+                              setSelectedAddressId(Number(e.target.value))
+                            }
+                            className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                          />
+                          <div className="w-full flex items-center justify-between min-w-0">
+                            <div>
+                              {/* Primary address line */}
+                              <p className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+                                {addr.street}
+                              </p>
+                              {/* Secondary locality */}
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {addr.thana}, {addr.city} – {addr.post}
+                              </p>
+                            </div>
+                            {/* Metadata row */}
+                            <div className="gap-4 text-xs text-gray-500 dark:text-gray-400 space-y-1.5">
+                              {/* Division badge */}
+                              <div className="">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                  {addr.division}
+                                </span>
+                              </div>
+                              {addr.zone_id && (
+                                <span>
+                                  Zone{" "}
+                                  <span className="font-medium">
+                                    {addr.zone_id}
+                                  </span>
+                                </span>
+                              )}
+                              {addr.geo_lat && addr.geo_lng && (
+                                <span>
+                                  Lat:{" "}
+                                  <span className="font-medium">
+                                    {addr.geo_lat}
+                                  </span>
+                                  , Lng:{" "}
+                                  <span className="font-medium">
+                                    {addr.geo_lng}
+                                  </span>
+                                </span>
+                              )}
+                              <span>
+                                ID:{" "}
+                                <span className="font-medium">{addr.id}</span>
+                              </span>
+                            </div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      No addresses available
+                    </p>
+                  )}
                 </div>
 
                 {/* Order Information */}
@@ -823,7 +1004,10 @@ const OrderProcessingSystem = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
-                        <CreateOrderForm showAddCustomer={false} existingCustomerId={currentCustomer?.id} />
+                        <CreateOrderForm
+                          showAddCustomer={false}
+                          existingCustomerId={currentCustomer?.id}
+                        />
                       </DialogContent>
                     </Dialog>
                   </div>
@@ -985,9 +1169,15 @@ const OrderProcessingSystem = () => {
                   {loading ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   ) : (
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                    <span>
+                      {additionalInfo?.length ? (
+                        <ArrowBigUpDash className="w-4 h-4 mr-2" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                      )}
+                    </span>
                   )}
-                  Confirm Status
+                  {additionalInfo?.length ? "Update Info" : "Confirm Status"}
                 </Button>
               </CardFooter>
             </Card>
