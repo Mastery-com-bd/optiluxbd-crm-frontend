@@ -50,7 +50,10 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
     setLoading(true);
 
     const payload = {
-      data: form,
+      data: {
+        ...form,
+        post: form.post ? form.post : "00"
+      },
       customerId: userId,
     };
 
@@ -88,7 +91,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+        <Button variant="outline" size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mb-2">
           Add Address
         </Button>
       </DialogTrigger>
