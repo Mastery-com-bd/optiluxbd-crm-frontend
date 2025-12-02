@@ -59,6 +59,7 @@ import AddAddressDialog from "../addAddressDialog";
 import CreateOrderForm from "../orders/create-order/CreateOrderForm";
 import { Input } from "@/components/ui/input";
 import { useUpdateCustomerInfoMutation } from "@/redux/features/customers/cutomersApi";
+import EditCustomerDetails from "../editCustomerInfoDialog";
 
 type BatchType = {
   id: number;
@@ -747,9 +748,12 @@ const OrderProcessingSystem = () => {
               <CardContent className="pt-6 space-y-6">
                 {/* Customer Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
-                    Customer Details :
-                  </h3>
+                  <div className="flex items-center justify-between border-b">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
+                      Customer Details :
+                    </h3>
+                    <EditCustomerDetails details={{name: currentCustomer.name, phone: currentCustomer.phone, email: currentCustomer.email, date_of_birth: currentCustomer.date_of_birth, profession: currentCustomer.profession, isMarried: currentCustomer.isMarried}} userId={currentCustomer?.id} />
+                  </div>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="flex items-start gap-3 p-3 rounded-lg border">
                       <User className="w-5 h-5 mt-0.5" />
@@ -813,7 +817,7 @@ const OrderProcessingSystem = () => {
                           Married Status
                         </p>
                         <p className="font-medium text-gray-900 dark:text-gray-100">
-                          {currentCustomer?.isMarried || "N/A"}
+                          {currentCustomer?.isMarried ? "Married" : "Unmarried"}
                         </p>
                       </div>
                     </div>
