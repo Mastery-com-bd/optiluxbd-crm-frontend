@@ -40,7 +40,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
-  console.log(permissions);
+
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     Promise.resolve().then(() => {

@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Clock } from "lucide-react";
 
 const HourlyReportSkeleton = () => {
   return (
@@ -34,11 +35,23 @@ const HourlyReportSkeleton = () => {
       </div>
 
       {/* Report Summary Section */}
-      <div className="flex flex-col items-center space-y-3 w-full">
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-6 w-60" />
-      </div>
+      <Card className="px-6">
+        <div className="flex flex-wrap justify-between items-center gap-4">
+          {/* Left Section */}
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-40" />
+          </div>
+
+          {/* Right Section */}
+          <div className="text-right space-y-2">
+            <div className="flex items-center justify-end gap-2">
+              <Clock className="w-5 h-5 text-muted-foreground" />
+              <Skeleton className="h-5 w-32" />
+            </div>
+            <Skeleton className="h-4 w-28" />
+          </div>
+        </div>
+      </Card>
 
       <div className="space-y-4">
         {/* First Card */}

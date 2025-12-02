@@ -4,7 +4,6 @@
 import { useGetHourlyTeamReportQuery } from "@/redux/features/report&analytics/reportAndAnalyticsApi";
 import { THourlyReportItem } from "@/types/report/hourlyReportType";
 import { useState } from "react";
-import LeaderList from "./LeaderList";
 import {
   Popover,
   PopoverContent,
@@ -26,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format } from "date-fns";
 import HourlyReportSkeleton from "./skeleton/HourlyReportSkeleton";
 import { Card } from "@/components/ui/card";
 import {
@@ -42,6 +40,7 @@ import {
   YAxis,
 } from "recharts";
 import { convertDate } from "@/utills/dateConverter";
+import LeaderList from "./LeaderList";
 
 export type THourlyReport = {
   startDate?: string;
@@ -190,6 +189,14 @@ const HourlyTeamreport = () => {
       }));
   };
 
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   const summary = calculateSummary();
   const hourlyData = prepareHourlyData();
   const distributionData = prepareDistributionData();
@@ -305,25 +312,49 @@ const HourlyTeamreport = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col items-center">
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {report?.reportType}
-          </p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            Intreval: {report?.intervalHours} Hours
-          </p>
-          <p className="flex flex-col space-y-2">
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {report?.period?.startLocal
-                ? format(new Date(report?.period?.startLocal), "yyyy-MM-dd")
-                : "No date"}{" "}
-              →{" "}
-              {report?.period?.endLocal
-                ? format(new Date(report?.period?.endLocal), "yyyy-MM-dd")
-                : "No date"}
-            </span>
-          </p>
-        </div>
+        <Card className="px-6">
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold">{report?.reportType}</h1>
+              <p className="opacity-90 flex items-center gap-2">
+                {report?.period?.startLocal
+                  ? new Date(report?.period?.startLocal).toLocaleDateString(
+                      "en-GB",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                      }
+                    )
+                  : ""}
+                →
+                {report?.period?.endLocal
+                  ? new Date(report?.period?.endLocal).toLocaleDateString(
+                      "en-GB",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                      }
+                    )
+                  : ""}
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                <span className="font-semibold">
+                  {formatTime(report?.period?.startLocal || "")} -{" "}
+                  {formatTime(report?.period?.endLocal || "")}
+                </span>
+              </div>
+              <p className="text-sm opacity-90">
+                Interval: {report.intervalHours} hour
+                {report.intervalHours > 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+        </Card>
       </div>
       <div className="space-y-6">
         {/* Summary Cards */}
