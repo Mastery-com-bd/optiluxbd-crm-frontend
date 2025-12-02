@@ -3,13 +3,7 @@ import { buildParams } from "@/utills/paramsBuilder";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getProfile: builder.query({
-      query: () => ({
-        url: `/auth/profile`,
-        method: "GET",
-      }),
-      providesTags: ["user"],
-    }),
+    // login user profile
     getMyProfile: builder.query({
       query: () => ({
         url: `/users/profile`,
@@ -17,6 +11,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    // admin can get all users
     getAllUsers: builder.query({
       query: (params = {}) => ({
         url: `/users?${buildParams(params)}`,
@@ -25,6 +20,7 @@ const authApi = baseApi.injectEndpoints({
       providesTags: ["user"],
       keepUnusedDataFor: 3000,
     }),
+    // admin can get all unassign agent
     getAllUnassignedAgents: builder.query({
       query: (params = {}) => ({
         url: `/users/unassigned-agents?${buildParams(params)}`,
@@ -32,13 +28,15 @@ const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["unassigned-agents"],
     }),
+    // admin can get all user who has no role
     getUnassignedUsers: builder.query({
       query: (params = {}) => ({
         url: `/users/without-roles?${buildParams(params)}`,
         method: "GET",
       }),
-      providesTags: ["unassigned-agents"],
+      providesTags: ["unassigned-user"],
     }),
+    // admin can get a single user
     getASingleUser: builder.query({
       query: (id) => ({
         url: `/users/${id}`,
@@ -47,6 +45,7 @@ const authApi = baseApi.injectEndpoints({
       providesTags: ["user"],
       keepUnusedDataFor: 3000,
     }),
+    // user image upload system
     userImageUpload: builder.mutation({
       query: (data) => ({
         url: `/images/users/${data.id}/avatar`,
@@ -55,6 +54,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // image delete system
     deleteUserImage: builder.mutation({
       query: (id) => ({
         url: `/images/users/${id}/avatar`,
@@ -62,6 +62,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // user can update his information
     updateUserInfo: builder.mutation({
       query: (data) => ({
         url: `/users/${data.id}`,
@@ -70,6 +71,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // admin can update a users status
     updateUSerStatus: builder.mutation({
       query: ({ data, id }) => ({
         url: `/auth/users/${id}/status`,
@@ -78,6 +80,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // admin can suspoend a user
     suspendUser: builder.mutation({
       query: (id) => ({
         url: `/auth/users/${id}/suspend`,
@@ -85,6 +88,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // admin can activate a user
     activateUser: builder.mutation({
       query: (id) => ({
         url: `/auth/users/${id}/activate`,
@@ -92,6 +96,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // admin can manually create a user
     createUserByAdmin: builder.mutation({
       query: (data) => ({
         url: `/users`,
@@ -100,6 +105,7 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    // admin can delete a user
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/users/${id}`,
@@ -111,7 +117,6 @@ const authApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetProfileQuery,
   useGetMyProfileQuery,
   useGetAllUsersQuery,
   useGetAllUnassignedAgentsQuery,

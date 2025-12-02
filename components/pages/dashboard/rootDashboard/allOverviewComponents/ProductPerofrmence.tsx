@@ -3,7 +3,15 @@ import {
   TProductPerformanceItem,
   TProductPerformence,
 } from "@/types/report/productReportdataTypes";
-import { ClipboardList, DollarSign, Package, ShoppingCart } from "lucide-react";
+import {
+  Award,
+  ClipboardList,
+  DollarSign,
+  Package,
+  ShoppingCart,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import {
   PieChart,
   Pie,
@@ -23,8 +31,6 @@ import {
   Radar,
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Download, TrendingUp, Users, Award } from "lucide-react";
 
 const ProductPerofrmence = ({
   profuctPerformance,
@@ -86,25 +92,25 @@ const ProductPerofrmence = ({
     return [
       {
         metric: "Revenue",
-        value: (product.totalRevenue / maxRevenue) * 100,
+        value: (product?.totalRevenue / maxRevenue) * 100,
       },
       {
         metric: "Orders",
-        value: (product.totalOrders / maxOrders) * 100,
+        value: (product?.totalOrders / maxOrders) * 100,
       },
       {
         metric: "Quantity",
-        value: (product.totalQuantitySold / maxQuantity) * 100,
+        value: (product?.totalQuantitySold / maxQuantity) * 100,
       },
       {
         metric: "Success Rate",
-        value: parseFloat(product.deliverySuccessRate),
+        value: parseFloat(product?.deliverySuccessRate),
       },
       {
         metric: "Customers",
         value:
-          (product.uniqueCustomers /
-            Math.max(...products.map((p) => p.uniqueCustomers))) *
+          (product?.uniqueCustomers /
+            Math.max(...products.map((p) => p?.uniqueCustomers))) *
           100,
       },
     ];

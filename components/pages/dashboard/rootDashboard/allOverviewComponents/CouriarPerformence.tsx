@@ -40,7 +40,8 @@ const CouriarPerformence = ({
   couriarPerformance: TCouriarperformanceType;
 }) => {
   const summary = couriarPerformance?.summary;
-  const couriers = couriarPerformance?.services as ICourierPerformanceItem[];
+  const couriers =
+    (couriarPerformance?.services as ICourierPerformanceItem[]) || [];
 
   const totalMetrics = {
     totalShipments: couriers.reduce(
@@ -101,44 +102,44 @@ const CouriarPerformence = ({
 
   // Bar Chart: Top 6 Couriers by Total Shipments
   const topCouriersForBar = [...couriers]
-    .sort((a, b) => b.totalShipments - a.totalShipments)
+    .sort((a, b) => b?.totalShipments - a?.totalShipments)
     .slice(0, 6)
     .map((c) => ({
       name:
-        c.courierService.length > 14
-          ? c.courierService.substring(0, 14) + "..."
-          : c.courierService,
-      delivered: c.deliveredShipments,
-      pending: c.pendingShipments,
-      returned: c.returnedShipments,
-      cancelled: c.cancelledShipments,
+        c?.courierService.length > 14
+          ? c?.courierService.substring(0, 14) + "..."
+          : c?.courierService,
+      delivered: c?.deliveredShipments,
+      pending: c?.pendingShipments,
+      returned: c?.returnedShipments,
+      cancelled: c?.cancelledShipments,
     }));
 
   // Radar Chart: Top 3 Couriers Comparison
   const topThree = [...couriers]
-    .sort((a, b) => b.totalShipments - a.totalShipments)
+    .sort((a, b) => b?.totalShipments - a?.totalShipments)
     .slice(0, 3);
 
   const maxValues = {
-    shipments: Math.max(...couriers.map((c) => c.totalShipments), 1),
-    delivered: Math.max(...couriers.map((c) => c.deliveredShipments), 1),
-    cod: Math.max(...couriers.map((c) => c.totalCODAmount), 1),
+    shipments: Math.max(...couriers.map((c) => c?.totalShipments), 1),
+    delivered: Math.max(...couriers.map((c) => c?.deliveredShipments), 1),
+    cod: Math.max(...couriers.map((c) => c?.totalCODAmount), 1),
   };
 
   const getRadarScore = (courier: ICourierPerformanceItem) => [
     {
       metric: "Shipments",
-      value: (courier.totalShipments / maxValues.shipments) * 100,
+      value: (courier?.totalShipments / maxValues.shipments) * 100,
     },
     {
       metric: "Delivered",
-      value: (courier.deliveredShipments / maxValues.delivered) * 100,
+      value: (courier?.deliveredShipments / maxValues.delivered) * 100,
     },
-    { metric: "Success Rate", value: parseFloat(courier.deliverySuccessRate) },
-    { metric: "Low Return", value: 100 - parseFloat(courier.returnRate) },
+    { metric: "Success Rate", value: parseFloat(courier?.deliverySuccessRate) },
+    { metric: "Low Return", value: 100 - parseFloat(courier?.returnRate) },
     {
       metric: "COD Value",
-      value: (courier.totalCODAmount / maxValues.cod) * 100,
+      value: (courier?.totalCODAmount / maxValues.cod) * 100,
     },
   ];
 

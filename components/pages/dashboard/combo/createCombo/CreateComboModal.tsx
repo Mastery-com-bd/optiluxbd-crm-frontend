@@ -24,7 +24,7 @@ import {
   ImageIcon,
   Plus,
 } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { TComboData } from "./CreateCombo";
@@ -40,8 +40,10 @@ import { TComboPack } from "@/types/comboPackage";
 
 const CreateComboModal = ({
   selectedProducts,
+  setSelectedProducts,
 }: {
   selectedProducts: TComboData[];
+  setSelectedProducts: Dispatch<SetStateAction<TComboData[]>>;
 }) => {
   const [open, setOpen] = useState(false);
   const [createCombo] = useCreateComboMutation();
@@ -69,6 +71,7 @@ const CreateComboModal = ({
         toast.success(res?.message, { duration: 3000 });
         reset();
         setOpen(false);
+        setSelectedProducts([]);
       }
     } catch (error: any) {
       const errorInfo =

@@ -45,7 +45,7 @@ const rolesApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["roles", "user", "permissions"],
+      invalidatesTags: ["roles", "user", "unassigned-user"],
     }),
     removeRoleFromUser: builder.mutation({
       query: ({ roleId, data }) => ({

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import { TUser } from "@/types/user/user.types";
 import { debounce } from "@/utills/debounce";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { TAgentReportFilter } from "../AgentReport";
 import Image from "next/image";
 import { Check } from "lucide-react";
@@ -18,6 +18,8 @@ const SearchAgentInput = ({
 }) => {
   const [showUserList, setShowUserList] = useState(false);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "created_at",
@@ -30,25 +32,43 @@ const SearchAgentInput = ({
     refetchOnMountOrArgChange: false,
   });
   const agents = data?.data as TUser[];
-
   const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
   };
-
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(e.target as Node) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowUserList(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="w-full sm:w-1/2 relative">
       <Input
         type="text"
         placeholder="Search by agent name or id"
+        ref={inputRef}
         value={filters.search}
         onChange={(e) => debouncedLog(e.target.value)}
         onFocus={() => setShowUserList(true)}
-        onBlur={() => setTimeout(() => setShowUserList(false), 150)}
         className="w-full text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700"
       />
       {showUserList && filters.search.trim() && (
-        <div className="absolute top-10 bg-gray-700 p-2 rounded-xl">
+        <div
+          ref={dropdownRef}
+          className="absolute top-10 bg-gray-700 p-2 rounded-xl"
+        >
           {filters.search.trim() ? (
             isLoading ? (
               <p className="text-sm text-muted-foreground">Loading...</p>

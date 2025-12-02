@@ -20,11 +20,13 @@ const TeamReportModal = () => {
 
   return (
     <div>
-      <Button onClick={() => setOpen(true)}>View Team Report</Button>
+      <Button onClick={() => setOpen(true)} className="cursor-pointer">
+        View Team Report
+      </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
+            <DialogTitle className="text-xl font-semibold ">
               Team Report
             </DialogTitle>
           </DialogHeader>
