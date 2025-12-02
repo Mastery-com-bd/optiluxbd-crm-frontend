@@ -40,10 +40,10 @@ const GeographicalComponent = ({
 
   const totalMetrics = locations.reduce(
     (acc, loc) => ({
-      totalOrders: acc.totalOrders + loc.totalOrders,
-      deliveredOrders: acc.deliveredOrders + loc.deliveredOrders,
-      returnedOrders: acc.returnedOrders + loc.returnedOrders,
-      totalRevenue: acc.totalRevenue + loc.totalRevenue,
+      totalOrders: acc?.totalOrders + loc?.totalOrders,
+      deliveredOrders: acc?.deliveredOrders + loc?.deliveredOrders,
+      returnedOrders: acc?.returnedOrders + loc?.returnedOrders,
+      totalRevenue: acc?.totalRevenue + loc?.totalRevenue,
     }),
     { totalOrders: 0, deliveredOrders: 0, returnedOrders: 0, totalRevenue: 0 }
   );
@@ -101,23 +101,23 @@ const GeographicalComponent = ({
 
   // Bar Chart: Top 8 Locations by Orders
   const topLocationsByOrders = [...locations]
-    .sort((a, b) => b.totalOrders - a.totalOrders)
+    .sort((a, b) => b?.totalOrders - a?.totalOrders)
     .slice(0, 8)
     .map((loc) => ({
       name:
         loc.city === "Unknown"
           ? "Other/Unknown"
-          : loc.city.length > 12
-          ? loc.city.substring(0, 12) + "..."
-          : loc.city,
-      orders: loc.totalOrders,
-      revenue: Math.round(loc.totalRevenue / 1000), // in thousands
-      aov: parseFloat(loc.averageOrderValue),
+          : loc?.city.length > 12
+          ? loc?.city.substring(0, 12) + "..."
+          : loc?.city,
+      orders: loc?.totalOrders,
+      revenue: Math.round(loc?.totalRevenue / 1000), // in thousands
+      aov: parseFloat(loc?.averageOrderValue),
     }));
 
   // Top 5 Revenue Generating Locations
   const topRevenueLocations = [...locations]
-    .sort((a, b) => b.totalRevenue - a.totalRevenue)
+    .sort((a, b) => b?.totalRevenue - a?.totalRevenue)
     .slice(0, 5);
 
   return (

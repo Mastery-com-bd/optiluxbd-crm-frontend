@@ -163,7 +163,6 @@ const CreateOrderForm = ({
             ...baseData,
             packageId: data.packageId ? Number(data.packageId) : undefined,
           };
-    console.log(finalData);
     try {
       await createOrder(finalData).unwrap();
       toast.success("Order placed successfully", { id: toastId });

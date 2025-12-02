@@ -1,20 +1,22 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { THourlyReport } from "./HourlyReport";
 import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
 import { TUser } from "@/types/user/user.types";
 import { debounce } from "@/utills/debounce";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Check } from "lucide-react";
+import { THourlyReport } from "./HourlyTeamreport";
 
 const LeaderList = ({
   reportFilter,
   setReportFilter,
+  field,
 }: {
   reportFilter: THourlyReport;
   setReportFilter: Dispatch<SetStateAction<THourlyReport>>;
+  field: string;
 }) => {
   const [showUserList, setShowUserList] = useState(false);
   const [selectedLeaderId, setSelectedLeaderId] = useState<string | null>(null);
@@ -83,12 +85,28 @@ const LeaderList = ({
                   const id = user.id.toString();
                   if (selectedLeaderId === id) {
                     setSelectedLeaderId(null);
-                    setReportFilter({ ...reportFilter, teamLeaderId: "" });
-                    return;
+                    if (field === "teamLeaderId") {
+                      setReportFilter({
+                        ...reportFilter,
+                        teamLeaderId: "",
+                      });
+                      return;
+                    }
+                    if (field === "leaderId") {
+                      setReportFilter({
+                        ...reportFilter,
+                        leaderId: "",
+                      });
+                      return;
+                    }
+                  } else {
+                    setSelectedLeaderId(id);
+                    if (field === "teamLeaderId") {
+                      setReportFilter({ ...reportFilter, teamLeaderId: id });
+                    } else {
+                      setReportFilter({ ...reportFilter, leaderId: id });
+                    }
                   }
-
-                  setSelectedLeaderId(id);
-                  setReportFilter({ ...reportFilter, teamLeaderId: id });
                 }}
                 className={`flex items-center justify-between py-1 px-2 cursor-pointer transition rounded-md border border-red-600
                 ${

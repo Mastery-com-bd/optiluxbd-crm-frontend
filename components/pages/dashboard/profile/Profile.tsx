@@ -26,6 +26,7 @@ import EditInfoComponent from "./EditInfoComponent";
 import MyOrders from "./MyOrders";
 import ProfileImage from "./ProfileImage";
 import ProfileLoader from "./ProfileLoader";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 
 export interface IProfileInfo {
   id: number;
@@ -42,11 +43,11 @@ export interface IProfileInfo {
 
 const Profile = () => {
   const [checkInAttendence] = useCheckInAttendenceMutation();
-
   const [startBreak] = useStartBreakMutation();
   const [endBreak] = useEndBreakMutation();
   const [checkOutAttendence] = useCheckOutAttendenceMutation();
   const { data, isLoading } = useGetMyProfileQuery(undefined);
+  // const { data, isLoading } = useGetProfileQuery(undefined);
   const { data: attendenceData, isLoading: attendenceLoading } =
     useAttendenceHistoryQuery(undefined);
   const { data: allAttendenceData, isLoading: allAttendenceDataLoading } =
