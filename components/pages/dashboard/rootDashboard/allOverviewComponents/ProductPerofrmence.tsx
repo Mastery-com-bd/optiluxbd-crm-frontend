@@ -468,21 +468,21 @@ const ProductPerofrmence = ({
                 />
 
                 <Radar
-                  name={topThreeProducts[0].productName}
+                  name={topThreeProducts[0]?.productName}
                   dataKey="product1"
                   stroke="#6366f1"
                   fill="#6366f1"
                   fillOpacity={0.3}
                 />
                 <Radar
-                  name={topThreeProducts[1].productName}
+                  name={topThreeProducts[1]?.productName}
                   dataKey="product2"
                   stroke="#8b5cf6"
                   fill="#8b5cf6"
                   fillOpacity={0.3}
                 />
                 <Radar
-                  name={topThreeProducts[2].productName}
+                  name={topThreeProducts[2]?.productName}
                   dataKey="product3"
                   stroke="#ec4899"
                   fill="#ec4899"
