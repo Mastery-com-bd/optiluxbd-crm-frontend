@@ -33,6 +33,10 @@ const alwaysAllowedRoutes = [
   "/dashboard/couriar/test/steadfast-return-request",
   "/dashboard/my-activity",
   "/dashboard/agent/complaint",
+  "/dashboard/reminders",
+  "/dashboard/reminders/customer-reminders",
+  "/dashboard/reminders/upcoming-reminders",
+  "/dashboard/reminders/customer",
 ];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -67,9 +71,20 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // Always allowed pages for any logged-in user
+    // if (alwaysAllowedRoutes.includes(pathname)) {
+    //   return;
+    // }
+    // always allowed route
     if (alwaysAllowedRoutes.includes(pathname)) {
       return;
     }
+    const nestedAllowed = alwaysAllowedRoutes.some(
+      (route) => pathname !== route && pathname.startsWith(route + "/")
+    );
+    if (nestedAllowed) {
+      return;
+    }
+
     if (pathname === "/dashboard/activity" && !role.includes("ADMIN")) {
       router.replace("/dashboard/profile");
       return;

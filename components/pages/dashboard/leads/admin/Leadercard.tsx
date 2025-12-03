@@ -38,7 +38,7 @@ const Leadercard = ({
           </div>
 
           {/* View Details Link */}
-          <Link
+          {/* <Link
             className="flex items-center"
             href={`/dashboard/leads/admin/all-teams/${team?.leader?.id}`}
             onClick={(e) => e.stopPropagation()}
@@ -46,7 +46,7 @@ const Leadercard = ({
             <Button className="cursor-pointer" variant="ghost">
               View Details
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </CardHeader>
 

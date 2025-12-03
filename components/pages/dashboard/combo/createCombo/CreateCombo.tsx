@@ -33,7 +33,7 @@ const CreateCombo = () => {
     limit: 10,
     page: 1,
     status: "ACTIVE",
-    in_stock: true,
+    inStock: true,
   });
   // get all products
   const { data, isLoading } = useGetAllProductQuery(filters, {
