@@ -184,9 +184,8 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product }) => {
                 </button>
                 <button
                   type="button"
-                  className={`absolute top-2 left-2 px-3 py-1 text-xs bg-red-500 text-white rounded ${
-                    imageFile ? "block" : "hidden"
-                  }`}
+                  className={`absolute top-2 left-2 px-3 py-1 text-xs bg-red-500 text-white rounded ${imageFile ? "block" : "hidden"
+                    }`}
                   onClick={() => {
                     setImagePreview(product.image_url);
                     setImageFile(null);

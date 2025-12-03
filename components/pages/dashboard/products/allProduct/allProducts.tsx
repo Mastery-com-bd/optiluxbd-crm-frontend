@@ -192,7 +192,7 @@ const AllProducts = () => {
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
                   {
-                    categories?.map((category:{id:number, name:string}) => <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>)
+                    categories?.map((category: { id: number, name: string }) => <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>)
                   }
                 </SelectContent>
               </Select>
@@ -299,7 +299,7 @@ const AllProducts = () => {
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">{product.sku}</td>
-                      <td className="px-4 py-3 text-sm">{product.category}</td>
+                      <td className="px-4 py-3 text-sm">{product?.subCategory?.name}</td>
                       <td className="px-4 py-3 text-sm font-medium">
                         {product.stock}
                       </td>

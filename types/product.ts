@@ -1,4 +1,5 @@
 export interface Product {
+  subCategory: any;
   brand: string;
   category: string;
   created_at: string;

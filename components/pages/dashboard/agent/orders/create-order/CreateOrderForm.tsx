@@ -20,14 +20,14 @@ import { useAppSelector } from "@/redux/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
 import { useGetCustomerAddressQuery } from "@/redux/features/address/customerAddress";
-import { useGetAllProductQuery } from "@/redux/features/products/productsApi";
-import { useGetAllPackageQuery } from "@/redux/features/package/packageApi";
-import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
+import { useCreateOrderMutation, } from "@/redux/features/orders/ordersApi";
 import { CreateCustomer } from "./CreateCustomer";
 import CreateAddress from "./CreateAddress";
 import { toast } from "sonner";
 import { Address, Package, Product } from "@/types/orders";
 import { TCustomer } from "@/types/customer.types";
+import { useGetAllAvailableProductsQuery } from "@/redux/features/products/productsApi";
+import { useGetAvailablePackageQuery } from "@/redux/features/combo/comboApi";
 
 // Zod Schema
 const orderSchema = z.object({
@@ -114,7 +114,9 @@ const CreateOrderForm = ({
   });
 
   const { data: productData, isLoading: loadingProducts } =
-    useGetAllProductQuery(productFilters);
+    useGetAllAvailableProductsQuery(productFilters, {
+      refetchOnMountOrArgChange: true,
+    });
 
   const productDebounce = debounce((v: string) => {
     setProductFilters((prev) => ({ ...prev, search: v }));
@@ -130,7 +132,7 @@ const CreateOrderForm = ({
   });
 
   const { data: packageData, isLoading: loadingPackages } =
-    useGetAllPackageQuery(packageFilters, {
+    useGetAvailablePackageQuery(packageFilters, {
       skip: orderType === "product",
     });
 
@@ -156,13 +158,13 @@ const CreateOrderForm = ({
     const finalData =
       orderType === "product"
         ? {
-            ...baseData,
-            productId: data.productId ? Number(data.productId) : undefined,
-          }
+          ...baseData,
+          productId: data.productId ? Number(data.productId) : undefined,
+        }
         : {
-            ...baseData,
-            packageId: data.packageId ? Number(data.packageId) : undefined,
-          };
+          ...baseData,
+          packageId: data.packageId ? Number(data.packageId) : undefined,
+        };
     try {
       await createOrder(finalData).unwrap();
       toast.success("Order placed successfully", { id: toastId });

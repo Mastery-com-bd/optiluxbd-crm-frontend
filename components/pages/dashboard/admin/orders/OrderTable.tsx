@@ -37,7 +37,7 @@ export function OrderTable() {
 
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [courierOrders, setCourierOrders] = useState<any[]>([]);
+  const [courierOrders, setCourierOrders] = useState<{ [key: string]: any[] }>({});
   const { data, isLoading } = useGetAllOrdersQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
@@ -86,7 +86,7 @@ export function OrderTable() {
 
 
   const handleBookToCourier = () => {
-    const processedOrders = orders
+    const data = orders
       .filter((order: { id: number }) => selectedOrders.includes(order.id))
       .map((order: OrderData) => {
         const invoice = `INV-${order.id}`;
@@ -114,7 +114,8 @@ export function OrderTable() {
           cod_amount,
         };
       });
-
+    const processedOrders = { data }
+    console.log(processedOrders);
     setCourierOrders(processedOrders);
     setIsDialogOpen(true);
   };
