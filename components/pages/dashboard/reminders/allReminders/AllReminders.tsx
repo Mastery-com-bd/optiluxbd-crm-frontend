@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { useGetAllRemindersQuery } from "@/redux/features/reminders/reminderApi";
 import { IReminder } from "@/types/reminderTypes";
 import { useState } from "react";
-import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -19,6 +18,8 @@ import Link from "next/link";
 import { convertDate } from "@/utills/dateConverter";
 import ReminderStatistics from "./ReminderStatistics";
 import ReminderTableSkeleton from "./ReminderTableSkeleton";
+import AllReminderActionDropdown from "./AllReminderActionDropdown";
+import CreateReminder from "../createReminder/CreateReminder";
 
 const AllReminders = () => {
   const [filters, setFilters] = useState({
@@ -90,13 +91,13 @@ const AllReminders = () => {
             reminders.map((reminder) => (
               <TableRow key={reminder?.id}>
                 <TableCell className="font-medium">
-                  {/* <Link
+                  <Link
                     href={`/dashboard/reminders/customer/${reminder?.customer?.id}`}
                     className="text-blue-600 hover:underline"
                   >
                     {reminder?.customer?.name}
-                  </Link> */}
-                  {reminder?.customer?.name}
+                  </Link>
+                  {/* {reminder?.customer?.name} */}
                 </TableCell>
                 <TableCell className="font-medium">
                   {reminder?.customer?.customerId}
@@ -126,11 +127,10 @@ const AllReminders = () => {
                   {getNotificationStatus(reminder?.isNotified)}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/dashboard/reminders/${reminder?.id}`}>
-                    <Button size="sm">
-                      <span className="cursor-pointer ">View</span>
-                    </Button>
-                  </Link>
+                  <AllReminderActionDropdown
+                    id={reminder?.id}
+                    customerId={reminder?.customer?.id}
+                  />
                 </TableCell>
               </TableRow>
             ))

@@ -60,6 +60,39 @@ const reminderApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["reminders"],
     }),
+    // update reminder
+    updateReminder: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/reminders/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["reminders"],
+    }),
+    // complete reminder
+    completeReminder: builder.mutation({
+      query: (id) => ({
+        url: `/reminders/${id}/complete`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["reminders"],
+    }),
+    // camcel reminder
+    cancelReminder: builder.mutation({
+      query: (id) => ({
+        url: `/reminders/${id}/cancel`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["reminders"],
+    }),
+    // delete reminder
+    deleteReminder: builder.mutation({
+      query: (id) => ({
+        url: `/reminders/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["reminders"],
+    }),
   }),
 });
 export const {
@@ -70,4 +103,8 @@ export const {
   useGetOverdueReminderQuery,
   useGetCustomerReminderQuery,
   useCreateReminderMutation,
+  useUpdateReminderMutation,
+  useCompleteReminderMutation,
+  useCancelReminderMutation,
+  useDeleteReminderMutation,
 } = reminderApi;

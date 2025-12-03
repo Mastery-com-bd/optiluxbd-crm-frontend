@@ -87,12 +87,12 @@ const DeleteUSerModal = ({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200">
+          <AlertDialogCancel className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => handleConfirm(setLoading, id)}
-            className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-600"
+            className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-600 cursor-pointer"
             disabled={loading}
           >
             {loading ? "Deleting..." : "Yes, Delete"}
