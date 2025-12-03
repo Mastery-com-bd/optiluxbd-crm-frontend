@@ -65,7 +65,7 @@ const ReminderStatistics = () => {
           <div className="text-2xl font-bold">{stats?.todayReminders}</div>
           <p className="text-xs text-muted-foreground">Scheduled for today</p>
           {stats?.todayReminders > 0 && (
-            <Badge className="absolute top-3 right-3" variant="secondary">
+            <Badge className="absolute top-1 right-3" variant="secondary">
               Today
             </Badge>
           )}

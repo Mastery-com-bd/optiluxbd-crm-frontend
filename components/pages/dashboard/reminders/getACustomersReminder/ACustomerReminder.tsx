@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { IReminder } from "@/types/reminderTypes";
 import { convertDate } from "@/utills/dateConverter";
+import ReminderDetailsSkeleton from "./ReminderDetailsSkeleton";
 
 const ACustomerReminder = ({ id }: { id: string }) => {
   const { data, isLoading } = useGetASingleReminderQuery(id, {
@@ -46,7 +47,7 @@ const ACustomerReminder = ({ id }: { id: string }) => {
   const StatusIcon = currentStatus.icon;
 
   if (isLoading) {
-    return <h1>loading...</h1>;
+    return <ReminderDetailsSkeleton />;
   }
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
