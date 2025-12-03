@@ -67,5 +67,4 @@ export const {
   useGetAgentOrderSummaryQuery,
   useGetAgentOrdersQuery,
   useCreateOrderMutation,
-
 } = ordersApi;

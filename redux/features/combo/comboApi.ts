@@ -41,6 +41,12 @@ const comboApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["combo-package", "products"],
     }),
+    getAvailablePackage: builder.query({
+      query: (params) => ({
+        url: `/packages/available?${buildParams(params)}`,
+        method: "GET",
+      })
+    })
   }),
 });
 export const {
@@ -49,4 +55,5 @@ export const {
   useCreateComboMutation,
   useUpdateComboPackageMutation,
   useDeleteComboPackageMutation,
+  useGetAvailablePackageQuery,
 } = comboApi;
