@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { useGetAllRemindersQuery } from "@/redux/features/reminders/reminderApi";
 import { IReminder } from "@/types/reminderTypes";
 import { useState } from "react";
-import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -90,13 +89,13 @@ const AllReminders = () => {
             reminders.map((reminder) => (
               <TableRow key={reminder?.id}>
                 <TableCell className="font-medium">
-                  {/* <Link
+                  <Link
                     href={`/dashboard/reminders/customer/${reminder?.customer?.id}`}
                     className="text-blue-600 hover:underline"
                   >
                     {reminder?.customer?.name}
-                  </Link> */}
-                  {reminder?.customer?.name}
+                  </Link>
+                  {/* {reminder?.customer?.name} */}
                 </TableCell>
                 <TableCell className="font-medium">
                   {reminder?.customer?.customerId}
@@ -127,8 +126,8 @@ const AllReminders = () => {
                 </TableCell>
                 <TableCell className="text-right">
                   <Link href={`/dashboard/reminders/${reminder?.id}`}>
-                    <Button size="sm">
-                      <span className="cursor-pointer ">View</span>
+                    <Button size="sm" className="cursor-pointer">
+                      View
                     </Button>
                   </Link>
                 </TableCell>

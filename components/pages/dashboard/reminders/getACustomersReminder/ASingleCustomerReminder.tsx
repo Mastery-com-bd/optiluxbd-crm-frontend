@@ -3,23 +3,20 @@
 import { useGetCustomerReminderQuery } from "@/redux/features/reminders/reminderApi";
 import { IReminder } from "@/types/reminderTypes";
 import {
-  AlertCircle,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Mail,
-  Phone,
-  StickyNote,
-  User,
-  UserCheck,
-} from "lucide-react";
-
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { CheckCircle2, Clock } from "lucide-react";
 import { format } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { convertDate } from "@/utills/dateConverter";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import ASingleCustomerReminderSkeleton from "./ASingleCustomerReminderSkeleton";
 
 const ASingleCustomerReminder = ({ id }: { id: string }) => {
   const filters = {
@@ -29,217 +26,130 @@ const ASingleCustomerReminder = ({ id }: { id: string }) => {
     { filters, id },
     { refetchOnMountOrArgChange: false }
   );
-  const reminder = data?.data as IReminder;
-  const user = reminder?.user;
+  const reminders = data?.data as IReminder[];
 
-  const statusConfig = {
-    PENDING: { variant: "secondary" as const, label: "Pending", icon: Clock },
-    COMPLETED: {
-      variant: "default" as const,
-      label: "Completed",
-      icon: CheckCircle2,
-    },
-    CANCELLED: {
-      variant: "destructive" as const,
-      label: "Cancelled",
-      icon: AlertCircle,
-    },
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "-";
+    return format(new Date(dateString), "PPP 'at' p");
   };
 
-  const currentStatus =
-    statusConfig[status.toUpperCase() as keyof typeof statusConfig] ||
-    statusConfig.PENDING;
-  const StatusIcon = currentStatus.icon;
+  const getStatusBadge = (status: string, isNotified: boolean) => {
+    if (isNotified) {
+      return (
+        <Badge variant="default" className="bg-green-500">
+          <CheckCircle2 className="w-3 h-3 mr-1" />
+          Notified
+        </Badge>
+      );
+    }
+
+    switch (status) {
+      case "PENDING":
+        return (
+          <Badge variant="secondary">
+            <Clock className="w-3 h-3 mr-1" />
+            Pending
+          </Badge>
+        );
+      case "COMPLETED":
+        return <Badge variant="default">Completed</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
 
   if (isLoading) {
-    return <h1>loading...</h1>;
+    return <ASingleCustomerReminderSkeleton />;
+  }
+
+  if (!reminders || reminders.length === 0) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        No reminders found.
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              {reminder?.title}
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Reminder details and customer information
-            </p>
-          </div>
-          <Badge
-            variant={currentStatus.variant}
-            className="w-fit text-sm px-3 py-1"
-          >
-            <StatusIcon className="w-3.5 h-3.5 mr-1.5" />
-            {currentStatus.label}
-          </Badge>
-        </div>
+    <div className="rounded-md border p-6">
+      <Table>
+        <TableCaption>Customer reminders</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Title</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Agent</TableHead>
+            <TableHead>Remind At</TableHead>
+            <TableHead>Notified At</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {reminders.map((reminder) => (
+            <TableRow key={reminder?.id}>
+              <TableCell className="font-medium">{reminder?.title}</TableCell>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Main Reminder Info */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Reminder Details Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-primary" />
-                  Reminder Schedule
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Remind At</p>
-                      <p className="font-medium">
-                        {convertDate(new Date(reminder?.remindAt)).creationDate}
-                        <span className="text-muted-foreground ml-2">
-                          {
-                            convertDate(new Date(reminder?.remindAt))
-                              .creationTime
-                          }
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2
-                      className={`w-5 h-5 ${
-                        reminder?.isNotified
-                          ? "text-green-600"
-                          : "text-orange-600"
-                      }`}
-                    />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Notification
-                      </p>
-                      <p className="font-medium">
-                        {reminder?.isNotified ? (
-                          <span className="text-green-600">
-                            Sent{" "}
-                            {reminder?.notifiedAt &&
-                              format(new Date(reminder?.notifiedAt), "p")}
-                          </span>
-                        ) : (
-                          <span className="text-orange-600">Pending</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <div className="flex items-start gap-3">
-                    <StickyNote className="w-5 h-5 text-muted-foreground mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground mb-2">Note</p>
-                      <p className="text-foreground whitespace-pre-wrap">
-                        {reminder?.note || (
-                          <span className="text-muted-foreground italic">
-                            No additional note
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Customer & Agent Info */}
-          <div className="space-y-6">
-            {/* Customer Card */}
-            {reminder?.customer && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    Customer
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarFallback className="bg-primary/10">
-                        {reminder?.customer?.name}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold text-lg">
-                        {reminder?.customer?.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        ID: {reminder?.customer?.customerId || "No Id"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span>{reminder?.customer?.phone || ' like "—" '}</span>
-                    </div>
-                    {reminder?.customer?.email ? (
-                      <div className="flex items-center gap-3 text-sm">
-                        <Mail className="w-4 h-4 text-muted-foreground" />
-                        <span>{reminder?.customer?.email}</span>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground italic">
-                        No email provided
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Agent Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <UserCheck className="w-4 h-4" />
-                  Assigned Agent
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-blue-100 text-blue-700 dark:bg-blue-900">
-                      {reminder?.user?.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+              <TableCell>
+                {reminder?.customer ? (
                   <div>
-                    <p className="font-medium">{reminder?.user?.name}</p>
+                    <div className="font-medium">
+                      {reminder?.customer?.name}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      ID: {reminder?.customer?.customerId} •{" "}
+                      {reminder?.customer?.phone}
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">
+                    ID: {reminder?.customerId}
+                  </span>
+                )}
+              </TableCell>
+
+              <TableCell>
+                <div>
+                  <div className="font-medium">{reminder?.user?.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Agent ID: {reminder?.user?.id}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </TableCell>
 
-        {/* Optional Action Buttons */}
-        {/* <div className="flex flex-wrap gap-3 justify-end">
-          <Button variant="outline">Mark as Completed</Button>
-          <Button>Edit Reminder</Button>
-        </div> */}
-      </div>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  {formatDate(reminder?.remindAt)}
+                </div>
+              </TableCell>
+
+              <TableCell>
+                {reminder?.isNotified && reminder?.notifiedAt ? (
+                  <div className="flex items-center gap-1 text-green-600">
+                    <CheckCircle2 className="w-4 h-4" />
+                    {formatDate(reminder?.notifiedAt)}
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">No Date</span>
+                )}
+              </TableCell>
+
+              <TableCell>
+                {getStatusBadge(reminder?.status, reminder?.isNotified)}
+              </TableCell>
+
+              <TableCell className="text-right">
+                <Link href={`/dashboard/reminders/${reminder?.id}`}>
+                  <Button size="sm" className="cursor-pointer">
+                    View
+                  </Button>
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
