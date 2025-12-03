@@ -18,6 +18,8 @@ import Link from "next/link";
 import { convertDate } from "@/utills/dateConverter";
 import ReminderStatistics from "./ReminderStatistics";
 import ReminderTableSkeleton from "./ReminderTableSkeleton";
+import AllReminderActionDropdown from "./AllReminderActionDropdown";
+import CreateReminder from "../createReminder/CreateReminder";
 
 const AllReminders = () => {
   const [filters, setFilters] = useState({
@@ -125,11 +127,10 @@ const AllReminders = () => {
                   {getNotificationStatus(reminder?.isNotified)}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/dashboard/reminders/${reminder?.id}`}>
-                    <Button size="sm" className="cursor-pointer">
-                      View
-                    </Button>
-                  </Link>
+                  <AllReminderActionDropdown
+                    id={reminder?.id}
+                    customerId={reminder?.customer?.id}
+                  />
                 </TableCell>
               </TableRow>
             ))
