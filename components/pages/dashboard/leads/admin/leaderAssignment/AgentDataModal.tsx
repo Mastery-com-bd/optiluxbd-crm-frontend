@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAssignAGentToLeaderMutation } from "@/redux/features/leads/adminLeedsApi";
+import { useAssignMultipleAgentToLeaderMutation } from "@/redux/features/leads/adminLeedsApi";
 import { useGetAllUnassignedAgentsQuery } from "@/redux/features/user/userApi";
 import { TTeam } from "@/types/teamleader.types";
 import { TUser } from "@/types/user/user.types";
@@ -50,12 +50,27 @@ const AgentDataModal = ({
 
   const agents = (data?.data as TUser[]) || [];
   const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-  const [selectedAgentId, setSelectedAgentId] = useState<number | null>(null);
-  const [assignAgent] = useAssignAGentToLeaderMutation();
+  const [selectedAgentId, setSelectedAgentId] = useState<number[]>([]);
+  const [assignAgent] = useAssignMultipleAgentToLeaderMutation();
   const [openModal, setOpenModal] = useState(false);
 
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
+  };
+
+  const toggleAgentSelection = (id: number) => {
+    setSelectedAgentId((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedAgentId.length === agents.length) {
+      setSelectedAgentId([]);
+    } else {
+      const all = agents.map((item: TUser) => item.id);
+      setSelectedAgentId(all);
+    }
   };
 
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
@@ -63,7 +78,7 @@ const AgentDataModal = ({
   const handleConfirmAssign = async () => {
     const data = {
       leaderId: selectedTeam?.leader.id,
-      agentId: selectedAgentId,
+      agentIds: selectedAgentId,
     };
     const toastId = toast.loading("assigning agent to team", {
       duration: 3000,
@@ -74,6 +89,7 @@ const AgentDataModal = ({
         toast.success(res?.message, { id: toastId, duration: 3000 });
         setOpenModal(false);
         setSelectedTeam(null);
+        setSelectedAgentId([]);
       }
     } catch (error: any) {
       const errorInfo =
@@ -118,7 +134,17 @@ const AgentDataModal = ({
             <Table>
               <TableHeader className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
                 <TableRow>
-                  <TableHead className="text-center">Select</TableHead>
+                  <TableHead className="text-center">
+                    <input
+                      type="checkbox"
+                      className="rounded border-border cursor-pointer"
+                      checked={
+                        selectedAgentId.length === agents.length &&
+                        agents.length > 0
+                      }
+                      onChange={toggleSelectAll}
+                    />
+                  </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Phone</TableHead>
@@ -140,14 +166,13 @@ const AgentDataModal = ({
                       <TableRow
                         key={agent.id}
                         className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-                        onClick={() => setSelectedAgentId(agent.id)}
                       >
                         <TableCell className="text-center">
                           <input
-                            type="radio"
-                            name="selectedAgent"
-                            checked={selectedAgentId === agent.id}
-                            onChange={() => setSelectedAgentId(agent.id)}
+                            type="checkbox"
+                            checked={selectedAgentId.includes(agent?.id)}
+                            onChange={() => toggleAgentSelection(agent?.id)}
+                            className="cursor-pointer"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -173,7 +198,7 @@ const AgentDataModal = ({
             <Button
               variant="outline"
               onClick={() => {
-                setSelectedAgentId(null);
+                setSelectedAgentId([]);
                 setOpenModal(false);
               }}
               className="cursor-pointer"

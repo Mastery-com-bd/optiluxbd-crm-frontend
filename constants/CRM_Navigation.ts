@@ -375,4 +375,25 @@ export const crmRoutes: NavRoute[] = [
       },
     ],
   },
+  {
+    title: "Reminder",
+    icon: Activity,
+    children: [
+      {
+        title: "All Reminders",
+        path: "/dashboard/reminders",
+        // permissions: ["AUDIT VIEW"],
+      },
+      {
+        title: "Customer Reminder",
+        path: "/dashboard/reminders/customer-reminders",
+        // permissions: ["AUDIT VIEW"],
+      },
+      {
+        title: "Upcoming Reminders",
+        path: "/dashboard/reminders/upcoming-reminders",
+        // permissions: ["AUDIT VIEW"],
+      },
+    ],
+  },
 ];

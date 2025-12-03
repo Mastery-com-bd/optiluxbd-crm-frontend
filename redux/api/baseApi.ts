@@ -85,6 +85,7 @@ export const baseApi = createApi({
     "assigned-leads",
     "pending-leads",
     "complain",
+    "reminders",
   ],
   endpoints: () => ({}),
 });
