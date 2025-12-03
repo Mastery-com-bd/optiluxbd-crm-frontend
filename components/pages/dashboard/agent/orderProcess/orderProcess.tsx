@@ -238,6 +238,10 @@ const OrderProcessingSystem = () => {
       return;
     }
 
+    if (!selectedAddressId) {
+      return toast.error("Please select address");
+    }
+
     if (!customerOutcome) {
       return toast.error("Please select outcome");
     }
