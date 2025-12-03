@@ -1,5 +1,11 @@
+import UpcomingReminders from "@/components/pages/dashboard/reminders/upcomingReminders/UpcomingReminders";
+
 const UpcomingRemindersPage = () => {
-  return <div>this is upcoming reminders page</div>;
+  return (
+    <div>
+      <UpcomingReminders />
+    </div>
+  );
 };
 
 export default UpcomingRemindersPage;

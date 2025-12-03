@@ -378,7 +378,6 @@ export const crmRoutes: NavRoute[] = [
   {
     title: "Reminder",
     icon: Activity,
-    roles: ["ADMIN"],
     children: [
       {
         title: "All Reminders",
