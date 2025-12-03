@@ -45,6 +45,12 @@ const productsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["products"],
     }),
+    getAllAvailableProducts: builder.query({
+      query: (params) => ({
+        url: `/products/in-stock?${buildParams(params)}`,
+        method: "GET",
+      })
+    }),
   }),
 });
 export const {
@@ -53,4 +59,5 @@ export const {
   useUpdateProductMutation,
   useGetAllProductQuery,
   useDeleteProductMutation,
+  useGetAllAvailableProductsQuery,
 } = productsApi;

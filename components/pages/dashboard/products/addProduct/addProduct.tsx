@@ -31,7 +31,7 @@ import {
   useAddProductImageMutation,
   useAddProductMutation,
 } from "@/redux/features/products/productsApi"
-import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery } from "@/redux/features/category/categoryApi"
+import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery, } from "@/redux/features/category/categoryApi"
 
 const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
@@ -55,7 +55,7 @@ const productSchema = z.object({
     .optional(),
   brand: z.string().optional(),
   category: z.string().min(1, { message: "Category is required" }),
-  subCategory: z.string().min(1, { message: "Subcategory is required" }),
+  subCategoryId: z.string().min(1, { message: "subCategoryId is required" }),
   status: z.string().min(1, { message: "Status is required" }),
   tags: z.string().optional(),
 })
@@ -84,7 +84,7 @@ const AddProduct = () => {
       discountValue: 0,
       brand: "",
       category: "",
-      subCategory: "",
+      subCategoryId: "",
       status: "",
       tags: "",
     },
@@ -102,8 +102,8 @@ const AddProduct = () => {
       description: data.description ?? "",
       sku: data.sku,
       price: data.basePrice,
-      quantity: data.stock,
-      category: data.category,
+      stock: data.stock,
+      subCategoryId: Number(data.subCategoryId),
       brand: data.brand,
       public_id: "",
       secure_url: "",
@@ -147,7 +147,7 @@ const AddProduct = () => {
   const { data: categories, data: isCategoryLoading } = useGetAllCategoryQuery(undefined);
 
   const [parentCategory, setParentCategory] = useState<number | null>(null);
-  const { data: subcategoriesData, isLoading: isSubcategoryLoading } = useGetCategoryAndSubcategoryQuery(
+  const { data: subcategoriesData, isLoading: issubCategoryIdLoading } = useGetCategoryAndSubcategoryQuery(
     parentCategory,
     { skip: !parentCategory, refetchOnMountOrArgChange: true, }
   )
@@ -356,10 +356,10 @@ const AddProduct = () => {
                   )}
                 </div>
                 <div>
-                  <Label>Subcategory *</Label>
+                  <Label>subCategoryId *</Label>
                   <Controller
                     control={control}
-                    name="subCategory"
+                    name="subCategoryId"
                     rules={{ required: true }}
                     render={({ field }) => (
                       <Select
@@ -371,13 +371,11 @@ const AddProduct = () => {
                           <SelectValue placeholder="Pick a sub category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {isSubcategoryLoading ? (
-                            <div>
-                              Loading subcategories...
-                            </div>
+                          {issubCategoryIdLoading ? (
+                            <div>Loading subcategories...</div>
                           ) : (
                             subCategories?.map((sub: { id: number; name: string }) => (
-                              <SelectItem key={sub.id} value={sub.name}>
+                              <SelectItem key={sub.id} value={String(sub.id)}>
                                 {sub.name}
                               </SelectItem>
                             ))
@@ -386,8 +384,8 @@ const AddProduct = () => {
                       </Select>
                     )}
                   />
-                  {errors.subCategory && (
-                    <p className="text-destructive text-sm">{errors.subCategory?.message}</p>
+                  {errors.subCategoryId && (
+                    <p className="text-destructive text-sm">{errors.subCategoryId?.message}</p>
                   )}
                 </div>
                 <div>
