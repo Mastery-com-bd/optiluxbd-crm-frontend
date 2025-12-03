@@ -2,14 +2,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarIcon, Clock } from "lucide-react";
 
-const HourlyTeamtargetSkeleton = () => {
+const AgentReportSkeleton = () => {
   return (
-    <div className="space-y-4">
-      <div className="flex items-end justify-between gap-4">
-        <div className="w-full">
-          <Skeleton className="h-10 w-full" />
-        </div>
-
+    <div className="space-y-4 p-6">
+      <div className="flex items-end gap-4">
         {/* Select Gap Skeleton */}
         <div className="flex flex-col gap-1 w-72">
           <Skeleton className="h-10 w-full" />
@@ -38,7 +34,6 @@ const HourlyTeamtargetSkeleton = () => {
               <Skeleton className="h-7 w-56" />{" "}
               <Skeleton className="h-4 w-40" />
             </div>
-
             {/* Right Section */}
             <div className="text-right space-y-2">
               <div className="flex items-center justify-end gap-2">
@@ -49,9 +44,8 @@ const HourlyTeamtargetSkeleton = () => {
             </div>
           </div>
         </Card>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {[1, 2, 3, 4, 5].map((i) => (
             <Card key={i} className="w-full h-24">
               <CardContent className="h-full flex flex-col justify-center space-y-2">
                 <Skeleton className="h-4 w-24" />
@@ -60,7 +54,6 @@ const HourlyTeamtargetSkeleton = () => {
             </Card>
           ))}
         </div>
-
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="p-6">
@@ -143,4 +136,4 @@ const HourlyTeamtargetSkeleton = () => {
   );
 };
 
-export default HourlyTeamtargetSkeleton;
+export default AgentReportSkeleton;

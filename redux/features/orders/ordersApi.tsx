@@ -53,7 +53,8 @@ const ordersApi = baseApi.injectEndpoints({
         url: "/orders",
         method: "POST",
         body,
-      })
+      }),
+      invalidatesTags:["customers", "orders"]
     }),
   }),
 });

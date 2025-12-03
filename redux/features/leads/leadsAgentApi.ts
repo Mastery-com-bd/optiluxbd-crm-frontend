@@ -4,7 +4,7 @@ const leadsAgentsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAssignCustomers: builder.query({
       query: () => ({
-        url: `/allocations/agent/customers`,
+        url: `/allocations/agent/customers?sort=desc&sortBy=updatedAt`,
         method: "GET",
       }),
       providesTags: ["customers"],

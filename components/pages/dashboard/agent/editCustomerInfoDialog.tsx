@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -10,35 +11,32 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUpdateCustomerInfoMutation } from "@/redux/features/customers/cutomersApi";
 import React, { useState } from "react";
 
-import { useCreateCustomerAddressMutation } from "@/redux/features/customers/cutomersApi";
 import { toast } from "sonner";
 
 interface AddressPayload {
-  division: string;
-  city: string;
-  thana: string;
-  post: string;
-  street: string;
-  zone_id?: number;
-  geo_lat: number;
-  geo_lng: number;
+  name: string;
+  phone: string;
+  email: string | null;
+  date_of_birth: string | null;
+  profession: string | null;
+  isMarried?: boolean | null;
 }
 
-const AddAddressDialog = ({ userId }: { userId: number }) => {
+const EditCustomerDetails = ({ userId, details }: { userId: number, details: AddressPayload }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<AddressPayload>({
-    division: "",
-    city: "",
-    thana: "",
-    post: "",
-    street: "",
-    geo_lat: 0,
-    geo_lng: 0,
+    name: details.name || "",
+    phone: details.phone || "",
+    email: details.email || "",
+    date_of_birth: details.date_of_birth || "",
+    profession: details.profession || "",
+    isMarried: details.isMarried || false,
   });
 
-  const [createAddress, { isLoading }] = useCreateCustomerAddressMutation();
+  const [updateCustomerInfo, { isLoading }] = useUpdateCustomerInfoMutation();
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,16 +48,13 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
     setLoading(true);
 
     const payload = {
-      data: {
-        ...form,
-        post: form.post ? form.post : "00"
-      },
-      customerId: userId,
+      id: userId,
+      customerData: form,
     };
 
     setOpen(false);
     try {
-      const res = await createAddress(payload).unwrap();
+      const res = await updateCustomerInfo(payload).unwrap();
       if (res?.success) {
         toast.success(res?.message, {
           duration: 3000,
@@ -83,7 +78,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
       <div className="flex items-center justify-center p-4">
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         <span className="ml-2 text-sm text-muted-foreground">
-          Creating address...
+          Updating customer info...
         </span>
       </div>
     );
@@ -91,80 +86,87 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mb-2">
-          Add Address
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mb-2"
+        >
+          Edit Info
         </Button>
       </DialogTrigger>
       <DialogContent className="w-11/12 max-w-2xl rounded-lg">
         <DialogHeader>
-          <DialogTitle>Add New Address</DialogTitle>
+          <DialogTitle>Edit Customer Info</DialogTitle>
           <DialogDescription>
-            Fill in the details below to add a new address for the user.
+            Fill in the details below to edit the customer info.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="division">Division</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
-              id="division"
-              name="division"
+              id="name"
+              name="name"
               placeholder="Dhaka"
-              value={form.division}
+              value={form.name}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="thana">Thana</Label>
+            <Label htmlFor="phone">Phone</Label>
             <Input
-              id="thana"
-              name="thana"
-              placeholder="Dhaka"
-              value={form.thana}
+              id="phone"
+              name="phone"
+              maxLength={11}
+              placeholder="01234567890"
+              value={form.phone}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="post">Postal Code</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="post"
-              name="post"
-              placeholder="1203"
-              value={form.post}
+              id="email"
+              name="email"
+              placeholder="example@domain.com"
+              value={form.email || ""}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="date_of_birth">Date of Birth</Label>
             <Input
-              id="city"
-              name="city"
-              placeholder="Dhaka"
-              value={form.city}
+              id="date_of_birth"
+              name="date_of_birth"
+              placeholder="DD-MM-YYYY"
+              value={form.date_of_birth || ""}
               onChange={handleChange}
             />
           </div>
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <Label htmlFor="street">Street</Label>
+            <Label htmlFor="profession">Profession</Label>
             <Input
-              id="street"
-              name="street"
-              placeholder="123 Main St"
-              value={form.street}
+              id="profession"
+              name="profession"
+              placeholder="Software Engineer"
+              value={form.profession || ""}
               onChange={handleChange}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="city">Zone ID</Label>
-            <Input
-              id="zone_id"
-              name="zone_id"
-              placeholder="1"
-              onChange={(e) => handleChange(e)}
+            <Label htmlFor="isMarried">Is Married</Label>
+            <Checkbox
+              id="isMarried"
+              name="isMarried"
+              checked={form.isMarried || false}
+              onCheckedChange={(checked) =>
+                setForm((prev) => ({ ...prev, isMarried: !!checked }))
+              }
             />
           </div>
         </div>
@@ -185,7 +187,7 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
             onClick={handleSubmit}
             className="w-full sm:w-auto"
           >
-            Save Address
+            Save Info
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -193,4 +195,4 @@ const AddAddressDialog = ({ userId }: { userId: number }) => {
   );
 };
 
-export default AddAddressDialog;
+export default EditCustomerDetails;

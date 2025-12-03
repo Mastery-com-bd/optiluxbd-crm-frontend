@@ -2,7 +2,6 @@
 import { Card } from "@/components/ui/card";
 import {
   Order,
-  OrderProduct,
   TAgentPerformanceType,
 } from "@/types/overAllReport/agentPerformanceType";
 import { ArrowUp, ClipboardList, Coins, DollarSign, Users } from "lucide-react";
@@ -465,7 +464,7 @@ const AgentPerformence = ({
                 <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
-                    style={{ width: `${parseFloat(agent?.deliveryRate)}%` }}
+                    style={{ width: `${parseFloat(agent.deliveryRate)}%` }}
                   />
                 </div>
               </div>

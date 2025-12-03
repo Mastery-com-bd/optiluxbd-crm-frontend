@@ -31,23 +31,32 @@ export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    permissions: ["REPORTS VIEW"],
-    roles: ["ADMIN"],
+    permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+    roles: ["ADMIN", "TEAM_LEADER"],
     children: [
       {
         title: "All Overview",
         path: "/dashboard",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
       },
       {
         title: "Hourly Reports",
         path: "/dashboard/hourly-report",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
       },
       {
         title: "All Reports",
         path: "/dashboard/reports",
         permissions: ["REPORTS VIEW"],
+        roles: ["ADMIN"],
+      },
+      {
+        title: "Agents Report",
+        path: "/dashboard/agents-report",
+        permissions: ["AGENT-REPORTS VIEW"],
+        roles: ["TEAM_LEADER", "ADMIN"],
       },
     ],
   },
@@ -363,6 +372,27 @@ export const crmRoutes: NavRoute[] = [
       {
         title: "My Activity",
         path: "/dashboard/my-activity",
+      },
+    ],
+  },
+  {
+    title: "Reminder",
+    icon: Activity,
+    children: [
+      {
+        title: "All Reminders",
+        path: "/dashboard/reminders",
+        // permissions: ["AUDIT VIEW"],
+      },
+      // {
+      //   title: "Customer Reminder",
+      //   path: "/dashboard/reminders/customer-reminders",
+      //   // permissions: ["AUDIT VIEW"],
+      // },
+      {
+        title: "Upcoming Reminders",
+        path: "/dashboard/reminders/upcoming-reminders",
+        // permissions: ["AUDIT VIEW"],
       },
     ],
   },
