@@ -1,7 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,26 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { PathaoCouriarDashboardPrpos } from "@/lib/interface";
 import { useGetAllPathaoCouriarQuery } from "@/redux/features/couriar/pathao/pathaoCouriarAPI";
@@ -43,39 +27,18 @@ import {
   Phone,
   Truck,
   Users,
-  XCircle,
+  XCircle
 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import CouriarDashboardHeader from "../components/couriarDashboardHeader";
 import PathaoDashboardSkeleton from "./pathaoDashboardSkeleton";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
-// Mock data
-const mockParcels = Array.from({ length: 50 }, (_, i) => ({
-  id: `PAR-${1000 + i}`,
-  customerName: `Customer ${i + 1}`,
-  customerPhone: `+8801${Math.floor(Math.random() * 9e8) + 1e8}`,
-  address: `House ${i + 1}, Road ${i + 1}, Dhaka`,
-  status: ["pending", "processing", "in_transit", "delivered", "cancelled"][
-    Math.floor(Math.random() * 5)
-  ] as string,
-  weight: `${(Math.random() * 5 + 0.5).toFixed(2)} kg`,
-  codAmount: Math.floor(Math.random() * 5000) + 100,
-  createdAt: new Date(
-    Date.now() - Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000)
-  ).toISOString(),
-  agent: {
-    id: `AGT-${200 + (i % 10)}`,
-    name: `Agent ${(i % 10) + 1}`,
-    phone: `+8801${Math.floor(Math.random() * 9e8) + 1e8}`,
-    email: `agent${(i % 10) + 1}@optiluxbd.com`,
-    avatar: `https://avatar.vercel.sh/agent${(i % 10) + 1}.png`,
-    joinedAt: new Date(
-      Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)
-    ).toISOString(),
-  },
-}));
 
 const statusBackgroundColor: Record<
   string,
@@ -96,17 +59,13 @@ const statusBackgroundColor: Record<
 export default function SteadFastDashboard() {
   const [page, setPage] = useState(1);
 
-  const counts = mockParcels.reduce((acc, p) => {
-    acc[p.status] = (acc[p.status] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
-  const total = mockParcels.length;
-  const pending = counts.pending || 0;
-  const processing = counts.processing || 0;
-  const inTransit = counts.in_transit || 0;
-  const delivered = counts.delivered || 0;
-  const cancelled = counts.cancelled || 0;
+  const total = 495;
+  const pending = 99;
+  const processing = 99;
+  const inTransit = 99;
+  const delivered = 99;
+  const cancelled = 99;
 
   const payload = {
     page: page,
@@ -235,7 +194,7 @@ export default function SteadFastDashboard() {
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
-            {/* <TableBody>
+            <TableBody>
               {couriarData.map((parcel) => (
                 <TableRow key={parcel.id}>
                   <TableCell className="font-mono text-xs">
@@ -340,7 +299,7 @@ export default function SteadFastDashboard() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
                           <Link
-                            href={`/dashboard/couriar/steadFast/id/${parcel.id}`}
+                            href={`/dashboard/couriar/pathao/id/${parcel.id}`}
                           >
                             View Details
                           </Link>
@@ -354,7 +313,7 @@ export default function SteadFastDashboard() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody> */}
+            </TableBody> 
           </Table>
 
           {/* Pagination */}

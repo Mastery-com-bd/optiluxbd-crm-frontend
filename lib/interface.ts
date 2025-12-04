@@ -6,6 +6,7 @@ interface CustomerData {
   id: number;
   name: string;
   phone: string;
+  customerType?: string;
 }
 
 interface AgentData {
@@ -29,34 +30,49 @@ interface OrderData {
   shipping_address_geo_lng: string | null;
   agent: AgentData;
   quantity: number;
+  totalAmount: string;
+  agentId?: number;
+  customerId: number;
+  productId?: number | null;
+  packageId?: number | null;
+  batchId?: number | null;
 }
 
 export interface PathaoCouriarDashboardPrpos {
   id: number;
-  invoice: string;
-  courierService: string;
+  invoice?: string;
+  courierService?: string;
   consignmentId: string | null;
-  trackingCode: string | null;
-  codAmount: string;
-  deliveryCharge: string;
+  trackingCode?: string | null;
+  codAmount?: string;
+  deliveryCharge?: string;
   commission: string;
   commissionRate: string;
   totalAmount: string;
   status: string;
-  note: string;
+  note?: string;
   recipientName: string;
   recipientPhone: string;
   recipientAddress: string;
   orderId: number;
   order: OrderData;
-  productId: number;
+  productId?: number;
   quantity: number;
-  packageId: number | null;
-  batchId: number | null;
+  packageId?: number | null;
+  batchId?: number | null;
   customerId: number;
   customer: CustomerData;
   createdAt: string;
   updatedAt: string;
+  amountToCollect?: string;
+  deliveryType?: number;
+  itemDescription?: string;
+  itemQuantity?: number;
+  itemType?: number;
+  itemWeight?: number;
+  merchantOrderId?: string;
+  storeId?: number;
+  specialInstruction?: string;
 }
 
 
