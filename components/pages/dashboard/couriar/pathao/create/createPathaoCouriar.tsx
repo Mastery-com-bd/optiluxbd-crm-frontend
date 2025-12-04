@@ -30,8 +30,8 @@ import { Loader2 } from "lucide-react";
 const phoneRegex = /^(\+?88)?01[3-9]\d{8}$/;
 
 const PathaoSchema = z.object({
-  orderId: z.number().int().min(1, "Order ID must be at least 1"),
-  storeId: z.number().int().min(1, "Store ID must be at least 1"),
+  orderId: z.string().min(1, "Order ID is required"),
+  storeId: z.number().int().min(1, "Store ID is required"),
   recipientName: z.string().min(2, "Recipient name is required"),
   recipientPhone: z.string().regex(phoneRegex, "Enter a valid BD phone number"),
   recipientAddress: z.string().min(10, "Provide a detailed address"),
@@ -50,18 +50,15 @@ export default function CreatePathaoCouriar() {
   const form = useForm<PathaoFormValues>({
     resolver: zodResolver(PathaoSchema),
     defaultValues: {
-      orderId: 1,
-      storeId: 123,
-      recipientName: "John Doe",
-      recipientPhone: "01712345678",
-      recipientAddress: "House 123, Road 4, Sector 10, Uttara, Dhaka-1230",
+      orderId: "",
+      storeId: 149048,
+      recipientName: "",
+      recipientPhone: "",
+      recipientAddress: "",
       deliveryType: 48,
       itemType: 2,
-      itemQuantity: 1,
-      itemWeight: 0.5,
-      itemDescription: "Cloth item",
-      amountToCollect: 1500,
-      specialInstruction: "Handle with care",
+      itemDescription: "",
+      specialInstruction: "",
     },
   });
 
@@ -71,7 +68,11 @@ export default function CreatePathaoCouriar() {
     toast.loading("Saving courier...");
 
     try {
-      const res = await createPathaoCouriar(values).unwrap();
+      const payload = {
+        ...values,
+        orderId: Number(values.orderId)
+      }
+      const res = await createPathaoCouriar(payload).unwrap();
       console.log("Create Courier Response", res);
       if (res?.success) {
         toast.dismiss();
@@ -111,19 +112,6 @@ export default function CreatePathaoCouriar() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Order ID</FormLabel>
-                      <FormControl>
-                        <Input type="number" inputMode="numeric" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="storeId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Store ID</FormLabel>
                       <FormControl>
                         <Input type="number" inputMode="numeric" {...field} />
                       </FormControl>
