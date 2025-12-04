@@ -1,4 +1,5 @@
 "use client";
+
 import { Card } from "@/components/ui/card";
 import {
   Order,
@@ -26,16 +27,19 @@ const AgentPerformence = ({
   agentPerformance: TAgentPerformanceType;
 }) => {
   const summary = agentPerformance?.summary;
-  const topAgents = agentPerformance?.topAgents ?? [];
+  const topAgents = agentPerformance?.topAgents || [];
 
   const calculateSalesDistribution = () => {
     const categoryMap: { [key: string]: number } = {};
     let totalSales = 0;
 
-    topAgents?.forEach((agent) => {
-      agent?.orders?.forEach((order) => {
-        const categoryName = order?.product?.subCategory?.category?.name || "Unknown";
-        const amount = parseFloat(order?.totalAmount ?? "0");
+    topAgents.forEach((agent) => {
+      agent?.orders.forEach((order) => {
+        // Handle both product and package data
+        const categoryName =
+          order?.product?.subCategory?.category?.name ||
+          (order?.package ? "Packages" : "Uncategorized");
+        const amount = parseFloat(order?.totalAmount);
         categoryMap[categoryName] = (categoryMap[categoryName] || 0) + amount;
         totalSales += amount;
       });
@@ -49,21 +53,23 @@ const AgentPerformence = ({
     }));
   };
 
+  // Calculate monthly sales data from orders
   const calculateMonthlySales = () => {
     const monthlyData: {
       [key: string]: { online: number; instore: number; projected: number };
     } = {};
 
-    topAgents?.forEach((agent) => {
-      agent?.orders?.forEach((order) => {
-        const date = new Date(order?.orderDate ?? "");
+    topAgents.forEach((agent) => {
+      agent.orders.forEach((order) => {
+        const date = new Date(order?.orderDate);
         const monthKey = date.toLocaleString("default", { month: "short" });
-        const amount = parseFloat(order?.totalAmount ?? "0") / 1000;
+        const amount = parseFloat(order?.totalAmount) / 1000; // Scale down for chart
 
         if (!monthlyData[monthKey]) {
           monthlyData[monthKey] = { online: 0, instore: 0, projected: 0 };
         }
 
+        // Assuming all orders are online for this example
         monthlyData[monthKey].online += amount;
         monthlyData[monthKey].projected = monthlyData[monthKey].online * 1.1;
       });
@@ -83,101 +89,122 @@ const AgentPerformence = ({
       "Nov",
       "Dec",
     ];
-
     return months
       .map((month) => ({
         month,
-        online: Math.round(monthlyData[month]?.online ?? 0),
-        instore: Math.round(monthlyData[month]?.instore ?? 0),
-        projected: Math.round(monthlyData[month]?.projected ?? 0),
+        online: Math.round(monthlyData[month]?.online || 0),
+        instore: Math.round(monthlyData[month]?.instore || 0),
+        projected: Math.round(monthlyData[month]?.projected || 0),
       }))
-      .filter((entry) => entry.online > 0 || entry.instore > 0);
+      .filter((data) => data.online > 0 || data.instore > 0);
   };
 
+  // Get unique products from all orders
   const getProductInventory = () => {
-    const productMap: { [key: string]: OrderProduct & { totalStock: number } } = {};
+    const itemMap: {
+      [key: string]: {
+        name: string;
+        totalStock: number;
+        price: string;
+        type: "product" | "package";
+      };
+    } = {};
 
-    topAgents?.forEach((agent) => {
-      agent?.orders?.forEach((order) => {
-        const productId = order?.product?.id?.toString();
-        if (!productId) return;
-
-        if (!productMap[productId]) {
-          productMap[productId] = {
-            ...order?.product,
-            totalStock: 0,
-          };
+    topAgents.forEach((agent) => {
+      agent.orders.forEach((order) => {
+        // Handle products
+        if (order?.product) {
+          const productId = `product-${order.product.id}`;
+          if (!itemMap[productId]) {
+            itemMap[productId] = {
+              name: order.product.name,
+              totalStock: 0,
+              price: order.product.price,
+              type: "product",
+            };
+          }
+          itemMap[productId].totalStock += order.quantity;
         }
 
-        productMap[productId].totalStock += order?.quantity ?? 0;
+        // Handle packages
+        if (order?.package) {
+          const packageId = `package-${order.package.id}`;
+          if (!itemMap[packageId]) {
+            itemMap[packageId] = {
+              name: order.package.name,
+              totalStock: 0,
+              price: order.package.packagePrice,
+              type: "package",
+            };
+          }
+          itemMap[packageId].totalStock += order.quantity;
+        }
       });
     });
 
-    return Object.values(productMap).map((product) => ({
-      name: product?.name ?? "N/A",
-      stock: product?.totalStock ?? 0,
-      ratings: (4 + Math.random()).toFixed(1),
-      price: `৳${parseFloat(product?.price ?? "0").toFixed(2)}`,
+    return Object.values(itemMap).map((item) => ({
+      name: item.name,
+      stock: item.totalStock,
+      ratings: (4.0 + Math.random()).toFixed(1),
+      price: `৳${parseFloat(item.price).toFixed(2)}`,
+      type: item.type,
     }));
   };
 
+  // Get recent orders from all agents
   const getRecentOrders = () => {
     const allOrders: Order[] = [];
-    topAgents?.forEach((agent) => {
-      allOrders.push(...(agent?.orders ?? []));
+    topAgents.forEach((agent) => {
+      allOrders.push(...agent?.orders);
     });
 
     return allOrders
       .sort(
         (a, b) =>
-          new Date(b?.orderDate ?? "").getTime() -
-          new Date(a?.orderDate ?? "").getTime()
+          new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
       )
       .slice(0, 5)
       .map((order) => ({
-        id: `#ORD-${order?.id?.toString()?.padStart(4, "0")}`,
-        customer: order?.customer?.name ?? "N/A",
-        date: new Date(order?.orderDate ?? "").toLocaleDateString(),
-        amount: `৳${parseFloat(order?.totalAmount ?? "0").toFixed(2)}`,
+        id: `#ORD-${order?.id.toString().padStart(4, "0")}`,
+        customer: order?.customer?.name,
+        date: new Date(order?.orderDate).toLocaleDateString(),
+        amount: `৳${parseFloat(order?.totalAmount).toFixed(2)}`,
         status:
-          order?.courier?.status ??
-          (order?.quantity && order?.quantity > 0
-            ? "Pending"
-            : "Unknown"),
+          order?.courier?.status ||
+          (order?.quantity > 0 ? "Pending" : "Unknown"),
       }));
   };
 
   const getStatusColor = (status: string) => {
-    const statusLower = status?.toLowerCase?.() ?? "";
+    const statusLower = status.toLowerCase();
     if (statusLower.includes("delivered") || statusLower.includes("complete"))
       return "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800";
-    else if (
-      statusLower.includes("pending") ||
-      statusLower.includes("processing")
-    )
+    if (statusLower.includes("pending") || statusLower.includes("processing"))
       return "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800";
-    else if (statusLower.includes("cancel"))
+    if (statusLower.includes("cancel"))
       return "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800";
-    else if (statusLower.includes("return"))
+    if (statusLower.includes("return"))
       return "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800";
     return "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800";
   };
 
   const getInitials = (name: string) => {
     return name
-      ?.split(" ")
-      ?.map((n) => n[0])
-      ?.join("")
-      ?.toUpperCase()
-      ?.slice(0, 2);
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   const salesDistribution = calculateSalesDistribution();
   const salesData = calculateMonthlySales();
   const productInventory = getProductInventory();
   const recentOrders = getRecentOrders();
-  const totalPendingOrders = topAgents?.reduce(
-    (total, agent) => total + (agent?.pendingOrders ?? 0),
+
+  // Calculate total pending orders
+  const totalPendingOrders = topAgents.reduce(
+    (sum, agent) => sum + agent.pendingOrders,
     0
   );
 
