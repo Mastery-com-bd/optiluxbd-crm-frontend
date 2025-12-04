@@ -15,7 +15,7 @@ const pathaoCouriarApi = baseApi.injectEndpoints({
         /* All Pathao Couriar Parcel List */
         getAllPathaoCouriar: builder.query({
             query: (payload) => ({
-                url: `/pathao?status=${payload.status}&search=${payload.search}&page=${payload.page}&limit=${payload.limit}`,
+                url: `/pathao?${payload.status ? `status=${payload.status}` : null}&${payload.search ? `search=${payload.search}` : null}&${payload.page ? `page=${payload.page}` : null}&${payload.limit ? `limit=${payload.limit}` : null}`,
                 method: "GET",
             }),
         }),
