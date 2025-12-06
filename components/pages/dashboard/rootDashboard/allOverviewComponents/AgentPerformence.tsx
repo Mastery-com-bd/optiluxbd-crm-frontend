@@ -20,6 +20,7 @@ import {
   YAxis,
 } from "recharts";
 import { Tooltip } from "@/components/ui/tooltip";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const AgentPerformence = ({
   agentPerformance,
@@ -212,123 +213,134 @@ const AgentPerformence = ({
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
         {/* Total Agents */}
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {summary?.totalAgents ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Agents
-              </p>
+        <LiquidGlass>
+          <Card className="bg-transparent border-0 shadow-sm p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                  {summary?.totalAgents ?? 0}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Total Agents
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <Users className="w-6 h-6 text-indigo-600 dark:text-indigo-300" />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-              <Users className="w-6 h-6 text-indigo-600 dark:text-indigo-300" />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </LiquidGlass>
 
         {/* Total Orders */}
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {summary?.totalOrders ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Orders
-              </p>
+        <LiquidGlass>
+          <Card className="bg-transparent border-0 shadow-sm p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                  {summary?.totalOrders ?? 0}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Total Orders
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
+                <ClipboardList className="w-6 h-6 text-amber-600 dark:text-amber-300" />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-              <ClipboardList className="w-6 h-6 text-amber-600 dark:text-amber-300" />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </LiquidGlass>
+
 
         {/* Total Revenue */}
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {summary?.totalRevenue.toFixed(2) ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Revenue
-              </p>
+        <LiquidGlass>
+          <Card className="bg-transparent border-0 shadow-sm p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                  {summary?.totalRevenue.toFixed(2) ?? 0}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Total Revenue
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-teal-600 dark:text-teal-300" />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-teal-600 dark:text-teal-300" />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </LiquidGlass>
 
         {/* Total Commission */}
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-5">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                {summary?.totalCommission.toFixed(2) ?? 0}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Total Commission
-              </p>
+        <LiquidGlass>
+          <Card className="bg-transparent border-0 shadow-sm p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                  {summary?.totalCommission.toFixed(2) ?? 0}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Total Commission
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                <Coins className="w-6 h-6 text-purple-600 dark:text-purple-300" />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-              <Coins className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </LiquidGlass>
       </div>
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">
-              Total Sales
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-              You have {totalPendingOrders} pending orders awaiting fulfillment.
-            </p>
+          <LiquidGlass>
+            <Card className="bg-transparent border-0 shadow-sm p-6">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                Total Sales
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                You have {totalPendingOrders} pending orders awaiting fulfillment.
+              </p>
 
-            <div className="flex items-center justify-center mb-6">
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={salesDistribution}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {salesDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+              <div className="flex items-center justify-center mb-6">
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={salesDistribution}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={90}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {salesDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
 
-            <div className="space-y-3">
-              {salesDistribution.map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    ></div>
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      {item?.name}
+              <div className="space-y-3">
+                {salesDistribution.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        {item?.name}
+                      </span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {item?.value}%
                     </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {item?.value}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 lg:col-span-2">
+                ))}
+              </div>
+            </Card>
+          </LiquidGlass>
+          <LiquidGlass className=" border-0 shadow-sm p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 Sales Analytics
@@ -391,210 +403,216 @@ const AgentPerformence = ({
                 />
               </ComposedChart>
             </ResponsiveContainer>
-          </Card>
+          </LiquidGlass>
         </div>
-        <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6 mb-6 rounded-2xl">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-              Top Call Center Executives
-            </h2>
-            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
-              Live Performance
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {topAgents.map((agent, index) => (
-              <div
-                key={agent.agentId}
-                className="group relative p-5 bg-linear-to-br from-indigo-50 dark:from-indigo-950 via-white dark:via-gray-800 to-purple-50 dark:to-purple-950 rounded-xl border border-indigo-100 dark:border-indigo-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <Avatar className="w-10 h-10 shadow-md">
-                    <AvatarImage
-                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${agent.agentName}`}
-                    />
-                    <AvatarFallback>
-                      {getInitials(agent.agentName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Rank
-                    </p>
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                      #{index + 1}
-                    </p>
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 text-sm truncate">
-                  {agent?.agentName}
-                </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 truncate">
-                  {agent?.agentEmail}
-                </p>
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Total Orders
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {agent?.totalOrders}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Delivered
-                    </span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">
-                      {agent?.deliveredOrders}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Delivery Rate
-                    </span>
-                    <span className="font-semibold text-purple-600 dark:text-purple-400">
-                      {agent?.deliveryRate}%
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Sales Amount
-                    </span>
-                    <span className="font-semibold text-indigo-600 dark:text-indigo-400">
-                      ৳{agent?.totalSalesAmount.toFixed(0)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Commission
-                    </span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                      ৳{agent?.totalCommission.toFixed(2)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Avg Order Value
-                    </span>
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">
-                      ৳{parseFloat(agent?.averageOrderValue).toFixed(0)}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
-                    style={{ width: `${parseFloat(agent.deliveryRate)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
+        <LiquidGlass>
+          <Card className="bg-transparent border-0 shadow-sm p-6 mb-6 rounded-2xl">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                Product Inventory
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                Top Call Center Executives
               </h2>
+              <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
+                Live Performance
+              </span>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
-                      Product
-                    </th>
-                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
-                      Stock
-                    </th>
-                    <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
-                      Ratings
-                    </th>
-                    <th className="text-right py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
-                      Price
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productInventory.map((product, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                    >
-                      <td className="py-3 px-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {product?.name}
-                      </td>
-                      <td className="py-3 px-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-                        {product?.stock}
-                      </td>
-                      <td className="py-3 px-2 text-sm text-center">
-                        <span className="inline-flex items-center gap-1">
-                          <span className="text-amber-500">★</span>
-                          <span className="text-gray-900 dark:text-gray-100 font-medium">
-                            {product?.ratings}
-                          </span>
-                        </span>
-                      </td>
-                      <td className="py-3 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">
-                        {product?.price}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
-          <Card className="bg-white dark:bg-gray-800 border-0 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                Recent Orders
-              </h2>
-            </div>
-
-            <div className="space-y-3">
-              {recentOrders.map((order, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {topAgents.map((agent, index) => (
+                <LiquidGlass
+                  key={agent.agentId}
+                  className="group relative p-5"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        {order?.id}
+                  <div className="flex items-center justify-between mb-4">
+                    <Avatar className="w-10 h-10 shadow-md">
+                      <AvatarImage
+                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${agent.agentName}`}
+                      />
+                      <AvatarFallback>
+                        {getInitials(agent.agentName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Rank
+                      </p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        #{index + 1}
+                      </p>
+                    </div>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 text-sm truncate">
+                    {agent?.agentName}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 truncate">
+                    {agent?.agentEmail}
+                  </p>
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Total Orders
                       </span>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full border ${getStatusColor(
-                          order?.status
-                        )}`}
-                      >
-                        {order?.status}
+                      <span className="font-semibold text-gray-900 dark:text-gray-100">
+                        {agent?.totalOrders}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                      {order?.customer}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
-                      {order?.date}
-                    </p>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Delivered
+                      </span>
+                      <span className="font-semibold text-green-600 dark:text-green-400">
+                        {agent?.deliveredOrders}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Delivery Rate
+                      </span>
+                      <span className="font-semibold text-purple-600 dark:text-purple-400">
+                        {agent?.deliveryRate}%
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Sales Amount
+                      </span>
+                      <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                        ৳{agent?.totalSalesAmount.toFixed(0)}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Commission
+                      </span>
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                        ৳{agent?.totalCommission.toFixed(2)}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Avg Order Value
+                      </span>
+                      <span className="font-semibold text-blue-600 dark:text-blue-400">
+                        ৳{parseFloat(agent?.averageOrderValue).toFixed(0)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right ml-4">
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                      {order?.amount}
-                    </p>
+                  <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
+                      style={{ width: `${parseFloat(agent.deliveryRate)}%` }}
+                    />
                   </div>
-                </div>
+                </LiquidGlass>
               ))}
             </div>
           </Card>
+        </LiquidGlass>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <LiquidGlass>
+            <Card className="bg-transparent border-0 shadow-sm p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                  Product Inventory
+                </h2>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
+                        Product
+                      </th>
+                      <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
+                        Stock
+                      </th>
+                      <th className="text-center py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
+                        Ratings
+                      </th>
+                      <th className="text-right py-3 px-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
+                        Price
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {productInventory.map((product, index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                      >
+                        <td className="py-3 px-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                          {product?.name}
+                        </td>
+                        <td className="py-3 px-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+                          {product?.stock}
+                        </td>
+                        <td className="py-3 px-2 text-sm text-center">
+                          <span className="inline-flex items-center gap-1">
+                            <span className="text-amber-500">★</span>
+                            <span className="text-gray-900 dark:text-gray-100 font-medium">
+                              {product?.ratings}
+                            </span>
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">
+                          {product?.price}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </LiquidGlass>
+          <LiquidGlass borderRadius="20px">
+            <Card className="bg-transparent border-0 shadow-sm p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                  Recent Orders
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                {recentOrders.map((order, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                          {order?.id}
+                        </span>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full border ${getStatusColor(
+                            order?.status
+                          )}`}
+                        >
+                          {order?.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                        {order?.customer}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
+                        {order?.date}
+                      </p>
+                    </div>
+                    <div className="text-right ml-4">
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        {order?.amount}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </LiquidGlass>
         </div>
       </div>
     </div>

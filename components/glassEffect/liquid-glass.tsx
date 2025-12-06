@@ -100,7 +100,7 @@ export const LiquidGlass = ({
         className={cn(
           `relative ${draggable ? "cursor-pointer" : ""} ${
             expandable ? "cursor-pointer" : ""
-          } backdrop-blur-4xl ${showBG ? "bg-white/10" : ""} shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]`,
+          } backdrop-blur-4xl ${showBG ? "bg-white/5" : ""} shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]`,
           className
         )}
         style={{
