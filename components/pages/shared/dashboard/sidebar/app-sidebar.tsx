@@ -17,6 +17,7 @@ import Optilux from "../../../../../public/images/OptiluxBD.png";
 import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 // This is sample data.
 const data = {
   teams: [
@@ -35,17 +36,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useAppSelector(currentUser);
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data?.teams} />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data?.navMain} />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user as TAuthUSer} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+    <LiquidGlass>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <TeamSwitcher teams={data?.teams} />
+        </SidebarHeader>
+        <SidebarContent>
+          <NavMain items={data?.navMain} />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={user as TAuthUSer} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    </LiquidGlass>
   );
 }
