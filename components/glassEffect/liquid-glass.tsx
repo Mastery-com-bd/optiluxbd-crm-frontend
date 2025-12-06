@@ -66,7 +66,7 @@ export const LiquidGlass = ({
     "2xl":
       "0 4px 4px rgba(0, 0, 0, 0.15), 0 0 12px rgba(0, 0, 0, 0.08), 0 0 60px rgba(255, 255, 255, 0.3)",
   };
-//solved 
+//solved the 
   return (
     <>
       {/* Hidden SVG Filter */}
