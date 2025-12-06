@@ -30,7 +30,7 @@ export default function RootLayout({
     <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className="bg-transparent">
           <Navbar />
           <AuthGuard>
             <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
