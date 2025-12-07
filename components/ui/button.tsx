@@ -51,7 +51,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), "relative flex items-center gap-2 rounded-full px-6 py-2 text-lg font-medium text-neutral-200 backdrop-blur-md shadow-lg shadow-amber-500/20 hover:scale-105 transition-all duration-300")}
       {...props}
     />
   )

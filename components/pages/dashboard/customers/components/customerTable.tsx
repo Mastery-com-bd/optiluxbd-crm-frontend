@@ -73,21 +73,32 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
       </div>
     );
   }
-
+  const headers = [
+    "Name",
+    "Contact",
+    "Location",
+    "Profession",
+    "Level",
+    "Joined",
+    "Actions",
+  ]
   return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
+    <div className="rounded-lg  bg-transparent overflow-hidden">
       {/* Desktop Table */}
       <div className="hidden md:block">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">Name</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Profession</TableHead>
-              <TableHead className="text-center">Level</TableHead>
-              <TableHead className="text-right">Joined</TableHead>
-              <TableHead className="text-right w-[100px]">Actions</TableHead>
+              {headers.map((label, ind) => (
+                <TableHead
+                  first={ind === 0}
+                  last={ind === headers.length - 1}
+                  key={label}
+                  className="text-left text-xs font-semibold uppercase text-muted-foreground"
+                >
+                  {label}
+                </TableHead>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody>
