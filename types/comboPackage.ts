@@ -32,7 +32,7 @@ export type TComboPackage = {
 };
 
 export interface TProduct extends Product {
-  discountPrice: string;
+  discountPrice: number;
 }
 
 export interface TComboPackageItem {

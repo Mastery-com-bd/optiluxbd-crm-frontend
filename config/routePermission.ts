@@ -5,6 +5,7 @@ export const routePermissions: Record<string, string[]> = {
 
   // Product Management
   "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
+  "/dashboard/admin/products/id": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/add-product": ["PRODUCTS CREATE"],
   "/dashboard/admin/products/drafts": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/deleted": ["PRODUCTS VIEW"],
