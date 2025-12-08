@@ -164,7 +164,7 @@ const AllProducts = () => {
           </div>
           {permissions.includes("PRODUCTS CREATE") && (
             <Link href={"/dashboard/admin/products/add-product"}>
-              <Button className="hover:bg-primary/90"  variant="ghost">
+              <Button className="cursor-pointer"  variant="yellow">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
               </Button>
@@ -280,15 +280,15 @@ const AllProducts = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-sm">{product.sku}</TableCell>
-                      <TableCell className="px-4 py-3 text-sm">{product?.subCategory?.name}</TableCell>
-                      <TableCell className="px-4 py-3 text-sm font-medium">{product.stock}</TableCell>
-                      <TableCell className="px-4 py-3 text-sm font-semibold">${product.price}</TableCell>
-                      <TableCell className="px-4 py-3 text-sm">{product.sold}</TableCell>
-                      <TableCell className="px-4 py-3">
+                      <TableCell className="px-4 py-3 text-sm text-center">{product.sku}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">{product?.subCategory?.name}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-medium text-center">{product.stock}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">${product.price}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">{product.sold}</TableCell>
+                      <TableCell className="px-4 py-3 text-center">
                         <div className="flex items-center gap-1">{renderStars(product.rating)}</div>
                       </TableCell>
-                      <TableCell className="px-4 py-3">
+                      <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
                             product.status
@@ -297,7 +297,7 @@ const AllProducts = () => {
                           {product.status}
                         </span>
                       </TableCell>
-                      <TableCell className="px-4 py-3">
+                      <TableCell className="px-4 py-3 text-center">
                         <div className="flex items-center gap-1">
                           <ProductDetails product={product} />
                           <UpdateProduct product={product} />
