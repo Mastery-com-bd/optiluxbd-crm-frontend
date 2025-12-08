@@ -232,7 +232,7 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] pt-[29px] pl-5 pb-[19px] ",
+          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] py-4 pl-4 ",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -245,7 +245,7 @@ function Sidebar({
         {...props}
       >
         <LiquidGlass
-          borderRadius="12px"
+          borderRadius="16px"
           shadowIntensity="xs"
           glowIntensity="xs"
           width="100%"
@@ -253,7 +253,7 @@ function Sidebar({
           <div
             data-sidebar="sidebar"
             data-slot="sidebar-inner"
-            className="bg-[rgba(255,255,255,0.06)] cursor-default group-data-[variant=floating]:border-sidebar-border h-[93vh] px-5 pt-5 pb-4 w-full group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm "
+            className="bg-[rgba(255,255,255,0.06)] cursor-default h-[95.5vh] p-4 w-full rounded-2xl "
           >
             <CustomScrollbar>{children}</CustomScrollbar>
           </div>
@@ -276,7 +276,7 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-7", className, "cursor-pointer")}
+      className={cn("size-7", className, "cursor-pointer border-none")}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
