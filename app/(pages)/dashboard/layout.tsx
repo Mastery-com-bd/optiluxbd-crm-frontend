@@ -6,7 +6,6 @@ import "../../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
 import AuthGuard from "@/provider/AuthGuardProvider";
 
-
 // Load custom fonts
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,13 +42,11 @@ export default function RootLayout({
     >
       {/* Layout Structure */}
       <SidebarProvider>
-          <AppSidebar />
+        <AppSidebar />
         <SidebarInset>
           <Navbar />
           <AuthGuard>
-            <div className="flex flex-1 flex-col gap-4 pt-0">
-              {children}
-            </div>
+            <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
           </AuthGuard>
         </SidebarInset>
       </SidebarProvider>
