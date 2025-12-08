@@ -10,8 +10,8 @@ function cn(...inputs: ClassValue[]) {
 
 interface LiquidGlassCardProps {
   children: React.ReactNode;
+  onClick?: () => void;
   className?: string;
-  draggable?: boolean;
   showBG?: boolean;
   expandable?: boolean;
   width?: string;
@@ -19,7 +19,7 @@ interface LiquidGlassCardProps {
   expandedWidth?: string;
   expandedHeight?: string;
   blurIntensity?: "sm" | "md" | "lg" | "xl";
-  shadowIntensity?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  shadowIntensity?: "none" | "xxs" | "xs" | "sm" | "md" | "lg" | "xl";
   borderRadius?: string;
   glowIntensity?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
 }
@@ -27,7 +27,7 @@ interface LiquidGlassCardProps {
 export const LiquidGlass = ({
   children,
   className = "",
-  draggable = true,
+  
   expandable = false,
   showBG = true,
   width,
@@ -47,7 +47,8 @@ export const LiquidGlass = ({
 
   const shadowStyles = {
     none: "inset 0 0 0 0 rgba(255, 255, 255, 0)",
-    xs: "inset 1px 1px 1px 0 rgba(255, 255, 255, 0.3), inset -1px -1px 1px 0 rgba(255, 255, 255, 0.3)",
+    xs: "inset 1px 1px 1px 0 rgba(255, 255, 255, 0.7), inset -1px -1px 1px 0 rgba(255, 255, 255, 0.7)",
+    xxs: "inset 0.5px 0.5px 0.5px 0 rgba(255, 255, 255, 0.7), inset -0.5px -0.5px 0.5px 0 rgba(255, 255, 255, 0.7)",
     sm: "inset 2px 2px 2px 0 rgba(255, 255, 255, 0.35), inset -2px -2px 2px 0 rgba(255, 255, 255, 0.35)",
     md: "inset 3px 3px 3px 0 rgba(255, 255, 255, 0.45), inset -3px -3px 3px 0 rgba(255, 255, 255, 0.45)",
     lg: "inset 4px 4px 4px 0 rgba(255, 255, 255, 0.5), inset -4px -4px 4px 0 rgba(255, 255, 255, 0.5)",
@@ -98,10 +99,8 @@ export const LiquidGlass = ({
       </svg>
       <div
         className={cn(
-          `relative ${draggable ? "cursor-pointer" : ""} ${
-            expandable ? "cursor-pointer" : ""
-          } backdrop-blur-4xl ${
-            showBG ? "bg-white/5" : ""
+          `relative backdrop-blur-4xl ${
+            showBG ? "bg-white/10" : ""
           } shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]`,
           className
         )}
