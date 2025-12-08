@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Download, Grid3x3, List, Plus, Search, Trash2 } from "lucide-react";
+import { Plus, Search, Trash2 } from "lucide-react";
 import {
   useDeleteProductMutation,
   useGetAllProductQuery,
@@ -41,6 +41,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const AllProducts = () => {
   const user = useAppSelector(currentUser);
@@ -136,9 +137,19 @@ const AllProducts = () => {
   //     setSelectedProducts([...selectedProducts, id]);
   //   }
   // };
-
+  const keys = [
+    "Product",
+    "SKU",
+    "Category",
+    "Stock",
+    "Price",
+    "Sold",
+    "Rating",
+    "Status",
+    "Actions",
+  ]
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-transparent text-foreground p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -153,7 +164,7 @@ const AllProducts = () => {
           </div>
           {permissions.includes("PRODUCTS CREATE") && (
             <Link href={"/dashboard/admin/products/add-product"}>
-              <Button className="bg-primary hover:bg-primary/90">
+              <Button className="cursor-pointer"  variant="yellow">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
               </Button>
@@ -228,57 +239,30 @@ const AllProducts = () => {
             <Loading />
           </div>
         ) : (
-          <Card className="bg-card text-card-foreground border shadow-sm overflow-hidden mb-5">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border bg-muted">
-                    {/* <th className="px-4 py-3 text-left">
-                      <input
-                        type="checkbox"
-                        className="rounded border-border"
-                        checked={
-                          selectedProducts.length === PRODUCTS?.length &&
-                          PRODUCTS?.length > 0
-                        }
-                        onChange={toggleSelectAll}
-                      />
-                    </th> */}
-                    {[
-                      "Product",
-                      "SKU",
-                      "Category",
-                      "Stock",
-                      "Price",
-                      "Sold",
-                      "Rating",
-                      "Status",
-                      "Actions",
-                    ].map((label) => (
-                      <th
+          <Card className="bg-transparent text-card-foreground  shadow-sm overflow-hidden mb-5 border-none">
+            <div className="overflow-x-auto w-full">
+              <Table className="w-full">
+                <TableHeader className="">
+                  <TableRow className=" ">
+                    {keys.map((label, ind) => (
+                      <TableHead
+                        first={ind === 0}
+                        last={ind === keys.length - 1}
                         key={label}
-                        className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase"
+                        className="text-left text-xs font-semibold uppercase text-muted-foreground"
                       >
                         {label}
-                      </th>
+                      </TableHead>
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {PRODUCTS?.map((product: Product) => (
-                    <tr
+                    <TableRow
                       key={product.id}
-                      className="border-b border-muted hover:bg-muted/50 transition-colors"
+                      className=" border-muted hover:bg-muted/50 transition-colors"
                     >
-                      {/* <td className="px-4 py-3">
-                        <input
-                          type="checkbox"
-                          className="rounded border-border"
-                          checked={selectedProducts.includes(product.id)}
-                          onChange={() => toggleSelectProduct(product.id)}
-                        />
-                      </td> */}
-                      <td className="px-4 py-3">
+                      <TableCell className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Image
                             src={
@@ -292,30 +276,19 @@ const AllProducts = () => {
                           />
                           <div>
                             <p className="font-medium">{product.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              by {product.by}
-                            </p>
+                            <p className="text-xs text-muted-foreground">by {product.by}</p>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm">{product.sku}</td>
-                      <td className="px-4 py-3 text-sm">{product?.subCategory?.name}</td>
-                      <td className="px-4 py-3 text-sm font-medium">
-                        {product.stock}
-                      </td>
-                      <td className="px-4 py-3 text-sm font-semibold">
-                        ${product.price}
-                      </td>
-                      <td className="px-4 py-3 text-sm">{product.sold}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          {renderStars(product.rating)}
-                          {/* <span className="text-xs text-muted-foreground ml-1">
-                          ({product.reviews})
-                        </span> */}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">{product.sku}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">{product?.subCategory?.name}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-medium text-center">{product.stock}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">${product.price}</TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">{product.sold}</TableCell>
+                      <TableCell className="px-4 py-3 text-center">
+                        <div className="flex items-center gap-1">{renderStars(product.rating)}</div>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`text-xs px-2.5 py-1 rounded-full border ${getStatusColor(
                             product.status
@@ -323,48 +296,38 @@ const AllProducts = () => {
                         >
                           {product.status}
                         </span>
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
                         <div className="flex items-center gap-1">
                           <ProductDetails product={product} />
                           <UpdateProduct product={product} />
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button
-                                className="cursor-pointer"
-                                variant="ghost"
-                                size="icon"
-                              >
+                              <Button className="cursor-pointer" variant="ghost"  size="icon">
                                 <Trash2 className="w-4 h-4 text-destructive " />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This action cannot be undone. This will
-                                  permanently delete your account and remove
-                                  your data from our servers.
+                                  This action cannot be undone. This will permanently delete your product and remove your data from our servers.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => handleDelete(product.id)}
-                                >
+                                <AlertDialogAction onClick={() => handleDelete(product.id)}>
                                   Continue
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
                           </AlertDialog>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           </Card>
         )}
@@ -376,7 +339,7 @@ const AllProducts = () => {
           onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
         />
       </div>
-    </div>
+    </div >
   );
 };
 

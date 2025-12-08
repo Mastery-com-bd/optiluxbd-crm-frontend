@@ -6,16 +6,11 @@ import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div
-      data-slot="table-container"
-      className="relative w-full overflow-x-auto "
-    >
-      <table
-        data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
-        {...props}
-      />
-    </div>
+    <table
+      data-slot="table"
+      className={cn("caption-bottom text-sm  w-full ", className)}
+      {...props}
+    />
   );
 }
 
@@ -23,7 +18,10 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        "min-w-full",
+        className
+      )}
       {...props}
     />
   );
@@ -57,7 +55,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+        "hover:bg-muted/50 data-[state=selected]:bg-muted  rounded-2xl  transition-colors w-full",
         className
       )}
       {...props}
@@ -65,16 +63,23 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   );
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ first, last, children, className, ...props }: React.ComponentProps<"th"> & {
+  first?: boolean;
+  last?: boolean;
+}) {
   return (
     <th
       data-slot="table-head"
       className={cn(
-        "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] ",
+        "text-foreground h-10  text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
-    />
+    >
+      <div className={`px-4 py-3 bg-white/10 border border-y-white/40   border-x-white/20 ${first ? "rounded-tl-2xl rounded-bl-2xl" : last ? "rounded-tr-2xl rounded-br-2xl" : ""} text-center text-white`}>
+        {children}
+      </div>
+    </th >
   );
 }
 
@@ -83,7 +88,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] border-red-600",
+        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]  border-b-2 border-white/20",
         className
       )}
       {...props}

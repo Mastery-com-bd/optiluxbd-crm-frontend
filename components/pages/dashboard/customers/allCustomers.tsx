@@ -56,7 +56,7 @@ export default function AllCustomersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen ">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         {/* Header */}
 
