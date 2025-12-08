@@ -116,6 +116,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -127,4 +128,12 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.bgGlass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  border-radius: 20px;
+  border: 1 solid rgba(255, 255, 255, 0.2);
 }

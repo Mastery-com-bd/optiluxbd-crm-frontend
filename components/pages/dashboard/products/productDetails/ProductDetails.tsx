@@ -1,120 +1,165 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+/* eslint-disable @next/next/no-img-element */
 import { Product } from "@/types/product";
+import { BadgePercent, Tag } from "lucide-react";
 
 interface ProductDetailsProps {
-  product: Product;
-  buttonName?: string;
+  product?: Product;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({
-  product,
-  buttonName,
-}) => {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        {buttonName ? (
-          <Button variant="ghost" className="cursor-pointer">
-            {buttonName}
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="cursor-pointer"
-            title="View Product Details"
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
-        )}
-      </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="sm:max-w-[40vw] w-full overflow-y-auto p-6"
-      >
-        <SheetHeader>
-          <SheetTitle className="text-xl font-bold">Product Details</SheetTitle>
-          <SheetDescription>
-            View details for <strong>{product.name}</strong>
-          </SheetDescription>
-        </SheetHeader>
+const ProductDetails: React.FC<ProductDetailsProps> = () => {
+  const product: Product = {
+    id: 1,
+    name: "Men Black Slim Fit T-shirt",
+    brand: "UltraFit",
+    category: "Clothing",
+    subCategory: { id: 101, name: "T-shirts" },
+    price: "100.00",
+    discountPrice: 80.0,
+    sku: "UTF-TSHIRT-BLK01",
+    image_url:
+      "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png",
+    image_public_id: "dummy_product_image_id_123456",
+    stock: 224,
+    stock_status: "in_stock",
+    is_active: true,
+    is_featured: false,
+    status: "Published",
+    tags: ["black", "slim-fit", "cotton"],
+    description:
+      "Top in sweatshirt fabric made from a cotton blend with a soft brushed inside. Relaxed fit with dropped shoulders, long sleeves and ribbing around the neckline, cuffs and hem.",
+    dimensions: "30x25x3 cm",
+    weight: "400g",
+    created_at: "2024-06-01T12:00:00Z",
+    updated_at: "2024-06-10T09:32:00Z",
+    by: "Admin",
+    sold: 12,
+    rating: 4,
+  };  
 
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Product Image */}
-          <div className="col-span-1">
+  const colors = ["#667085", "#fcd34d", "#ffffff", "#000000", "#10b981"];
+  const sizes = ["S", "M", "L", "XL", "XXL"];
+
+  const discountPercent = Math.round(
+    (1 - Number(product.discountPrice) / Number(product.price)) * 100
+  );
+
+  return (
+    <div className="min-h-screen text-white p-10 ]">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-4">
+          <h3 className="text-3xl font-bold">Product Details</h3>
+          <p className="text-sm text-gray-400">View product details</p>
+        </div>
+
+        {/* Content */}
+        <div className="flex gap-6  mt-10">
+          {/* Left Image Panel */}
+          <div className="w-full md:w-1/3 bgGlass p-6  flex flex-col items-center shadow-lg justify-between">
             <img
               src={product.image_url}
               alt={product.name}
-              className="w-full h-auto rounded-md border"
+              className="rounded-lg object-cover w-full h-auto "
             />
+            {/* Thumbnails */}
+            <div className="flex justify-between w-full mt-4 ">
+              {[1, 2, 3].map((_, i) => (
+                <img
+                  key={i}
+                  src={product.image_url}
+                  alt="thumb"
+                  className="w-24 h-24 object-cover rounded-lg border border-white/20"
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Product meta info */}
-          <div className="space-y-1 text-sm">
-            <p>
-              <strong>Name:</strong> {product.name}
+          {/* Right Content Area */}
+          <div className="w-full md:w-2/3 bgGlass rounded-lg p-6 shadow-lg space-y-4">
+            <h2 className="text-2xl font-semibold">{product.name}</h2>
+
+            <div className="flex items-center gap-3 text-lg my-6">
+              <span className="text-white font-semibold text-3xl">
+                ${product.discountPrice.toFixed(2)}
+              </span>
+              <span className="line-through text-gray-400">
+                ${Number(product.price).toFixed(2)}
+              </span>
+              <span className="text-rose-400 text-sm">
+                ({discountPercent}% Off)
+              </span>
+            </div>
+
+            {/* Colors & Sizes */}
+            <div className="flex gap-8 my-6">
+              <div>
+                <p className="text-sm mb-1 ">Available Colors</p>
+                <div className="flex gap-2">
+                  {colors.map((color, i) => (
+                    <span
+                      key={i}
+                      className="w-6 h-6 rounded-full border-2 border-white"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-sm mb-1 ">Available Size</p>
+                <div className="flex gap-2">
+                  {sizes.map((size) => (
+                    <span
+                      key={size}
+                      className="text-sm p-2 rounded-sm bg-white text-black "
+                    >
+                      {size}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Quantity */}
+            <p className="text-sm my-6">
+              <strong>Quantity:</strong> {product.stock}
             </p>
-            <p>
-              <strong>Category:</strong> {product.category}
-            </p>
-            <p>
-              <strong>Brand:</strong> {product.brand}
-            </p>
-            <p>
-              <strong>SKU:</strong> {product.sku}
-            </p>
-            <p>
-              <strong>Price:</strong> ${product.price}
-            </p>
-            <p>
-              <strong>Status:</strong> {product.status}
-            </p>
-            <p>
-              <strong>Stock Status:</strong> {product.stock_status}
-            </p>
-            <p>
-              <strong>Stock:</strong> {product.stock}
-            </p>
+
+            {/* Description */}
+            <div className="my-6">
+              <p className="text-sm font-semibold mb-1">Description :</p>
+              <p className="text-sm text-gray-300">
+                {product.description}{" "}
+                <span className="text-yellow-600 cursor-pointer hover:underline">
+                  Read More
+                </span>
+              </p>
+            </div>
+
+            {/* Offers */}
+            <div className="my-6">
+              <p className="text-sm font-semibold mb-1">Available offers :</p>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2">
+                  <BadgePercent className="text-green-400 w-4 h-4 mt-0.5" />
+                  <span className="text-sm text-gray-300">
+                    <span className="text-yellow-600">Bank Offer</span> 10%
+                    instant discount on Bank Debit Cards, up to $30 on orders
+                    of $50 and above
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Tag className="text-green-400 w-4 h-4 mt-0.5" />
+                  <span className="text-sm text-gray-300">
+                    <span className="text-yellow-600">Bank Offer</span>{" "}
+                    Get 20% off your next purchase! Exclusive deal ends soon!
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-
-        {/* Grid like delivery info section */}
-        <div className="grid grid-cols-2 gap-4 mt-6 text-sm">
-          <div>
-            <strong>Created At:</strong>
-            <p>{new Date(product.created_at).toLocaleString()}</p>
-          </div>
-          <div>
-            <strong>Updated At:</strong>
-            <p>{new Date(product.updated_at).toLocaleString()}</p>
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="mt-4 text-sm">
-          <strong>Description:</strong>
-          <p>{product.description || "N/A"}</p>
-        </div>
-
-        {/* Footer */}
-        <SheetFooter className="mt-6">
-          <SheetClose asChild>
-            <Button variant="outline">✕ Close</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </div>
   );
 };
 
