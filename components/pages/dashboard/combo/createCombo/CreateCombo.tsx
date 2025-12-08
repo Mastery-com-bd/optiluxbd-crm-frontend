@@ -297,7 +297,6 @@ const CreateCombo = () => {
                           <div className="flex items-center gap-1">
                             <ProductDetails
                               product={product}
-                              buttonName="View Details"
                             />
                           </div>
                         </td>
