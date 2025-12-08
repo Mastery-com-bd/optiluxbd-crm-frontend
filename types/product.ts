@@ -22,4 +22,5 @@ export interface Product {
   by: string | "";
   sold: number | null;
   rating: number;
+  discountPrice:number;
 }
