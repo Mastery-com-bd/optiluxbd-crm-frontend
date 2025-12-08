@@ -6,31 +6,44 @@ import "../../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
 import AuthGuard from "@/provider/AuthGuardProvider";
 
+// Load custom fonts
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+// Metadata for Next.js
 export const metadata: Metadata = {
   title: "Optilux CRM",
-  description: "this is the dashboard of Optiluxbd crm",
+  description: "This is the dashboard of Optiluxbd CRM",
 };
 
+// Root layout component
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <div
+      className={`
+        ${geistSans.variable} ${geistMono.variable} 
+        antialiased 
+        relative 
+        overflow-hidden 
+        min-h-screen 
+        bg-[linear-gradient(40deg,hsl(0_0%_0%)_2%,hsl(285_65%_8%)_34%,hsl(278_72%_13%)_46%,hsl(278_72%_13%)_57%,hsl(285_65%_8%)_69%,hsl(0_0%_0%)_99%)]
+        text-white
+      `}
+    >
+      {/* Layout Structure */}
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset className="bg-transparent">
+        <SidebarInset>
           <Navbar />
           <AuthGuard>
             <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>

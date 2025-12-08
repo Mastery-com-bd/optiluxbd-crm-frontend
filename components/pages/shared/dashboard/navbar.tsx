@@ -8,7 +8,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
@@ -60,7 +59,6 @@ const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-transparent">
       <div className="w-full flex items-center justify-between gap-2 px-4">
-        <SidebarTrigger className="-ml-1" />
         <div className="w-full flex items-center justify-between gap-2">
           <div className="hidden lg:flex flex-col items-start">
             <span className="text-xs text-muted-foreground/80">

@@ -24,6 +24,7 @@ import {
   Truck,
   User,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -87,6 +88,7 @@ interface CourierDetail {
 export default function CouriarDetails({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetCouriarDetailsByIdQuery(id);
+  const router = useRouter();
 
   const details: CourierDetail = data?.data;
 
@@ -113,7 +115,7 @@ export default function CouriarDetails({ id }: { id: string }) {
   const [returnRequest] = useCreateSteadfastReturnRequestMutation();
   const handleReturnRequest = async () => {
     const payload = {
-      consignmentId: details.consignmentId || details.invoice || details.trackingCode,
+      consignment_id: details.consignmentId || details.invoice || details.trackingCode,
       reason: "Customer refused delivery",
     };
     setLoading(true);
@@ -128,6 +130,7 @@ export default function CouriarDetails({ id }: { id: string }) {
           duration: 3000,
         });
         setLoading(false);
+        router.push("/dashboard/couriar/steadFast")
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

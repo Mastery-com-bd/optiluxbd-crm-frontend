@@ -8,6 +8,7 @@ import {
   Activity,
   Tags,
   MessageCircleWarning,
+  CircleGauge,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -30,7 +31,7 @@ export interface NavRoute {
 export const crmRoutes: NavRoute[] = [
   {
     title: "Dashboard",
-    icon: LayoutDashboard,
+    icon: CircleGauge,
     permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
     roles: ["ADMIN", "TEAM_LEADER"],
     children: [
