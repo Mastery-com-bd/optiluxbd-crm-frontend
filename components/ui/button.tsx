@@ -8,6 +8,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        secondary:"text-secondary-foreground bg-linear-to-t from-[#8B07A8] to-white/10",
+        destructive: "bg-destructive text-white",
         default: "text-secondary-foreground bg-white/10 border-b border-b-white/60",
         red:
           "text-secondary-foreground bg-linear-to-t from-[#B5050B] to-white/10",
