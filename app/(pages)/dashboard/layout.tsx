@@ -41,12 +41,12 @@ export default function RootLayout({
       `}
     >
       {/* Layout Structure */}
-      <SidebarProvider>
+      <SidebarProvider className="px-4">
         <AppSidebar />
         <SidebarInset>
           <Navbar />
           <AuthGuard>
-            <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
+            <div className="flex flex-1 flex-col gap-4 py-4">{children}</div>
           </AuthGuard>
         </SidebarInset>
       </SidebarProvider>
