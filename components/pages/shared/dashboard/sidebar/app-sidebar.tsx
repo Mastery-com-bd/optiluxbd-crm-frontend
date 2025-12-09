@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-full ">
         <div>
           <SidebarHeader>
             <TeamSwitcher teams={data?.teams} />

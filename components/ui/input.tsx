@@ -25,12 +25,19 @@ export { Input }
 
 import { cn } from "@/lib/utils";
 
-export function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export function Input({
+  className,
+  type,
+  ...props
+}: React.ComponentProps<"input">) {
   return (
     <div className="relative w-full max-w-2xl">
       {/* Glass background with custom fading borders */}
       <div
-        className={`relative flex items-center gap-4 w-full px-5 py-2.5 rounded-2xl backdrop-blur-xl ${className}`}
+        className={cn(
+          "relative flex items-center gap-4 w-full px-5 py-2.5 rounded-2xl backdrop-blur-xl",
+          className
+        )}
         style={{
           background:
             "linear-gradient(135deg, rgba(58, 54, 65, 0.7) 0%, rgba(45, 42, 52, 0.8) 100%)",
@@ -73,9 +80,9 @@ export function Input({ className, type, ...props }: React.ComponentProps<"input
         {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
         <input
           type={type}
-      data-slot="input"
+          data-slot="input"
           className={cn(
-            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-lg font-light outline-none"
+            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none"
           )}
           {...props}
         />

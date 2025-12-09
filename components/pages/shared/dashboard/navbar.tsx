@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-transparent">
+    <header className=" sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-transparent">
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="w-full flex items-center justify-between gap-2">
           <div className="hidden lg:flex flex-col items-start">
