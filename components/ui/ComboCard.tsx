@@ -3,9 +3,7 @@
 import { cn } from "@/lib/utils";
 
 interface ComboCardProps {
-  height?: string;
   background?: string;
-  padding?: string;
   gap?: string;
   radius?: string;
   className?: string;
@@ -13,8 +11,6 @@ interface ComboCardProps {
 }
 
 const ComboCard = ({
-  height,
-  padding = "p-4",
   gap,
   background = "bg-[rgba(255,255,255,0.10)]",
   radius = "rounded-[20px]",
@@ -22,9 +18,7 @@ const ComboCard = ({
   children,
 }: ComboCardProps) => {
   return (
-    <div className={cn(height, padding, gap, background, radius, className)}>
-      {children}
-    </div>
+    <div className={cn(gap, background, radius, className)}>{children}</div>
   );
 };
 

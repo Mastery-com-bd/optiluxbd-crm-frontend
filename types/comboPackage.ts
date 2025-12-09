@@ -3,6 +3,10 @@ import { Product } from "./product";
 export type TComboItem = {
   productId: number;
   quantity: number;
+  product: {
+    id: number;
+    name: string;
+  };
 };
 
 export type TComboPack = {
@@ -15,21 +19,16 @@ export type TComboPack = {
   items: TComboItem[];
 };
 
-export type TComboPackage = {
+export interface TComboPackage extends TComboPack {
   id: number;
-  name: string;
-  description: string;
-  sku: string;
-  discountPrice: string;
   packagePrice: string;
   savingsAmount: string;
   savingsPercent: string;
   is_active: boolean;
-  is_featured: boolean;
-  tags?: string[];
-  items: TComboItem[];
   created_at: string;
-};
+  image_url: string | null;
+  image_public_id: string | null;
+}
 
 export interface TProduct extends Product {
   discountPrice: number;
