@@ -72,7 +72,7 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                     tooltip={item.title}
                     className="w-full"
                   >
-                    <button className="w-full group transition-all bg-white/10 text-secondary-foreground hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white cursor-pointer text-base">
+                    <button className="w-full group transition-all text-secondary-foreground hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white cursor-pointer text-base">
                       <div className="w-full flex items-center justify-between">
                         <p className="flex items-center gap-2 ">
                           <span>{item.icon && <item.icon size={16} />}</span>

@@ -12,7 +12,7 @@ interface ComboCardProps {
 
 const ComboCard = ({
   gap,
-  background = "bg-[rgba(255,255,255,0.10)]",
+  background = "bg-white/5 backdrop-blur-3xl",
   radius = "rounded-[20px]",
   className,
   children,

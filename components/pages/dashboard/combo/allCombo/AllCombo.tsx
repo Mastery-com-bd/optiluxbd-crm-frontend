@@ -21,6 +21,8 @@ import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 import CardView from "./CardView";
 import TableView from "./TableView";
+import ComboOverView from "./ComboOverView";
+import Link from "next/link";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -75,7 +77,7 @@ const AllCombo = () => {
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full">
       {/* header section */}
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between px-8">
         <div>
           <h1 className="text-3xl font-semibold">All Combo Pack</h1>
           <p className="text-[#A1A1A1] leading-5">
@@ -103,47 +105,28 @@ const AllCombo = () => {
             shadowIntensity="xs"
             borderRadius="16px"
           >
-            <Button
-              variant="yellow"
-              className="p-3 flex rounded-2xl border-none cursor-pointer"
-            >
-              <p className="flex items-center gap-2">
-                <Plus />
-                <span className="text-[14px]">Create Combo</span>
-              </p>
-            </Button>
+            <Link href="/dashboard/combo/create-combo">
+              <Button
+                variant="yellow"
+                className="p-3 flex rounded-2xl border-none cursor-pointer"
+              >
+                <p className="flex items-center gap-2">
+                  <Plus />
+                  <span className="text-[14px]">Create Combo</span>
+                </p>
+              </Button>
+            </Link>
           </LiquidGlass>
         </div>
       </div>
 
       {/* stats card section */}
-      <Card className="bg-transparent text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
-        this is a card
-        {/* <div className="flex flex-col gap-3 lg:w-[50%]">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Price Range: {priceRange[0]} - {priceRange[1]}
-          </label>
-          <Slider
-            // defaultValue={[priceRange[0], priceRange[1]]}
-            value={priceRange}
-            min={1}
-            max={100000}
-            step={100}
-            onValueChange={(val) => {
-              setPriceRange(val);
-              setFilters((prev: any) => ({
-                ...prev,
-                minPrice: val[0],
-                maxPrice: val[1],
-                page: 1,
-              }));
-            }}
-          />
-        </div> */}
-      </Card>
+      <div className="w-full ">
+        <ComboOverView />
+      </div>
 
       {/* filtyer section */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-8">
         {/* search bar */}
         <div className=" w-full flex items-center gap-3">
           <div className="relative">
