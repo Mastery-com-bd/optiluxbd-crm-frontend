@@ -75,9 +75,9 @@ const AllCombo = () => {
   }
 
   return (
-    <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full">
+    <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full px-4">
       {/* header section */}
-      <div className="flex items-center justify-between px-8">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold">All Combo Pack</h1>
           <p className="text-[#A1A1A1] leading-5">
@@ -126,7 +126,7 @@ const AllCombo = () => {
       </div>
 
       {/* filtyer section */}
-      <div className="flex items-center justify-between px-8">
+      <div className="flex items-center justify-between">
         {/* search bar */}
         <div className=" w-full flex items-center gap-3">
           <div className="relative">
@@ -135,7 +135,7 @@ const AllCombo = () => {
               className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
             />
             <Input
-              className="px-10 py-1.5 w-64 text-sm bg-white/10"
+              className="px-10 py-1.5 w-64 text-sm bg-transparent"
               value={inputValue}
               onChange={(e) => {
                 debouncedLog(e.target.value);
@@ -150,9 +150,9 @@ const AllCombo = () => {
             shadowIntensity="xs"
             borderRadius="12px"
           >
-            <button className=" w-9 h-9 p-2.5 rounded-[12px] bg-white/10 cursor-pointer">
+            <Button className=" w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
               <Funnel size={16} />
-            </button>
+            </Button>
           </LiquidGlass>
         </div>
 
@@ -168,7 +168,7 @@ const AllCombo = () => {
               >
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer "
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
                 >
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
@@ -182,7 +182,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="bg-gray-800 text-gray-100"
             >
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
@@ -213,7 +213,7 @@ const AllCombo = () => {
               >
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer "
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
                 >
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
@@ -227,7 +227,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="bg-gray-800 text-gray-100"
             >
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
@@ -258,13 +258,16 @@ const AllCombo = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] bg-white/10 border-none cursor-pointer"
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent"
                 >
                   <Logs />
                 </Button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="center" className="rounded-xl">
+              <DropdownMenuContent
+                align="center"
+                className="rounded-xl bg-gray-800 text-gray-100"
+              >
                 {["Table View", "Grid View"].map((item) => (
                   <DropdownMenuItem
                     key={item}
@@ -284,7 +287,7 @@ const AllCombo = () => {
         {/* card section */}
         {view === "Grid View" && (
           <div className="flex justify-center">
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid grid-cols-3 gap-8">
               {comboPackages.map((item, i) => (
                 <CardView key={i} item={item} />
               ))}

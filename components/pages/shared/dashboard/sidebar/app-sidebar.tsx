@@ -11,19 +11,13 @@ import {
   SidebarHeader,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { crmRoutes, NavRoute } from "@/constants/CRM_Navigation";
+import { crmRoutes } from "@/constants/CRM_Navigation";
 import Optilux from "../../../../../public/images/OptiluxBD.png";
 import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  currentUser,
-  logOut,
-  TAuthUSer,
-} from "@/redux/features/auth/authSlice";
-import { NavUser } from "./nav-user";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useAppDispatch } from "@/redux/hooks";
+import { logOut } from "@/redux/features/auth/authSlice";
+import { Collapsible } from "@/components/ui/collapsible";
 import { useRouter } from "next/navigation";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
@@ -43,7 +37,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useAppSelector(currentUser);
+  // const user = useAppSelector(currentUser);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();

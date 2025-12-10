@@ -30,6 +30,7 @@ export const routePermissions: Record<string, string[]> = {
   // combo management
   "/dashboard/combo": ["PACKAGES VIEW"],
   "/dashboard/combo/create-combo": ["PACKAGES CREATE"],
+  "/dashboard/combo/combo-draft": ["PACKAGES VIEW"],
 
   // Customer Management
   "/dashboard/customers": ["CUSTOMERS VIEW"],

@@ -42,7 +42,7 @@ export default function RootLayout({
       `}
     >
       {/* Layout Structure */}
-      <SidebarProvider className="px-4">
+      <SidebarProvider className="px-4" defaultOpen={true}>
         <AppSidebar />
         <SidebarInset>
           <Navbar />
