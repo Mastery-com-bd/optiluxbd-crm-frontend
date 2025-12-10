@@ -22,6 +22,7 @@ import { getPermissions } from "@/utills/getPermissionAndRole";
 import { getSidebarRoutes } from "@/utills/getSidebarRoutes";
 import { NavRoute } from "@/constants/CRM_Navigation";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function NavMain({ items }: { items: NavRoute[] }) {
   const user = useAppSelector(currentUser);
@@ -67,15 +68,28 @@ export function NavMain({ items }: { items: NavRoute[] }) {
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
+                    asChild
                     tooltip={item.title}
-                    className="cursor-pointer"
+                    className="w-full"
                   >
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                    <Plus className="ml-auto transition-all duration-200 group-data-[state=open]/collapsible:hidden" />
-
-                    {/* Minus (only when open) */}
-                    <Minus className="ml-auto hidden transition-all duration-200 group-data-[state=open]/collapsible:block" />
+                    <button className="w-full group transition-all text-secondary-foreground hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white cursor-pointer text-base">
+                      <div className="w-full flex items-center justify-between">
+                        <p className="flex items-center gap-2 ">
+                          <span>{item.icon && <item.icon size={16} />}</span>
+                          <span>{item.title}</span>
+                        </p>
+                        <p>
+                          <Plus
+                            size={16}
+                            className=" transition-all duration-200 group-data-[state=open]/collapsible:hidden"
+                          />
+                          <Minus
+                            size={16}
+                            className=" hidden transition-all duration-200 group-data-[state=open]/collapsible:block"
+                          />
+                        </p>
+                      </div>
+                    </button>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -88,9 +102,18 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                           active={isActive}
                         >
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.path!}>
-                              <span>{subItem.title}</span>
-                            </Link>
+                            <button
+                              className={cn(
+                                "w-full group transition-all cursor-pointer text-base",
+                                "hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white",
+                                isActive &&
+                                  "bg-linear-to-t from-[#CB9228] to-white/10 text-white"
+                              )}
+                            >
+                              <Link href={subItem.path!}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </button>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       );

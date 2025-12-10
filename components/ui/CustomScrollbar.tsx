@@ -62,7 +62,7 @@ export function CustomScrollbar({ children }: { children: React.ReactNode }) {
           opacity: isVisible ? 1 : 0,
         }}
         className="
-          absolute -right-5 w-[3px] 
+          absolute -right-4 w-[3px] 
           bg-[rgba(255,255,255,0.35)]
           rounded-full 
           transition-opacity duration-200
