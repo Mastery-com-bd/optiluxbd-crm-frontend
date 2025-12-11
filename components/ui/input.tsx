@@ -28,8 +28,9 @@ import { cn } from "@/lib/utils";
 export function Input({
   className,
   type,
+  icon,
   ...props
-}: React.ComponentProps<"input">) {
+}: React.ComponentProps<"input"> & { icon?: React.ReactNode }) {
   return (
     <div className="relative w-full max-w-2xl">
       {/* Glass background with custom fading borders */}
@@ -78,6 +79,11 @@ export function Input({
         />
 
         {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
+        {icon && (
+          <span className="shrink-0 text-[#8a8a96] w-5 h-5">
+            {icon}
+          </span>
+        )}
         <input
           type={type}
           data-slot="input"
