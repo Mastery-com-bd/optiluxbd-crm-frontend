@@ -81,7 +81,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
     "Level",
     "Joined",
     "Actions",
-  ]
+  ];
   return (
     <div className="rounded-lg  bg-transparent overflow-hidden">
       {/* Desktop Table */}
@@ -171,7 +171,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                     <DropdownMenuContent align="end" className="w-[180px]">
                       <DropdownMenuItem asChild>
                         <Link
-                          href={`/dashboard/customers/id/${customer.id}`}
+                          href={`/dashboard/customers/${customer.id}`}
                           className="flex items-center cursor-pointer"
                         >
                           <Eye className="h-4 w-4 mr-2" />
@@ -180,7 +180,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
-                          href={`/dashboard/customers/id/${customer.id}`}
+                          href={`/dashboard/customers/${customer.id}`}
                           className="flex items-center cursor-pointer"
                         >
                           <Edit className="h-4 w-4 mr-2" />

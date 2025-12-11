@@ -137,3 +137,18 @@
   border-radius: 20px;
   border: 1 solid rgba(255, 255, 255, 0.2);
 }
+
+.custom-border-bg {
+  border-style: solid;
+  border-width: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+
+  /* Border color */
+  border-color: rgba(255, 255, 255, 0.25);
+
+  /* Rounded corners */
+  border-radius: 6px;
+}

@@ -1,12 +1,11 @@
-import AllCustomersPage from "@/components/pages/dashboard/customers/allCustomers";
+import AllCustomers from "@/components/pages/dashboard/customers/allCustomers/AllCustomers";
 
-
-const Page = () => {
+const AllCustomersPage = () => {
   return (
     <div>
-      <AllCustomersPage />
+      <AllCustomers />
     </div>
   );
 };
 
-export default Page;
+export default AllCustomersPage;

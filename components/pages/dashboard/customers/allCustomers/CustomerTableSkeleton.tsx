@@ -1,14 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-const TableSkeleton = () => {
+const CustomerTableSkeleton = () => {
   return (
     <section className="w-full bg-white dark:bg-gray-900 rounded-2xl shadow p-6 space-y-6 animate-in fade-in">
-      
-
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse bg-white dark:bg-gray-800">
-
           <tbody>
             {Array.from({ length: 6 }).map((_, i) => (
               <tr
@@ -57,4 +54,4 @@ const TableSkeleton = () => {
   );
 };
 
-export default TableSkeleton;
+export default CustomerTableSkeleton;
