@@ -76,12 +76,12 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(
-        "relative overflow-hidden border-r-white/60 border-r border-t-white/60 border-t border-l-white/60 border-l text-[16px]! text-white!",
+        "relative overflow-hidden text-white",
         buttonVariants({ variant, size, className })
       )}
       {...props}
     >
-      <div className="rounded-xl">
+      <div className="rounded-xl ">
         <span
           data-slot="button-content"
           className="relative z-10 flex items-center "

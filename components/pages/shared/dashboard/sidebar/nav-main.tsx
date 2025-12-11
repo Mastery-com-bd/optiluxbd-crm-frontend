@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,7 +22,8 @@ import { getPermissions } from "@/utills/getPermissionAndRole";
 import { getSidebarRoutes } from "@/utills/getSidebarRoutes";
 import { NavRoute } from "@/constants/CRM_Navigation";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { matchRoute } from "@/utills/matchRoute";
 
 export function NavMain({ items }: { items: NavRoute[] }) {
   const user = useAppSelector(currentUser);
@@ -34,8 +35,8 @@ export function NavMain({ items }: { items: NavRoute[] }) {
     <SidebarGroup>
       <SidebarMenu>
         {visibleRoutes.map((item) => {
+          const isActive = pathname === item.path;
           if (!item.children || item.children.length === 0) {
-            const isActive = pathname === item.path;
             return (
               <SidebarMenuItem key={item.title}>
                 {item.path ? (
@@ -57,14 +58,9 @@ export function NavMain({ items }: { items: NavRoute[] }) {
               </SidebarMenuItem>
             );
           }
-
           // If the item has children
           return (
-            <Collapsible
-              key={item.title}
-              asChild
-              className="group/collapsible "
-            >
+            <Collapsible key={item.title} asChild className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
@@ -95,25 +91,23 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.children?.map((subItem) => {
-                      const isActive = pathname === subItem.path;
+                      const isActive = matchRoute(pathname, subItem.path);
                       return (
                         <SidebarMenuSubItem
                           key={subItem.title}
                           active={isActive}
                         >
                           <SidebarMenuSubButton asChild>
-                            <button
-                              className={cn(
-                                "w-full group transition-all cursor-pointer text-base",
-                                "hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white",
-                                isActive &&
-                                  "bg-linear-to-t from-[#CB9228] to-white/10 text-white"
-                              )}
+                            <Button
+                              variant={isActive ? "yellow" : "default"}
+                              className="flex items-center justify-start  text-base bg-transparent hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white border-none"
                             >
                               <Link href={subItem.path!}>
-                                <span>{subItem.title}</span>
+                                <span className="text-sm group-data-[collapsible=icon]:hidden">
+                                  {subItem.title}
+                                </span>
                               </Link>
-                            </button>
+                            </Button>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       );

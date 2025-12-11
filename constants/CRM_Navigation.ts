@@ -150,6 +150,11 @@ export const crmRoutes: NavRoute[] = [
         path: "/dashboard/combo/create-combo",
         permissions: ["PACKAGES CREATE"],
       },
+      {
+        title: "Combo Draft",
+        path: "/dashboard/combo/combo-draft",
+        permissions: ["PACKAGES VIEW"],
+      },
     ],
   },
 

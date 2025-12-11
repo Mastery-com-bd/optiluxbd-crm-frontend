@@ -29,7 +29,7 @@ export function TeamSwitcher({
     plan: string;
   }[];
 }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, state } = useSidebar();
   const [activeTeam, setActiveTeam] = React.useState(teams[0]);
 
   if (!activeTeam) {
@@ -55,7 +55,7 @@ export function TeamSwitcher({
                   </div>
                 </div>
               </Link>
-              <SidebarTrigger />
+              {state === "expanded" && <SidebarTrigger />}
             </div>
           </DropdownMenuTrigger>
           {/* <DropdownMenuContent
