@@ -17,7 +17,7 @@ const CardView = ({ item }: { item: TComboPackage }) => {
       borderRadius="20px"
       className="w-[380px] h-[630px] cursor-default"
     >
-      <ComboCard className="p-4 flex flex-col gap-2 h-[630px]">
+      <ComboCard className="p-5 flex flex-col gap-2 h-[630px] ">
         {/* photo section */}
         <div className="relative mx-auto w-full h-[300px] rounded-[20px]">
           <Image
@@ -122,7 +122,7 @@ const CardView = ({ item }: { item: TComboPackage }) => {
                 borderRadius="20px"
                 className="cursor-default h-28"
               >
-                <div className="w-full h-28 bg-white/10 px-4 py-2 rounded-[20px] space-y-2 overflow-y-auto no-scrollbar">
+                <div className="w-full h-28 px-4 py-2 rounded-[20px] space-y-2 overflow-y-auto no-scrollbar">
                   <h1 className="text-white/60 leading-5">
                     Includes {item?.items.length} items:
                   </h1>

@@ -210,7 +210,7 @@ function Sidebar({
 
   return (
     <div
-      className="group peer hidden md:block"
+      className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
@@ -232,13 +232,13 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] py-4 pl-4 ",
+          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] py-4 pl-4",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
 
           variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-full "
+            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+4px)]"
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
           className
         )}
@@ -253,7 +253,7 @@ function Sidebar({
           <div
             data-sidebar="sidebar"
             data-slot="sidebar-inner"
-            className="bg-[rgba(255,255,255,0.06)] cursor-default h-[95.5vh] p-4 w-full rounded-2xl "
+            className="bg-[rgba(255,255,255,0.06)] cursor-default h-[95.5vh] p-4 w-full group-data-[collapsible=icon]:p-2 rounded-2xl "
           >
             <CustomScrollbar>{children}</CustomScrollbar>
           </div>
