@@ -3,11 +3,13 @@
 
 import { NotificationBell } from "@/components/notification/NotificationBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
@@ -16,22 +18,29 @@ import {
   TAuthUSer,
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { debounce } from "@/utills/debounce";
 import { getPermissions } from "@/utills/getPermissionAndRole";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 const Navbar: React.FC = () => {
-  const { setTheme } = useTheme();
+  // const { setTheme } = useTheme();
+  const { state } = useSidebar();
   const user = useAppSelector(currentUser);
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const router = useRouter();
+  const [inputValue, setInputValue] = useState("");
 
   const { role } = getPermissions(user as TAuthUSer);
+  const handleSearch = async (val: any) => {
+    // setFilters({ ...filters, search: val });
+    console.log(val);
+  };
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
@@ -57,19 +66,27 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className=" sticky top-0 z-9 flex border-b h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-transparent">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 rounded-xl">
+      {state === "collapsed" && <SidebarTrigger />}
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="w-full flex items-center justify-between gap-2">
-          <div className="hidden lg:flex flex-col items-start">
-            <span className="text-xs text-muted-foreground/80">
-              Good afternoon
-            </span>
-            <span className="text-lg font-semibold text-foreground">
-              Welcome back, {user?.name}
-            </span>
+          <div className="relative">
+            <Search
+              size={16}
+              className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
+            />
+            <Input
+              className="px-10 py-1.5 w-64 text-sm bg-transparent"
+              value={inputValue}
+              onChange={(e) => {
+                debouncedLog(e.target.value);
+                setInputValue(e.target.value);
+              }}
+              placeholder="Search "
+            />
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
+            {/* <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
               <button
                 onClick={() => {
                   setTheme("light");
@@ -90,12 +107,12 @@ const Navbar: React.FC = () => {
               >
                 <MoonIcon className="w-6 h-6" />
               </button>
-            </div>
+            </div> */}
             <NotificationBell />
             <Popover>
-              <PopoverTrigger asChild>
-                <button className="flex items-center gap-3 rounded-full pl-2 pr-4 py-2 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
-                  <Avatar className="w-9 h-9 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
+              <PopoverTrigger asChild className="bg-transparent">
+                <button className="flex items-center gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg ">
+                  <Avatar className="w-10 h-10 rounded-lg">
                     <AvatarImage
                       src={
                         user?.avatar_secure_url ||
@@ -119,6 +136,9 @@ const Navbar: React.FC = () => {
                         .join(", ")}
                     </span>
                   </div>
+                  <span>
+                    <ChevronDown className="w-5 h-5" />
+                  </span>
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-56 p-2" align="end">

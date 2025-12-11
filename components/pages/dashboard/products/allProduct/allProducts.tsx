@@ -42,10 +42,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useAppSelector } from "@/redux/hooks";
-import {
-  currentUser,
-  TAuthUSer,
-} from "@/redux/features/auth/authSlice";
+import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
@@ -261,50 +258,54 @@ const AllProducts = () => {
                               </p>
                             </div>
                           </div>
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm text-center">
-                          {product.sku}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm text-center">
-                          {product?.subCategory?.name}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm font-medium text-center">
-                          {product.stock}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm font-semibold text-center">
-                          ${product.price}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-center">
-                          <span
-                            className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                          ${product.status === "ACTIVE"
-                                ? "text-green-500"
-                                : "text-red-500"
-                              }`}
-                          >
-                            {product.status.toLocaleLowerCase()}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {new Date(product.created_at).toLocaleDateString("en-US", {
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {product.sku}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {product?.subCategory?.name}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-medium text-center">
+                        {product.stock}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">
+                        ${product.price}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
+                        <span
+                          className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
+                          ${
+                            product.status === "ACTIVE"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {product.status.toLocaleLowerCase()}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {new Date(product.created_at).toLocaleDateString(
+                          "en-US",
+                          {
                             year: "numeric",
                             month: "short",
                             day: "2-digit",
-                          })}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-center ">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger className="cursor-pointer" >
-                              <MoreVertical className="h-4 w-4" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[180px] flex flex-col ">
-                              <Link href={`/dashboard/admin/products/all-products/${product.id}`} >
-                                <DropdownMenuItem className="cursor-pointer">
-                                  <Eye className="w-4 h-4 mr-2" />
-                                  Details
-                                </DropdownMenuItem>
-                              </Link>
-                              <DropdownMenuSeparator />
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center ">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="cursor-pointer">
+                            <MoreVertical className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-[180px] flex flex-col "
+                          >
+                            <Link
+                              href={`/dashboard/admin/products/all-products/${product.id}`}
+                            >
                               <DropdownMenuItem className="cursor-pointer">
                                 <Pencil className="w-4 h-4 mr-2" />
                                 Update
