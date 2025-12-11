@@ -12,7 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Eye, MoreVertical, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import {
+  Eye,
+  Grid2X2,
+  MoreVertical,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
 import {
   useDeleteProductMutation,
   useGetAllProductQuery,
@@ -52,9 +60,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ProductCart from "../productCard/ProductCart";
 
 const AllProducts = () => {
   const user = useAppSelector(currentUser);
+  const [isGridView, setIsGridView] = useState(false);
   const { permissions } = getPermissions(user as TAuthUSer);
   const [filters, setFilters] = useState({
     search: "",
@@ -136,9 +146,10 @@ const AllProducts = () => {
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-4 md:p-5 mb-5">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground " />
               <Input
+                placeholder="Search product by id name sku...."
                 value={inputValue}
+                icon={<Search />}
                 onChange={(e) => {
                   debouncedLog(e.target.value);
                   setInputValue(e.target.value);
@@ -190,6 +201,13 @@ const AllProducts = () => {
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
+              <Button
+                variant="default"
+                className="rounded-full py-6 cursor-pointer text-2xl bg-white/15"
+                onClick={() => setIsGridView((prev) => !prev)}
+              >
+                <Grid2X2 className="size-6" />
+              </Button>
             </div>
           </div>
         </Card>
@@ -197,125 +215,130 @@ const AllProducts = () => {
         {isLoading ? (
           <Loading />
         ) : (
-          <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
-            <div className="overflow-x-auto w-full">
-              <Table className="w-full">
-                <TableHeader>
-                  <TableRow>
-                    {keys.map((label, ind) => (
-                      <TableHead
-                        first={ind === 0}
-                        last={ind === keys.length - 1}
-                        key={label}
-                        className="text-left text-xs font-semibold uppercase text-muted-foreground"
-                      >
-                        {label}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {PRODUCTS?.map((product: Product) => (
-                    <TableRow
-                      key={product.id}
-                      className="border-muted hover:bg-muted/50 transition-colors"
-                    >
-                      <TableCell className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src={
-                              product?.image_url ||
-                              "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                            }
-                            alt={product.name}
-                            width={48}
-                            height={48}
-                            className="w-12 h-12 rounded-lg object-cover"
-                          />
-                          <div>
-                            <p className="font-medium">{product.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              by {product.by}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-sm text-center">
-                        {product.sku}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-sm text-center">
-                        {product?.subCategory?.name}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-sm font-medium text-center">
-                        {product.stock}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">
-                        ${product.price}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-center">
-                        <span
-                          className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                          ${
-                            product.status === "ACTIVE"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
+          !isGridView ?
+            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+              <div className="overflow-x-auto w-full">
+                <Table className="w-full">
+                  <TableHeader>
+                    <TableRow>
+                      {keys.map((label, ind) => (
+                        <TableHead
+                          first={ind === 0}
+                          last={ind === keys.length - 1}
+                          key={label}
+                          className="text-left text-xs font-semibold uppercase text-muted-foreground"
                         >
-                          {product.status.toLocaleLowerCase()}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {new Date(product.created_at).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "2-digit",
-                          }
-                        )}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-center ">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger className="cursor-pointer">
-                            <MoreVertical className="h-4 w-4" />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="w-[180px] flex flex-col "
-                          >
-                            <Link
-                              href={`/dashboard/admin/products/all-products/${product.id}`}
-                            >
-                              <DropdownMenuItem className="cursor-pointer">
-                                <Eye className="w-4 h-4 mr-2" />
-                                Details
-                              </DropdownMenuItem>
-                            </Link>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Pencil className="w-4 h-4 mr-2" />
-                              Update
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setDeleteProductId(product.id);
-                                setDeleteDialogOpen(true);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              <Trash2 className="w-4 h-4 text-destructive mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                          {label}
+                        </TableHead>
+                      ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {PRODUCTS?.map((product: Product) => (
+                      <TableRow
+                        key={product.id}
+                        className="border-muted hover:bg-muted/50 transition-colors"
+                      >
+                        <TableCell className="px-4 py-3">
+                          <div>
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={
+                                  product?.image_url ||
+                                  "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
+                                }
+                                alt={product.name}
+                                width={48}
+                                height={48}
+                                className="w-12 h-12 rounded-lg object-cover"
+                              />
+                              <div>
+                                <p className="font-medium">{product.name}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  by {product.by}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-sm text-center">
+                          {product.sku}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-sm text-center">
+                          {product?.subCategory?.name}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-sm font-medium text-center">
+                          {product.stock}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-sm font-semibold text-center">
+                          ${product.price}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-center">
+                          <span
+                            className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
+                                                  ${product.status === "ACTIVE"
+                                ? "text-green-500"
+                                : "text-red-500"
+                              }`}
+                          >
+                            {product.status.toLocaleLowerCase()}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {new Date(product.created_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "2-digit",
+                            }
+                          )}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-center ">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger className="cursor-pointer">
+                              <MoreVertical className="h-4 w-4" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className="w-[180px] flex flex-col "
+                            >
+                              <Link
+                                href={`/dashboard/admin/products/all-products/${product.id}`}
+                              />
+                              <DropdownMenuItem className="cursor-pointer">
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Update
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setDeleteProductId(product.id);
+                                  setDeleteDialogOpen(true);
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <Trash2 className="w-4 h-4 text-destructive mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </Card> :
+            <div className="grid grid-cols-3 gap-8 w-[1150px] mx-auto">
+              {PRODUCTS?.map((product: Product) => (
+                <ProductCart
+                  key={product.id} product={product}
+                  setDeleteProductId={setDeleteProductId}
+                  setDeleteDialogOpen={setDeleteDialogOpen}
+                />
+              ))}
             </div>
-          </Card>
         )}
 
         {/* Pagination */}
