@@ -17,7 +17,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
     discountPrice: 80.0,
     sku: "UTF-TSHIRT-BLK01",
     image_url:
-      "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png",
+      "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg",
     image_public_id: "dummy_product_image_id_123456",
     stock: 224,
     stock_status: "in_stock",
@@ -59,7 +59,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
             <img
               src={product.image_url}
               alt={product.name}
-              className="rounded-lg object-cover w-full h-auto "
+              className="rounded-3xl  object-cover w-full h-auto "
             />
             {/* Thumbnails */}
             <div className="flex justify-between w-full mt-4 ">

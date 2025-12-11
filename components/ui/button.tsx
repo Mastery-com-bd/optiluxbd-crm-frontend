@@ -8,7 +8,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        secondary:"text-secondary-foreground bg-linear-to-t from-[#8B07A8] to-white/10",
+        secondary: "text-secondary-foreground bg-linear-to-t from-[#8B07A8] to-white/10",
         destructive: "bg-destructive text-white",
         default: "text-secondary-foreground bg-white/10 border-b border-b-white/60",
         red:
@@ -20,8 +20,8 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
-        purple:"text-secondary-foreground bg-linear-to-t from-[#8B07A8] to-white/10",
-        green:"text-secondary-foreground bg-linear-to-t from-[#00A656] to-white/10",
+        purple: "text-secondary-foreground bg-linear-to-t from-[#8B07A8] to-white/10",
+        green: "text-secondary-foreground bg-linear-to-t from-[#00A656] to-white/10",
 
       },
       size: {
@@ -44,6 +44,7 @@ function Button({
   children,
   className,
   variant,
+  icon,
   size,
   asChild = false,
   ...props
@@ -54,63 +55,64 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button"
   const yellowGradient = {
-    left:`linear-gradient(to right,  #CB9228 40%,   #FECC6F 100%)`,
-    right:`linear-gradient(to right,  #FECC6F 40%,   #CB9228 100%)`
+    left: `linear-gradient(to right,  #CB9228 40%,   #FECC6F 100%)`,
+    right: `linear-gradient(to right,  #FECC6F 40%,   #CB9228 100%)`
   }
   const purpleGradient = {
-    left:`linear-gradient(to right,  #8B07A8 40%,   #AA00FF 100%)`,
-    right:`linear-gradient(to right,  #AA00FF 40%,   #8B07A8 100%)`
+    left: `linear-gradient(to right,  #8B07A8 40%,   #AA00FF 100%)`,
+    right: `linear-gradient(to right,  #AA00FF 40%,   #8B07A8 100%)`
   }
   const redGradient = {
-    left:`linear-gradient(to right,  #B5050B 40%,   #E03137 100%)`,
-    right:`linear-gradient(to right,  #E03137 40%,   #B5050B 100%)`
+    left: `linear-gradient(to right,  #B5050B 40%,   #E03137 100%)`,
+    right: `linear-gradient(to right,  #E03137 40%,   #B5050B 100%)`
   }
   const greenGradient = {
-    left:`linear-gradient(to right,  #00A656 40%,   #09EB7E 100%)`,
-    right:`linear-gradient(to right,  #09EB7E 40%,   #00A656 100%)`
+    left: `linear-gradient(to right,  #00A656 40%,   #09EB7E 100%)`,
+    right: `linear-gradient(to right,  #09EB7E 40%,   #00A656 100%)`
   }
 
   return (
     <Comp
       data-slot="button"
       className={cn(
-        "relative overflow-hidden border-r-white/60 border-r border-t-white/60 border-t border-l-white/60 border-l text-[16px]! text-white!",
+        "relative overflow-hidden border-r-white/60 border-r border-t-white/60 border-t border-l-white/60 border-l  text-white!",
         buttonVariants({ variant, size, className })
       )}
       {...props}
     >
       <div className="rounded-xl">
         <span
-        data-slot="button-content"
-        className="relative z-10 flex items-center "
-      >
-        {children}
-      </span>
-      <div className="absolute flex w-full bottom-0 left-1/2 -translate-x-1/2">
-        <span className="w-1/2 h-0.5" 
-        style={{
-            background: 
-            `${variant === "yellow" ? 
-              yellowGradient.left: 
-              variant === "purple" ?
-               purpleGradient.left
-               : variant === "red" ? redGradient.left 
-               :variant === "green" ? greenGradient.left
-               :""
-              }`,
-          }}
+          data-slot="button-content"
+          className={"relative z-10 flex gap-3 items-center"}
+        >
+          {icon}
+          {children}
+        </span>
+        <div className="absolute flex w-full bottom-0 left-1/2 -translate-x-1/2">
+          <span className="w-1/2 h-0.5"
+            style={{
+              background:
+                `${variant === "yellow" ?
+                  yellowGradient.left :
+                  variant === "purple" ?
+                    purpleGradient.left
+                    : variant === "red" ? redGradient.left
+                      : variant === "green" ? greenGradient.left
+                        : ""
+                }`,
+            }}
           />
-        <span className="w-1/2 h-0.5" 
-        style={{
-            background: `${variant === "yellow" ? yellowGradient.right: variant === "purple" ? 
-              purpleGradient.right 
-              : variant === "red" ? redGradient.right 
-              :variant === "green" ? greenGradient.right
-              :""
-            }`,
-          }}
+          <span className="w-1/2 h-0.5"
+            style={{
+              background: `${variant === "yellow" ? yellowGradient.right : variant === "purple" ?
+                purpleGradient.right
+                : variant === "red" ? redGradient.right
+                  : variant === "green" ? greenGradient.right
+                    : ""
+                }`,
+            }}
           />
-      </div>
+        </div>
       </div>
     </Comp>
   )
