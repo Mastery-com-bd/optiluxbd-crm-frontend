@@ -46,6 +46,7 @@ function Button({
   children,
   className,
   variant,
+  icon,
   size,
   asChild = false,
   ...props
