@@ -1,30 +1,30 @@
 const ButtonSvgGlow = () => {
   return (
     <svg
-      width="561"
-      height="100"
-      viewBox="0 0 561 100"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover -z-10 rounded-xl"
+      width="195"
+      height="32"
+      viewBox="0 0 195 32"
+      fill="none"
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover z-10 rounded-xl"
     >
-      <g filter="url(#filter0_f_758_11327)">
+      <g filter="url(#filter0_f_1093_40256)">
         <ellipse
-          cx="130.5"
-          cy="108"
-          rx="130.5"
-          ry="44"
+          cx="75"
+          cy="35"
+          rx="79"
+          ry="10"
           fill="#FFB13F"
           fill-opacity="1"
         />
       </g>
       <defs>
         <filter
-          id="filter0_f_758_11327"
-          x="-100"
-          y="-36"
-          width="461"
-          height="288"
+          id="filter0_f_1093_40256"
+          x="-24.4"
+          y="-5.4"
+          width="218.8"
+          height="75.8"
           filterUnits="userSpaceOnUse"
           color-interpolation-filters="sRGB"
         >
@@ -36,8 +36,8 @@ const ButtonSvgGlow = () => {
             result="shape"
           />
           <feGaussianBlur
-            stdDeviation="50"
-            result="effect1_foregroundBlur_758_11327"
+            stdDeviation="15.2"
+            result="effect1_foregroundBlur_1093_40256"
           />
         </filter>
       </defs>

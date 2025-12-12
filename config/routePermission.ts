@@ -35,6 +35,7 @@ export const routePermissions: Record<string, string[]> = {
   // Customer Management
   "/dashboard/customers": ["CUSTOMERS VIEW"],
   "/dashboard/customers/add": ["CUSTOMERS CREATE"],
+  "/dashboard/customers/overview": ["CUSTOMERS VIEW"],
 
   // ORDERS Management
   "/dashboard/agent/orders/my-orders": ["ORDERS VIEW OWN"],

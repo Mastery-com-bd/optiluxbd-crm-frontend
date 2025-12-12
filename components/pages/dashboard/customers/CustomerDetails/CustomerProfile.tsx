@@ -10,6 +10,9 @@ import { useGetCustomerByIdQuery } from "@/redux/features/customers/cutomersApi"
 import { SquarePen, Star, Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import Overview from "./Overview";
+import Members from "./Members";
+import Leads from "./Leads";
 
 const buttons = ["OverView", "Member", "Leads"];
 
@@ -161,7 +164,7 @@ const CustomerProfile = () => {
         </LiquidGlass>
 
         {/* right side */}
-        <div className="w-full">
+        <div className="w-full space-y-4">
           <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
@@ -175,35 +178,42 @@ const CustomerProfile = () => {
                   <button
                     key={i}
                     onClick={() => setCurrent(item)}
-                    className={`relative w-full py-2 flex items-center justify-center cursor-pointer  ${
-                      active && "border-2 border-white/20 rounded-xl "
+                    className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${
+                      active && "bg-white/5 rounded-xl"
                     }`}
                   >
+                    {/* Button text */}
+                    <span className="relative z-10">{item}</span>
+
                     {active && (
-                      <div className="absolute flex w-full bottom-0 left-3">
+                      <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none"></div>
+                    )}
+                    {active && (
+                      <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none"></div>
+                    )}
+
+                    {active && (
+                      <div className="absolute z-20 bottom-0 left-0 w-full">
                         <span
-                          className="w-36 h-[0.5px] block"
+                          className="block w-full h-[1.5px]"
                           style={{
-                            background: `linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.4) 50%,
-      rgba(255, 255, 255, 0) 100%
-    )`,
+                            background:
+                              "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
                           }}
                         />
                       </div>
                     )}
 
                     {active && <ButtonSvgGlow />}
-
-                    {/* Button text */}
-                    <span className="relative z-10">{item}</span>
                   </button>
                 );
               })}
             </Card>
           </LiquidGlass>
+
+          {current === "OverView" && <Overview />}
+          {current === "Member" && <Members />}
+          {current === "Leads" && <Leads />}
         </div>
       </div>
     </section>
