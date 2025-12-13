@@ -307,6 +307,11 @@ export const crmRoutes: NavRoute[] = [
     ],
     children: [
       {
+        title: "Customer Overview",
+        path: "/dashboard/customers/overview",
+        permissions: ["CUSTOMERS VIEW"],
+      },
+      {
         title: "All Customers",
         path: "/dashboard/customers",
         permissions: ["CUSTOMERS VIEW"],
