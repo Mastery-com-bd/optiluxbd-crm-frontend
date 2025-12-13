@@ -103,7 +103,7 @@ const CustomerProfile = () => {
           borderRadius="16px"
           className="w-[25vw]"
         >
-          <Card className="bg-transparent w-[25vw] p-4 rounded-2xl">
+          <Card className="bg-transparent w-[25vw] px-4 py-6 rounded-2xl">
             {/* upper section */}
             <div className="flex justify-between ">
               <div className="h-10 w-20 border-2 border-[#F0B10080] rounded-full bg-[linear-gradient(90deg,#F0B1004D_0%,#D0870066_100%)] flex items-center justify-center gap-1">
@@ -115,7 +115,7 @@ const CustomerProfile = () => {
               <ImageUploader
                 handleChange={handleChange}
                 id={Number(customerId)}
-                clasName="w-24 h-24 rounded-full shadow-md"
+                clasName="w-36 h-36 rounded-full shadow-md"
               />
 
               <button
