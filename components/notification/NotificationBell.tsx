@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"; // Remove this if using Pages Router
+"use client";
 
 import { useEffect, useState } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -8,6 +8,11 @@ import { config } from "@/config";
 import { urlBase64ToUint8Array } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Bell } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function NotificationBell() {
   const {
@@ -19,7 +24,7 @@ export function NotificationBell() {
     isLoading,
     handleDeleteNotification,
   } = useNotifications();
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [isPushSupported, setIsPushSupported] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
@@ -95,48 +100,44 @@ export function NotificationBell() {
 
   return (
     <div className="relative">
-      {/* Bell Button */}
-      <Button
-        variant="yellow"
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative flex flex-col items-center justify-center gap-2 p-3 rounded-[12px] border-none cursor-pointer bg-transparent"
-      >
-        <Bell size={18} />
-        <span
-          className="absolute top-0 -right-1 bg-red-600 rounded-full h-2 w-2 border-white"
-          style={{ borderWidth: "2px" }}
-        />
+      <Popover>
+        <PopoverTrigger asChild className="bg-transparent">
+          <Button
+            variant="yellow"
+            className="flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg"
+          >
+            <Bell size={18} />
+            {unreadCount > 0 && (
+              <span
+                className="absolute top-0 -right-1 bg-red-600 rounded-full h-2 w-2 border-white"
+                style={{ borderWidth: "2px" }}
+              />
+            )}
 
-        {unreadCount > 0 && (
-          <span
-            className={`
+            {unreadCount > 0 && (
+              <span
+                className={`
         absolute -top-1.5 -right-1.5 
         flex items-center justify-center
         text-[10px] font-bold text-white 
         bg-red-600 rounded-full 
         h-5 min-w-5 px-1
       `}
-          >
-            {unreadCount > 99 ? "99+" : unreadCount}
-          </span>
-        )}
-      </Button>
-
-      {/* Dropdown */}
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-20"
-            onClick={() => setIsOpen(false)}
-          />
-
-          {/* Notification Panel */}
-          <div className="absolute z-50 right-0 mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-128 overflow-hidden">
+              >
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-96 p-2 bg-white/5 backdrop-blur-2xl max-h-128 overflow-hidden"
+          align="end"
+        >
+          <div>
             {/* Header */}
             <div className="p-2 space-y-3">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className="text-lg font-semibold ">
                   Notifications {unreadCount > 0 && `(${unreadCount})`}
                 </h3>
 
@@ -212,7 +213,6 @@ export function NotificationBell() {
                         handleMarkAsRead(notification.id);
                         if (notification.actionUrl) {
                           window.location.href = notification.actionUrl;
-                          setIsOpen(false);
                         }
                       }}
                     >
@@ -261,8 +261,8 @@ export function NotificationBell() {
               )}
             </div>
           </div>
-        </>
-      )}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

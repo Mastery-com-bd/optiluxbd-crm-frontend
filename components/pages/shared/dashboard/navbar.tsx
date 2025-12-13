@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 rounded-xl">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 backdrop-blur-2xl rounded-xl">
       {state === "collapsed" && <SidebarTrigger />}
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="w-full flex items-center justify-between gap-2">
@@ -141,7 +141,10 @@ const Navbar: React.FC = () => {
                   </span>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-56 p-2" align="end">
+              <PopoverContent
+                className="w-56 p-2 bg-white/5 backdrop-blur-2xl"
+                align="end"
+              >
                 <div className="flex items-center gap-3 px-2 py-2">
                   <Avatar className="w-10 h-10">
                     <AvatarImage

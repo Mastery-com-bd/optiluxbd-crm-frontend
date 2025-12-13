@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,13 +16,11 @@ import { debounce } from "@/utills/debounce";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import CustomerTable from "./components/customerTable";
-import CustomerPagination from "./components/pagination";
-import TableSkeleton from "./tableSchaliton";
+import CustomerTableSkeleton from "./CustomerTableSkeleton";
+import CustomerTable from "../components/customerTable";
+import CustomerPagination from "../components/pagination";
 
-// Define the customer type
-
-export default function AllCustomersPage() {
+const AllCustomers = () => {
   const [filters, setFilters] = useState({
     search: "",
     customerLevel: "",
@@ -54,12 +51,9 @@ export default function AllCustomersPage() {
   const HandlePageChange = (page: number) => {
     setFilters({ ...filters, page });
   };
-
   return (
     <div className="min-h-screen ">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        {/* Header */}
-
         {/* Search Bar */}
         <CardContent className="pt-4 flex justify-end items-center">
           <Link href="/dashboard/customers/add">
@@ -220,7 +214,7 @@ export default function AllCustomersPage() {
 
         {/* Customer Table */}
         {isLoading ? (
-          <TableSkeleton />
+          <CustomerTableSkeleton />
         ) : (
           <Card className="border-0 bg-transparent shadow-none">
             <CardContent className="p-0">
@@ -238,4 +232,6 @@ export default function AllCustomersPage() {
       </div>
     </div>
   );
-}
+};
+
+export default AllCustomers;
