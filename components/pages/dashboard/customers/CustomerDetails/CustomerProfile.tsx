@@ -13,8 +13,11 @@ import { useState } from "react";
 import Overview from "./Overview";
 import Members from "./Members";
 import Leads from "./Leads";
+import OrderHistory from "./OrderHistory";
+import Note from "./Note";
 
-const buttons = ["OverView", "Member", "Leads"];
+const buttons = ["OverView", "Order History", "Note"];
+// const buttons = ["OverView", "Member", "Order History", "Leads", "Note"];
 
 const CustomerProfile = () => {
   const [enabled, setEnabled] = useState(false);
@@ -213,7 +216,9 @@ const CustomerProfile = () => {
 
           {current === "OverView" && <Overview />}
           {current === "Member" && <Members />}
+          {current === "Order History" && <OrderHistory />}
           {current === "Leads" && <Leads />}
+          {current === "Note" && <Note />}
         </div>
       </div>
     </section>

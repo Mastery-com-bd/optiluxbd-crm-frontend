@@ -198,7 +198,6 @@ const CustomerOverview = () => {
               </TableHeader>
               <TableBody>
                 {data?.map((item: TOverviewdata, index) => {
-                  console.log(item);
                   return (
                     <TableRow
                       key={index}
