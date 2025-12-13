@@ -65,12 +65,13 @@ const productSchema = z.object({
   subCategoryId: z.string().min(1, { message: "subCategoryId is required" }),
   status: z.string().min(1, { message: "Status is required" }),
   tags: z.string().optional(),
+  color: z.array(z.string()).optional(),
+  size: z.array(z.string()).optional(),
 })
 
 type InferedFormData = z.infer<typeof productSchema>
 
 const AddProduct = () => {
-  const [colorOpen, setColorOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -107,6 +108,36 @@ const AddProduct = () => {
   const handleDivClick = () => {
     fileInputRef.current?.click()
   }
+
+  //color....
+  const [colorOpen, setColorOpen] = useState(false);
+  const [availableColors, setAvailableColors] = useState<string[]>([
+    "#dc2626",  // red-600
+    "#2563eb",  // blue-600
+    "#16a34a",  // green-600
+    "#ca8a04",  // yellow-600
+    "#ea580c",  // orange-600
+    "#ffffff",  // white
+  ]);
+  const [newColor, setNewColor] = useState<string>("#ffffff");
+  const [selectedColor, setSelectedColor] = useState<string[]>([]);
+  const [colorEnabled, setColorEnabled] = useState<boolean>(false);
+
+
+  //size....
+  const [sizeOpen, setSizeOpen] = useState(false);
+  const [availableSize, setAvailableSize] = useState<string[]>([
+    "S",
+    "M",
+    "X",
+    "XL",
+  ]);
+  const [newSize, setNewSize] = useState<string>("XXL");
+  const [selectedSize, setSelectedSize] = useState<string[]>([]);
+  const [sizeEnabled, setSizeEnabled] = useState<boolean>(false);
+
+
+  //submit function....
   const onSubmit = async (data: InferedFormData) => {
     const productInfo = {
       name: data.productName,
@@ -119,7 +150,10 @@ const AddProduct = () => {
       public_id: "",
       secure_url: "",
       isActive: true,
+      size: sizeEnabled ? selectedSize : [],
+      color: colorEnabled ? selectedColor : [],
     }
+    console.log(productInfo);
     try {
       const res = await addProduct(productInfo).unwrap()
       if (res.success) {
@@ -163,16 +197,7 @@ const AddProduct = () => {
     { skip: !parentCategory, refetchOnMountOrArgChange: true, }
   )
   const subCategories = subcategoriesData?.subCategories;
-  const [availableColors, setAvailableColors] = useState<string[]>([
-    "#dc2626",  // red-600
-    "#2563eb",  // blue-600
-    "#16a34a",  // green-600
-    "#ca8a04",  // yellow-600
-    "#ea580c",  // orange-600
-    "#ffffff",  // white
-  ]);
-  const [newColor, setNewColor] = useState<string>("#ffffff");
-  const [selectedColor, setSelectedColor] = useState<string[]>([]);
+
   return (
     <div className="min-h-screen  text-foreground p-4 lg:p-8">
       <div className=" max-w-[1130px] mx-auto">
@@ -366,20 +391,25 @@ const AddProduct = () => {
                   <div className="flex items-center justify-between">
                     <h2 className="text-white font-medium">Available Color</h2>
                     {/* a radio button here. */}
-                    <Switch id="airplane-mode" />
+                    <Switch
+                      id="enable-color"
+                      checked={colorEnabled}
+                      onCheckedChange={setColorEnabled}
+                      className="cursor-pointer"
+                    />
                   </div>
-
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <div className={`flex items-center gap-3 flex-wrap`}>
                     {availableColors.map((c) => (
                       <Checkbox
+                        disabled={!colorEnabled}
                         key={c}
-                        className="p-3 accent-white cursor-pointer flex justify-center rounded-full border"
+                        className={`p-3 accent-white cursor-pointer flex justify-center rounded-full border`}
                         style={{ backgroundColor: c }}
                         onClick={() => {
                           if (selectedColor.includes(c)) {
-                            setSelectedColor(selectedColor.filter((color) => color !== c)); 
+                            setSelectedColor(selectedColor.filter((color) => color !== c));
                           } else {
-                            setSelectedColor([...selectedColor, c]); 
+                            setSelectedColor([...selectedColor, c]);
                           }
                         }}
                       />
@@ -388,7 +418,7 @@ const AddProduct = () => {
                     {/* Add new color button */}
                     <span
                       onClick={() => setColorOpen(true)}
-                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer"
+                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer ${!colorEnabled ? "hidden" : "block"}`}
                     >
                       <Plus />
                     </span>
@@ -449,18 +479,40 @@ const AddProduct = () => {
                 <Card className="bgGlass p-5 rounded-2xl text-white space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-medium">Available Size</h3>
-                    <Switch className="data-[state=checked]:bg-amber-400" />
+                    <Switch
+                      id="enable-size"
+                      checked={sizeEnabled}
+                      onCheckedChange={setSizeEnabled}
+                      className="cursor-pointer"
+                    />
                   </div>
-                  <div className="flex gap-3 flex-wrap">
-                    {["S", "M", "X", "XL", "+"].map((size) => (
+                  <div className="flex gap-3 flex-wrap items-center">
+                    {availableSize.map((size) => (
                       <span
                         key={size}
-                        onClick={() => console.log("hi")}
-                        className="cursor-pointer w-10 h-10 p-0 flex justify-center items-center rounded-full border-white/40 text-white hover:bg-white/10 hover:text-white bg-white/5 border"
+                        className={`px-3 py-1 border rounded-full cursor-pointer
+                        ${selectedSize.includes(size) ? "bg-yellow-500 text-black" : "bg-white/10 text-white"}
+                          ${!sizeEnabled ? "opacity-40 pointer-events-none" : ""}
+                          `}
+                        onClick={() => {
+                          if (selectedSize.includes(size)) {
+                            setSelectedSize(selectedSize.filter((s) => s !== size));
+                          } else {
+                            setSelectedSize([...selectedSize, size]);
+                          }
+                        }}
                       >
                         {size}
                       </span>
                     ))}
+
+                    {/* Add new size button */}
+                    <span
+                      onClick={() => setSizeOpen(true)}
+                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer ${!sizeEnabled ? "hidden" : "block"} `}
+                    >
+                      <Plus />
+                    </span>
                   </div>
                 </Card>
                 <Card className="p-6 space-y-4 bgGlass ">
@@ -517,7 +569,7 @@ const AddProduct = () => {
                       id="description"
                       {...register("description")}
                       placeholder="Product description..."
-                      className="h-full bgGlass border-t-0! rounded-t-none!  border-red-600 border"
+                      className="h-full bgGlass border-t-0! rounded-t-none!"
                     />
                   </div>
                 </CardContent>
@@ -554,8 +606,9 @@ const AddProduct = () => {
           </div>
         </form>
       </div>
+      {/* color modal */}
       <Dialog open={colorOpen} onOpenChange={setColorOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="max-w-[425px]!">
           <DialogHeader>
             <DialogTitle>Add a new color</DialogTitle>
             <DialogDescription>
@@ -582,6 +635,50 @@ const AddProduct = () => {
               }}
             >
               Save Color
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* size modal */}
+      <Dialog open={sizeOpen} onOpenChange={setSizeOpen}>
+        <DialogContent className="max-w-[425px]!">
+          <DialogHeader>
+            <DialogTitle>Add a new size</DialogTitle>
+            <DialogDescription>
+              Write a new size.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="gap-4">
+            <div>
+              <Label htmlFor="productSize">Product Size*</Label>
+              <Input
+                id="productSize"
+                placeholder="Product Size"
+                className="mt-2"
+                onChange={(e) => setNewSize(e.target.value)}
+              />
+              {/* {errors.productName && (
+                <p className="text-destructive text-sm">
+                  {errors.productName?.message}
+                </p>
+              )} */}
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              type="button"
+              onClick={() => {
+                if (!availableSize.includes(newSize)) {
+                  setAvailableSize((prev) => [...prev, newSize])
+                }
+                setSizeOpen(false)
+              }}
+            >
+              Save Size
             </Button>
           </DialogFooter>
         </DialogContent>
