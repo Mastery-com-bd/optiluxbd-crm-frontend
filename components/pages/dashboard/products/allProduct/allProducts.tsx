@@ -305,7 +305,11 @@ const AllProducts = () => {
                             >
                               <Link
                                 href={`/dashboard/admin/products/all-products/${product.id}`}
-                              />
+                              >
+                                <DropdownMenuItem className="cursor-pointer">
+                                  <Eye className="w-4 h-4 mr-2" /> view
+                                </DropdownMenuItem>
+                              </Link>
                               <DropdownMenuItem className="cursor-pointer">
                                 <Pencil className="w-4 h-4 mr-2" />
                                 Update
