@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { ChevronDown, Funnel, Logs, Plus, Search, Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/utills/debounce";
@@ -18,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { TComboPackage } from "@/types/comboPackage";
 import CombocardSkeleton from "./CombocardSkeleton";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-
 import CardView from "./CardView";
 import TableView from "./TableView";
 import ComboOverView from "./ComboOverView";
@@ -50,7 +47,7 @@ const AllCombo = () => {
   // const [priceRange, setPriceRange] = useState([1, 100000]);
   const [view, setView] = useState<"Table View" | "Grid View">("Grid View");
 
-  const handleSearch = async (val: any) => {
+  const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
   };
 
