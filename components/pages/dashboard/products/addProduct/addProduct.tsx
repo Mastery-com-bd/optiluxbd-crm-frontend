@@ -163,7 +163,16 @@ const AddProduct = () => {
     { skip: !parentCategory, refetchOnMountOrArgChange: true, }
   )
   const subCategories = subcategoriesData?.subCategories;
-  const [color, setColor] = useState("#aabbcc");
+  const [availableColors, setAvailableColors] = useState<string[]>([
+    "#dc2626",  // red-600
+    "#2563eb",  // blue-600
+    "#16a34a",  // green-600
+    "#ca8a04",  // yellow-600
+    "#ea580c",  // orange-600
+    "#ffffff",  // white
+  ]);
+  const [newColor, setNewColor] = useState<string>("#ffffff");
+  const [selectedColor, setSelectedColor] = useState<string[]>([]);
   return (
     <div className="min-h-screen  text-foreground p-4 lg:p-8">
       <div className=" max-w-[1130px] mx-auto">
@@ -360,15 +369,26 @@ const AddProduct = () => {
                     <Switch id="airplane-mode" />
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <Checkbox className="bg-red-600! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
-                    <Checkbox className="bg-blue-600! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
-                    <Checkbox className="bg-yellow-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
-                    <Checkbox className="bg-orange-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
-                    <Checkbox className="bg-green-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {availableColors.map((c) => (
+                      <Checkbox
+                        key={c}
+                        className="p-3 accent-white cursor-pointer flex justify-center rounded-full border"
+                        style={{ backgroundColor: c }}
+                        onClick={() => {
+                          if (selectedColor.includes(c)) {
+                            setSelectedColor(selectedColor.filter((color) => color !== c)); 
+                          } else {
+                            setSelectedColor([...selectedColor, c]); 
+                          }
+                        }}
+                      />
+                    ))}
+
+                    {/* Add new color button */}
                     <span
                       onClick={() => setColorOpen(true)}
-                      className="w-6 h-6 rounded-full  text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer"
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer"
                     >
                       <Plus />
                     </span>
@@ -537,23 +557,32 @@ const AddProduct = () => {
       <Dialog open={colorOpen} onOpenChange={setColorOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Add a new color</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Pick a color to add to available color list.
             </DialogDescription>
           </DialogHeader>
           <div className="gap-4">
             <div className="">
-              <HexColorPicker color={color} onChange={setColor} className="w-full mx-auto" />
-              <p className="mt-2">Selected color: {color}</p>
+              <HexColorPicker color={newColor} onChange={setNewColor} className="w-full mx-auto" />
+              <p className="mt-2 text-sm">Selected color: <span className="font-medium">{newColor}</span></p>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (!availableColors.includes(newColor)) {
+                  setAvailableColors((prev) => [...prev, newColor])
+                }
+                setColorOpen(false)
+              }}
+            >
+              Save Color
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
