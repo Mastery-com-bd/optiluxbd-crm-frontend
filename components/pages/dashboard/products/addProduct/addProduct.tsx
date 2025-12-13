@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 "use client"
+import { HexColorPicker } from "react-colorful";
 import { useRef, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
@@ -18,7 +19,6 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import {
-  Upload,
   Bold,
   Italic,
   Underline,
@@ -28,6 +28,7 @@ import {
   LinkIcon,
   ImageIcon,
   Image,
+  Plus,
 } from "lucide-react"
 import { toast } from "sonner"
 import {
@@ -37,6 +38,7 @@ import {
 import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery, } from "@/redux/features/category/categoryApi"
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
@@ -68,12 +70,12 @@ const productSchema = z.object({
 type InferedFormData = z.infer<typeof productSchema>
 
 const AddProduct = () => {
+  const [colorOpen, setColorOpen] = useState(false);
   const {
     register,
     handleSubmit,
     control,
     reset,
-    watch,
     formState: { errors },
   } = useForm<InferedFormData>({
     resolver: zodResolver(productSchema),
@@ -161,6 +163,7 @@ const AddProduct = () => {
     { skip: !parentCategory, refetchOnMountOrArgChange: true, }
   )
   const subCategories = subcategoriesData?.subCategories;
+  const [color, setColor] = useState("#aabbcc");
   return (
     <div className="min-h-screen  text-foreground p-4 lg:p-8">
       <div className=" max-w-[1130px] mx-auto">
@@ -363,9 +366,12 @@ const AddProduct = () => {
                     <Checkbox className="bg-yellow-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
                     <Checkbox className="bg-orange-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
                     <Checkbox className="bg-green-500! p-3 accent-white cursor-pointer flex justify-center text-white rounded-full " />
-                    <button className="w-6 h-6 rounded-full  text-white text-xs flex items-center justify-center">
-                      +
-                    </button>
+                    <span
+                      onClick={() => setColorOpen(true)}
+                      className="w-6 h-6 rounded-full  text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer"
+                    >
+                      <Plus />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -429,7 +435,8 @@ const AddProduct = () => {
                     {["S", "M", "X", "XL", "+"].map((size) => (
                       <span
                         key={size}
-                        className="w-10 h-10 p-0 flex justify-center items-center rounded-full border-white/40 text-white hover:bg-white/10 hover:text-white bg-white/5 border"
+                        onClick={() => console.log("hi")}
+                        className="cursor-pointer w-10 h-10 p-0 flex justify-center items-center rounded-full border-white/40 text-white hover:bg-white/10 hover:text-white bg-white/5 border"
                       >
                         {size}
                       </span>
@@ -527,6 +534,29 @@ const AddProduct = () => {
           </div>
         </form>
       </div>
+      <Dialog open={colorOpen} onOpenChange={setColorOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="gap-4">
+            <div className="">
+              <HexColorPicker color={color} onChange={setColor} className="w-full mx-auto" />
+              <p className="mt-2">Selected color: {color}</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

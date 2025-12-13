@@ -121,6 +121,11 @@ export const crmRoutes: NavRoute[] = [
         path: "/dashboard/admin/products/add-product",
         permissions: ["PRODUCTS CREATE"],
       },
+      {
+        title: "Drafts Product",
+        path: "/dashboard/admin/products/drafts",
+        permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
+      }
       // {
       //   title: "Draft Products",
       //   path: "/dashboard/admin/products/drafts",
