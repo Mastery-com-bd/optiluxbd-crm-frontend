@@ -100,6 +100,7 @@ const CustomerProfile = () => {
       {/* main content */}
       <div className="flex justify-between items-start gap-6">
         {/* left side */}
+
         {/* <LiquidGlass
           glowIntensity="xs"
           shadowIntensity="xs"
@@ -107,7 +108,7 @@ const CustomerProfile = () => {
           className="w-[25vw]"
         >
         </LiquidGlass> */}
-        <Card className="bg-white/10 w-[25vw] px-6 py-6 rounded-4xl relative">
+        <Card className="bg-white/10 w-[25vw] px-6 py-6 rounded-4xl relative gap-4">
           {/* border section */}
           <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
           <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
@@ -143,7 +144,7 @@ const CustomerProfile = () => {
 
           {/* name section */}
           <div className="text-center space-y-2 ">
-            <h1 className="text-3xl">Karim Khan</h1>
+            <h1 className="text-3xl leading-6">Karim Khan</h1>
             <p className="text-sm">Member since June 2025</p>
             <p className="text-xs">2,200 pts</p>
           </div>

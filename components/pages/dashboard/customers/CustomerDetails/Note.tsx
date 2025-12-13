@@ -1,5 +1,6 @@
 "use client";
 
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,26 +23,44 @@ const Note = () => {
     { title: "Interested in bulk orders", role: "Admin", date: "Nov 3, 2025" },
   ];
 
+  const handleSubmit = async () => {
+    console.log("this is handle submit");
+  };
+
   return (
     <div className="space-y-4">
+      {/* add note */}
       <Card className="bg-white/5 px-6 py-4 w-full rounded-4xl gap-4 border border-white/10">
         <h1 className="text-xl font-medium">Add New Note</h1>
         <Textarea
           placeholder="Write a note about this customer..."
           className="bg-white/10 resize-none rounded-3xl px-4 py-3 placeholder:text-[#B1B1B1] h-[20vh] placeholder:text-base"
         />
-        <div className="flex items-center justify-end">
-          <Button
-            variant="yellow"
-            className="p-3 flex rounded-2xl border-none cursor-pointer"
+        <div className="flex items-center justify-end bg-transparent">
+          <button
+            onClick={handleSubmit}
+            className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
           >
+            {/* Button text */}
             <p className="flex items-center gap-2">
-              <Plus />
-              <span className="text-[14px]">Add New Note</span>
+              <Plus size={18} />
+              <span className="text-sm">Add New Note</span>
             </p>
-          </Button>
+
+            {/* top and bottom line */}
+            <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+
+            {/* bottom yellow glow line */}
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+            </div>
+            <CornerGlowSvg />
+          </button>
         </div>
       </Card>
+
+      {/* previous note */}
       <Card className="bg-white/5 px-6 py-4 w-full rounded-4xl gap-4 border border-white/10">
         <h1 className="text-xl font-medium">Previous Notes (3)</h1>
         {nodeData.map((data, i) => (
