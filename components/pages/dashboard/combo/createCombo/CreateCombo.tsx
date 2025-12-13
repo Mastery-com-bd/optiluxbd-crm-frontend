@@ -24,6 +24,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { toast } from "sonner";
+import ComboCreation from "./ComboCreation";
 
 export type TComboData = { productId: number; quantity: number };
 
@@ -116,9 +117,8 @@ const CreateCombo = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-6 lg:p-8">
-      <div className="max-w-[1600px] mx-auto">
-        {/* Filters */}
+    <div className="min-h-screen bg-transparent text-foreground space-y-4 w-full px-4">
+      {/* <div className="max-w-[1600px] mx-auto">
         <Card className="bg-card text-card-foreground border shadow-sm p-4 md:p-5 mb-5 flex">
           <div className="flex items-center justify-between">
             <div className="relative lg:w-[50%]">
@@ -167,8 +167,6 @@ const CreateCombo = () => {
             )}
           </div>
         </Card>
-
-        {/* Product Table */}
         {isLoading ? (
           <div>
             <ComboTableSkeleton />
@@ -226,8 +224,6 @@ const CreateCombo = () => {
                             )}
                             onChange={() => toggleSelectProduct(product.id)}
                           />
-
-                          {/* Quantity Controls */}
                           {selectedProducts.some(
                             (p) => p.productId === product.id
                           ) && (
@@ -295,9 +291,7 @@ const CreateCombo = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <ProductDetails
-                              product={product}
-                            />
+                            <ProductDetails product={product} />
                           </div>
                         </td>
                       </tr>
@@ -307,14 +301,13 @@ const CreateCombo = () => {
             </div>
           </Card>
         )}
-
-        {/* Pagination Controls */}
         <PaginationControls
           pagination={pagination}
           onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
           onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
         />
-      </div>
+      </div> */}
+      <ComboCreation />
     </div>
   );
 };
