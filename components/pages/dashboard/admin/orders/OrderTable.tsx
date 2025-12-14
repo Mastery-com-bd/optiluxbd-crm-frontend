@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/select";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
-import { Eye, X } from "lucide-react";
+import { Eye, MoreVertical, Pencil, X } from "lucide-react";
 import Loading from "@/components/pages/shared/Loading";
-import { OrderData } from "@/types/orders";
+import { OrderData, OrderItem, TProfileOrderData } from "@/types/orders";
 import Link from "next/link";
 import { formatCurrency } from "@/utills/formatCurrency";
 import {
@@ -26,6 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PlaceBulkOrder } from "../../couriar/bulkOrder/PlaceBulkOrder";
+import { Card } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 export function OrderTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filters, setFilters] = useState({
@@ -120,6 +122,17 @@ export function OrderTable() {
     setIsDialogOpen(true);
   };
 
+  const keys = [
+    "OrderID",
+    "SKU",
+    "Customer",
+    "Date",
+    "Item",
+    "Courier",
+    "Amount",
+    "Status",
+    "Actions",
+  ];
   return (
     <div className="p-4 dark:bg-muted/50 rounded-xl border shadow-sm mt-5 transition-all">
       {/* process bulk order */}
@@ -155,11 +168,11 @@ export function OrderTable() {
         />
         <Input
           type="number"
-          placeholder="Product ID"
+          placeholder="order ID"
           onChange={(e) =>
             setFilters((f) => ({
               ...f,
-              productId: e.target.value ? Number(e.target.value) : undefined,
+              orderId: e.target.value ? Number(e.target.value) : undefined,
               page: 1,
             }))
           }
@@ -254,112 +267,110 @@ export function OrderTable() {
             <Loading />
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-border bg-muted">
-                <TableHead className="px-4 py-3">
-                  <input
-                    type="checkbox"
-                    className="rounded border-border cursor-pointer"
-                    checked={allPageOrdersSelected}
-                    onChange={toggleSelectAll}
-                  />
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
-                  Order ID
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
-                  Date
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
-                  Customer
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
-                  Quantity
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
-                  Total Amount
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
-                  Commission
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase text-right">
-                  Commission Rate
-                </TableHead>
-                <TableHead className="px-4 py-3 text-xs font-semibold text-muted-foreground uppercase">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={9}
-                    className="text-center py-6 text-muted-foreground"
-                  >
-                    No orders found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                orders.map((order: OrderData) => {
-                  const isSelected = selectedOrders.includes(order.id);
-                  return (
+          <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+            <div className="overflow-x-auto w-full">
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow>
+                    {keys.map((label, ind) => (
+                      <TableHead
+                        first={ind === 0}
+                        last={ind === keys.length - 1}
+                        key={label}
+                        className="text-left text-xs font-semibold uppercase text-muted-foreground"
+                      >
+                        {label}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders?.map((order: OrderItem) => (
                     <TableRow
                       key={order.id}
-                      className={`border-b border-muted hover:bg-muted/40 transition-colors ${isSelected ? "bg-muted/30" : ""
-                        }`}
+                      className="border-muted hover:bg-muted/50 transition-colors"
                     >
                       <TableCell className="px-4 py-3">
-                        <input
-                          type="checkbox"
-                          className="rounded border-border cursor-pointer"
-                          checked={isSelected}
-                          onChange={() => toggleSelection(order.id)}
-                        />
-                      </TableCell>
-                      <TableCell className="px-4 py-3 font-medium">
-                        {order.id}
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
-                        {formatDate(order.orderDate)}
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
-                        {order.customer?.name ??
-                          `Customer ${order.customerId}`}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-right">
-                        {order.quantity}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-right">
-                        {formatCurrency(order.totalAmount)}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-right">
-                        {formatCurrency(order.commission)}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-right">
-                        {order.commissionRate}%
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
-                        <div className="flex items-center justify-center gap-1">
-                          <Link href={`/dashboard/admin/orders/${order.id}`}>
-                            <Button
-                              variant="ghost"
-                              className="cursor-pointer"
-                              size="icon"
-                              title="View"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <p className="font-medium">ORD-{order.id}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {/* by {order.by} */}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {order?.product?.sku}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {order?.customer?.name}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-medium text-center">
+                        {new Date(order.orderDate).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "2-digit",
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">
+                        {order.quantity}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order.courier?order.courier.name:"-"}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order.totalAmount}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order?.status}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center ">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="cursor-pointer">
+                            <MoreVertical className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-[180px] flex flex-col "
+                          >
+                            <Link
+                              href={`/dashboard/admin/orders/all-orders/${order.id}`}
+                            >
+                              <DropdownMenuItem className="cursor-pointer">
+                                <Eye className="w-4 h-4 mr-2" /> view
+                              </DropdownMenuItem>
+                            </Link>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="cursor-pointer">
+                              <Pencil className="w-4 h-4 mr-2" />
+                              Update
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            {/* <DropdownMenuItem
+                              onClick={() => {
+                                setDeleteorderId(order.id);
+                                setDeleteDialogOpen(true);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive mr-2" />
+                              Delete
+                            </DropdownMenuItem> */}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Card>
         )}
       </div>
 
