@@ -116,6 +116,7 @@ export interface OrderItem {
   commission: string;
   orderDate: string;
   addressId: number | null;
+  status: string;
 
   // Shipping address fields
   shipping_address_tag: string | null;
@@ -139,6 +140,7 @@ export interface OrderItem {
     id: number;
     name: string;
     price: string;
+    sku: string;
   } | null;
 
   // Nested package (nullable)
@@ -148,9 +150,16 @@ export interface OrderItem {
     sku: string;
     discountPrice: string;
   } | null;
+
+  courier: {
+    id: number;
+    name: string;
+    status: string;
+  } | null;
 }
 
 export interface TProfileOrderData {
+  product: any;
   addressId: number | null;
   agentId: number | null;
   batchId: number | null;
@@ -158,7 +167,7 @@ export interface TProfileOrderData {
   commissionRate: string;
   customerId: number;
   id: number;
-  orderDate: string; // ISO string
+  orderDate: string;
   packageId: number | null;
   productId: number | null;
   quantity: number;
