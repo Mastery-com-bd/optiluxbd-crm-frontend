@@ -48,7 +48,7 @@ export function AgentOverview() {
     <div className="space-y-6 w-full max-w-[1135px]">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between">
           <PageHeader
             title="All Agents"
             description="Browse and manage All Agent"
