@@ -23,7 +23,7 @@ import { getPermissions } from "@/utills/getPermissionAndRole";
 import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Navbar: React.FC = () => {
@@ -34,6 +34,7 @@ const Navbar: React.FC = () => {
   const [logout] = useLogoutMutation();
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+  const [scrolled, setScrolled] = useState(false);
 
   const { role } = getPermissions(user as TAuthUSer);
   const handleSearch = async (val: any) => {
@@ -41,6 +42,15 @@ const Navbar: React.FC = () => {
     console.log(val);
   };
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
@@ -66,7 +76,13 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 backdrop-blur-2xl rounded-xl">
+    <header
+      className={`sticky top-0 z-50 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 rounded-b-xl ${
+        scrolled
+          ? "bg-white/5 backdrop-blur-2xl border-b border-white/10"
+          : "bg-transparent"
+      }`}
+    >
       {state === "collapsed" && <SidebarTrigger />}
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="w-full flex items-center justify-between gap-2">

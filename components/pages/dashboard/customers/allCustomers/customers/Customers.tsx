@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CreateCustomerModal from "./CreateCustomerModal";
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 
 const Customers = () => {
   const [filters, setFilters] = useState({
@@ -182,8 +183,28 @@ const Customers = () => {
           </DropdownMenu>
 
           {/* export svg button */}
-          <div className="flex items-center justify-end gap-3 ">
-            <LiquidGlass
+          <div className="flex items-center justify-end ">
+            <button
+              className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
+            >
+              {/* Button text */}
+              <p className="flex items-center gap-2">
+                <Upload size={16} />
+                <span className="text-sm">Export</span>
+              </p>
+
+              {/* top and bottom line */}
+              <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
+              <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+
+              {/* bottom yellow glow line */}
+              <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+                <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+              </div>
+              <CornerGlowSvg />
+            </button>
+
+            {/* <LiquidGlass
               glowIntensity="xs"
               shadowIntensity="xs"
               borderRadius="16px"
@@ -197,7 +218,8 @@ const Customers = () => {
                   <span className="text-[14px]">Export</span>
                 </p>
               </Button>
-            </LiquidGlass>
+
+            </LiquidGlass> */}
           </div>
         </div>
       </div>
