@@ -15,7 +15,7 @@ const ButtonSvgGlow = () => {
           rx="79"
           ry="10"
           fill="#FFB13F"
-          fill-opacity="1"
+          fillOpacity="1"
         />
       </g>
       <defs>
@@ -26,9 +26,9 @@ const ButtonSvgGlow = () => {
           width="218.8"
           height="75.8"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
