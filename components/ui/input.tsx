@@ -29,26 +29,29 @@ export function Input({
   className,
   type,
   icon,
+  borderRadius = "16px",
   ...props
-}: React.ComponentProps<"input"> & { icon?: React.ReactNode }) {
+}: React.ComponentProps<"input"> & {
+  icon?: React.ReactNode;
+  borderRadius?: string;
+}) {
   return (
-    <div className="relative w-full max-w-2xl">
+    <div className="relative w-full">
       {/* Glass background with custom fading borders */}
       <div
         className={cn(
-          "relative flex items-center gap-4 w-full px-5 py-2.5 rounded-2xl backdrop-blur-xl",
+          "relative flex items-center gap-2.5 w-full px-5 py-2.5  backdrop-blur-xl",
           className
         )}
         style={{
-          background:
-            "linear-gradient(135deg, rgba(58, 54, 65, 0.7) 0%, rgba(45, 42, 52, 0.8) 100%)",
+         
           boxShadow:
             "inset 0 1px 1px rgba(255,255,255,0.05), 0 4px 30px rgba(0,0,0,0.3)",
         }}
       >
         {/* Border that fades at top-right and bottom-left */}
         <div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
+          className={`absolute inset-0 rounded-[${borderRadius}] pointer-events-none`}
           style={{
             background: `
               linear-gradient(to right, #9d9da8 0%, #9d9da8 95%, transparent 100%) top / 100% 1px no-repeat,
@@ -80,7 +83,7 @@ export function Input({
 
         {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
         {icon && (
-          <span className="shrink-0 text-[#8a8a96] w-5 h-5">
+          <span className="flex items-center shrink-0 text-[#8a8a96] w-5 h-5">
             {icon}
           </span>
         )}
