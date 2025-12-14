@@ -134,7 +134,7 @@ export function OrderTable() {
     "Actions",
   ];
   return (
-    <div className="p-4 dark:bg-muted/50 rounded-xl border shadow-sm mt-5 transition-all">
+    <div className="p-4  rounded-xl  shadow-sm mt-5 transition-all">
       {/* process bulk order */}
       <PlaceBulkOrder
         isOpen={isDialogOpen}
