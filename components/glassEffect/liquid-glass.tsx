@@ -10,6 +10,7 @@ function cn(...inputs: ClassValue[]) {
 
 interface LiquidGlassCardProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
   onClick?: () => void;
   className?: string;
   showBG?: boolean;
@@ -35,7 +36,7 @@ export const LiquidGlass = ({
   blurIntensity = "xl",
   borderRadius = "32px",
   glowIntensity = "sm",
-  shadowIntensity = "md",
+  shadowIntensity = "xxs",
   ...props
 }: LiquidGlassCardProps) => {
   const blurClasses = {

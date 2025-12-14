@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 backdrop-blur-2xl rounded-xl">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-white/5 backdrop-blur-2xl rounded-xl">
       {state === "collapsed" && <SidebarTrigger />}
       <div className="w-full flex items-center justify-between gap-2 px-4">
         <div className="w-full flex items-center justify-between gap-2">
