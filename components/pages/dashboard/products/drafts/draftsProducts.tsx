@@ -97,8 +97,7 @@ const DraftsProducts = () => {
     "Category",
     "Stock",
     "Price",
-    "Status",
-    "Created Date",
+    "Last Edited",
     "Actions",
   ];
 
@@ -254,7 +253,7 @@ const DraftsProducts = () => {
                         <TableCell className="px-4 py-3 text-sm font-semibold text-center">
                           ${product.price}
                         </TableCell>
-                        <TableCell className="px-4 py-3 text-center">
+                        {/* <TableCell className="px-4 py-3 text-center">
                           <span
                             className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
                                                   ${product.status === "ACTIVE"
@@ -264,7 +263,7 @@ const DraftsProducts = () => {
                           >
                             {product.status.toLocaleLowerCase()}
                           </span>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell className="text-center">
                           {new Date(product.created_at).toLocaleDateString(
                             "en-US",
