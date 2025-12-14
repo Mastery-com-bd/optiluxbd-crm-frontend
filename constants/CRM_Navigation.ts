@@ -1,14 +1,14 @@
 import {
-  LayoutDashboard,
   Package,
   ShoppingCart,
   Users,
   Users2,
-  Gift,
   Activity,
   Tags,
   MessageCircleWarning,
   CircleGauge,
+  UsersRound,
+  GitFork,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -130,14 +130,14 @@ export const crmRoutes: NavRoute[] = [
         title: "Low Stock Products",
         path: "/dashboard/admin/products/low-stock-products",
         permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
-      }
+      },
     ],
   },
 
   // combo pack route
   {
     title: "Combo Pack",
-    icon: Gift,
+    icon: GitFork,
     permissions: [
       "PACKAGES VIEW",
       "PACKAGES CREATE",
@@ -328,6 +328,8 @@ export const crmRoutes: NavRoute[] = [
       },
     ],
   },
+
+  // complain route
   {
     title: "Complaint",
     icon: MessageCircleWarning,
@@ -342,6 +344,36 @@ export const crmRoutes: NavRoute[] = [
         title: "Report user's complain",
         path: "/dashboard/agent/complaint",
         // permissions: ["COMPLAINT CREATE", "COMPLAINT VIEW", "COMPLAINT UPDATE", "COMPLAINT DELETE"],
+      },
+    ],
+  },
+
+  // team leader management route
+  {
+    title: "Teams",
+    icon: UsersRound,
+    permissions: [
+      "ALLOCATIONS ASSIGN LEADER",
+      "ALLOCATIONS DISTRIBUTE",
+      "ALLOCATIONS REPORTS VIEW",
+      "ALLOCATIONS REPORTS VIEW OWN",
+      "ALLOCATIONS VIEW OWN",
+    ],
+    children: [
+      {
+        title: "Team`s Overview",
+        path: "/dashboard/team/overview",
+        permissions: ["ALLOCATIONS REPORTS VIEW"],
+      },
+      {
+        title: "All Teams",
+        path: "/dashboard/team",
+        permissions: ["ALLOCATIONS REPORTS VIEW"],
+      },
+      {
+        title: "Lead Assignment",
+        path: "/dashboard/team/assign-leads",
+        permissions: ["ALLOCATIONS REPORTS VIEW"],
       },
     ],
   },

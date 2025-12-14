@@ -15,7 +15,7 @@ const ImageUploader = ({
 }: {
   handleChange: (imageFile: File) => Promise<void>;
   profileImage?: string;
-  id: number;
+  id: string;
   clasName?: string;
 }) => {
   const [hovered, setHovered] = useState(false);
