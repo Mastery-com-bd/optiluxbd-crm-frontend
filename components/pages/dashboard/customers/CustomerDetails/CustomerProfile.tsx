@@ -13,8 +13,11 @@ import { useState } from "react";
 import Overview from "./Overview";
 import Members from "./Members";
 import Leads from "./Leads";
+import OrderHistory from "./OrderHistory";
+import Note from "./Note";
 
-const buttons = ["OverView", "Member", "Leads"];
+const buttons = ["OverView", "Order History", "Note"];
+// const buttons = ["OverView", "Member", "Order History", "Leads", "Note"];
 
 const CustomerProfile = () => {
   const [enabled, setEnabled] = useState(false);
@@ -97,123 +100,134 @@ const CustomerProfile = () => {
       {/* main content */}
       <div className="flex justify-between items-start gap-6">
         {/* left side */}
-        <LiquidGlass
+
+        {/* <LiquidGlass
           glowIntensity="xs"
           shadowIntensity="xs"
           borderRadius="16px"
           className="w-[25vw]"
         >
-          <Card className="bg-transparent w-[25vw] p-4 rounded-2xl">
-            {/* upper section */}
-            <div className="flex justify-between ">
-              <div className="h-10 w-20 border-2 border-[#F0B10080] rounded-full bg-[linear-gradient(90deg,#F0B1004D_0%,#D0870066_100%)] flex items-center justify-center gap-1">
-                <p className="text-[#FDC700] flex items-center gap-1">
-                  <Star size={16} />
-                  Gold
-                </p>
-              </div>
-              <ImageUploader
-                handleChange={handleChange}
-                id={Number(customerId)}
-                clasName="w-24 h-24 rounded-full shadow-md"
-              />
+        </LiquidGlass> */}
+        <Card className="bg-white/10 w-[25vw] px-6 py-6 rounded-4xl relative gap-4">
+          {/* border section */}
+          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
+          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
 
-              <button
-                type="button"
-                onClick={() => setEnabled(!enabled)}
-                className={`relative inline-flex h-8 w-16 items-center rounded-full transition cursor-pointer ${
-                  enabled ? "bg-blue-600" : "bg-white/10"
+          {/* upper section */}
+          <div className="flex justify-between ">
+            <div className="h-10 w-20 border-2 border-[#F0B10080] rounded-full bg-[linear-gradient(90deg,#F0B1004D_0%,#D0870066_100%)] flex items-center justify-center gap-1">
+              <p className="text-[#FDC700] flex items-center gap-1">
+                <Star size={16} />
+                Gold
+              </p>
+            </div>
+            <ImageUploader
+              handleChange={handleChange}
+              id={Number(customerId)}
+              clasName="w-36 h-36 rounded-full shadow-md"
+            />
+
+            <button
+              type="button"
+              onClick={() => setEnabled(!enabled)}
+              className={`relative inline-flex h-8 w-16 items-center rounded-full transition cursor-pointer ${
+                enabled ? "bg-blue-600" : "bg-white/10"
+              }`}
+            >
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition ${
+                  enabled ? "translate-x-9" : "translate-x-1"
                 }`}
-              >
-                <span
-                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition ${
-                    enabled ? "translate-x-9" : "translate-x-1"
-                  }`}
-                />
-              </button>
-            </div>
+              />
+            </button>
+          </div>
 
-            {/* name section */}
-            <div className="text-center space-y-2 ">
-              <h1 className="text-3xl">Karim Khan</h1>
-              <p className="text-sm">Member since June 2025</p>
-              <p className="text-xs">2,200 pts</p>
-            </div>
+          {/* name section */}
+          <div className="text-center space-y-2 ">
+            <h1 className="text-3xl leading-6">Karim Khan</h1>
+            <p className="text-sm">Member since June 2025</p>
+            <p className="text-xs">2,200 pts</p>
+          </div>
 
-            {/* info section */}
-            <div className="space-y-3 px-10 ">
-              <h1 className="text-xl">Customer Info</h1>
-              <div className=" px-4 py-2 rounded-3xl bg-white/5">
-                <h3 className="text-white/50">Email Address </h3>
-                <p>karim.khan@example.com</p>
-              </div>
-              <div className=" px-4 py-2 rounded-3xl bg-white/5">
-                <h3 className="text-white/50">Phone Number </h3>
-                <p>+880 1783155183</p>
-              </div>
-              <div className=" px-4 py-2 rounded-3xl bg-white/5">
-                <h3 className="text-white/50">Source </h3>
-                <p>Website</p>
-              </div>
-              <div className=" px-4 py-2 rounded-3xl bg-white/5">
-                <h3 className="text-white/50">Address </h3>
-                <p>House 12,Road 02, Mirpur,Dhaka</p>
-              </div>
+          {/* info section */}
+          <div className="space-y-3 px-6 w-full">
+            <h1 className="text-xl">Customer Info</h1>
+            <div className=" px-6 py-2 rounded-3xl bg-white/5">
+              <h3 className="text-white/50">Email Address </h3>
+              <p>karim.khan@example.com</p>
             </div>
-          </Card>
-        </LiquidGlass>
+            <div className=" px-6 py-2 rounded-3xl bg-white/5">
+              <h3 className="text-white/50">Phone Number </h3>
+              <p>+880 1783155183</p>
+            </div>
+            <div className=" px-6 py-2 rounded-3xl bg-white/5">
+              <h3 className="text-white/50">Source </h3>
+              <p>Website</p>
+            </div>
+            <div className=" px-6 py-2 rounded-3xl bg-white/5">
+              <h3 className="text-white/50">Address </h3>
+              <p>House 12,Road 02, Mirpur,Dhaka</p>
+            </div>
+          </div>
+        </Card>
 
         {/* right side */}
         <div className="w-full space-y-4">
-          <LiquidGlass
+          {/* <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
             borderRadius="16px"
           >
-            <Card className="bg-transparent px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5">
-              {/* upper section */}
-              {buttons.map((item, i) => {
-                const active = item === current;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setCurrent(item)}
-                    className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${
-                      active && "bg-white/5 rounded-xl"
-                    }`}
-                  >
-                    {/* Button text */}
-                    <span className="relative z-10">{item}</span>
+          </LiquidGlass> */}
+          <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
+            {/* top and bottom border */}
+            <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
 
-                    {active && (
-                      <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none"></div>
-                    )}
-                    {active && (
-                      <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none"></div>
-                    )}
+            {/* upper section */}
+            {buttons.map((item, i) => {
+              const active = item === current;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(item)}
+                  className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${
+                    active && "bg-white/5 rounded-xl"
+                  }`}
+                >
+                  {/* Button text */}
+                  <span className="relative z-10">{item}</span>
 
-                    {active && (
-                      <div className="absolute z-20 bottom-0 left-0 w-full">
-                        <span
-                          className="block w-full h-[1.5px]"
-                          style={{
-                            background:
-                              "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
-                          }}
-                        />
-                      </div>
-                    )}
+                  {active && (
+                    <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none" />
+                  )}
+                  {active && (
+                    <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none" />
+                  )}
 
-                    {active && <ButtonSvgGlow />}
-                  </button>
-                );
-              })}
-            </Card>
-          </LiquidGlass>
+                  {active && (
+                    <div className="absolute z-20 bottom-0 left-0 w-full">
+                      <span
+                        className="block w-full h-[1.5px]"
+                        style={{
+                          background:
+                            "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {active && <ButtonSvgGlow />}
+                </button>
+              );
+            })}
+          </Card>
 
           {current === "OverView" && <Overview />}
           {current === "Member" && <Members />}
+          {current === "Order History" && <OrderHistory />}
           {current === "Leads" && <Leads />}
+          {current === "Note" && <Note />}
         </div>
       </div>
     </section>
