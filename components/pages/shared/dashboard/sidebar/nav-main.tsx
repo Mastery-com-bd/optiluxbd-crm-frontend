@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -33,6 +34,7 @@ export function NavMain({ items }: { items: NavRoute[] }) {
 
   return (
     <SidebarGroup>
+      <SidebarGroupLabel>Core Management</SidebarGroupLabel>
       <SidebarMenu>
         {visibleRoutes.map((item) => {
           const isActive = pathname === item.path;

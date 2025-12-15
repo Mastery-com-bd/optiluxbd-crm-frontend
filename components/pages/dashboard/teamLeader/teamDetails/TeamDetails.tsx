@@ -5,21 +5,24 @@ import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ImageUploader from "@/components/ui/ImageUploader";
-import { useGetCustomerByIdQuery } from "@/redux/features/customers/cutomersApi";
-import { SquarePen, Star, Trash2 } from "lucide-react";
+import {
+  SquarePen,
+  Star,
+  Target,
+  Trash2,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
-import Overview from "./Overview";
-import OrderHistory from "./OrderHistory";
-import Note from "./Note";
+import Members from "./Members";
+import Leads from "./Leads";
+import TeamOverview from "./TeamOverview";
 
-const buttons = ["OverView", "Order History", "Note"];
+const buttons = ["OverView", "Member", "Leads"];
 
-const CustomerProfile = ({ id }: { id: string }) => {
+const TeamDetails = ({ id }: { id: string }) => {
   const [enabled, setEnabled] = useState(false);
   const [current, setCurrent] = useState(buttons[0]);
-  const { data, isLoading } = useGetCustomerByIdQuery(id);
-  const customerData = data?.data;
-  //   const [imageUpload] = useUserImageUploadMutation();
 
   const handleChange = async (imageFile: File) => {
     const formData = new FormData();
@@ -43,17 +46,14 @@ const CustomerProfile = ({ id }: { id: string }) => {
     // }
   };
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
   return (
     <section className=" bg-transparent text-foreground space-y-4 w-full">
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Customer Profile</h1>
+          <h1 className="text-3xl font-semibold">Team Profile</h1>
           <p className="text-[#A1A1A1] leading-5">
-            View add and edit customer details
+            See the details of a specific team
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
@@ -68,7 +68,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
             >
               <p className="flex items-center gap-2">
                 <SquarePen className="text-green-300" />
-                <span className="text-[14px]">Edit Profile</span>
+                <span className="text-[14px]">Edit Team</span>
               </p>
             </Button>
           </LiquidGlass>
@@ -83,7 +83,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
             >
               <p className="flex items-center gap-2">
                 <Trash2 className="text-red-400" />
-                <span className="text-[14px]">Delete Profile</span>
+                <span className="text-[14px]">Delete Team</span>
               </p>
             </Button>
           </LiquidGlass>
@@ -107,59 +107,50 @@ const CustomerProfile = ({ id }: { id: string }) => {
           <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
 
           {/* upper section */}
-          <div className="flex justify-between ">
-            <div className="h-10 w-20 border-2 border-[#F0B10080] rounded-full bg-[linear-gradient(90deg,#F0B1004D_0%,#D0870066_100%)] flex items-center justify-center gap-1">
-              <p className="text-[#FDC700] flex items-center gap-1 text-sm">
-                <Star size={14} />
-                Gold
-              </p>
+          <div className="flex gap-4">
+            <div className="h-7 w-20 relative bg-transparent rounded-[6px] flex items-center justify-center p-1">
+              <div className="absolute top-0 left-px inset-2 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-[6px] pointer-events-none" />
+              <div className="absolute bottom-0 right-px inset-2 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-[6px] pointer-events-none" />
+              <span className="text-sm"> Diamond</span>
             </div>
             <ImageUploader
               handleChange={handleChange}
               id={id}
-              clasName="w-32 h-32 rounded-full shadow-md"
+              clasName="w-30 h-30 rounded-full shadow-md"
             />
-
-            <button
-              type="button"
-              onClick={() => setEnabled(!enabled)}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition cursor-pointer ${
-                enabled ? "bg-blue-600" : "bg-white/10"
-              }`}
-            >
-              <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white transition ${
-                  enabled ? "translate-x-9" : "translate-x-1"
-                }`}
-              />
-            </button>
           </div>
 
           {/* name section */}
           <div className="text-center space-y-1 ">
-            <h1 className="text-3xl leading-6">Karim Khan</h1>
-            <p className="text-sm">Member since June 2025</p>
-            <p className="text-xs text-[#B1B1B1]">2,200 pts</p>
+            <h1 className="text-3xl leading-6">Sales Team Alpha</h1>
+            <p className="text-sm">Senior Sales Agent</p>
+            <p className="text-xs text-[#B1B1B1]">Team Alpha</p>
           </div>
 
           {/* info section */}
-          <div className="space-y-3 px-4 w-full text-sm">
-            <h1 className="text-xl">Customer Info</h1>
-            <div className=" px-4 py-2 rounded-2xl bg-white/5">
-              <h3 className="text-white/50">Email Address </h3>
-              <p>karim.khan@example.com</p>
-            </div>
-            <div className=" px-4 py-2 rounded-2xl bg-white/5">
-              <h3 className="text-white/50">Phone Number </h3>
-              <p>+880 1783155183</p>
-            </div>
-            <div className=" px-4 py-2 rounded-2xl bg-white/5">
-              <h3 className="text-white/50">Source </h3>
-              <p>Website</p>
-            </div>
-            <div className=" px-4 py-2 rounded-2xl bg-white/5">
-              <h3 className="text-white/50">Address </h3>
-              <p>House 12,Road 02, Mirpur,Dhaka</p>
+          <div className=" rounded-2xl bg-white/10 relative p-4 mt-20">
+            {/* top and bottom border effect */}
+            <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+            <div>
+              <h1 className="text-lg font-medium">Quick Stats</h1>
+              <div className="grid grid-cols-[3fr_1fr] gap-2">
+                <p className="text-sm text-[#B1B1B1] flex items-center gap-2">
+                  <Users size={14} className="text-[#51A2FF]" /> Members
+                </p>
+                <p className="text-xl font-semibold text-right">8</p>
+                <p className="text-sm text-[#B1B1B1] flex items-center gap-2">
+                  <Target size={14} className="text-[#FDC700]" /> Total Leads
+                </p>
+                <p className="text-xl font-semibold text-right">156</p>
+                <p className="text-sm text-[#B1B1B1] flex items-center gap-2 w-full ">
+                  <TrendingUp size={14} className="text-[#05DF72]" /> Monthly
+                  Conversion
+                </p>
+                <p className="text-xl font-semibold text-right text-[#05DF72] ">
+                  32.5 %
+                </p>
+              </div>
             </div>
           </div>
         </Card>
@@ -216,13 +207,13 @@ const CustomerProfile = ({ id }: { id: string }) => {
             })}
           </Card>
 
-          {current === "OverView" && <Overview />}
-          {current === "Order History" && <OrderHistory />}
-          {current === "Note" && <Note />}
+          {current === "OverView" && <TeamOverview />}
+          {current === "Member" && <Members />}
+          {current === "Leads" && <Leads />}
         </div>
       </div>
     </section>
   );
 };
 
-export default CustomerProfile;
+export default TeamDetails;
