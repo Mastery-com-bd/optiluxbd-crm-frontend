@@ -5,23 +5,15 @@ import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ImageUploader from "@/components/ui/ImageUploader";
-import {
-  SquarePen,
-  Star,
-  Target,
-  Trash2,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { SquarePen, Target, Trash2, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
 import Members from "./members/Members";
-import Leads from "./Leads";
+import Leads from "./leads/Leads";
 import TeamOverview from "./overview/TeamOverview";
 
 const buttons = ["OverView", "Member", "Leads"];
 
 const TeamDetails = ({ id }: { id: string }) => {
-  const [enabled, setEnabled] = useState(false);
   const [current, setCurrent] = useState(buttons[0]);
 
   const handleChange = async (imageFile: File) => {

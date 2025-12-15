@@ -1,5 +1,6 @@
 "use client";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
+
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,24 +9,76 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { agentList } from "../../team/CreateTeam";
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import Image from "next/image";
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const AssignMembers = () => {
-  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
+type TTeamData = {
+  id: number;
+  name: string;
+  image: string;
+  member: number;
+  lead: number;
+};
+
+const AssignLeadsToTeam = ({ selectedLeads }: { selectedLeads: string[] }) => {
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+
+  const teamData: TTeamData[] = [
+    {
+      id: 1,
+      name: "Team Alpha",
+      image:
+        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&w=687&q=80",
+      member: 20,
+      lead: 100,
+    },
+    {
+      id: 2,
+      name: "Team Beta",
+      image:
+        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&w=687&q=80",
+      member: 15,
+      lead: 75,
+    },
+    {
+      id: 3,
+      name: "Team Gamma",
+      image:
+        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&w=687&q=80",
+      member: 25,
+      lead: 130,
+    },
+    {
+      id: 4,
+      name: "Team Delta",
+      image:
+        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&w=687&q=80",
+      member: 12,
+      lead: 60,
+    },
+    {
+      id: 5,
+      name: "Team Omega",
+      image:
+        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?auto=format&fit=crop&w=687&q=80",
+      member: 18,
+      lead: 90,
+    },
+  ];
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <button
+          disabled={!selectedLeads.length}
           className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
         >
           {/* Button text */}
           <p className="flex items-center gap-2">
             <Plus size={18} />
-            <span className="text-sm">Add New Member</span>
+            <span className="text-sm">Assign to team</span>
           </p>
 
           {/* top and bottom line */}
@@ -42,7 +95,7 @@ const AssignMembers = () => {
       <DialogContent className="px-6 py-3 w-[20vw] gap-4">
         <DialogHeader className="flex flex-row items-center justify-between ">
           <DialogTitle className="text-lg font-medium">
-            Assign New Agent
+            Assign {selectedLeads.length} Leads to
           </DialogTitle>
         </DialogHeader>
 
@@ -51,16 +104,18 @@ const AssignMembers = () => {
           {/* main content */}
           <div className="space-y-3 h-full overflow-y-auto no-scrollbar">
             <input
-              placeholder="Search agent by ID or Name"
+              placeholder="Search Team"
               className="w-full py-2 rounded-xl text-sm bg-white/10 placeholder:text-sm px-4 outline-none border border-white/5"
             />
             <p className="text-sm text-white/70 flex items-center justify-between">
-              <span>All Agents</span>{" "}
-              <span>{selectedAgents.length} selected</span>
+              <span>All Teams</span>{" "}
+              <span>{selectedLeads.length} selected</span>
             </p>
 
             <div className="space-y-3">
-              {agentList.map((data, i) => {
+              {teamData.map((data, i) => {
+                const value = data.id.toString();
+                const isSelected = selectedTeam === value;
                 return (
                   <div
                     key={i}
@@ -75,7 +130,7 @@ const AssignMembers = () => {
                       <div className="flex items-center gap-2 ">
                         <Image
                           src={
-                            data?.profileImage ??
+                            data?.image ??
                             "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
                           }
                           alt="Agent Avatar"
@@ -85,22 +140,26 @@ const AssignMembers = () => {
                         />
                         <div className="text-xs space-y-1">
                           <h1 className="font-medium ">{data?.name}</h1>
-                          <p className="text-[#B1B1B1] flex items-center gap-1">
-                            <span>Agent ID:</span> {data?.agentId}
+                          <p className="text-[#B1B1B1] flex items-center gap-4">
+                            <span> {data?.member} Members</span>{" "}
+                            <span>Leads {data?.lead} </span>
                           </p>
                         </div>
                       </div>
-                      <Checkbox
-                        checked={selectedAgents.includes(data.agentId)}
-                        onCheckedChange={(checked) => {
-                          setSelectedAgents((prev) =>
-                            checked
-                              ? [...prev, data.agentId]
-                              : prev.filter((id) => id !== data.agentId)
-                          );
-                        }}
-                        className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
-                      />
+                      <RadioGroup
+                        value={selectedTeam ?? ""}
+                        onValueChange={(value) => setSelectedTeam(value)}
+                        className="space-y-3"
+                      >
+                        <RadioGroupItem
+                          value={value}
+                          checked={isSelected}
+                          onClick={() =>
+                            setSelectedTeam(isSelected ? null : value)
+                          }
+                          className="h-4 w-4 bg-transparent border border-white/30  data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 cursor-pointer "
+                        />
+                      </RadioGroup>
                     </div>
                   </div>
                 );
@@ -134,4 +193,4 @@ const AssignMembers = () => {
   );
 };
 
-export default AssignMembers;
+export default AssignLeadsToTeam;

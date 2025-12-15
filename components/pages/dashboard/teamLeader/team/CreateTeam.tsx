@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const teamLeaders = [
   { label: "Ruhul Khan", value: "ruhul" },
@@ -77,6 +78,7 @@ const CreateTeam = () => {
   const [image, setImage] = useState<File | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [selectedLeader, setSelectedLeader] = useState<string>("");
+  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
 
   return (
     <Dialog>
@@ -289,7 +291,7 @@ const CreateTeam = () => {
                 <span>All Agents</span> <span>0 selected</span>
               </p>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {agentList.map((data, i) => {
                   return (
                     <div
@@ -301,7 +303,7 @@ const CreateTeam = () => {
                       <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/20 rounded-br-xl pointer-events-none" />
 
                       {/* main content */}
-                      <div>
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Image
                             src={
@@ -320,6 +322,17 @@ const CreateTeam = () => {
                             </p>
                           </div>
                         </div>
+                        <Checkbox
+                          checked={selectedAgents.includes(data.agentId)}
+                          onCheckedChange={(checked) => {
+                            setSelectedAgents((prev) =>
+                              checked
+                                ? [...prev, data.agentId]
+                                : prev.filter((id) => id !== data.agentId)
+                            );
+                          }}
+                          className="h-3 w-3 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
+                        />
                       </div>
                     </div>
                   );

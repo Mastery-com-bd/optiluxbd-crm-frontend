@@ -1,5 +1,4 @@
 "use client";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import {
   Dialog,
   DialogContent,
@@ -8,13 +7,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { agentList } from "../../team/CreateTeam";
 import Image from "next/image";
-import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
+import { agentList } from "../../team/CreateTeam";
+import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 
-const AssignMembers = () => {
+const CreateLeads = () => {
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   return (
     <Dialog>
@@ -25,7 +25,7 @@ const AssignMembers = () => {
           {/* Button text */}
           <p className="flex items-center gap-2">
             <Plus size={18} />
-            <span className="text-sm">Add New Member</span>
+            <span className="text-sm">Add New Leads</span>
           </p>
 
           {/* top and bottom line */}
@@ -99,7 +99,7 @@ const AssignMembers = () => {
                               : prev.filter((id) => id !== data.agentId)
                           );
                         }}
-                        className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
+                        className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-[#05DF72] [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-green-900"
                       />
                     </div>
                   </div>
@@ -134,4 +134,4 @@ const AssignMembers = () => {
   );
 };
 
-export default AssignMembers;
+export default CreateLeads;
