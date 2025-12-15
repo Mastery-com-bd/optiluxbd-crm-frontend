@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import OverviewChart from "./OverviewChart";
 
 const TeamOverview = () => {
@@ -95,13 +94,13 @@ const TeamOverview = () => {
       </div>
 
       {/* chart section */}
-      <Card className="bg-white/10 w-full relative rounded-3xl py-4 ">
+      <Card className="bg-white/10 w-full h-full relative rounded-3xl py-0 ">
         {/* top and bottom border effect */}
         <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
 
         {/* main content */}
-        <div className="space-y-3 w-full">
+        <div className=" w-full h-full rounded-3xl pt-4">
           <div className="flex items-center justify-between px-4">
             <h1 className="text-xl font-semibold">Team Performance</h1>
             <DropdownMenu>
@@ -139,11 +138,11 @@ const TeamOverview = () => {
           <div className="flex items-center justify-end px-4 gap-8">
             <p className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[rgba(143,207,185,1)]" />{" "}
-              <span className="tetx-xs font-medium">Conversion Rate</span>
+              <span className="text-sm font-medium">Conversion Rate</span>
             </p>
             <p className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-brand" />{" "}
-              <span className="tetx-xs font-medium">Call</span>
+              <span className="text-sm font-medium">Call</span>
             </p>
           </div>
           <OverviewChart />

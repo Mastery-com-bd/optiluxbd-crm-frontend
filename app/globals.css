@@ -34,6 +34,9 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-brand: rgb(var(--brand-color));
+  --color-success: var(--success-color);
+  --color-alternative: var(--alt-color);
+  --color-text-secondary: var(--secondary-text-color);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,6 +56,9 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --brand-color: 222 156 58;
+  --success-color: rgb(5 223 114);
+  --alt-color: rgb(81 162 255);
+  --secondary-text-color: rgb(177 177 177);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);

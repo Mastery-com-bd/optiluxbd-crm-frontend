@@ -14,9 +14,9 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
-import Members from "./Members";
+import Members from "./members/Members";
 import Leads from "./Leads";
-import TeamOverview from "./TeamOverview";
+import TeamOverview from "./overview/TeamOverview";
 
 const buttons = ["OverView", "Member", "Leads"];
 

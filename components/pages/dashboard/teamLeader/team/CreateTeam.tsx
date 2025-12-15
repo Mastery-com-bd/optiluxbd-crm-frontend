@@ -28,13 +28,13 @@ const teamLeaders = [
   { label: "Sabbir Ahmed", value: "sabbir" },
 ];
 
-type TAgentList = {
+export type TAgentList = {
   name: string;
   agentId: string;
   profileImage: string;
 };
 
-const agentList: TAgentList[] = [
+export const agentList: TAgentList[] = [
   {
     name: "karim Hossain",
     agentId: "AG23894",
