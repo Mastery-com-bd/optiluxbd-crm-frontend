@@ -7,8 +7,16 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/admin/products/all-products": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/id": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/add-product": ["PRODUCTS CREATE"],
-  "/dashboard/admin/products/draft-products": ["PRODUCTS VIEW", "PRODUCTS UPDATE", "PRODUCTS DELETE"],
-  "/dashboard/admin/products/low-stock-products": ["PRODUCTS VIEW", "PRODUCTS UPDATE", "PRODUCTS DELETE"],
+  "/dashboard/admin/products/draft-products": [
+    "PRODUCTS VIEW",
+    "PRODUCTS UPDATE",
+    "PRODUCTS DELETE",
+  ],
+  "/dashboard/admin/products/low-stock-products": [
+    "PRODUCTS VIEW",
+    "PRODUCTS UPDATE",
+    "PRODUCTS DELETE",
+  ],
   "/dashboard/admin/products/deleted": ["PRODUCTS VIEW"],
   "/dashboard/admin/products/inventory": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
   "/dashboard/admin/products/reviews": ["PRODUCTS VIEW", "PRODUCTS UPDATE"],
@@ -73,6 +81,11 @@ export const routePermissions: Record<string, string[]> = {
   ],
   // lead management of agents
   "/dashboard/leads/agents": ["ALLOCATIONS VIEW OWN"],
+
+  // team leader management
+  "/dashboard/team/overview": ["ALLOCATIONS REPORTS VIEW"],
+  "/dashboard/team": ["ALLOCATIONS REPORTS VIEW"],
+  "/dashboard/team/assign-leads": ["ALLOCATIONS REPORTS VIEW"],
 
   // audit and history
   "/dashboard/activity": ["AUDIT VIEW"],

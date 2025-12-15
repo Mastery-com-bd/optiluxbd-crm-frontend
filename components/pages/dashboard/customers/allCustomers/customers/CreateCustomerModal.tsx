@@ -40,22 +40,6 @@ const CreateCustomerModal = () => {
           </div>
           <CornerGlowSvg />
         </button>
-
-        {/* <LiquidGlass
-          glowIntensity="xs"
-          shadowIntensity="xs"
-          borderRadius="16px"
-        >
-          <Button
-            variant="yellow"
-            className="p-3 flex rounded-2xl border-none cursor-pointer"
-          >
-            <p className="flex items-center gap-2">
-              <Plus />
-              <span className="text-[14px]">Create Customer</span>
-            </p>
-          </Button>
-        </LiquidGlass> */}
       </DialogTrigger>
       <DialogContent className="p-6 w-[50vw]">
         <DialogHeader className="flex flex-row items-center justify-between mt-4 ">
@@ -155,6 +139,7 @@ const CreateCustomerModal = () => {
                 Phone Number
               </Label>
               <Input
+                type="number"
                 placeholder="01714******"
                 className="w-full py-2 rounded-lg text-sm bg-transparent"
               />

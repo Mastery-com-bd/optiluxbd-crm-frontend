@@ -128,7 +128,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <Card className="bg-white/5 px-6 py-4 w-full rounded-4xl gap-4">
+    <Card className="bg-white/5 px-6 py-3 w-full rounded-4xl gap-3">
       <h1 className="font-medium text-xl">
         Order History <span className="text-lg">({orderdata.length})</span>
       </h1>
@@ -164,7 +164,7 @@ const OrderHistory = () => {
                       </TableCell>
                     );
                   })}
-                  <TableCell className="px-3 py-2">
+                  <TableCell className="px-6 py-2">
                     {" "}
                     <div
                       className={`px-2 py-1 text-sm text-center rounded-3xl border ${bg} ${border} ${text}`}

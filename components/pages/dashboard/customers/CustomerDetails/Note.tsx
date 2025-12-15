@@ -28,9 +28,9 @@ const Note = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* add note */}
-      <Card className="bg-white/5 px-6 py-4 w-full rounded-4xl gap-4 border border-white/10">
+      <Card className="bg-white/5 px-6 py-2 w-full rounded-4xl gap-2 border border-white/10">
         <h1 className="text-xl font-medium">Add New Note</h1>
         <Textarea
           placeholder="Write a note about this customer..."
@@ -61,14 +61,14 @@ const Note = () => {
       </Card>
 
       {/* previous note */}
-      <Card className="bg-white/5 px-6 py-4 w-full rounded-4xl gap-4 border border-white/10">
+      <Card className="bg-white/5 px-6 py-3 w-full rounded-4xl gap-3 border border-white/10">
         <h1 className="text-xl font-medium">Previous Notes (3)</h1>
         {nodeData.map((data, i) => (
           <div
             key={i}
-            className="bg-white/5 rounded-2xl space-y-4 border border-white/10 px-4 py-3 flex justify-between"
+            className="bg-white/5 rounded-2xl space-y-2 border border-white/10 px-4 py-2 flex justify-between"
           >
-            <div className="space-y-3">
+            <div>
               <h1 className="text-base text-[#FDFDFD]">{data?.title}</h1>
               <p className="text-[#B1B1B1] flex items-center gap-1 text-sm leading-4">
                 <span>{data?.role}</span>
