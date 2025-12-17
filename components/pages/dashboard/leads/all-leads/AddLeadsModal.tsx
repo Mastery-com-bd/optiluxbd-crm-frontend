@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Label } from "@/components/ui/label";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import { ImageIcon, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -22,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 
 const teamLeaders = [
   { label: "Ruhul Khan", value: "ruhul" },
@@ -73,13 +73,11 @@ export const agentList: TAgentList[] = [
       "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
   },
 ];
-
-const CreateTeam = () => {
+const AddLeadsModal = () => {
   const [image, setImage] = useState<File | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [selectedLeader, setSelectedLeader] = useState<string>("");
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -89,7 +87,7 @@ const CreateTeam = () => {
           {/* Button text */}
           <p className="flex items-center gap-2">
             <Plus size={18} />
-            <span className="text-sm">Create New Team</span>
+            <span className="text-sm">Add Leads</span>
           </p>
 
           {/* top and bottom line */}
@@ -346,4 +344,4 @@ const CreateTeam = () => {
   );
 };
 
-export default CreateTeam;
+export default AddLeadsModal;

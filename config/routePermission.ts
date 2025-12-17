@@ -79,6 +79,20 @@ export const routePermissions: Record<string, string[]> = {
     "ALLOCATIONS REPORTS VIEW OWN",
     "ALLOCATIONS VIEW OWN",
   ],
+  "/dashboard/leads": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
+  "/dashboard/leads/lead-overview": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
   // lead management of agents
   "/dashboard/leads/agents": ["ALLOCATIONS VIEW OWN"],
 

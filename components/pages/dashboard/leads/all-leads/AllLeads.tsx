@@ -1,22 +1,22 @@
 "use client";
 
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-import { useState } from "react";
-import AssignLeadsToTeam from "./AssignLeadsToTeam";
-import { ChevronDown, Search } from "lucide-react";
-import { debounce } from "@/utills/debounce";
+import { ChevronDown, Search, Upload } from "lucide-react";
+import AddLeadsModal from "./AddLeadsModal";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { debounce } from "@/utills/debounce";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
-import AssignLeadsTable from "./AssignLeadsTable";
+import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
+import AllLeadsTable from "./AllLeadsTable";
 
-const Assignleades = () => {
-  const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+const AllLeads = () => {
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "createdAt",
@@ -35,28 +35,17 @@ const Assignleades = () => {
   const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
   return (
-    <section className=" bg-transparent text-foreground space-y-5 w-full">
-      {/* header */}
+    <div className="min-h-screen bg-transparent text-foreground space-y-6 w-full">
+      {/* headers */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Leads Assignment</h1>
+          <h1 className="text-3xl font-semibold">All Leads</h1>
           <p className="text-[#A1A1A1] leading-5">
             Manage, filter, and assign your leads.
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <div className="bg-transparent flex items-center px-3 py-1.5 rounded-2xl border border-brand">
-              <h1 className="flex items-center gap-1 text-sm">
-                Selected Leads <span>{selectedLeads.length}</span>
-              </h1>
-            </div>
-          </LiquidGlass>
-          <AssignLeadsToTeam selectedLeads={selectedLeads} />
+          <AddLeadsModal />
         </div>
       </div>
 
@@ -126,7 +115,7 @@ const Assignleades = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* status dropdown */}
+          {/* priority dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <LiquidGlass
@@ -170,12 +159,31 @@ const Assignleades = () => {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <button
+            className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
+          >
+            {/* Button text */}
+            <p className="flex items-center gap-2">
+              <Upload size={18} />
+              <span className="text-sm">Export</span>
+            </p>
+
+            {/* top and bottom line */}
+            <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+
+            {/* bottom yellow glow line */}
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+            </div>
+            <CornerGlowSvg />
+          </button>
         </div>
       </div>
-      <AssignLeadsTable
-        selectedLeads={selectedLeads}
-        setSelectedLeads={setSelectedLeads}
-      />
+
+      {/* all leads table */}
+      <AllLeadsTable />
+
       <div className="flex items-center justify-end">
         <div className="flex items-center gap-6">
           <p className="text-sm text-[#7E7E7E]">
@@ -224,8 +232,8 @@ const Assignleades = () => {
           </DropdownMenu>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Assignleades;
+export default AllLeads;

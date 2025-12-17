@@ -1,5 +1,11 @@
+import TeamOverview from "@/components/pages/dashboard/teamLeader/teamOverview/TeamOverview";
+
 const TeamOverviewPage = () => {
-  return <div>this is team overview page</div>;
+  return (
+    <section>
+      <TeamOverview />
+    </section>
+  );
 };
 
 export default TeamOverviewPage;
