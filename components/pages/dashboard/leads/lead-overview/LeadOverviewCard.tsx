@@ -1,13 +1,12 @@
 "use client";
+
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-import { Button } from "@/components/ui/button";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ArrowUpRight,
-  Box,
-  Briefcase,
-  Plus,
+  Boxes,
+  GalleryVertical,
+  MoveUpRight,
   User,
 } from "lucide-react";
 import { useState } from "react";
@@ -16,8 +15,9 @@ const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 
 const stats = [
   {
-    icon: Box,
-    label: "Active Combo",
+    icon: Boxes,
+
+    label: "Total Leads",
     value: "128",
     change: 36.8,
     isPositive: true,
@@ -25,31 +25,31 @@ const stats = [
   },
   {
     icon: User,
-    label: "Total Sales",
+    label: "New Today",
     value: "512",
     change: 36.8,
     isPositive: false,
     highlight: false,
   },
   {
-    icon: Briefcase,
-    label: "Revenue Generated",
-    value: "120.4k",
-    change: 36.8,
-    isPositive: true,
-    highlight: true,
-  },
-  {
-    icon: ArrowUpRight,
-    label: "Avg. Discount",
-    value: "25%",
+    icon: GalleryVertical,
+    label: "Unassigned",
+    value: "12",
     change: 36.8,
     isPositive: true,
     highlight: false,
   },
+  {
+    icon: MoveUpRight,
+    label: "Assigned",
+    value: "85",
+    change: 36.8,
+    isPositive: true,
+    highlight: true,
+  },
 ];
 
-const ComboOverView = () => {
+const LeadOverviewCard = () => {
   const [activeFilter, setActiveFilter] = useState("1Y");
   return (
     <div className="space-y-6 w-full mx-auto">
@@ -121,7 +121,7 @@ const ComboOverView = () => {
                   showBG={false}
                   shadowIntensity="xxs"
                 >
-                  <div className="flex justify-center items-center px-2 py-1.5 gap-1">
+                  <div className="bg-[rgba(0,166,86,0.05)] text-success flex justify-center items-center px-2 py-1.5 gap-1 ">
                     {stat.isPositive ? (
                       <ArrowUpIcon className="w-3 h-3" />
                     ) : (
@@ -133,11 +133,26 @@ const ComboOverView = () => {
                       }`}
                     >
                       {stat.change}
-                    </span>{" "}
+                    </span>
                     %
                   </div>
                 </LiquidGlass>
-                <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                {stat.label === "Total Teams" && (
+                  <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                )}
+                {stat.label === "New Today" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Requires attention
+                  </span>
+                )}
+                {stat.label === "Unassigned" && (
+                  <span className="text-[#EBEBEB] text-sm">Need to assign</span>
+                )}
+                {stat.label === "Assigned" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Lead to Customer
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -147,4 +162,4 @@ const ComboOverView = () => {
   );
 };
 
-export default ComboOverView;
+export default LeadOverviewCard;

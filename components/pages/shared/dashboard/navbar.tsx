@@ -84,7 +84,11 @@ const Navbar: React.FC = () => {
       }`}
     >
       {state === "collapsed" && <SidebarTrigger />}
-      <div className="w-full flex items-center justify-between gap-2 px-4">
+      <div
+        className={`w-full flex items-center justify-between gap-2 ${
+          scrolled ? "px-4" : "px-0"
+        }`}
+      >
         <div className="w-full flex items-center justify-between gap-2">
           <div className="relative">
             <Search
