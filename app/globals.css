@@ -124,8 +124,7 @@
   }
 }
 
-.primary {
-}
+.primary {}
 
 .no-scrollbar {
   scrollbar-width: none;
@@ -139,7 +138,7 @@
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(100px);
   -webkit-backdrop-filter: blur(100px);
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1 solid rgba(255, 255, 255, 0.2);
 }
 

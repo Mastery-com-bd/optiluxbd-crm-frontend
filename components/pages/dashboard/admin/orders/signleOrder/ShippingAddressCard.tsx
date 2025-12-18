@@ -4,25 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OrderData } from "@/types/orders";
 
-interface ShippingAddressCardProps {
-    order: OrderData;
-}
 
-export function ShippingAddressCard({ order }: ShippingAddressCardProps) {
+
+export function ContactPersonCard({ order }: { order: OrderData }) {
     const {
         shipping_address_tag,
-        shipping_address_line1,
-        shipping_address_line2,
         shipping_address_city,
         shipping_address_postcode,
         customer,
     } = order || {};
 
     return (
-        <div className="bg-white dark:bg-muted p-6 rounded-xl shadow-md w-full">
+        <div className="bgGlass p-6 rounded-xl shadow-md w-full">
             {/* Title */}
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-md font-medium text-foreground">Shipping Address</h3>
+                <h3 className="text-md font-medium text-foreground">Contact Person</h3>
                 <Button variant="ghost" size="icon" className="text-muted-foreground cursor-pointer">
                     <Pencil className="w-4 h-4" />
                 </Button>
@@ -42,14 +38,6 @@ export function ShippingAddressCard({ order }: ShippingAddressCardProps) {
 
                 {/* Address Fields with Labels */}
                 <div className="text-sm text-muted-foreground space-y-1">
-                    <p>
-                        <span className="font-medium">Address Line 1:</span>{" "}
-                        {shipping_address_line1 || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium">Address Line 2:</span>{" "}
-                        {shipping_address_line2 || "N/A"}
-                    </p>
                     <p>
                         <span className="font-medium">City:</span>{" "}
                         {shipping_address_city || "N/A"}

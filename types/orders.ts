@@ -18,6 +18,7 @@ export interface Product {
   price: number;
   image_url: string,
   image_public_id: string,
+  quantity: number,
 }
 
 export interface Package {
@@ -52,15 +53,13 @@ export interface OrderData {
   shipping_address_city: string | null,
   shipping_address_post: string | null,
   shipping_address_division: string | null,
-
   agentId: number;
   customerId: number;
   productId: number | null;
   packageId: number | null;
-
   agent: Agent;
   customer: Customer;
-  product: Product | null;
+  products: [Product] | null;
   package: Package | null;
 }
 
@@ -117,8 +116,6 @@ export interface OrderItem {
   orderDate: string;
   addressId: number | null;
   status: string;
-
-  // Shipping address fields
   shipping_address_tag: string | null;
   shipping_address_line1: string | null;
   shipping_address_line2: string | null;
@@ -136,12 +133,13 @@ export interface OrderItem {
   };
 
   // Nested product (nullable)
-  product: {
+  products: {
     id: number;
     name: string;
     price: string;
     sku: string;
-  } | null;
+    image_url: string;
+  }[] | null;
 
   // Nested package (nullable)
   package: {
@@ -156,9 +154,18 @@ export interface OrderItem {
     name: string;
     status: string;
   } | null;
+
+  payment: {
+    method: string,
+    provider: string,
+    trxId: string,
+    amount: number,
+    paidAt: string,
+  }
 }
 
 export interface TProfileOrderData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   product: any;
   addressId: number | null;
   agentId: number | null;
@@ -181,7 +188,6 @@ export interface TProfileOrderData {
   shipping_address_thana: string | null;
   totalAmount: string;
 }
-
 
 export interface Address {
   id: number,
