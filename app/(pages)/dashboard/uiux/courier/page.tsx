@@ -4,7 +4,7 @@ import { CourierPatnerCards } from '@/components/pages/dashboard/couriar/courier
 
 const Page = () => {
   return (
-    <div className='space-y-7 max-w-[1132px] mx-auto'>
+    <div className='space-y-7 w-full max-w-[1132px] mx-auto'>
         <CourierOverview />
         <CourierDeliveryChart />
         <CourierPatnerCards />
