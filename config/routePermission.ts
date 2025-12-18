@@ -50,6 +50,7 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/agent/orders/my-orders": ["ORDERS VIEW OWN"],
   "/dashboard/agent/orders/create-order": ["ORDERS CREATE"],
   "/dashboard/admin/orders/top-sellers": ["ORDERS VIEW"],
+  "/dashboard/admin/orders/overview": ["ORDERS VIEW"],
   "/dashboard/admin/orders": ["ORDERS VIEW"],
 
   // role Management
@@ -76,6 +77,20 @@ export const routePermissions: Record<string, string[]> = {
   "/dashboard/leads/leaders": [
     "ALLOCATIONS ASSIGN LEADER",
     "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
+  "/dashboard/leads": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
+    "ALLOCATIONS REPORTS VIEW OWN",
+    "ALLOCATIONS VIEW OWN",
+  ],
+  "/dashboard/leads/lead-overview": [
+    "ALLOCATIONS ASSIGN LEADER",
+    "ALLOCATIONS DISTRIBUTE",
+    "ALLOCATIONS REPORTS VIEW",
     "ALLOCATIONS REPORTS VIEW OWN",
     "ALLOCATIONS VIEW OWN",
   ],
