@@ -303,7 +303,7 @@ export function OrderTable() {
                         </div>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
-                        {order?.product?.sku}
+                        {/* {order?.products?.sku} */} sku
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
                         {order?.customer?.name}

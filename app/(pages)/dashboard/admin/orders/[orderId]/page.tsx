@@ -10,8 +10,8 @@ import Loading from "../../../customers/loading";
 import { Card, CardHeader } from "@/components/ui/card";
 import { OrderInformationSection } from "@/components/pages/dashboard/admin/orders/signleOrder/OrderInformationSection";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import TrackOrderCard from "@/components/pages/dashboard/admin/orders/signleOrder/TrackOrderCard";
+import OrderDetailsPDF from "@/components/pages/dashboard/admin/orders/signleOrder/OrderDetailsPDF";
 
 const SingleProductPage = () => {
   const { orderId } = useParams();
@@ -35,12 +35,13 @@ const SingleProductPage = () => {
           <h3 className="mb-3 text-xl font-bold">Orders Details</h3>
           <p className="text-gray-400">OrderID ORD-{order?.id}  .placed on {formattedDate} </p>
         </div>
-        <div className="">
-          <TrackOrderCard  />
+        <div className="flex gap-3">
+          <TrackOrderCard />
+          <OrderDetailsPDF order={order} />
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full justify-between gap-6 my-4">
-        <div className="lg:w-[70%] ">
+        <div className="lg:w-[70%]">
           <Card className="bgGlass">
             <OrderInformationSection order={order} />
           </Card>

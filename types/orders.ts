@@ -139,6 +139,7 @@ export interface OrderItem {
     price: string;
     sku: string;
     image_url: string;
+    quantity: number,
   }[] | null;
 
   // Nested package (nullable)
