@@ -14,7 +14,7 @@ import {
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
 import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
-import AllLeadsTable from "./AllLeadsTable";
+import AssignLeadsTable from "../../teamLeader/assignleades/AssignLeadsTable";
 
 const AllLeads = () => {
   const [filters, setFilters] = useState({
@@ -182,7 +182,7 @@ const AllLeads = () => {
       </div>
 
       {/* all leads table */}
-      <AllLeadsTable />
+      <AssignLeadsTable />
 
       <div className="flex items-center justify-end">
         <div className="flex items-center gap-6">

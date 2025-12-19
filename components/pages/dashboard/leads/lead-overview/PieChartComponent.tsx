@@ -1,14 +1,5 @@
 "use client";
-import { Label, Pie, PieChart, Sector } from "recharts";
-import { type PieSectorDataItem } from "recharts/types/polar/Pie";
-import { CardDescription, CardTitle } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartStyle,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { type ChartConfig } from "@/components/ui/chart";
 import {
   Select,
   SelectContent,
@@ -17,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMemo, useState } from "react";
+import ReusablePieChart from "@/components/ui/ReusablePieChart";
 
 const chartData = [
   { name: "Referral", value: 25, fill: "#1EAAE7" },
@@ -35,23 +27,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const PieChartComponent = () => {
-  const id = "pie-interactive";
-
-  // Use the first category as default
   const [activeCategory, setActiveCategory] = useState(chartData[0].name);
-
-  // Index of active slice
-  const activeIndex = useMemo(
-    () => chartData.findIndex((item) => item.name === activeCategory),
-    [activeCategory]
-  );
-
-  // All category names for dropdown
   const categories = useMemo(() => chartData.map((item) => item.name), []);
+
   return (
     <div className="space-y-4">
-      <ChartStyle id={id} config={chartConfig} />
-
       {/* header */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Lead Source</h1>
@@ -90,80 +70,14 @@ const PieChartComponent = () => {
         </Select>
       </div>
 
-      {/* Pie Chart */}
-      <ChartContainer
-        id={id}
-        config={chartConfig}
-        className=" aspect-square w-full p-0 shadow-none"
-      >
-        <PieChart>
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent hideLabel />}
-          />
-
-          <Pie
-            data={chartData}
-            dataKey="value"
-            nameKey="name"
-            innerRadius={90}
-            activeIndex={activeIndex}
-            activeShape={({
-              outerRadius = 0,
-              innerRadius = 0,
-              ...props
-            }: PieSectorDataItem) => {
-              const innerExtra = 24;
-              const outerExtra = 20;
-              const strokeWidth = 8;
-
-              return (
-                <g>
-                  <Sector
-                    {...props}
-                    innerRadius={innerRadius - innerExtra}
-                    outerRadius={outerRadius + outerExtra + strokeWidth / 2}
-                    stroke="#fff"
-                    strokeWidth={strokeWidth}
-                  />
-                </g>
-              );
-            }}
-          >
-            <Label
-              content={({ viewBox }) => {
-                if (!viewBox || !("cx" in viewBox && "cy" in viewBox))
-                  return null;
-
-                const activeItem = chartData[activeIndex];
-
-                return (
-                  <text
-                    x={viewBox.cx}
-                    y={viewBox.cy}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    className="fill-foreground text-3xl"
-                  >
-                    {activeItem.value.toFixed(0)}%
-                  </text>
-                );
-              }}
-            />
-          </Pie>
-
-          {/* ✅ Center overlay circle — drawn LAST */}
-          <g>
-            <circle
-              cx="50%"
-              cy="50%"
-              r={60}
-              className="fill-white/10 stroke-white/20"
-              strokeWidth={1}
-            />
-          </g>
-        </PieChart>
-      </ChartContainer>
+      <ReusablePieChart
+        id="pie-interactive"
+        chartData={chartData}
+        valueKey="value"
+        nameKey="name"
+        activeCategoryKey="name"
+        activeCategory={activeCategory}
+      />
     </div>
   );
 };
