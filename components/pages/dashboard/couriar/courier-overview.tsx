@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Package, RotateCcw, Truck, Users } from "lucide-react";
 import { OverviewCard } from "../shared/overviewCard";
@@ -39,11 +39,7 @@ const stats = [
 ];
 
 const CourierOverview = () => {
-  return (
-    <div>
-      <OverviewCard stats={stats} />
-    </div>
-  );
+  return <OverviewCard stats={stats} />;
 };
 
 export default CourierOverview;
