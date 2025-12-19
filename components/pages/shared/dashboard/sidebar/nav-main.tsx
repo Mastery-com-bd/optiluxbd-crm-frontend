@@ -102,12 +102,10 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                           <SidebarMenuSubButton asChild>
                             <Button
                               variant={isActive ? "yellow" : "default"}
-                              className="flex items-center justify-start  text-base bg-transparent hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 hover:text-white border-none"
+                              className="flex items-center justify-start text-base bg-transparent hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 border-none hover:text-white w-full"
                             >
-                              <Link href={subItem.path!}>
-                                <span className="text-sm group-data-[collapsible=icon]:hidden">
-                                  {subItem.title}
-                                </span>
+                              <Link href={subItem.path!} className=" w-full ">
+                                {subItem.title}
                               </Link>
                             </Button>
                           </SidebarMenuSubButton>

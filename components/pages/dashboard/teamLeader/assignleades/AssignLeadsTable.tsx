@@ -30,8 +30,8 @@ type TLeadsData = {
 };
 
 type TLeadsTableProps = {
-  selectedLeads: string[];
-  setSelectedLeads: Dispatch<SetStateAction<string[]>>;
+  selectedLeads?: string[];
+  setSelectedLeads?: Dispatch<SetStateAction<string[]>>;
 };
 
 const AssignLeadsTable = ({
@@ -142,7 +142,7 @@ const AssignLeadsTable = ({
     },
   ];
 
-  const allSelected = selectedLeads.length === leadsdata.length;
+  const allSelected = selectedLeads?.length === leadsdata.length;
 
   return (
     <div className="overflow-x-auto w-full ">
@@ -152,15 +152,18 @@ const AssignLeadsTable = ({
             <TableHead first>
               <div className="flex items-center justify-between px-6">
                 {/* Select all checkbox */}
-                <Checkbox
-                  checked={allSelected}
-                  onCheckedChange={(checked) => {
-                    setSelectedLeads(
-                      checked ? leadsdata.map((l) => l.leadId) : []
-                    );
-                  }}
-                  className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
-                />
+                {selectedLeads && setSelectedLeads && (
+                  <Checkbox
+                    checked={allSelected}
+                    onCheckedChange={(checked) => {
+                      setSelectedLeads(
+                        checked ? leadsdata.map((l) => l.leadId) : []
+                      );
+                    }}
+                    className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
+                  />
+                )}
+
                 <span className="text-left text-xs font-semibold uppercase text-muted-foreground">
                   Lead ID
                 </span>
@@ -189,17 +192,20 @@ const AssignLeadsTable = ({
             <TableRow key={i} className="group">
               <TableCell>
                 <div className="text-sm flex items-center justify-between w-full px-8">
-                  <Checkbox
-                    checked={selectedLeads.includes(lead.leadId)}
-                    onCheckedChange={(checked) => {
-                      setSelectedLeads((prev) =>
-                        checked
-                          ? [...prev, lead.leadId]
-                          : prev.filter((id) => id !== lead.leadId)
-                      );
-                    }}
-                    className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
-                  />
+                  {selectedLeads && setSelectedLeads && (
+                    <Checkbox
+                      checked={selectedLeads.includes(lead.leadId)}
+                      onCheckedChange={(checked) => {
+                        setSelectedLeads((prev) =>
+                          checked
+                            ? [...prev, lead.leadId]
+                            : prev.filter((id) => id !== lead.leadId)
+                        );
+                      }}
+                      className="h-4 w-4 rounded-none border border-white/30 data-[state=checked]:border-brand [&>span]:flex [&>span]:items-center [&>span]:justify-center [&_svg]:h-3 [&_svg]:w-3 data-[state=checked]:text-brand cursor-pointer"
+                    />
+                  )}
+
                   {lead?.leadId}
                 </div>
               </TableCell>

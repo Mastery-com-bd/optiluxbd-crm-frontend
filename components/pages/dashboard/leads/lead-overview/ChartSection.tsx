@@ -34,8 +34,8 @@ const ChartSection = () => {
         {/* main content */}
         <div className=" w-full h-full rounded-3xl ">
           <PieChartComponent />
-          <div className="w-full">
-            <div className="grid grid-cols-2 gap-1 mx-auto">
+          <div className="w-full flex justify-center ">
+            <div className="grid grid-cols-2 space-x-10">
               <p className="flex items-center gap-1">
                 <span className="h-4 w-4 rounded-full bg-[#1EAAE7]" />
                 <span className="text-text-secondary font-medium">
