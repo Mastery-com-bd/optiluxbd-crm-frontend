@@ -20,15 +20,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { motion } from "framer-motion";
-import {
-  LayoutDashboard,
-  LogIn,
-  LogOut,
-  Menu,
-  MoonIcon,
-  SunIcon,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,7 +30,7 @@ export default function Navbar() {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
-  const { setTheme } = useTheme();
+  // const { setTheme } = useTheme();
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
 
@@ -151,7 +143,7 @@ export default function Navbar() {
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
             <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
-              <button
+              {/* <button
                 onClick={() => {
                   setTheme("light");
                   console.log("clicked sun");
@@ -161,7 +153,6 @@ export default function Navbar() {
               >
                 <SunIcon className="w-6 h-6" />
               </button>
-              <NotificationBell />
               <button
                 onClick={() => {
                   setTheme("dark");
@@ -171,7 +162,8 @@ export default function Navbar() {
                 aria-label="Switch to dark mode"
               >
                 <MoonIcon className="w-6 h-6" />
-              </button>
+              </button> */}
+              <NotificationBell />
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -237,7 +229,7 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
+            {/* <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
               <button
                 onClick={() => {
                   setTheme("light");
@@ -258,7 +250,7 @@ export default function Navbar() {
               >
                 <MoonIcon className="w-6 h-6" />
               </button>
-            </div>
+            </div> */}
             {user ? (
               <>
                 <Link href={dashboardRoute}>
