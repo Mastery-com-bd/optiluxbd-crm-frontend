@@ -2,6 +2,7 @@ import Footer from "@/components/pages/shared/home/Footer";
 import Navbar from "@/components/pages/shared/home/Navbar";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import ReactProvider from "@/provider/ReactProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -33,18 +34,18 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {/* <ThemeProvider
+          <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
-          </ThemeProvider> */}
-          <ServiceWorkerRegistration />
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster richColors position="top-center" />
+            <ServiceWorkerRegistration />
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster richColors position="top-center" />
+          </ThemeProvider>
         </body>
       </ReactProvider>
     </html>
