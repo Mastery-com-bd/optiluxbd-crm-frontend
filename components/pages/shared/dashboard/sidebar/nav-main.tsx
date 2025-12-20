@@ -13,7 +13,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
@@ -23,14 +22,17 @@ import { getPermissions } from "@/utills/getPermissionAndRole";
 import { getSidebarRoutes } from "@/utills/getSidebarRoutes";
 import { NavRoute } from "@/constants/CRM_Navigation";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { matchRoute } from "@/utills/matchRoute";
+
+import SubItemButton from "@/components/ui/SubItemButton";
 
 export function NavMain({ items }: { items: NavRoute[] }) {
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
   const visibleRoutes = getSidebarRoutes(items, role, permissions);
   const pathname = usePathname();
+
+  // Show effect if active OR hovered
 
   return (
     <SidebarGroup>
@@ -94,21 +96,16 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                   <SidebarMenuSub>
                     {item.children?.map((subItem) => {
                       const isActive = matchRoute(pathname, subItem.path);
+
                       return (
                         <SidebarMenuSubItem
                           key={subItem.title}
                           active={isActive}
                         >
-                          <SidebarMenuSubButton asChild>
-                            <Button
-                              variant={isActive ? "yellow" : "default"}
-                              className="flex items-center justify-start text-base bg-transparent hover:bg-linear-to-t hover:from-[#CB9228] hover:to-white/10 border-none hover:text-white w-full"
-                            >
-                              <Link href={subItem.path!} className=" w-full ">
-                                {subItem.title}
-                              </Link>
-                            </Button>
-                          </SidebarMenuSubButton>
+                          <SubItemButton
+                            isActive={isActive}
+                            subItem={subItem}
+                          />
                         </SidebarMenuSubItem>
                       );
                     })}
