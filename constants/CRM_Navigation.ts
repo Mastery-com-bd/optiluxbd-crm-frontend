@@ -191,6 +191,11 @@ export const crmRoutes: NavRoute[] = [
         permissions: ["ORDERS VIEW"],
       },
       {
+        title: "Payments",
+        path: "/dashboard/admin/orders/payments",
+        permissions: ["ORDERS VIEW"],
+      },
+      {
         title: "My Orders",
         path: "/dashboard/agent/orders/my-orders",
         permissions: ["ORDERS VIEW OWN"],

@@ -18,7 +18,7 @@ export function OrderSummarySection({ order }: { order: OrderItem }) {
                                 <div className="flex items-center gap-3 col-span-2">
                                     <div className="w-10 h-10 relative rounded overflow-hidden bg-white">
                                         <Image
-                                            src={product?.image_url} 
+                                            src={product?.image_url}
                                             alt={product?.name ?? "Product"}
                                             fill
                                             className="object-contain"
@@ -47,12 +47,12 @@ export function OrderSummarySection({ order }: { order: OrderItem }) {
                 {/* Order Summary Footer Styled Like Image */}
                 <div className="flex justify-between text-sm mb-2">
                     <span className="">Subtotal</span>
-                    <span>৳ {order.totalAmount}</span>
+                    <span>৳ {order?.totalAmount}</span>
                 </div>
 
                 <div className="flex justify-between text-sm mb-2">
                     <span className="">Discount</span>
-                    <span className="text-red-500">-৳ {order.commission}</span>
+                    <span className="text-red-500">-৳ {order?.commission}</span>
                 </div>
 
                 <div className="flex justify-between text-sm mb-1">
@@ -66,7 +66,7 @@ export function OrderSummarySection({ order }: { order: OrderItem }) {
                 <hr className="my-3 border-border" />
                 <div className="flex justify-between font-semibold text-base">
                     <span>Total</span>
-                    <span>৳ {order.totalAmount - order.commission + 100}</span>
+                    <span>৳ {Number(order?.totalAmount) - Number(order?.commission) + 100}</span>
                 </div>
             </div>
         </Card>

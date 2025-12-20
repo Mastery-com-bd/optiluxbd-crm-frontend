@@ -37,7 +37,7 @@ const SingleProductPage = () => {
         </div>
         <div className="flex gap-3">
           <TrackOrderCard />
-          <OrderDetailsPDF order={order} />
+          <OrderDetailsPDF />
         </div>
       </div>
       <div className="flex flex-col lg:flex-row w-full justify-between gap-6 my-4">

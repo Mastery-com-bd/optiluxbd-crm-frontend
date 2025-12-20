@@ -1,7 +1,10 @@
+import OrderDetail from "@/components/PDF/OrderDetails";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from "@/components/ui/table";
 import { OrderItem } from "@/types/orders";
+import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer';
+
 
 const OrderDetailsPDF = () => {
     const order: OrderItem = {
@@ -24,6 +27,7 @@ const OrderDetailsPDF = () => {
         shipping_address_postcode: "10001",
         shipping_address_geo_lat: 40.7128,
         shipping_address_geo_lng: -74.0060,
+        paymentStatus: "paid",
         customer: {
             id: 201,
             name: "John Doe",
@@ -77,8 +81,22 @@ const OrderDetailsPDF = () => {
                 <div className="flex justify-between">
                     <h3>Order Details</h3>
                     <div className="flex gap-3">
-                        <Button variant={"yellow"} className="cursor-pointer">Export PDF</Button>
-                        <Button variant={"purple"} className="cursor-pointer">Print</Button>
+                        <div className="flex gap-3">
+                            <PDFDownloadLink
+                                document={<OrderDetail order={order} />}
+                                fileName="order_details.pdf"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                {({ loading }) =>
+                                    loading ? (
+                                        <Button variant={"yellow"} className="cursor-pointer">Loading PDF...</Button>
+                                    ) : (
+                                        <Button variant={"yellow"} className="cursor-pointer">Export PDF</Button>
+                                    )
+                                }
+                            </PDFDownloadLink>
+                            <Button variant={"purple"} className="cursor-pointer">Print</Button>
+                        </div>
                     </div>
                 </div>
                 <div>

@@ -120,12 +120,12 @@ const ReturnAndRefunds = () => {
     ];
 
     return (
-        <div>
+        <div className="w-full">
             <h3 className={`${pageHeader.pageHeader}`}>Return & Refunds</h3>
             <p className={`${pageHeader.pageDes}`}>Process customer and refund request</p>
-            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
-                <div className="overflow-x-auto w-full">
-                    <Table className="w-full">
+            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 border-none rounded-none! my-6">
+                <div className="overflow-x-auto">
+                    <Table className="">
                         <TableHeader>
                             <TableRow>
                                 {keys.map((label, ind) => (
@@ -142,62 +142,55 @@ const ReturnAndRefunds = () => {
                         </TableHeader>
                         <TableBody>
                             {refundRequest.map((refund) => (
-                                <TableRow
-                                    key={refund.id}
-                                    className="border-muted hover:bg-muted/50 transition-colors"
-                                >
-                                    <TableCell className="px-4 py-3">
-                                        <div>
-                                            <div className="flex items-center gap-3">
-                                                <Image
-                                                    src={
-                                                        refund.image_url ||
-                                                        "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                                                    }
-                                                    alt={refund.products}
-                                                    width={48}
-                                                    height={48}
-                                                    className="w-12 h-12 rounded-lg object-cover"
-                                                />
-                                                <div>
-                                                    <p className="font-medium">{refund.products}</p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        by {refund.customer}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-sm text-center">
-                                        {refund.orderId}
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-sm text-center">
-                                        {refund.customer}
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-sm font-medium text-center">
-                                        {refund.items}
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-sm font-semibold text-center">
-                                        {refund.price}
-                                    </TableCell>
+                                <TableRow key={refund.id} className="border-muted hover:bg-muted/50 transition-colors">
+                                    {/* Request ID */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.id}</TableCell>
+
+                                    {/* Order ID */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.orderId}</TableCell>
+
+                                    {/* Customer */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.customer}</TableCell>
+
+                                    {/* Products with image */}
                                     <TableCell className="px-4 py-3 text-center">
-                                        <span className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${refund.status === "ACTIVE"
-                                                ? "text-green-500"
-                                                : "text-red-500"
-                                            }`}
+                                        {refund.products}
+                                    </TableCell>
+
+                                    {/* Items */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.items}</TableCell>
+
+                                    {/* Reason */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.reason}</TableCell>
+
+                                    {/* Status with color badge */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">
+                                        <span
+                                            className={`px-3 py-1 bgGlass text-xs  ${refund.status === "Pending"
+                                                ? "text-yellow-600"
+                                                : refund.status === "Refunded"
+                                                    ? " text-green-600"
+                                                    : " text-red-600"
+                                                }`}
                                         >
-                                            {refund.status.toLowerCase()}
+                                            {refund.status}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-center">
+
+                                    {/* Date */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">
                                         {new Date(refund.created_at).toLocaleDateString("en-US", {
                                             year: "numeric",
                                             month: "short",
                                             day: "2-digit",
                                         })}
                                     </TableCell>
-                                    <TableCell className="px-4 py-3 text-center ">
+
+                                    {/* Refund Amount */}
+                                    <TableCell className="px-4 py-3 text-sm text-center">{refund.price}</TableCell>
+
+                                    {/* Action */}
+                                    <TableCell className="px-4 py-3 text-center">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger className="cursor-pointer">
                                                 <MoreVertical className="h-4 w-4" />
@@ -206,7 +199,9 @@ const ReturnAndRefunds = () => {
                                                 align="end"
                                                 className="w-[180px] flex flex-col "
                                             >
-                                                <Link href={`/dashboard/admin/refunds/all-refunds/${refund.id}`}>
+                                                <Link
+                                                    href={`/dashboard/admin/orders/refunds/${refund?.id}`}
+                                                >
                                                     <DropdownMenuItem className="cursor-pointer">
                                                         <Eye className="w-4 h-4 mr-2" /> view
                                                     </DropdownMenuItem>
@@ -217,10 +212,10 @@ const ReturnAndRefunds = () => {
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem
-                                                    onClick={() => {
-                                                        // setDeleterefundId(refund.id);
-                                                        // setDeleteDialogOpen(true);
-                                                    }}
+                                                    // onClick={() => {
+                                                    //     setDeleteProductId(product.id);
+                                                    //     setDeleteDialogOpen(true);
+                                                    // }}
                                                     className="cursor-pointer"
                                                 >
                                                     <Trash2 className="w-4 h-4 text-destructive mr-2" />

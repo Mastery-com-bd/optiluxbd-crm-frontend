@@ -116,6 +116,7 @@ export interface OrderItem {
   orderDate: string;
   addressId: number | null;
   status: string;
+  paymentStatus: string,
   shipping_address_tag: string | null;
   shipping_address_line1: string | null;
   shipping_address_line2: string | null;
