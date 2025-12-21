@@ -1,30 +1,30 @@
-const YellowSVGForButton = () => {
+const NotificationSvgComponent = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="132"
-      height="48"
-      viewBox="0 0 132 48"
+      width="48"
+      height="46"
+      viewBox="0 0 48 46"
       fill="none"
       className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover z-10 rounded-xl"
     >
-      <g filter="url(#filter0_f_1636_17207)">
+      <g filter="url(#filter0_f_1636_7014)">
         <ellipse
-          cx="82"
-          cy="39"
-          rx="85"
-          ry="11"
-          fill="#FFB13F"
+          cx="24"
+          cy="37.5996"
+          rx="24"
+          ry="9"
+          fill="#FF9800"
           fillOpacity="1"
         />
       </g>
       <defs>
         <filter
-          id="filter0_f_1636_17207"
-          x="-22.5"
-          y="-8.5"
-          width="209"
-          height="95"
+          id="filter0_f_1636_7014"
+          x="-28.6"
+          y="-0.000391006"
+          width="105.2"
+          height="75.2"
           filterUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
@@ -36,8 +36,8 @@ const YellowSVGForButton = () => {
             result="shape"
           />
           <feGaussianBlur
-            stdDeviation="19.25"
-            result="effect1_foregroundBlur_1636_17207"
+            stdDeviation="14.3"
+            result="effect1_foregroundBlur_1636_7014"
           />
         </filter>
       </defs>
@@ -45,4 +45,4 @@ const YellowSVGForButton = () => {
   );
 };
 
-export default YellowSVGForButton;
+export default NotificationSvgComponent;
