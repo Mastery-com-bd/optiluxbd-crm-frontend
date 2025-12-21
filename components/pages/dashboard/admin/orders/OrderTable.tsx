@@ -134,7 +134,7 @@ export function OrderTable() {
     "Actions",
   ];
   return (
-    <div className="p-4  rounded-xl  shadow-sm mt-5 transition-all">
+    <div className="rounded-xl  shadow-sm mt-5 transition-all">
       {/* process bulk order */}
       <PlaceBulkOrder
         isOpen={isDialogOpen}
@@ -267,7 +267,7 @@ export function OrderTable() {
             <Loading />
           </div>
         ) : (
-          <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+          <Card className="p-0 bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
             <div className="overflow-x-auto w-full">
               <Table className="w-full">
                 <TableHeader>
