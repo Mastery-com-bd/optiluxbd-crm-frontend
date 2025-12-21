@@ -1,4 +1,3 @@
-import React from "react";
 
 const PageHeader = ({
   title,
@@ -8,10 +7,11 @@ const PageHeader = ({
   description: string;
 }) => {
   return (
-    <div>
-    
-      <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
-      <p className="text-[#8a8490] text-base">{description}</p>
+    <div className="flex items-center justify-between">
+      <div>
+        <h1 className="text-[32px] font-semibold text-white mb-2">{title}</h1>
+        <p className="text-[#A1A1A1] text-base font-normal">{description}</p>
+      </div>
     </div>
   );
 };

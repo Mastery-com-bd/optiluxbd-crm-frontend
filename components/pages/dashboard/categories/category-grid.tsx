@@ -1,5 +1,8 @@
-import { Search } from "lucide-react"
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Eye, Search } from "lucide-react";
+import Link from "next/link";
 
 const categories = [
   {
@@ -22,25 +25,42 @@ const categories = [
     name: "Eye Ware & Sunglass",
     image: "/category2.png",
   },
-]
+];
 
 export function CategoryGrid() {
   return (
-    <div className="space-y-6 w-full max-w-[1135px] mt-10">
+    <div className="space-y-6 w-full  mt-10">
       {/* Header with search and link */}
       <div className="flex items-center justify-between">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
+          <Input
+            icon={<Search className="w-4 h-4" />}
             type="text"
             placeholder="Search In category"
-            className="bg-[#1a1a2e]/80 text-gray-300 placeholder-gray-500 rounded-full pl-11 pr-6 py-3 w-[280px] md:w-[400px] border-0 outline-none focus:ring-1 focus:ring-purple-500/50"
+            className=" text-gray-300 placeholder-gray-500 w-[280px] outline-none"
           />
         </div>
-        <button className="relative text-white font-medium">
-          See all Category
-          <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-linear-to-r from-orange-500 to-amber-500 rounded-full" />
-        </button>
+        <Link href={"/dashboard/categories/all"} className="relative">
+          <div className="relative">
+            <LiquidGlass
+              glowIntensity="none"
+              borderRadius="10px"
+              className="w-fit"
+            >
+              <Button
+                style={{
+                  backgroundImage: "url('/svg/button-pink-background.svg')",
+                  backgroundSize: "cover",
+                }}
+                className="rounded-xl bg-transparent border-none"
+              >
+                See all Category
+              </Button>
+              <div className="w-full absolute bottom-0 left-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-[#AA00FF] to-transparent h-[1.5px]" />
+            </LiquidGlass>
+          </div>
+        </Link>
       </div>
 
       {/* Category Grid */}
@@ -55,18 +75,36 @@ export function CategoryGrid() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-function CategoryCard({ category }: { category: { id: number; name: string; image: string } }) {
+function CategoryCard({
+  category,
+}: {
+  category: { id: number; name: string; image: string };
+}) {
   return (
-    <LiquidGlass borderRadius="12px" shadowIntensity="xxs" className="rounded-2xl p-6 cursor-pointer hover:scale-[1.02] transition-transform">
+    <LiquidGlass
+      borderRadius="12px"
+      shadowIntensity="xxs"
+      className="rounded-2xl p-6 cursor-pointer hover:scale-[1.02] transition-transform"
+    >
       {/* Inner bordered image container */}
-      <LiquidGlass borderRadius="12px" shadowIntensity="xxs" className="border border-gray-700/50 rounded-xl p-6 flex items-center justify-center min-h-[140px] bg-white/10">
-        <img src={category.image || "/placeholder.svg"} alt={category.name} className="h-24 w-24 object-contain" />
+      <LiquidGlass
+        borderRadius="12px"
+        shadowIntensity="xxs"
+        className="border border-gray-700/50 rounded-xl p-6 flex items-center justify-center min-h-[140px] bg-white/10"
+      >
+        <img
+          src={category.image || "/placeholder.svg"}
+          alt={category.name}
+          className="h-24 w-24 object-contain"
+        />
       </LiquidGlass>
       {/* Category name */}
-      <h3 className="text-white font-semibold text-center mt-4">{category.name}</h3>
+      <h3 className="text-white font-semibold text-center mt-4">
+        {category.name}
+      </h3>
     </LiquidGlass>
-  )
+  );
 }

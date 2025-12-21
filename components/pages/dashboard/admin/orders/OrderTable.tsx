@@ -134,7 +134,7 @@ export function OrderTable() {
     "Actions",
   ];
   return (
-    <div className="p-4  rounded-xl  shadow-sm mt-5 transition-all">
+    <div className="rounded-xl  shadow-sm mt-5 transition-all">
       {/* process bulk order */}
       <PlaceBulkOrder
         isOpen={isDialogOpen}
@@ -267,7 +267,7 @@ export function OrderTable() {
             <Loading />
           </div>
         ) : (
-          <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+          <Card className="p-0 bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
             <div className="overflow-x-auto w-full">
               <Table className="w-full">
                 <TableHeader>
@@ -303,7 +303,7 @@ export function OrderTable() {
                         </div>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
-                        {order?.product?.sku}
+                        {/* {order?.products?.sku} */} sku
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
                         {order?.customer?.name}
@@ -340,7 +340,7 @@ export function OrderTable() {
                             className="w-[180px] flex flex-col "
                           >
                             <Link
-                              href={`/dashboard/admin/orders/all-orders/${order.id}`}
+                              href={`/dashboard/admin/orders/${order.id}`}
                             >
                               <DropdownMenuItem className="cursor-pointer">
                                 <Eye className="w-4 h-4 mr-2" /> view

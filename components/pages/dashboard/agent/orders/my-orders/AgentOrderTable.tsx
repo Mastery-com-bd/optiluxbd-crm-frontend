@@ -71,7 +71,8 @@ const AgentOrderTable = () => {
                                 </tr>
                             ) : (
                                 orders.map((order: OrderItem) => {
-                                    const itemLabel = order.product?.name ?? order.package?.name ?? 'N/A';
+                                    // order.product?.name ?? order.package?.name ??
+                                    const itemLabel = 'product name';
                                     const customerName = order.customer?.name ?? `Customer ${order.customerId}`;
                                     return (
                                         <tr key={order.id} className="border-b border-muted hover:bg-muted/40 transition-colors">

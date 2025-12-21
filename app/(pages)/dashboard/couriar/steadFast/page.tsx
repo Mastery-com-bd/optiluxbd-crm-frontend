@@ -1,9 +1,10 @@
-import SteadFastDashboard from '@/components/pages/dashboard/couriar/steadFast/steadFastDashboard'
+import { PathaoDashboard } from '@/components/pages/dashboard/couriar/uiux/pathao/pathaoDashboard'
+import React from 'react'
 
 const Page = () => {
   return (
     <div>
-        <SteadFastDashboard />
+       <PathaoDashboard />
     </div>
   )
 }

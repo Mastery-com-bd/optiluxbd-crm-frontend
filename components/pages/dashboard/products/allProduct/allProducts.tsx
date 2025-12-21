@@ -63,9 +63,7 @@ import {
 import ProductCart from "../productCard/ProductCart";
 
 const AllProducts = () => {
-  const user = useAppSelector(currentUser);
   const [isGridView, setIsGridView] = useState(false);
-  const { permissions } = getPermissions(user as TAuthUSer);
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "created_at",
@@ -120,30 +118,10 @@ const AllProducts = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground p-4 md:p-6 lg:p-8">
-      <div className="max-w-[1600px] mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">CRM</span>
-              <span>›</span>
-              <span>Dashboard</span>
-              <span>›</span>
-              <span>All Products</span>
-            </div>
-          </div>
-          {permissions.includes("PRODUCTS CREATE") && (
-            <Link href={"/dashboard/admin/products/add-product"}>
-              <Button className="cursor-pointer" variant="yellow">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Product
-              </Button>
-            </Link>
-          )}
-        </div>
+    <div className="bg-transparent text-foreground my-4">
+      <div className="w-full">
         {/* Filters */}
-        <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-4 md:p-5 mb-5">
+        <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
               <Input
@@ -216,7 +194,7 @@ const AllProducts = () => {
           <Loading />
         ) : (
           !isGridView ?
-            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 pt-2 border-none ">
               <div className="overflow-x-auto w-full">
                 <Table className="w-full">
                   <TableHeader>
@@ -334,7 +312,7 @@ const AllProducts = () => {
                 </Table>
               </div>
             </Card> :
-            <div className="grid grid-cols-3 gap-8 w-[1150px] mx-auto">
+            <div className="grid grid-cols-3 gap-6 w-[1150px]  my-6">
               {PRODUCTS?.map((product: Product) => (
                 <ProductCart
                   key={product.id} product={product}

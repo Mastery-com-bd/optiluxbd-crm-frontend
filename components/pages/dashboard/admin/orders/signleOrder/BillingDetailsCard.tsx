@@ -44,14 +44,14 @@ const billingData: BillingDetailsProps = {
     status: "Paid",
 }
 
-export function BillingDetailsCard() {
+export function ShippingAddressCard() {
     const statusStyle = statusMap[billingData.status]
 
     return (
-        <div className="bg-white dark:bg-muted p-6 rounded-xl shadow-md w-full ">
+        <div className="bgGlass p-6 rounded-xl shadow-md w-full ">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-md font-medium text-foreground">Billing Details</h3>
+                <h3 className="text-md font-medium text-foreground">Shipping Address</h3>
                 <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <Pencil className="w-4 h-4" />
                 </Button>
@@ -61,7 +61,7 @@ export function BillingDetailsCard() {
             <div className="mb-4">
                 <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-foreground">{billingData.customerName}</p>
-                    <Badge className="text-xs bg-blue-100 text-blue-700">Billing Address</Badge>
+                    <Badge className="text-xs bg-blue-100 text-blue-700">Shipping Address</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
                     {billingData.address.map((line, i) => (
@@ -73,10 +73,8 @@ export function BillingDetailsCard() {
                 </p>
             </div>
 
-            <hr className="my-4 border-muted" />
-
             {/* Card Info */}
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <Image
                         src="https://i.ibb.co.com/Xfx69qYG/icon-256x256.png"
@@ -94,7 +92,7 @@ export function BillingDetailsCard() {
                 </div>
 
                 <Badge className={`text-xs ${statusStyle.className}`}>{statusStyle.label}</Badge>
-            </div>
+            </div> */}
         </div>
     )
 }

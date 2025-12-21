@@ -13,12 +13,12 @@ type TButtonComponentProps = {
   buttonName?: string;
   icon?: LucideIcon;
   varient?:
-    | "green"
-    | "yellow"
-    | "red"
-    | "dark yellow"
-    | "light yellow"
-    | "default";
+  | "green"
+  | "yellow"
+  | "red"
+  | "dark yellow"
+  | "light yellow"
+  | "default";
   clasName?: string;
   borderClass?: string;
   handleSubmit?: () => Promise<void>;
@@ -58,8 +58,8 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
                 varient === "green"
                   ? "text-success"
                   : varient === "red"
-                  ? "text-[#F50F0F]"
-                  : "text-white"
+                    ? "text-[#F50F0F]"
+                    : "text-white"
               }
             />
           )}

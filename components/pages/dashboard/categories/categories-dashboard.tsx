@@ -9,9 +9,11 @@ import {
   Box,
   Briefcase,
   Plus,
-  User
+  User,
 } from "lucide-react";
 import { useState } from "react";
+import PageHeader from "../shared/pageHeader";
+import AddCategory from "./addCategory";
 
 const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 
@@ -54,15 +56,14 @@ export function CategoryOverview() {
   const [activeFilter, setActiveFilter] = useState("1Y");
 
   return (
-    <div className="space-y-6 w-full max-w-[1135px]">
+    <div className="space-y-6 w-full ">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <p className="text-gray-400 text-sm">Browse and manage All Category</p>
-        <Button className="bg-transparent border-0 text-white hover:bg-white/10 relative group">
-          <Plus className="w-4 h-4 mr-2" />
-          Create New Category
-          <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-orange-500 to-orange-300" />
-        </Button>
+        <PageHeader
+          title="Category Overview"
+          description="Browse and manage All Category"
+        />
+         <AddCategory />
       </div>
 
       {/* Overview Card */}
@@ -88,11 +89,10 @@ export function CategoryOverview() {
                 className=""
               >
                 <button
-                  className={`px-4 py-2 text-sm font-semibold ${
-                    activeFilter !== filter
+                  className={`px-4 py-2 text-sm font-semibold ${activeFilter !== filter
                       ? " text-gray-400"
                       : "text-[#F3F3F3]"
-                  }`}
+                    }`}
                 >
                   {filter}
                 </button>
@@ -128,14 +128,25 @@ export function CategoryOverview() {
 
               {/* Change */}
               <div className="flex items-center gap-2">
-                <LiquidGlass borderRadius="10px" showBG={false} shadowIntensity="xxs">
+                <LiquidGlass
+                  borderRadius="10px"
+                  showBG={false}
+                  shadowIntensity="xxs"
+                >
                   <div className="flex justify-center items-center px-2 py-1.5 gap-1">
                     {stat.isPositive ? (
                       <ArrowUpIcon className="w-3 h-3" />
                     ) : (
                       <ArrowDownIcon className="w-3 h-3" />
                     )}
-                    <span className={`${stat.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"}`}>{stat.change}</span> %
+                    <span
+                      className={`${
+                        stat.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"
+                      }`}
+                    >
+                      {stat.change}
+                    </span>{" "}
+                    %
                   </div>
                 </LiquidGlass>
                 <span className="text-[#EBEBEB] text-sm">vs last year</span>
