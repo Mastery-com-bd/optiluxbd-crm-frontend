@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import ImageIcon from "@/public/icons/image-icon";
 import Image from "next/image";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const AddAgent = () => {
   const [isActive, setIsActive] = React.useState(false);
@@ -21,13 +22,25 @@ const AddAgent = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="rounded-xl bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl"
-        >
-          <Plus className="size-4" />
-          Add New Agent
-        </Button>
+        <div className="relative">
+          <LiquidGlass
+            glowIntensity="none"
+            borderRadius="10px"
+            className="w-fit"
+          >
+            <Button
+              style={{
+                backgroundImage: "url('/svg/button-background.svg')",
+                backgroundSize: "cover",
+              }}
+              className="rounded-xl bg-transparent border-none"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Agent
+            </Button>
+            <div className="w-full absolute bottom-0 left-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-[#FFB13F] to-transparent h-[1.5px]" />
+          </LiquidGlass>
+        </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-white/7 border-white/10 backdrop-blur-2xl">
         <div className="p-8 space-y-8">

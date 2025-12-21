@@ -1,11 +1,12 @@
-import PathaoDashboard from "@/components/pages/dashboard/couriar/pathao/pathaoDashboard";
+import { PathaoDashboard } from '@/components/pages/dashboard/couriar/uiux/pathao/pathaoDashboard'
+import React from 'react'
 
 const Page = () => {
   return (
     <div>
-      <PathaoDashboard />
+       <PathaoDashboard />
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page
