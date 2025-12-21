@@ -1,3 +1,4 @@
+import LeadsTitleIcon from "@/components/svgIcon/LeadsTitleIcon";
 import {
   Package,
   ShoppingCart,
@@ -253,8 +254,8 @@ export const crmRoutes: NavRoute[] = [
 
   // leads management route
   {
-    title: "Leads Magement",
-    icon: Users2,
+    title: "Leads",
+    icon: LeadsTitleIcon,
     permissions: [
       "ALLOCATIONS ASSIGN LEADER",
       "ALLOCATIONS DISTRIBUTE",
@@ -264,6 +265,30 @@ export const crmRoutes: NavRoute[] = [
     ],
     roles: ["ADMIN", "AGENT", "TEAM_LEADER"],
     children: [
+      {
+        title: "Lead Overview",
+        path: "/dashboard/leads/lead-overview",
+        roles: ["ADMIN", "Agent"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
+      {
+        title: "All Leads",
+        path: "/dashboard/leads",
+        roles: ["ADMIN", "Agent"],
+        permissions: [
+          "ALLOCATIONS ASSIGN LEADER",
+          "ALLOCATIONS DISTRIBUTE",
+          "ALLOCATIONS REPORTS VIEW",
+          "ALLOCATIONS REPORTS VIEW OWN",
+          "ALLOCATIONS VIEW OWN",
+        ],
+      },
       {
         title: "All Teams",
         path: "/dashboard/leads/admin/all-teams",
@@ -276,18 +301,6 @@ export const crmRoutes: NavRoute[] = [
           "ALLOCATIONS VIEW OWN",
         ],
       },
-      // {
-      //   title: "Customer Distribution",
-      //   path: "/dashboard/leads/admin/assign-customer",
-      //   roles: ["ADMIN"],
-      //   permissions: [
-      //     "ALLOCATIONS ASSIGN LEADER",
-      //     "ALLOCATIONS DISTRIBUTE",
-      //     "ALLOCATIONS REPORTS VIEW",
-      //     "ALLOCATIONS REPORTS VIEW OWN",
-      //     "ALLOCATIONS VIEW OWN",
-      //   ],
-      // },
       {
         title: "My Team",
         path: "/dashboard/leads/leaders",

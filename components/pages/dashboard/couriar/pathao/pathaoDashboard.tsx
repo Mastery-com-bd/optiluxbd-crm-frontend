@@ -56,7 +56,7 @@ const statusBackgroundColor: Record<
   PARTIAL_DELIVERED: { bg: "bg-lime-600" }, // Lime (bright and different)
 };
 
-export default function SteadFastDashboard() {
+export default function PathaoDashboard() {
   const [page, setPage] = useState(1);
 
 
@@ -74,8 +74,6 @@ export default function SteadFastDashboard() {
 
   const { data, isLoading: couriarIsLoading } = useGetAllPathaoCouriarQuery(payload);
   const couriarData: PathaoCouriarDashboardPrpos[] = data?.data;
-
-  console.log("Pathao Couriar Data:", couriarData);
 
   const handleRefund = () => {
     toast.success("Comming Soon!");
