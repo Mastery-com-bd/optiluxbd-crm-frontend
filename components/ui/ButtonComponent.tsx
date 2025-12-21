@@ -10,7 +10,7 @@ import ButtonSvgGlow from "../svgIcon/ButtonSvgGlow";
 import YellowSVGForButton from "../svgIcon/YellowSVGForButton";
 
 type TButtonComponentProps = {
-  buttonName: string;
+  buttonName?: string;
   icon?: LucideIcon;
   varient?:
     | "green"
@@ -63,8 +63,7 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
               }
             />
           )}
-
-          <span className="text-sm">{buttonName}</span>
+          {buttonName && <span className="text-sm">{buttonName}</span>}
         </p>
 
         {/* Variant effects */}

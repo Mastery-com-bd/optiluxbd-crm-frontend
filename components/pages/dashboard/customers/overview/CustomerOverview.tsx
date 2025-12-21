@@ -136,6 +136,7 @@ const CustomerOverview = () => {
     if (num >= 50) return "bg-[rgba(255,105,0,0.4)]";
     return "bg-[rgba(251,44,54,0.4)]";
   };
+
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full">
       <div className="flex items-center justify-between">
@@ -145,44 +146,11 @@ const CustomerOverview = () => {
             Operational overview and quick actions.
           </p>
         </div>
-
         <ButtonComponent
           buttonName="Create New Team"
           icon={Plus}
           varient="dark yellow"
         />
-        {/* <button
-          className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-3 overflow-hidden`}
-        >
-          <p className="flex items-center gap-2">
-            <Plus size={18} />
-            <span className="text-sm">Create New Team</span>
-          </p>
-
-          <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
-
-          <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-            <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-          </div>
-          <CornerGlowSvg />
-        </button> */}
-
-        {/* <LiquidGlass
-          glowIntensity="xs"
-          shadowIntensity="xs"
-          borderRadius="16px"
-        >
-          <Button
-            variant="yellow"
-            className="p-3 flex rounded-2xl border-none cursor-pointer"
-          >
-            <p className="flex items-center gap-2">
-              <Plus />
-              <span className="text-[14px]">Create New Team</span>
-            </p>
-          </Button>
-        </LiquidGlass> */}
       </div>
       <div className="w-full ">
         <ComboOverView />
