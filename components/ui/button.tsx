@@ -85,41 +85,39 @@ function Button({
       <div className="rounded-xl ">
         <span
           data-slot="button-content"
-          className="relative z-10 flex items-center "
+          className="relative z-10 flex items-center gap-2"
         >
-          {children}
+          {icon}{children}
         </span>
         <div className="absolute flex w-full bottom-0 left-1/2 -translate-x-1/2">
           <span
             className="w-1/2 h-0.5"
             style={{
-              background: `${
-                variant === "yellow"
-                  ? yellowGradient.left
-                  : variant === "purple"
+              background: `${variant === "yellow"
+                ? yellowGradient.left
+                : variant === "purple"
                   ? purpleGradient.left
                   : variant === "red"
-                  ? redGradient.left
-                  : variant === "green"
-                  ? greenGradient.left
-                  : ""
-              }`,
+                    ? redGradient.left
+                    : variant === "green"
+                      ? greenGradient.left
+                      : ""
+                }`,
             }}
           />
           <span
             className="w-1/2 h-0.5"
             style={{
-              background: `${
-                variant === "yellow"
-                  ? yellowGradient.right
-                  : variant === "purple"
+              background: `${variant === "yellow"
+                ? yellowGradient.right
+                : variant === "purple"
                   ? purpleGradient.right
                   : variant === "red"
-                  ? redGradient.right
-                  : variant === "green"
-                  ? greenGradient.right
-                  : ""
-              }`,
+                    ? redGradient.right
+                    : variant === "green"
+                      ? greenGradient.right
+                      : ""
+                }`,
             }}
           />
         </div>

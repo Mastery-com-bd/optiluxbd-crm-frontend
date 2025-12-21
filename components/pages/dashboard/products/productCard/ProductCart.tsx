@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import GreenSvgForButton from "@/components/svgIcon/GreenSvgForButton";
 import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import { Product } from "@/types/product";
 import { Eye, Pencil, Trash } from "lucide-react";
 import Image from "next/image";
@@ -31,17 +33,34 @@ const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: Props
                 <span>SKU: {product.sku}</span>
                 <div className="flex justify-between">
                     <Link href={`/dashboard/admin/products/all-products/${product.id}`}>
-                        <Button variant={"yellow"} className="px-4 py-3 rounded-xl cursor-pointer">
-                            <Eye /> View Details
-                        </Button>
+                        <ButtonComponent
+                            buttonName="View Details"
+                            varient="yellow"
+                            clasName="p-4"
+                            icon={Eye}
+                        />
                     </Link>
 
-                    <Button variant={"green"} className="px-4 py-3 rounded-xl"><Pencil /></Button>
-                    <Button variant={"red"} onClick={() => {
-                        setDeleteProductId(product.id);
-                        setDeleteDialogOpen(true);
-                    }}
-                        className="cursor-pointer"
+                    <button
+                        className=
+                        "relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden"
+
+                    >
+                        <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+                            <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,transparent_0%,var(--color-success)_50%,transparent_100%)]" />
+                        </div>
+                        <div className="pointer-events-none">
+                            <GreenSvgForButton />
+                        </div>
+                        <Pencil />
+                    </button>
+
+                    <Button variant={"red"}
+                        onClick={() => {
+                            setDeleteProductId(product.id);
+                            setDeleteDialogOpen(true);
+                        }}
+                        className="cursor-pointer p-6! rounded-[12px]!"
                     >
                         <Trash />
                     </Button>
