@@ -303,7 +303,7 @@ export function OrderTable() {
                         </div>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
-                        {order?.product?.sku}
+                        {/* {order?.products?.sku} */} sku
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm text-center">
                         {order?.customer?.name}
@@ -340,7 +340,7 @@ export function OrderTable() {
                             className="w-[180px] flex flex-col "
                           >
                             <Link
-                              href={`/dashboard/admin/orders/all-orders/${order.id}`}
+                              href={`/dashboard/admin/orders/${order.id}`}
                             >
                               <DropdownMenuItem className="cursor-pointer">
                                 <Eye className="w-4 h-4 mr-2" /> view

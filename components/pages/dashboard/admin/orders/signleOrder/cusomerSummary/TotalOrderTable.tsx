@@ -71,7 +71,8 @@ const TotalOrderTable = () => {
                                     >
                                         <td className="px-4 py-3 font-medium">{order.id}</td>
                                         <td className="px-4 py-3">{formatDate(order.orderDate)}</td>
-                                        <td className="px-4 py-3">{order.product?.name ?? `Product ${order.productId}`}</td>
+                                        {/* {order?.product?.name ?? `Product ${order.productId}`} */}
+                                        <td className="px-4 py-3">product name</td>
                                         <td className="px-4 py-3 text-right">{order.quantity}</td>
                                         <td className="px-4 py-3 text-right">{formatCurrency(order.totalAmount)}</td>
                                         <td className="px-4 py-3 text-right">{formatCurrency(order.commission)}</td>

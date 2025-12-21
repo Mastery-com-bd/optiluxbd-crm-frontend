@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Customer } from "@/types/orders";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 type Props = {
     customer: Customer;
@@ -12,9 +13,9 @@ type Props = {
 
 export function CustomerDetailsCard({ customer }: Props) {
     return (
-        <div className="bg-white dark:bg-muted p-6 rounded-xl shadow-md w-full ">
+        <Card className="bgGlass p-6 rounded-xl shadow-md w-full ">
             {/* Title */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center ">
                 <h3 className="text-md font-medium text-foreground">Customer Details</h3>
             </div>
 
@@ -33,14 +34,14 @@ export function CustomerDetailsCard({ customer }: Props) {
                             <p className="font-semibold text-sm text-foreground">{customer?.name}</p>
                             <span className="text-xl">BD</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">ID: {customer?.id}</p>
+                        <p className="text-sm text-muted-foreground">{customer?.email || "email not provided"}</p>
                     </div>
                 </div>
             </div>
 
             {/* Contact Info */}
-            <div className="mt-6 space-y-3 text-sm">
-                <div className="flex items-center gap-3 text-muted-foreground">
+            <div className="space-y-3 text-sm">
+                {/* <div className="flex items-center gap-3 text-muted-foreground">
                     <Mail className="w-4 h-4" />
                     <span>{customer?.email || "N/A"}</span>
                 </div>
@@ -51,11 +52,11 @@ export function CustomerDetailsCard({ customer }: Props) {
                 <div className="flex items-center gap-3 text-muted-foreground">
                     <MapPin className="w-4 h-4" />
                     <span>{customer?.location || "N/A"}</span>
-                </div>
+                </div> */}
                 <Link href={`/dashboard/admin/orders/3/${customer?.id}`}>
-                    <Button>See Customer Order Details</Button>
+                    Customer Order Details
                 </Link>
             </div>
-        </div>
+        </Card>
     )
 }

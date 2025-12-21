@@ -56,7 +56,7 @@ export function CategoryOverview() {
   const [activeFilter, setActiveFilter] = useState("1Y");
 
   return (
-    <div className="space-y-6 w-full max-w-[1135px]">
+    <div className="space-y-6 w-full ">
       {/* Header */}
       <div className="flex items-center justify-between">
         <PageHeader
@@ -89,11 +89,10 @@ export function CategoryOverview() {
                 className=""
               >
                 <button
-                  className={`px-4 py-2 text-sm font-semibold ${
-                    activeFilter !== filter
+                  className={`px-4 py-2 text-sm font-semibold ${activeFilter !== filter
                       ? " text-gray-400"
                       : "text-[#F3F3F3]"
-                  }`}
+                    }`}
                 >
                   {filter}
                 </button>

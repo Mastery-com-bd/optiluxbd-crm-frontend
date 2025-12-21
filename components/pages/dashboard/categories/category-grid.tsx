@@ -29,7 +29,7 @@ const categories = [
 
 export function CategoryGrid() {
   return (
-    <div className="space-y-6 w-full max-w-[1135px] mt-10">
+    <div className="space-y-6 w-full  mt-10">
       {/* Header with search and link */}
       <div className="flex items-center justify-between">
         <div className="relative">

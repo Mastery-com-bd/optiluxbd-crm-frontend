@@ -17,7 +17,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Edit,
+  Eye,
+  MoreHorizontal,
+  MoreVertical,
+  Pencil,
+  Trash,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 
 export interface Customer {
@@ -40,6 +48,16 @@ interface CustomerTableProps {
   customers: Customer[];
 }
 
+type TCustomerData = {
+  custoemrId: string;
+  name: string;
+  mobile: string;
+  points: number;
+  orders: number;
+  tier: "Bronze" | "Silver" | "Gold" | "Diamond" | "Platinum" | "VIP";
+  status: "inactive" | "active";
+};
+
 const getLevelColor = (level: string) => {
   const colors: Record<string, string> = {
     BRONZE_PENDING:
@@ -56,220 +74,203 @@ const getLevelColor = (level: string) => {
 };
 
 export default function CustomerTable({ customers }: CustomerTableProps) {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  const customerData: TCustomerData[] = [
+    {
+      custoemrId: "LD-10001",
+      name: "Aminul Islam",
+      mobile: "01780530300",
+      points: 1500,
+      orders: 50,
+      tier: "VIP",
+      status: "active",
+    },
+    {
+      custoemrId: "LD-10002",
+      name: "Rahim Uddin",
+      mobile: "01712345678",
+      points: 800,
+      orders: 30,
+      tier: "Platinum",
+      status: "active",
+    },
+    {
+      custoemrId: "LD-10003",
+      name: "Karim Ahmed",
+      mobile: "01898765432",
+      points: 500,
+      orders: 20,
+      tier: "Gold",
+      status: "inactive",
+    },
+    {
+      custoemrId: "LD-10004",
+      name: "Sonia Rahman",
+      mobile: "01911223344",
+      points: 200,
+      orders: 10,
+      tier: "Silver",
+      status: "active",
+    },
+    {
+      custoemrId: "LD-10005",
+      name: "Farhan Hossain",
+      mobile: "01766778899",
+      points: 50,
+      orders: 2,
+      tier: "Bronze",
+      status: "inactive",
+    },
+    {
+      custoemrId: "LD-10006",
+      name: "Nabila Akter",
+      mobile: "01855667788",
+      points: 1200,
+      orders: 45,
+      tier: "VIP",
+      status: "active",
+    },
+    {
+      custoemrId: "LD-10007",
+      name: "Tanvir Chowdhury",
+      mobile: "01999887766",
+      points: 900,
+      orders: 35,
+      tier: "Platinum",
+      status: "inactive",
+    },
+    {
+      custoemrId: "LD-10008",
+      name: "Rumana Khatun",
+      mobile: "01733445566",
+      points: 600,
+      orders: 25,
+      tier: "Gold",
+      status: "active",
+    },
+    {
+      custoemrId: "LD-10009",
+      name: "Shakib Al Hasan",
+      mobile: "01822334455",
+      points: 300,
+      orders: 15,
+      tier: "Silver",
+      status: "inactive",
+    },
+    {
+      custoemrId: "LD-10010",
+      name: "Meherun Nesa",
+      mobile: "01911224455",
+      points: 100,
+      orders: 5,
+      tier: "Bronze",
+      status: "active",
+    },
+  ];
 
-  if (customers.length === 0) {
-    return (
-      <div className="rounded-lg border border-border bg-card p-8 text-center">
-        <p className="text-muted-foreground">
-          No customers found. Try adjusting your filters.
-        </p>
-      </div>
-    );
-  }
   const headers = [
-    "Name",
-    "Contact",
-    "Location",
-    "Profession",
-    "Level",
-    "Joined",
+    "Customer ID",
+    "Customer Name",
+    "Mobile Number",
+    "Loyality Points",
+    "Total Orders",
+    "Tier",
+    "Status",
     "Actions",
   ];
   return (
-    <div className="rounded-lg  bg-transparent overflow-hidden">
-      {/* Desktop Table */}
-      <div className="hidden md:block">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {headers.map((label, ind) => (
-                <TableHead
-                  first={ind === 0}
-                  last={ind === headers.length - 1}
-                  key={label}
-                  className="text-left text-xs font-semibold uppercase text-muted-foreground"
-                >
-                  {label}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {customers.map((customer) => (
-              <TableRow key={customer.id} className="group">
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <div className="h-6 w-fit px-2 flex items-center justify-center rounded-sm border text-primary font-semibold text-sm">
-                      {customer.id}
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {customer.name}
-                      </p>
-                      {customer.gender && (
-                        <p className="text-xs text-muted-foreground capitalize">
-                          {customer.gender.replace(/_/g, " ").toLowerCase()}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    <p className="font-medium">{customer.phone}</p>
-                    {customer.isMarried !== null && (
-                      <p className="text-xs text-muted-foreground">
-                        {customer.isMarried ? "Married" : "Single"}
-                      </p>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {customer.district || customer.thana ? (
-                    <div className="text-sm">
-                      <p className="font-medium">{customer.district || "—"}</p>
-                      {customer.thana && (
-                        <p className="text-xs text-muted-foreground">
-                          {customer.thana}
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{customer.profession || "—"}</span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <Badge
-                    className={`${getLevelColor(
-                      customer.customerLevel
-                    )} border-0`}
-                  >
-                    {customer.customerLevel.replace(/_/g, " ")}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right text-sm text-muted-foreground">
-                  {customer.created_at ? formatDate(customer.created_at) : "—"}
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[180px]">
-                      <DropdownMenuItem asChild>
-                        <Link
-                          href={`/dashboard/customers/${customer.id}`}
-                          className="flex items-center cursor-pointer"
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link
-                          href={`/dashboard/customers/${customer.id}`}
-                          className="flex items-center cursor-pointer"
-                        >
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit Customer
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => {
-                          if (
-                            confirm(
-                              "Are you sure you want to delete this customer?"
-                            )
-                          ) {
-                            console.log("Delete customer", customer.id);
-                          }
-                        }}
-                        className="text-red-600 focus:text-red-600 flex items-center cursor-pointer"
-                      >
-                        <Trash className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
+    <div className="overflow-x-auto w-full ">
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            {headers.map((label, ind) => (
+              <TableHead
+                first={ind === 0}
+                last={ind === headers.length - 1}
+                key={label}
+                className="text-left text-xs font-semibold uppercase text-muted-foreground"
+              >
+                {label}
+              </TableHead>
             ))}
-          </TableBody>
-        </Table>
-      </div>
+          </TableRow>
+        </TableHeader>
 
-      {/* Mobile Cards */}
-      <div className="md:hidden divide-y divide-border">
-        {customers.map((customer) => (
-          <div
-            key={customer.id}
-            className="p-4 hover:bg-muted/30 transition-colors"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground">
-                  {customer.name}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {customer.gender?.replace(/_/g, " ")}
-                </p>
-              </div>
-              <span
-                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(
-                  customer.customerLevel
-                )}`}
-              >
-                {customer.customerLevel.replace(/_/g, " ")}
-              </span>
-            </div>
-
-            <div className="space-y-2 text-sm mb-4">
-              <p className="text-foreground">📞 {customer.phone}</p>
-              {customer.district && (
-                <p className="text-foreground">
-                  📍 {customer.district}, {customer.thana}
-                </p>
-              )}
-              {customer.profession && (
-                <p className="text-foreground">💼 {customer.profession}</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                Joined {customer.created_at ? customer.created_at : "—"}
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              <Link
-                href={`/dashboard/customers/${customer.id}`}
-                className="flex-1"
-              >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full gap-1 bg-transparent"
-                >
-                  <Edit className="h-4 w-4" />
-                  Edit
-                </Button>
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
+        <TableBody>
+          {customerData.map((item, i) => (
+            <TableRow key={i} className="group">
+              <TableCell>
+                <div className="text-sm flex items-center justify-center w-full px-8">
+                  {item?.custoemrId}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.name}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.mobile}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.points}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.orders}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.tier}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm flex items-center justify-center">
+                  {item?.status}
+                </div>
+              </TableCell>
+              <TableCell className="px-4 py-3 text-center ">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="cursor-pointer">
+                    <MoreVertical className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-[180px] flex flex-col "
+                  >
+                    <Link href={`/dashboard/customers/${2}`}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        <Eye className="w-4 h-4 mr-2" />
+                        Details
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Pencil className="w-4 h-4 mr-2" />
+                      Update
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      //   onClick={() => {
+                      //     setDeleteProductId(product.id);
+                      //     setDeleteDialogOpen(true);
+                      //   }}
+                      className="cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
