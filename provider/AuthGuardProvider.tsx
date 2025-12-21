@@ -22,6 +22,7 @@ const alwaysAllowedRoutes = [
   "/dashboard/uiux/categories",
   "/dashboard/uiux/customers",
   "/dashboard/uiux/agent",
+  "/dashboard/uiux/courier",
 ];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import CreateCustomerModal from "./CreateCustomerModal";
 import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const Customers = () => {
   const [filters, setFilters] = useState({
@@ -36,6 +37,7 @@ const Customers = () => {
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState("All");
   const [tire, setTire] = useState("All");
+  const [show, setShow] = useState("10");
 
   const { data, isLoading } = useGetAllCustomerQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -116,24 +118,30 @@ const Customers = () => {
               align="end"
               className="bg-white/5 backdrop-blur-2xl"
             >
-              {["All", "BRONZE", "SILVER", "GOLD", "DIAMOND", "PLATINUM"].map(
-                (item) => (
-                  <DropdownMenuItem
-                    key={item}
-                    onClick={() => {
-                      setTire(item);
-                      setFilters((prev) => ({
-                        ...prev,
-                        tire: item === "All" ? undefined : item === "Yes",
-                        page: 1,
-                      }));
-                    }}
-                    className={item === tire ? "font-medium" : ""}
-                  >
-                    {item}
-                  </DropdownMenuItem>
-                )
-              )}
+              {[
+                "All",
+                "BRONZE",
+                "SILVER",
+                "GOLD",
+                "DIAMOND",
+                "PLATINUM",
+                "VIP",
+              ].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setTire(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      tire: item === "All" ? undefined : item === "Yes",
+                      page: 1,
+                    }));
+                  }}
+                  className={item === tire ? "font-medium" : ""}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -184,42 +192,11 @@ const Customers = () => {
 
           {/* export svg button */}
           <div className="flex items-center justify-end ">
-            <button
-              className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
-            >
-              {/* Button text */}
-              <p className="flex items-center gap-2">
-                <Upload size={16} />
-                <span className="text-sm">Export</span>
-              </p>
-
-              {/* top and bottom line */}
-              <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-              <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
-
-              {/* bottom yellow glow line */}
-              <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-                <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-              </div>
-              <CornerGlowSvg />
-            </button>
-
-            {/* <LiquidGlass
-              glowIntensity="xs"
-              shadowIntensity="xs"
-              borderRadius="16px"
-            >
-              <Button
-                variant="yellow"
-                className="p-3 flex rounded-2xl border-none cursor-pointer"
-              >
-                <p className="flex items-center gap-2">
-                  <Upload />
-                  <span className="text-[14px]">Export</span>
-                </p>
-              </Button>
-
-            </LiquidGlass> */}
+            <ButtonComponent
+              buttonName="Export"
+              icon={Upload}
+              varient="dark yellow"
+            />
           </div>
         </div>
       </div>
@@ -232,11 +209,61 @@ const Customers = () => {
       )}
 
       {/* Pagination */}
-      <CustomerPagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
-        onPageChange={HandlePageChange}
-      />
+      <div className="flex items-center justify-between">
+        <CustomerPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={HandlePageChange}
+        />
+        <div className="flex items-center justify-end">
+          <div className="flex items-center gap-6">
+            <p className="text-sm text-[#7E7E7E]">
+              Showing 1 to 10 of 10 entries
+            </p>
+            {/* status drodpown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <LiquidGlass
+                  glowIntensity="xs"
+                  shadowIntensity="xs"
+                  borderRadius="12px"
+                >
+                  <Button
+                    variant="default"
+                    className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+                  >
+                    <p className="flex items-center gap-2">
+                      <span className="text-[14px]">Show {show}</span>
+                      <ChevronDown size={18} />
+                    </p>
+                  </Button>
+                </LiquidGlass>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-white/5 backdrop-blur-2xl"
+              >
+                {["10", "20", "30", "40", "50"].map((item) => (
+                  <DropdownMenuItem
+                    key={item}
+                    onClick={() => {
+                      setShow(item);
+                      setFilters((prev) => ({
+                        ...prev,
+                        limit: Number(item),
+                        page: 1,
+                      }));
+                    }}
+                    className={item === show ? "font-medium" : ""}
+                  >
+                    {item}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -52,7 +52,7 @@ const stats = [
 const ComboOverView = () => {
   const [activeFilter, setActiveFilter] = useState("1Y");
   return (
-    <div className="space-y-6 w-full  mx-auto">
+    <div className="space-y-6 w-full mx-auto">
       {/* Overview Card */}
       <LiquidGlass
         shadowIntensity="xxs"

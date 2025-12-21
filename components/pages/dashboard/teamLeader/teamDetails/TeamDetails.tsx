@@ -1,27 +1,18 @@
 "use client";
 
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ImageUploader from "@/components/ui/ImageUploader";
-import {
-  SquarePen,
-  Star,
-  Target,
-  Trash2,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { SquarePen, Target, Trash2, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
-import Members from "./Members";
-import Leads from "./Leads";
-import TeamOverview from "./TeamOverview";
+import Members from "./members/Members";
+import Leads from "./leads/Leads";
+import TeamOverview from "./overview/TeamOverview";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const buttons = ["OverView", "Member", "Leads"];
 
 const TeamDetails = ({ id }: { id: string }) => {
-  const [enabled, setEnabled] = useState(false);
   const [current, setCurrent] = useState(buttons[0]);
 
   const handleChange = async (imageFile: File) => {
@@ -57,36 +48,16 @@ const TeamDetails = ({ id }: { id: string }) => {
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <Button
-              variant="green"
-              className="p-3 flex rounded-2xl border-none cursor-pointer"
-            >
-              <p className="flex items-center gap-2">
-                <SquarePen className="text-green-300" />
-                <span className="text-[14px]">Edit Team</span>
-              </p>
-            </Button>
-          </LiquidGlass>
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <Button
-              variant="red"
-              className="p-3 flex rounded-2xl border-none cursor-pointer"
-            >
-              <p className="flex items-center gap-2">
-                <Trash2 className="text-red-400" />
-                <span className="text-[14px]">Delete Team</span>
-              </p>
-            </Button>
-          </LiquidGlass>
+          <ButtonComponent
+            buttonName="Edit Team"
+            icon={SquarePen}
+            varient="green"
+          />
+          <ButtonComponent
+            buttonName="Delete Team"
+            icon={Trash2}
+            varient="red"
+          />
         </div>
       </div>
 
@@ -94,13 +65,6 @@ const TeamDetails = ({ id }: { id: string }) => {
       <div className="flex justify-between items-start gap-6">
         {/* left side */}
 
-        {/* <LiquidGlass
-          glowIntensity="xs"
-          shadowIntensity="xs"
-          borderRadius="16px"
-          className="w-[25vw]"
-        >
-        </LiquidGlass> */}
         <Card className="bg-white/10 w-[30vw] px-6 py-6 rounded-4xl relative gap-4">
           {/* border section */}
           <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
@@ -157,12 +121,6 @@ const TeamDetails = ({ id }: { id: string }) => {
 
         {/* right side */}
         <div className="w-full space-y-4">
-          {/* <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-          </LiquidGlass> */}
           <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
             {/* top and bottom border */}
             <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />

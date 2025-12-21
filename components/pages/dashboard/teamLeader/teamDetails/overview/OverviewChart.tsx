@@ -37,7 +37,7 @@ const chartConfig = {
 
 const OverviewChart = () => {
   return (
-    <div className="px-4 relative h-[35vh] w-full">
+    <div className="px-4 relative h-[35vh] w-full ">
       <ChartContainer config={chartConfig} className="h-full w-full">
         <AreaChart
           accessibilityLayer

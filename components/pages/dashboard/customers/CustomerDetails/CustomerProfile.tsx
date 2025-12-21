@@ -11,6 +11,7 @@ import { useState } from "react";
 import Overview from "./Overview";
 import OrderHistory from "./OrderHistory";
 import Note from "./Note";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const buttons = ["OverView", "Order History", "Note"];
 
@@ -57,7 +58,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
-          <LiquidGlass
+          {/* <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
             borderRadius="16px"
@@ -71,8 +72,18 @@ const CustomerProfile = ({ id }: { id: string }) => {
                 <span className="text-[14px]">Edit Profile</span>
               </p>
             </Button>
-          </LiquidGlass>
-          <LiquidGlass
+          </LiquidGlass> */}
+          <ButtonComponent
+            buttonName="Edit Profile"
+            icon={SquarePen}
+            varient="green"
+          />
+          <ButtonComponent
+            buttonName="Delete Profile"
+            icon={Trash2}
+            varient="red"
+          />
+          {/* <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
             borderRadius="16px"
@@ -86,7 +97,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
                 <span className="text-[14px]">Delete Profile</span>
               </p>
             </Button>
-          </LiquidGlass>
+          </LiquidGlass> */}
         </div>
       </div>
 
@@ -94,13 +105,6 @@ const CustomerProfile = ({ id }: { id: string }) => {
       <div className="flex justify-between items-start gap-6">
         {/* left side */}
 
-        {/* <LiquidGlass
-          glowIntensity="xs"
-          shadowIntensity="xs"
-          borderRadius="16px"
-          className="w-[25vw]"
-        >
-        </LiquidGlass> */}
         <Card className="bg-white/10 w-[30vw] px-6 py-6 rounded-4xl relative gap-4">
           {/* border section */}
           <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
@@ -166,12 +170,6 @@ const CustomerProfile = ({ id }: { id: string }) => {
 
         {/* right side */}
         <div className="w-full space-y-4">
-          {/* <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-          </LiquidGlass> */}
           <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
             {/* top and bottom border */}
             <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
