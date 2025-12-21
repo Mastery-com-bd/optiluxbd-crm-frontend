@@ -76,11 +76,10 @@ const ComboOverView = () => {
                 className=""
               >
                 <button
-                  className={`px-4 py-2 text-sm font-semibold cursor-pointer ${
-                    activeFilter !== filter
+                  className={`px-4 py-2 text-sm font-semibold cursor-pointer ${activeFilter !== filter
                       ? " text-gray-400"
                       : "text-[#F3F3F3]"
-                  }`}
+                    }`}
                 >
                   {filter}
                 </button>
@@ -128,9 +127,8 @@ const ComboOverView = () => {
                       <ArrowDownIcon className="w-3 h-3" />
                     )}
                     <span
-                      className={`${
-                        stat.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"
-                      }`}
+                      className={`${stat.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"
+                        }`}
                     >
                       {stat.change}
                     </span>{" "}
