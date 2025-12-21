@@ -14,6 +14,7 @@ interface OverviewCardProps {
     isPositive?: boolean;
     change?: string;
     highlight?: boolean;
+    highlightColor?: string;
   }[];
 }
 
@@ -43,9 +44,8 @@ export function OverviewCard({ stats }: OverviewCardProps) {
               className=""
             >
               <button
-                className={`px-4 py-2 text-sm font-semibold ${
-                  activeFilter !== filter ? " text-gray-400" : "text-[#F3F3F3]"
-                }`}
+                className={`px-4 py-2 text-sm font-semibold ${activeFilter !== filter ? " text-gray-400" : "text-[#F3F3F3]"
+                  }`}
               >
                 {filter}
               </button>
@@ -68,18 +68,15 @@ export function OverviewCard({ stats }: OverviewCardProps) {
             </LiquidGlass>
 
             <p
-              className={`text-lg font-semibold  mb-2 ${
-                stat.highlight ? "text-[#58E081]" : "text-white"
-              }`}
+              className={`text-lg font-semibold  mb-2 ${stat.highlight ? `${stat.highlightColor ? stat.highlightColor : "text-[#58E081]"}` : "text-white"}`}
             >
               {stat.label}
             </p>
 
             {/* Value */}
             <p
-              className={`text-[50px] leading-[1.2] font-normal ${
-                stat.highlight ? "text-[#58E081]" : "text-white"
-              } mb-3`}
+              className={`text-[50px] leading-[1.2] font-normal ${stat.highlight ? `${stat.highlightColor ? stat.highlightColor : "text-[#58E081]"}` : "text-white"
+                } mb-3`}
             >
               {stat.value}
             </p>
@@ -103,9 +100,8 @@ export function OverviewCard({ stats }: OverviewCardProps) {
                       </div>
                     ) : null}
                     <span
-                      className={`${
-                        stat?.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"
-                      }`}
+                      className={`${stat?.isPositive ? "text-[#00A656]" : "text-[#FF6A55]"
+                        }`}
                     >
                       {stat.change}
                     </span>{" "}

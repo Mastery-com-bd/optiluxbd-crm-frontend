@@ -34,7 +34,7 @@ const stats = [
 
 const AttendenceOverview = () => {
   return (
-    <div className="w-full max-w-[1135px]">
+    <div className="w-full ">
       {/* Header */}
       <div className="flex items-center justify-between mb-12">
         {/* Header */}
