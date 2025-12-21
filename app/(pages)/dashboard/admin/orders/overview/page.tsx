@@ -11,10 +11,10 @@ const page = () => {
         <div>
           <OrderStats />
           <div className="flex justify-between my-10 gap-4">
-            <div className="w-[70%]">
+            <div className="w-[65%]">
               <MonthlyOrder />
             </div>
-            <div className="w-[30%]">
+            <div className="w-[35%]">
               <OrderStatusRatio />
             </div>
           </div>
