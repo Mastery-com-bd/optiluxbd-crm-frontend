@@ -207,12 +207,12 @@ export const crmRoutes: NavRoute[] = [
         permissions: ["ORDERS CREATE"],
         roles: ["AGENT"],
       },
-      {
-        title: "Top Sellers",
-        path: "/dashboard/admin/orders/top-sellers",
-        permissions: ["ORDERS VIEW"],
-        roles: ["ADMIN"],
-      },
+      // {
+      //   title: "Top Sellers",
+      //   path: "/dashboard/admin/orders/top-sellers",
+      //   permissions: ["ORDERS VIEW"],
+      //   roles: ["ADMIN"],
+      // },
     ],
   },
   // Courier route

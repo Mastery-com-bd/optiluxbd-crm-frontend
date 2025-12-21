@@ -13,7 +13,7 @@ type PropsType = {
 
 const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: PropsType) => {
     return (
-        <div className="w-full! rounded-[14px] md:w-1/3 bgGlass p-4  flex flex-col items-center shadow-lg justify-between">
+        <div className="w-[355px]! rounded-[14px] md:w-1/3 bgGlass p-4  flex flex-col items-center shadow-lg justify-between">
             <Image
                 src={product.image_url}
                 alt={product.name}
