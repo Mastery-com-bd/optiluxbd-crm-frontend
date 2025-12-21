@@ -13,7 +13,7 @@ import Image from "next/image";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const CreateCustomerModal = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -21,25 +21,27 @@ const CreateCustomerModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
+        <ButtonComponent
+          buttonName="Create Customer"
+          icon={Plus}
+          varient="dark yellow"
+        />
+        {/* <button
           className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
         >
-          {/* Button text */}
           <p className="flex items-center gap-2">
             <Plus size={18} />
             <span className="text-sm">Create Customer</span>
           </p>
 
-          {/* top and bottom line */}
           <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
           <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
 
-          {/* bottom yellow glow line */}
           <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
             <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
           </div>
           <CornerGlowSvg />
-        </button>
+        </button> */}
       </DialogTrigger>
       <DialogContent className="p-6 w-[50vw]">
         <DialogHeader className="flex flex-row items-center justify-between mt-4 ">
@@ -51,12 +53,7 @@ const CreateCustomerModal = () => {
             shadowIntensity="xs"
             borderRadius="16px"
           >
-            <Button
-              variant="yellow"
-              className="p-3 flex rounded-2xl border-none cursor-pointer"
-            >
-              Add Customer
-            </Button>
+            <ButtonComponent buttonName="Add Customer" varient="yellow" />
           </LiquidGlass>
         </DialogHeader>
 

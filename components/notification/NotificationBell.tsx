@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import NotificationSvgComponent from "../svgIcon/NotificationSvgComponent";
 
 export function NotificationBell() {
   const {
@@ -102,7 +103,7 @@ export function NotificationBell() {
     <div className="relative">
       <Popover>
         <PopoverTrigger asChild className="bg-transparent">
-          <Button
+          {/* <Button
             variant="yellow"
             className="flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg"
           >
@@ -116,18 +117,42 @@ export function NotificationBell() {
 
             {unreadCount > 0 && (
               <span
-                className={`
-        absolute -top-1.5 -right-1.5 
-        flex items-center justify-center
-        text-[10px] font-bold text-white 
-        bg-red-600 rounded-full 
-        h-5 min-w-5 px-1
-      `}
+                className={`absolute -top-1.5 -right-1.5 flex items-center justify-center text-[10px] font-bold text-white bg-red-600 rounded-full h-5 min-w-5 px-1 `}
               >
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
-          </Button>
+          </Button> */}
+
+          <button className="relative bg-transparent border-none  justify-center flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg">
+            {/* Glow SVG */}
+            <NotificationSvgComponent />
+            {/* Top-left border */}
+            <div className="absolute top-0 left-px inset-1.5 border-l border-t border-white/20 rounded-tl-lg pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-1.5 border-r border-b border-white/20 rounded-br-lg pointer-events-none" />
+
+            {/* Bottom gradient line */}
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-1.1rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+            </div>
+
+            {/* Link text */}
+            <Bell size={18} />
+            {/* {unreadCount > 0 && (
+            )} */}
+            <span
+              className="absolute top-2 right-2 bg-red-600 rounded-full h-2 w-2 border-white"
+              style={{ borderWidth: "2px" }}
+            />
+
+            {unreadCount > 0 && (
+              <span
+                className={`absolute -top-1.5 -right-1.5 flex items-center justify-center text-[10px] font-bold text-white bg-red-600 rounded-full h-5 min-w-5 px-1 `}
+              >
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </button>
         </PopoverTrigger>
         <PopoverContent
           className="w-96 p-2 bg-white/5 backdrop-blur-2xl max-h-128 overflow-hidden"

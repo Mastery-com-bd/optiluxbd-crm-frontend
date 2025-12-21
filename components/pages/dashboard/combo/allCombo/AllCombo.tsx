@@ -20,6 +20,7 @@ import CardView from "./CardView";
 import TableView from "./TableView";
 import ComboOverView from "./ComboOverView";
 import Link from "next/link";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -82,38 +83,16 @@ const AllCombo = () => {
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <Button
-              variant="default"
-              className="p-3 flex rounded-2xl border-none cursor-pointer"
-            >
-              <p className="flex items-center gap-2">
-                <Upload />
-                <span className="text-[14px]">Bulk Upload</span>
-              </p>
-            </Button>
-          </LiquidGlass>
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <Link href="/dashboard/combo/create-combo">
-              <Button
-                variant="yellow"
-                className="p-3 flex rounded-2xl border-none cursor-pointer"
-              >
-                <p className="flex items-center gap-2">
-                  <Plus />
-                  <span className="text-[14px]">Create Combo</span>
-                </p>
-              </Button>
-            </Link>
-          </LiquidGlass>
+          <ButtonComponent
+            buttonName="Bulk Upload"
+            icon={Upload}
+            varient="default"
+          />
+          <ButtonComponent
+            buttonName="Create Combo"
+            icon={Plus}
+            varient="dark yellow"
+          />
         </div>
       </div>
 
