@@ -11,15 +11,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { useAppSelector } from "@/redux/hooks";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import {
     Eye,
     Grid2X2,
     MoreVertical,
     Pencil,
-    Plus,
     Search,
     Trash2,
 } from "lucide-react";
@@ -41,9 +37,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 
 const LowStockProducts = () => {
-    const user = useAppSelector(currentUser);
     const [isGridView, setIsGridView] = useState(false);
-    const { permissions } = getPermissions(user as TAuthUSer);
     const [filters, setFilters] = useState({
         search: "",
         sortBy: "created_at",
@@ -98,28 +92,10 @@ const LowStockProducts = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-transparent text-foreground p-4 md:p-6 lg:p-8">
-            <div className="max-w-[1600px] mx-auto">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <div className="">
-                            <h3 className="text-2xl font-bold">Low stock products</h3>
-                            <br />
-                            <p className="text-gray-500">Browse and manage your complete product catalog.</p>
-                        </div>
-                    </div>
-                    {permissions.includes("PRODUCTS CREATE") && (
-                        <Link href={"/dashboard/admin/products/add-product"}>
-                            <Button className="cursor-pointer" variant="yellow">
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Product
-                            </Button>
-                        </Link>
-                    )}
-                </div>
+        <div className="min-h-screen bg-transparent text-foreground ">
+            <div className="w-full mx-auto">
                 {/* Filters */}
-                <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-4 md:p-5 mb-5">
+                <Card className="p-0! bg-transparent border-none text-card-foreground border shadow-sm  mb-5">
                     <div className="flex flex-col lg:flex-row gap-4">
                         <div className="relative flex-1">
                             <Input
@@ -192,7 +168,7 @@ const LowStockProducts = () => {
                     <Loading />
                 ) : (
                     !isGridView ?
-                        <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+                        <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none p-0">
                             <div className="overflow-x-auto w-full">
                                 <Table className="w-full">
                                     <TableHeader>
