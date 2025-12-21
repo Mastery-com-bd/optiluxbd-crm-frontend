@@ -31,17 +31,24 @@ const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: Props
                 <span>SKU: {product.sku}</span>
                 <div className="flex justify-between">
                     <Link href={`/dashboard/admin/products/all-products/${product.id}`}>
-                        <Button variant={"yellow"} className="px-4 py-3 rounded-xl cursor-pointer">
-                            <Eye /> View Details
+                        <Button
+                            variant={"yellow"}
+                            className="p-6! rounded-xl cursor-pointer text-[14px]!"
+                            icon={<Eye />}
+                        >
+                            View Details
                         </Button>
                     </Link>
 
-                    <Button variant={"green"} className="px-4 py-3 rounded-xl"><Pencil /></Button>
-                    <Button variant={"red"} onClick={() => {
-                        setDeleteProductId(product.id);
-                        setDeleteDialogOpen(true);
-                    }}
-                        className="cursor-pointer"
+                    <Button variant={"green"} className="p-6! rounded-[12px]!">
+                        <Pencil />
+                    </Button>
+                    <Button variant={"red"}
+                        onClick={() => {
+                            setDeleteProductId(product.id);
+                            setDeleteDialogOpen(true);
+                        }}
+                        className="cursor-pointer p-6! rounded-[12px]!"
                     >
                         <Trash />
                     </Button>
