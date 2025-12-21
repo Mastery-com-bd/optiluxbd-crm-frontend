@@ -1,17 +1,10 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Search, Plus, Image as ImageIcon, ChevronDown, X } from "lucide-react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import AddCategory from "../addCategory";
 import CategoryCard from "../category-card";
 
 type Child = { id: string; name: string; image: string };
@@ -94,7 +87,6 @@ const CATEGORIES: Parent[] = [
 const AllCategories = () => {
   const [query, setQuery] = useState("");
   const [current, setCurrent] = useState<Parent>(CATEGORIES[0]);
-  const [categoryImage, setCategoryImage] = useState<File | null>(null);
 
   const filteredParents = useMemo(() => {
     const q = query.toLowerCase();
@@ -110,149 +102,9 @@ const AllCategories = () => {
             Browse all categories & subcategories
           </p>
         </div>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="rounded-xl bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl"
-            >
-              <Plus className="size-4" />
-              Create New Category
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden">
-            <div className="p-6 space-y-3">
-              <DialogHeader className="px-0 pt-0 text-left">
-                <DialogTitle className="text-xl font-semibold text-white">
-                  Add New Category
-                </DialogTitle>
-              </DialogHeader>
-
-              {/* Category Name */}
-              <div className="space-y-2 mt-3">
-                <span className="text-[16px] font-normal text-white mb-4">
-                  Category Name
-                </span>
-                <div className="relative mt-1.5">
-                  <input
-                    placeholder="Enter Category name"
-                    className="w-full h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  />
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-white/50" />
-                </div>
-              </div>
-
-              {/* Category Image */}
-              <div className="space-y-2">
-                <label className="text-[16px] font-normal text-white">
-                  Category Image
-                </label>
-                <div
-                  className={`relative flex flex-col items-center justify-center border border-dashed border-white rounded-2xl ${
-                    categoryImage ? "py-3" : "py-6"
-                  } bg-white/20 text-center mt-1.5 cursor-pointer hover:bg-white/25 transition-colors`}
-                  onClick={() => {
-                    const input = document.createElement("input");
-                    input.type = "file";
-                    input.accept = "image/png, image/jpeg";
-                    input.onchange = (e) => {
-                      const file = (e.target as HTMLInputElement).files?.[0];
-                      if (file) {
-                        setCategoryImage(file);
-                      }
-                    };
-                    input.click();
-                  }}
-                >
-                  {categoryImage ? (
-                    <div>
-                      <span
-                        className="absolute top-3 right-3 border border-white p-1 rounded-full bg-rose-500 cursor-pointer z-50"
-                        onClick={() => setCategoryImage(null)}
-                      >
-                        <X className="w-4 h-4 text-white" />
-                      </span>
-                      <img
-                        src={URL.createObjectURL(categoryImage)}
-                        alt="Category preview"
-                        className="w-32 h-32 object-cover rounded-xl mb-3"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="size-10 rounded-full bg-white/5 flex items-center justify-center mb-3 border border-white/10">
-                        <ImageIcon className="size-5 text-white/70" />
-                      </div>
-                      <p className="text-sm text-white/90 mb-1">
-                        Upload your Category image.
-                      </p>
-                      <p className="text-[10px] text-white/40">
-                        Only PNG, JPG format allowed.
-                      </p>
-                      <p className="text-[10px] text-white/40">
-                        500x500 pixels are recommended.
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Sub Category Name */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-[16px] font-normal text-white">
-                    Sub Category Name
-                  </label>
-                  <button className="size-6 rounded-md bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors border border-white/10">
-                    <Plus className="size-4 text-white/70" />
-                  </button>
-                </div>
-
-                <div className="space-y-3 -mt-1.5">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="flex gap-3">
-                      <div className="relative flex-1">
-                        <input
-                          placeholder="Enter Category name"
-                          className="w-full h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/20"
-                        />
-                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-white/50" />
-                      </div>
-                      <div className="w-[88px] h-11 border border-dashed border-white rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer">
-                        <ImageIcon className="size-3 text-white" />
-                        <span className="text-[8px] text-white">
-                          Upload Img
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex justify-end gap-3 pt-2">
-                <DialogClose>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className=" h-11 rounded-xl bg-none bg-transparent text-white hover:bg-white/5 hover:text-white"
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button
-                  style={{
-                    backgroundImage: "url('/svg/button-background.svg')",
-                  }}
-                  className="w-[142px] h-12 rounded-xl bg-transparent"
-                >
-                  Add
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <div>
+          <AddCategory />
+        </div>
       </div>
 
       <div className="grid grid-cols-12 gap-6">
@@ -299,7 +151,7 @@ const AllCategories = () => {
                             rx="130.5"
                             ry="44"
                             fill="#FFB13F"
-                            fill-opacity="0.4"
+                            fillOpacity="0.4"
                           />
                         </g>
                         <defs>
@@ -310,10 +162,10 @@ const AllCategories = () => {
                             width="461"
                             height="288"
                             filterUnits="userSpaceOnUse"
-                            color-interpolation-filters="sRGB"
+                            colorInterpolationFilters="sRGB"
                           >
                             <feFlood
-                              flood-opacity="0"
+                              floodOpacity="0"
                               result="BackgroundImageFix"
                             />
                             <feBlend
@@ -356,34 +208,37 @@ const AllCategories = () => {
           <h2 className="text-[28px] font-semibold mb-4">Sub Categories</h2>
           <div className="grid grid-cols-3 gap-5">
             {current.children.map((c) => (
-              <CategoryCard
-                key={c.id}
-                category={{
-                  id: Number(c.id),
-                  name: c.name,
-                  image: c.image,
-                }}
-              />
+              <Link href={`/dashboard/categories/products`} key={c.id}>
+                <CategoryCard
+                  category={{
+                    id: Number(c.id),
+                    name: c.name,
+                    image: c.image,
+                  }}
+                />
+              </Link>
             ))}
             {current.children.map((c) => (
-              <CategoryCard
-                key={c.id}
-                category={{
-                  id: Number(c.id),
-                  name: c.name,
-                  image: c.image,
-                }}
-              />
+              <Link href={`/dashboard/categories/products`} key={c.id}>
+                <CategoryCard
+                  category={{
+                    id: Number(c.id),
+                    name: c.name,
+                    image: c.image,
+                  }}
+                />
+              </Link>
             ))}
             {current.children.map((c) => (
-              <CategoryCard
-                key={c.id}
-                category={{
-                  id: Number(c.id),
-                  name: c.name,
-                  image: c.image,
-                }}
-              />
+              <Link href={`/dashboard/categories/products`} key={c.id}>
+                <CategoryCard
+                  category={{
+                    id: Number(c.id),
+                    name: c.name,
+                    image: c.image,
+                  }}
+                />
+              </Link>
             ))}
           </div>
         </section>
