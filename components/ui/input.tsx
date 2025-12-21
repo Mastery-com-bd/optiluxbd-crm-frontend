@@ -43,21 +43,16 @@ export function Input({
           "relative flex items-center gap-2.5 w-full px-5 py-2.5  backdrop-blur-xl",
           className
         )}
-        style={{
-         
-          boxShadow:
-            "inset 0 1px 1px rgba(255,255,255,0.05), 0 4px 30px rgba(0,0,0,0.3)",
-        }}
       >
         {/* Border that fades at top-right and bottom-left */}
         <div
-          className={`absolute inset-0 rounded-[${borderRadius}] pointer-events-none`}
+          className={`absolute inset-0 rounded-[${borderRadius}] pointer-events-none bg-none`}
           style={{
             background: `
-              linear-gradient(to right, #9d9da8 0%, #9d9da8 95%, transparent 100%) top / 100% 1px no-repeat,
-              linear-gradient(to right, transparent 0%, #9d9da8 10%, #9d9da8 100%) bottom / 100% 1px no-repeat,
-              linear-gradient(to bottom, #9d9da8 0%, #9d9da8 65%, transparent 100%) left / 1px 100% no-repeat,
-              linear-gradient(to bottom, transparent 0%, #9d9da8 65%, #9d9da8 100%) right / 1px 100% no-repeat
+              linear-gradient(to left, transparent 3%, #9d9da8 10%, #9d9da8 90%, transparent 95%) top / 100% 1px no-repeat,
+              linear-gradient(to right, transparent 3%, #9d9da8 10%, #9d9da8 90%, transparent 95%) bottom / 100% 1px no-repeat,
+              linear-gradient(to bottom, transparent 30%, #9d9da8 50%, transparent 90%) left / 1px 100% no-repeat,
+              linear-gradient(to top, transparent 50%, #9d9da8 70%, transparent 80%) right / 1px 100% no-repeat
             `,
           }}
         />

@@ -1,8 +1,11 @@
+import { PathaoDashboard } from '@/components/pages/dashboard/couriar/uiux/pathao/pathaoDashboard'
 import React from 'react'
 
 const Page = () => {
   return (
-    <div>RedX Page</div>
+    <div>
+       <PathaoDashboard />
+    </div>
   )
 }
 
