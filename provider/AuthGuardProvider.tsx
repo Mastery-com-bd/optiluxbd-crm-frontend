@@ -26,6 +26,7 @@ const alwaysAllowedRoutes = [
   "/dashboard/agent/leaderboard",
   "/dashboard/agent/team",
   "/dashboard/agent/profile",
+  "/dashboard/agentDashboard",
   
 ];
 
