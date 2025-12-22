@@ -480,14 +480,14 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
     <li
       data-slot="sidebar-menu-item"
       data-sidebar="menu-item"
-      className={cn("group/menu-item relative", className)}
+      className={cn("group/menu-item relative ", className)}
       {...props}
     />
   );
 }
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding]  focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding]  focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -688,11 +688,14 @@ function SidebarMenuSubItem({
   ...props
 }: SidebarMenuSubItemProps) {
   return (
-    <li className={cn("relative pl-4 flex items-center", className)} {...props}>
+    <li
+      className={cn("relative pl-8 flex items-center ", className)}
+      {...props}
+    >
       {/* Vertical line */}
       {showLine && (
         <div
-          className="absolute left-0 top-0 flex flex-col items-center h-full"
+          className="absolute left-4 top-0 flex flex-col items-center h-full"
           style={{ width: "7px" }} // width of the line area
         >
           {/* Full vertical line */}
@@ -719,7 +722,7 @@ function SidebarMenuSubItem({
           />
         </div>
       )}
-      <div className="w-full">{children}</div>
+      <div className="w-full ">{children}</div>
     </li>
   );
 }

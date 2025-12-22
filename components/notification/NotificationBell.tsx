@@ -103,28 +103,7 @@ export function NotificationBell() {
     <div className="relative">
       <Popover>
         <PopoverTrigger asChild className="bg-transparent">
-          {/* <Button
-            variant="yellow"
-            className="flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg"
-          >
-            <Bell size={18} />
-            {unreadCount > 0 && (
-              <span
-                className="absolute top-0 -right-1 bg-red-600 rounded-full h-2 w-2 border-white"
-                style={{ borderWidth: "2px" }}
-              />
-            )}
-
-            {unreadCount > 0 && (
-              <span
-                className={`absolute -top-1.5 -right-1.5 flex items-center justify-center text-[10px] font-bold text-white bg-red-600 rounded-full h-5 min-w-5 px-1 `}
-              >
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
-            )}
-          </Button> */}
-
-          <button className="relative bg-transparent border-none  justify-center flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg">
+          <button className="relative bg-transparent border-none justify-center flex items-center w-10 h-9 gap-4 text-sm font-medium text-foreground/80 transition-all duration-200 cursor-pointer p-2 rounded-lg">
             {/* Glow SVG */}
             <NotificationSvgComponent />
             {/* Top-left border */}
