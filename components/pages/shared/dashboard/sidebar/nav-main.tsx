@@ -98,7 +98,7 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                       </div>
 
                       {/* Content */}
-                      <div className="relative z-10 flex w-full items-center justify-between px-4 py-2">
+                      <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-2">
                         <p className="flex items-center gap-2">
                           <span>{item.icon && <item.icon size={16} />}</span>
                           <span>{item.title}</span>
@@ -107,13 +107,11 @@ export function NavMain({ items }: { items: NavRoute[] }) {
                         <p>
                           <Plus
                             size={16}
-                            className="transition-all duration-200
-                     group-data-[state=open]/collapsible:hidden"
+                            className="transition-all duration-200 group-data-[state=open]/collapsible:hidden"
                           />
                           <Minus
                             size={16}
-                            className="hidden transition-all duration-200
-                     group-data-[state=open]/collapsible:block"
+                            className="hidden transition-all duration-200 group-data-[state=open]/collapsible:block"
                           />
                         </p>
                       </div>

@@ -48,29 +48,30 @@ interface CustomerTableProps {
   customers: Customer[];
 }
 
+type TTire = "Bronze" | "Silver" | "Gold" | "Diamond" | "Platinum" | "VIP";
+
 type TCustomerData = {
   custoemrId: string;
   name: string;
   mobile: string;
   points: number;
   orders: number;
-  tier: "Bronze" | "Silver" | "Gold" | "Diamond" | "Platinum" | "VIP";
+  tier: TTire;
   status: "inactive" | "active";
 };
 
-const getLevelColor = (level: string) => {
-  const colors: Record<string, string> = {
-    BRONZE_PENDING:
-      "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
-    BRONZE:
-      "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
-    SILVER:
-      "bg-slate-200 text-slate-800 dark:bg-slate-900/30 dark:text-slate-400",
-    GOLD: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-    PLATINUM:
-      "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
-  };
-  return colors[level] || colors.BRONZE_PENDING;
+const tierTextColorMap: Record<string, string> = {
+  Bronze: "text-orange-600",
+  Silver: "text-slate-500 ",
+  Gold: "text-yellow-600 ",
+  Diamond: "text-cyan-600 ",
+  Platinum: "text-purple-600 ",
+  VIP: "text-red-600 ",
+};
+
+const statusTextColor: Record<string, string> = {
+  inactive: "text-red-700",
+  active: "text-success",
 };
 
 export default function CustomerTable({ customers }: CustomerTableProps) {
@@ -177,6 +178,14 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
     "Status",
     "Actions",
   ];
+
+  const getTierTextColor = (tier: TTire) => {
+    return tierTextColorMap[tier];
+  };
+  const getStatusColor = (status: "inactive" | "active") => {
+    return statusTextColor[status];
+  };
+
   return (
     <div className="overflow-x-auto w-full ">
       <Table className="w-full">
@@ -223,16 +232,31 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   {item?.orders}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="text-sm flex items-center justify-center">
+
+              <TableCell className=" px-6">
+                <div
+                  className={`${getTierTextColor(
+                    item?.tier
+                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}
+                >
+                  <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
+                  <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
                   {item?.tier}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="text-sm flex items-center justify-center">
+
+              <TableCell className=" px-6">
+                <div
+                  className={`${getStatusColor(
+                    item?.status
+                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}
+                >
+                  <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
+                  <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
                   {item?.status}
                 </div>
               </TableCell>
+
               <TableCell className="px-4 py-3 text-center ">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="cursor-pointer">

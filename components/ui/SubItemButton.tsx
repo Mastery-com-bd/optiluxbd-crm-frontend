@@ -19,7 +19,7 @@ const SubItemButton = ({ isActive, subItem }: SubItemButtonProps) => {
   return (
     <SidebarMenuSubButton asChild>
       <button
-        className="relative cursor-pointer bg-transparent border-none rounded-lg py-2 flex justify-start items-center px-4 overflow-hidden w-full"
+        className="relative cursor-pointer bg-transparent border-none rounded-lg py-2 flex justify-start items-center px-2 overflow-hidden w-full"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

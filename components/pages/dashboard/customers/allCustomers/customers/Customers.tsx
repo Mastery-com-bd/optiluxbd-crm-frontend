@@ -18,8 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CreateCustomerModal from "./CreateCustomerModal";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const Customers = () => {
   const [filters, setFilters] = useState({
@@ -52,12 +52,8 @@ const Customers = () => {
   };
   const debouncedLog = debounce(handleSearch, 1000, { leading: false });
 
-  const HandlePageChange = (page: number) => {
-    setFilters({ ...filters, page });
-  };
-
   return (
-    <div className="min-h-screen bg-transparent text-foreground space-y-4 w-full px-4">
+    <div className="min-h-screen bg-transparent text-foreground space-y-6 w-full px-4">
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
@@ -210,58 +206,57 @@ const Customers = () => {
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <CustomerPagination
+        <CustomPagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
-          onPageChange={HandlePageChange}
+          onPageChange={(page) => setFilters({ ...filters, page })}
         />
-        <div className="flex items-center justify-end">
-          <div className="flex items-center gap-6">
-            <p className="text-sm text-[#7E7E7E]">
-              Showing 1 to 10 of 10 entries
-            </p>
-            {/* status drodpown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <LiquidGlass
-                  glowIntensity="xs"
-                  shadowIntensity="xs"
-                  borderRadius="12px"
-                >
-                  <Button
-                    variant="default"
-                    className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                  >
-                    <p className="flex items-center gap-2">
-                      <span className="text-[14px]">Show {show}</span>
-                      <ChevronDown size={18} />
-                    </p>
-                  </Button>
-                </LiquidGlass>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="bg-white/5 backdrop-blur-2xl"
+
+        <div className="flex items-center gap-6">
+          <p className="text-sm text-[#7E7E7E]">
+            Showing 1 to 10 of 10 entries
+          </p>
+          {/* status drodpown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LiquidGlass
+                glowIntensity="xs"
+                shadowIntensity="xs"
+                borderRadius="12px"
               >
-                {["10", "20", "30", "40", "50"].map((item) => (
-                  <DropdownMenuItem
-                    key={item}
-                    onClick={() => {
-                      setShow(item);
-                      setFilters((prev) => ({
-                        ...prev,
-                        limit: Number(item),
-                        page: 1,
-                      }));
-                    }}
-                    className={item === show ? "font-medium" : ""}
-                  >
-                    {item}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                <Button
+                  variant="default"
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+                >
+                  <p className="flex items-center gap-2">
+                    <span className="text-[14px]">Show {show}</span>
+                    <ChevronDown size={18} />
+                  </p>
+                </Button>
+              </LiquidGlass>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white/5 backdrop-blur-2xl"
+            >
+              {["10", "20", "30", "40", "50"].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setShow(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      limit: Number(item),
+                      page: 1,
+                    }));
+                  }}
+                  className={item === show ? "font-medium" : ""}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
