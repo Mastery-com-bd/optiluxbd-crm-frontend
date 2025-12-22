@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { SidebarMenuSubButton } from "@/components/ui/sidebar";
 import SidebarButtonSvg from "../svgIcon/SidebarButtonSvg";
+import { NavRoute } from "@/constants/CRM_Navigation";
 
 type SubItemButtonProps = {
   isActive: boolean;
-  subItem: { title: string; path: string };
+  subItem: NavRoute;
 };
 
 const SubItemButton = ({ isActive, subItem }: SubItemButtonProps) => {
@@ -19,7 +20,7 @@ const SubItemButton = ({ isActive, subItem }: SubItemButtonProps) => {
   return (
     <SidebarMenuSubButton asChild>
       <button
-        className="relative cursor-pointer bg-transparent border-none rounded-lg py-2 flex justify-start items-center px-2 overflow-hidden w-full"
+        className="relative cursor-pointer bg-transparent border-none rounded-lg py-2 flex justify-start items-center px-2 overflow-hidden w-full "
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -44,12 +45,17 @@ const SubItemButton = ({ isActive, subItem }: SubItemButtonProps) => {
         )}
 
         {/* Link text */}
-        <Link
-          href={subItem.path}
-          className="relative z-10 w-full text-sm font-normal text-left"
-        >
-          {subItem.title}
-        </Link>
+        {subItem?.path && (
+          <Link
+            href={subItem?.path}
+            className={`relative z-10 w-full text-sm font-normal text-left flex items-center gap-4 ${
+              subItem.icon && "pl-2"
+            }`}
+          >
+            {subItem.icon && <subItem.icon size={16} />}
+            <span>{subItem.title}</span>
+          </Link>
+        )}
       </button>
     </SidebarMenuSubButton>
   );
