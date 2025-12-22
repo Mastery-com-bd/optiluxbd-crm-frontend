@@ -18,6 +18,17 @@ export interface TTeam {
   teamSize: number;
 }
 //Team leader types(dev:- RJannat..)
+export interface Lead {
+  id: number;
+  leadId: string;
+  leadName: string;
+  mobileNumber: string;
+  leadSource: string;
+  interestedProduct: string;
+  status: string;
+  priority: string;
+}
+export type LeadTableData = Lead[];
 
 export type Address = {
   id: number;

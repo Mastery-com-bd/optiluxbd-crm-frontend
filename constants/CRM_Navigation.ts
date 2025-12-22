@@ -289,6 +289,10 @@ export const crmRoutes: NavRoute[] = [
         //   "ALLOCATIONS VIEW OWN",
         // ],
       },
+      {
+        title: "My Leads",
+        path: "/dashboard/team-leader/my-leads"
+      }
       // {
       //   title: "All Teams",
       //   path: "/dashboard/leads/admin/all-teams",
