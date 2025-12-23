@@ -293,11 +293,11 @@ export const crmRoutes: TCrmNavigation = {
           path: "/dashboard/customers",
           // permissions: ["CUSTOMERS VIEW"],
         },
-        {
-          title: "Add Customer",
-          path: "/dashboard/customers/add",
-          // permissions: ["CUSTOMERS CREATE"],
-        },
+        // {
+        //   title: "Add Customer",
+        //   path: "/dashboard/customers/add",
+        //   permissions: ["CUSTOMERS CREATE"],
+        // },
       ],
     },
   ],
