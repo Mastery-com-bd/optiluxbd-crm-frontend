@@ -75,7 +75,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="border border-dashed border-[rgba(255,177,63,0.50)]"></div>
 
           <SidebarContent>
-            <NavMain items={data?.navMain} />
+            <NavMain
+              items={data?.navMain}
+              dashboradItem={data?.navMain?.dashboard}
+            />
           </SidebarContent>
         </div>
 
