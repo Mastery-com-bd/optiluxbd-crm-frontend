@@ -40,6 +40,7 @@ type OrderToCourier = {
 type PlaceBulkOrderProps = {
     isOpen: boolean;
     onOpenChange?: (open: boolean) => void;
+    setIsDialogOpen: (open: boolean) => void;
     orders: { data?: OrderToCourier[] };
 };
 
@@ -47,6 +48,7 @@ export function PlaceBulkOrder({
     isOpen,
     onOpenChange,
     orders,
+    setIsDialogOpen,
 }: PlaceBulkOrderProps) {
     const [createSteadFastBulkOrder] = useCreateBulkSteadFastOrderMutation();
     const [selectedCourier, setSelectedCourier] = useState<
@@ -54,7 +56,7 @@ export function PlaceBulkOrder({
     >("SteedFast");
 
     const [note, setNote] = useState("");
-
+    const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
     const handleSubmit = async () => {
         const toastId = toast.loading(`Placing order to ${selectedCourier} ...`);
         try {
@@ -153,11 +155,17 @@ export function PlaceBulkOrder({
                         </Button>
                     </DialogClose>
 
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="outline">Continue</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
+                    {/* Trigger Alert Dialog via State */}
+                    <Button variant="outline" onClick={() => {
+                        setIsDialogOpen(false)
+                        setIsAlertOpen(true)
+                    }}>
+                        Continue
+                    </Button>
+
+                    {/* Alert Dialog Controlled by State */}
+                    <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+                        <AlertDialogContent className="z-50">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
@@ -166,8 +174,15 @@ export function PlaceBulkOrder({
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleSubmit}>
+                                <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>
+                                    Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={() => {
+                                        handleSubmit();
+                                        setIsAlertOpen(false);
+                                    }}
+                                >
                                     Book Orders
                                 </AlertDialogAction>
                             </AlertDialogFooter>
@@ -175,6 +190,6 @@ export function PlaceBulkOrder({
                     </AlertDialog>
                 </DialogFooter>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }

@@ -16,7 +16,6 @@ import { Eye, MoreVertical, Pencil, X } from "lucide-react";
 import Loading from "@/components/pages/shared/Loading";
 import { OrderData, OrderItem, TProfileOrderData } from "@/types/orders";
 import Link from "next/link";
-import { formatCurrency } from "@/utills/formatCurrency";
 import {
   Table,
   TableBody,
@@ -123,6 +122,7 @@ export function OrderTable() {
   };
 
   const keys = [
+    "checkbox",
     "OrderID",
     "SKU",
     "Customer",
@@ -139,6 +139,7 @@ export function OrderTable() {
       <PlaceBulkOrder
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
         orders={courierOrders}
       />
 
@@ -279,7 +280,15 @@ export function OrderTable() {
                         key={label}
                         className="text-left text-xs font-semibold uppercase text-muted-foreground"
                       >
-                        {label}
+                        {label === "checkbox" ? (
+                          <input
+                            type="checkbox"
+                            checked={allPageOrdersSelected}
+                            onChange={toggleSelectAll}
+                          />
+                        ) : (
+                          label
+                        )}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -290,6 +299,13 @@ export function OrderTable() {
                       key={order.id}
                       className="border-muted hover:bg-muted/50 transition-colors"
                     >
+                      <TableCell className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedOrders.includes(order.id)}
+                          onChange={() => toggleSelection(order.id)}
+                        />
+                      </TableCell>
                       <TableCell className="px-4 py-3">
                         <div>
                           <div className="flex items-center gap-3">
@@ -322,7 +338,7 @@ export function OrderTable() {
                         {order.quantity}
                       </TableCell>
                       <TableCell className="text-center">
-                        {order.courier?order.courier.name:"-"}
+                        {order.courier ? order.courier.name : "-"}
                       </TableCell>
                       <TableCell className="text-center">
                         {order.totalAmount}
