@@ -1,12 +1,13 @@
-import AgentAttendance from '@/components/pages/dashboard/agentDashboard/attendance/agentAttendance'
-import React from 'react'
+import AgentDashboardAttendance from "@/components/pages/dashboard/agentDashboard/attendance/agentDashboardAttendance";
+import AttendanceStatus from "@/components/pages/dashboard/agentDashboard/attendance/attendanceStatus";
 
 const Page = () => {
   return (
     <div>
-      <AgentAttendance />
+      <AttendanceStatus />
+      <AgentDashboardAttendance />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
