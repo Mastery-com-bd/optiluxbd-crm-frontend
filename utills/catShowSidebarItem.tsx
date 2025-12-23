@@ -1,7 +1,7 @@
-import { NavChildRoute, NavRoute } from "@/constants/CRM_Navigation";
+import { NavRoute } from "@/constants/CRM_Navigation";
 
 export function canShowSidebarItem(
-  route: NavRoute | NavChildRoute,
+  route: NavRoute,
   userRoles: string[],
   userPermissions: string[]
 ) {

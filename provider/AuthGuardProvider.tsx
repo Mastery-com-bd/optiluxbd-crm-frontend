@@ -26,8 +26,6 @@ const alwaysAllowedRoutes = [
   "/dashboard/agent/leaderboard",
   "/dashboard/agent/team",
   "/dashboard/agent/profile",
-  "/dashboard/agentDashboard",
-  
 ];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -35,7 +33,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
-
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     Promise.resolve().then(() => {
@@ -54,65 +51,65 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    if (!role.length) {
-      if (!publicRoutes.includes(pathname)) {
-        router.replace("/activeAccount");
-      }
-      return;
-    }
+    // if (!role.length) {
+    //   if (!publicRoutes.includes(pathname)) {
+    //     router.replace("/activeAccount");
+    //   }
+    //   return;
+    // }
 
     // Always allowed pages for any logged-in user
     // if (alwaysAllowedRoutes.includes(pathname)) {
     //   return;
     // }
     // always allowed route
-    if (alwaysAllowedRoutes.includes(pathname)) {
-      return;
-    }
-    const nestedAllowed = alwaysAllowedRoutes.some(
-      (route) => pathname !== route && pathname.startsWith(route + "/")
-    );
-    if (nestedAllowed) {
-      return;
-    }
+    // if (alwaysAllowedRoutes.includes(pathname)) {
+    //   return;
+    // }
+    // const nestedAllowed = alwaysAllowedRoutes.some(
+    //   (route) => pathname !== route && pathname.startsWith(route + "/")
+    // );
+    // if (nestedAllowed) {
+    //   return;
+    // }
 
-    if (pathname === "/dashboard/activity" && !role.includes("ADMIN")) {
-      router.replace("/dashboard/profile");
-      return;
-    }
-    if (
-      (pathname === "/dashboard" || pathname === "/dashboard/activity") &&
-      role.includes("ADMIN")
-    ) {
-      return;
-    }
+    // if (pathname === "/dashboard/activity" && !role.includes("owner")) {
+    //   router.replace("/dashboard/profile");
+    //   return;
+    // }
+    // if (
+    //   (pathname === "/dashboard" || pathname === "/dashboard/activity") &&
+    //   role.includes("owner")
+    // ) {
+    //   return;
+    // }
 
-    let requiredPerms: string[] = routePermissions[pathname] ?? [];
+    // let requiredPerms: string[] = routePermissions[pathname] ?? [];
     // If exact match not found, check for nested routes (startsWith)
-    if (requiredPerms.length === 0) {
-      const dynamicMatch = Object.entries(routePermissions).find(([route]) =>
-        pathname.startsWith(route + "/")
-      );
-      requiredPerms = dynamicMatch?.[1] ?? [];
-    }
+    // if (requiredPerms.length === 0) {
+    //   const dynamicMatch = Object.entries(routePermissions).find(([route]) =>
+    //     pathname.startsWith(route + "/")
+    //   );
+    //   requiredPerms = dynamicMatch?.[1] ?? [];
+    // }
 
     // If no required permissions found → redirect
-    if (!requiredPerms) {
-      router.replace("/dashboard/profile");
-      return;
-    }
+    // if (!requiredPerms) {
+    //   router.replace("/dashboard/profile");
+    //   return;
+    // }
     // If route not in permission map → redirect to profile
-    if (!requiredPerms) {
-      router.replace("/dashboard/profile");
-      return;
-    }
+    // if (!requiredPerms) {
+    //   router.replace("/dashboard/profile");
+    //   return;
+    // }
 
     // Check if user has at least one required permission
-    const hasPermission = requiredPerms.some((p) => permissions.includes(p));
-    if (!hasPermission) {
-      router.replace("/dashboard/profile");
-      return;
-    }
+    // const hasPermission = requiredPerms.some((p) => permissions.includes(p));
+    // if (!hasPermission) {
+    //   router.replace("/dashboard/profile");
+    //   return;
+    // }
   }, [hydrated, pathname, user, router, role, permissions]);
 
   if (!hydrated || !user) {
