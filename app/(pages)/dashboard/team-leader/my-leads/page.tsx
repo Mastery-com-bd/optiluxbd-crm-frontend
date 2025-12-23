@@ -1,3 +1,4 @@
+'use client'
 // app/page.tsx (or any component file)
 import CustomPagination from "@/components/ui/CustomPagination";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -6,6 +7,7 @@ import { Lead } from "@/types/teamleader.types";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { User, Users, Phone, Mail, MoreVertical, Pencil, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 const statsFromBackend = [
     { id: 1, title: "Total Leads", value: 38, description: "Total leads received" },
@@ -118,6 +120,35 @@ const keys = [
     "checkbox", "LeadID", "Lead Name", "Mobile Number", "Lead Source", "Interested Product", "Status", "Priority", "Action",
 ]
 const Page = () => {
+    const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
+    const toggleSelection = (leadId: number) => {
+        setSelectedLeads((prev) =>
+            prev.includes(leadId)
+                ? prev.filter((id) => id !== leadId)
+                : [...prev, leadId]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        const currentOrderIds = myLeads.map((lead: Lead) => lead.id);
+        const allSelected = currentOrderIds.every((id: number) =>
+            selectedLeads.includes(id)
+        );
+        if (allSelected) {
+            setSelectedLeads((prev) =>
+                prev.filter((id) => !currentOrderIds.includes(id))
+            );
+        } else {
+            const newSelections = currentOrderIds.filter(
+                (id: number) => !selectedLeads.includes(id)
+            );
+            setSelectedLeads((prev) => [...prev, ...newSelections]);
+        }
+    };
+
+    const allPageLeadsSelected =
+        myLeads.length > 0 &&
+        myLeads.every((lead: Lead) => selectedLeads.includes(lead.id));
     return (
         <div className="p-6 ">
             <h3 className="text-xl font-semibold mb-6">My Leads</h3>
@@ -151,7 +182,16 @@ const Page = () => {
                                     key={label}
                                     className="text-left text-xs font-semibold uppercase text-muted-foreground"
                                 >
-                                    {label == "checkbox" ? <input type="checkbox" /> : label}
+                                    {label === "checkbox" ? (
+                                        <input
+                                            className="cursor-pointer"
+                                            type="checkbox"
+                                            checked={allPageLeadsSelected}
+                                            onChange={toggleSelectAll}
+                                        />
+                                    ) : (
+                                        label
+                                    )}
                                 </TableHead>
                             ))}
                         </TableRow>
@@ -163,7 +203,12 @@ const Page = () => {
                                 className="border-muted hover:bg-muted/50 transition-colors"
                             >
                                 <TableCell className="px-4 py-3">
-                                    <input type="checkbox" />
+                                    <input
+                                        className="cursor-pointer"
+                                        type="checkbox"
+                                        checked={selectedLeads.includes(lead.id)}
+                                        onChange={() => toggleSelection(lead.id)}
+                                    />
                                 </TableCell>
                                 <TableCell className="px-4 py-3">{lead.leadId}</TableCell>
                                 <TableCell className="px-4 py-3">{lead.leadName}</TableCell>
@@ -175,7 +220,7 @@ const Page = () => {
                                 <TableCell className="px-4 py-3 text-sm font-semibold text-center">
                                     <span
                                         className={`px-4 py-1 text-sm font-medium rounded-md
-              ${lead.status === "Assigned"
+                                                         ${lead.status === "Assigned"
                                                 ? "bg-green-800/30 text-green-400 border border-green-500/30"
                                                 : "bg-red-800/30 text-red-400 border border-red-500/30"
                                             }`}
@@ -187,12 +232,11 @@ const Page = () => {
                                 {/* ✅ Styled Priority Pill */}
                                 <TableCell className="px-4 py-3 text-center">
                                     <span
-                                        className={`px-4 py-1 text-sm font-medium rounded-md border
-              ${lead.priority === "High"
-                                                ? "bg-red-800/30 text-red-400 border-red-500/30"
-                                                : lead.priority === "Medium"
-                                                    ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
-                                                    : "bg-blue-800/30 text-blue-300 border-blue-400/30"
+                                        className={`px-4 py-1 text-sm font-medium rounded-md border ${lead.priority === "High"
+                                            ? "bg-red-800/30 text-red-400 border-red-500/30"
+                                            : lead.priority === "Medium"
+                                                ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
+                                                : "bg-blue-800/30 text-blue-300 border-blue-400/30"
                                             }`}
                                     >
                                         {lead.priority}

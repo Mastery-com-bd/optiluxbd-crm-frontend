@@ -275,6 +275,8 @@ export function OrderTable() {
                   <TableRow>
                     {keys.map((label, ind) => (
                       <TableHead
+                        first={ind === 0}
+                        last={ind === keys.length - 1}
                         key={label}
                         className="text-left text-xs font-semibold uppercase text-muted-foreground"
                       >
