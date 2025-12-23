@@ -254,7 +254,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-[rgba(255,255,255,0.10)] cursor-default h-full p-4 w-full group-data-[collapsible=icon]:p-2 rounded-2xl relative "
+          className="bg-[rgba(255,255,255,0.10)] cursor-default h-full p-3 w-full group-data-[collapsible=icon]:p-2 rounded-2xl relative"
         >
           <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-2xl pointer-events-none" />
           <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-2xl pointer-events-none" />
@@ -418,7 +418,7 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        "text-sidebar-foreground/70 ring-sidebar-ring flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "text-sidebar-foreground/70 ring-sidebar-ring flex h-6 shrink-0 items-center rounded-md pl-4 text-xs font-medium outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
         className
       )}
@@ -498,6 +498,10 @@ const sidebarMenuButtonVariants = cva(
         default: "h-8 text-sm",
         sm: "h-7 text-xs",
         lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
+      },
+      hasChildren: {
+        true: "h-7 w-full px-1",
+        false: "",
       },
     },
     defaultVariants: {
@@ -624,6 +628,13 @@ function SidebarMenuSub({
   );
 }
 
+type SidebarMenuButtonProps = React.ComponentProps<"button"> & {
+  asChild?: boolean;
+  isActive?: boolean;
+  tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  hasChildren?: boolean;
+} & VariantProps<typeof sidebarMenuButtonVariants>;
+
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
@@ -631,8 +642,9 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  hasChildren = false,
   ...props
-}: React.ComponentProps<"button"> & {
+}: SidebarMenuButtonProps & {
   asChild?: boolean;
   isActive?: boolean;
   tooltip?: string | React.ComponentProps<typeof TooltipContent>;
@@ -646,7 +658,10 @@ function SidebarMenuButton({
       data-sidebar="menu-button"
       data-size={size}
       data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      className={cn(
+        sidebarMenuButtonVariants({ variant, size, hasChildren }),
+        className
+      )}
       {...props}
     />
   );
@@ -677,6 +692,7 @@ function SidebarMenuButton({
 interface SidebarMenuSubItemProps extends React.ComponentProps<"li"> {
   active?: boolean;
   showLine?: boolean;
+  hasChildren?: boolean;
   children: React.ReactNode;
 }
 
@@ -685,17 +701,18 @@ function SidebarMenuSubItem({
   active,
   showLine = true,
   className,
+  hasChildren,
   ...props
 }: SidebarMenuSubItemProps) {
   return (
     <li
-      className={cn("relative pl-8 flex items-center ", className)}
+      className={cn("relative pl-6 flex items-center ", className)}
       {...props}
     >
       {/* Vertical line */}
       {showLine && (
         <div
-          className="absolute left-4 top-0 flex flex-col items-center h-full"
+          className="absolute left-2 top-0 flex flex-col items-center h-full"
           style={{ width: "7px" }} // width of the line area
         >
           {/* Full vertical line */}
@@ -709,16 +726,12 @@ function SidebarMenuSubItem({
           />
           {/* Circle in the middle */}
           <div
-            style={{
-              width: "7px",
-              height: "7px",
-              borderRadius: "3.5px",
-              border: "1px solid #FFB13F",
-              background: active ? "#FFB13F " : "#FFF1DD",
-              position: "absolute",
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
+            className={`
+    w-[7px] h-[7px] rounded-full border border-[#FFB13F] ${
+      active ? "bg-[#FFB13F]" : "bg-[#FFF1DD]"
+    } absolute ${
+              hasChildren ? "top-3 translate-y-0" : "top-1/2 -translate-y-1/2"
+            }`}
           />
         </div>
       )}
