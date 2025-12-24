@@ -87,7 +87,7 @@ export function PlaceBulkOrder({
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="max-w-[400px]!">
                 <DialogHeader>
                     <DialogTitle>Place Bulk Order</DialogTitle>
                     <DialogDescription>
@@ -156,16 +156,18 @@ export function PlaceBulkOrder({
                     </DialogClose>
 
                     {/* Trigger Alert Dialog via State */}
-                    <Button variant="outline" onClick={() => {
-                        setIsDialogOpen(false)
+                    <Button variant="outline" onClick={(e) => {
+                        e.stopPropagation()
+                        // setIsDialogOpen(false)
                         setIsAlertOpen(true)
+
                     }}>
                         Continue
                     </Button>
 
                     {/* Alert Dialog Controlled by State */}
                     <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-                        <AlertDialogContent className="z-50">
+                        <AlertDialogContent className="z-50!">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
