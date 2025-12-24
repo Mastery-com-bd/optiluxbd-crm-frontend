@@ -6,7 +6,7 @@ const ButtonSvgGlow = () => {
       height="32"
       viewBox="0 0 195 32"
       fill="none"
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover z-10 rounded-xl"
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover z-10 rounded-xl "
     >
       <g filter="url(#filter0_f_1093_40256)">
         <ellipse
