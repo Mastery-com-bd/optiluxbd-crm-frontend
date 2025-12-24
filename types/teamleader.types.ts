@@ -96,3 +96,15 @@ export type MemberProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedWorkers: React.Dispatch<React.SetStateAction<number | null>>;
 };
+
+export type Agent = {
+  id: number;
+  name: string;
+  agentId: string;
+  todaysCalls: number;
+  monthsConversion: string;
+  todaysConversion: string;
+  level: string;
+  status: "Active" | "Deactive";
+}
+export type myTeam = Agent[];

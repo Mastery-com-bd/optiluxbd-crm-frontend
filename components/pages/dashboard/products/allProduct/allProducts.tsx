@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import {
   Eye,
+  Funnel,
   Grid2X2,
   MoreVertical,
   Pencil,
@@ -132,17 +133,21 @@ const AllProducts = () => {
         </div>
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
+          <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
+            <div className="flex  gap-3">
               <Input
-                placeholder="Search product by id name sku...."
+                className=" py-1.5 w-64 text-sm bg-transparent"
                 value={inputValue}
                 icon={<Search />}
                 onChange={(e) => {
                   debouncedLog(e.target.value);
                   setInputValue(e.target.value);
                 }}
+                placeholder="Search product by name"
               />
+              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer border-none bgGlass">
+                <Funnel size={16} />
+              </Button>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select
