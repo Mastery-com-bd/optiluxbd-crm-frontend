@@ -72,6 +72,7 @@ const AgentDashboardAttendance = () => {
               </TableCell>
               <TableCell className="text-center">9:15 AM</TableCell>
               <TableCell className="text-center">5:15 PM</TableCell>
+              <TableCell className="text-center">8 h 0 m</TableCell>
               <TableCell className="text-center">
                 <LiquidGlass
                   borderRadius="8px"
@@ -80,7 +81,6 @@ const AgentDashboardAttendance = () => {
                   Present
                 </LiquidGlass>
               </TableCell>
-              <TableCell className="text-center">42</TableCell>
             </TableRow>
           ))}
         </TableBody>
