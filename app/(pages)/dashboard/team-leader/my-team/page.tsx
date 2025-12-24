@@ -5,10 +5,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Agent, myTeam } from "@/types/teamleader.types";
 import { debounce } from "@/utills/debounce";
 import { Eye, MoreVertical, Pencil, Search, Trash2, X } from "lucide-react";
 import { useState } from "react";
-const myAgents = [
+const myAgents: myTeam = [
     { id: 1, name: "Ayaan Khan", agentId: "AG101", todaysCalls: 40, monthsConversion: "25%", todaysConversion: "25%", level: "Bronze", status: "Deactive" },
     { id: 2, name: "Fatima Ali", agentId: "AG202", todaysCalls: 30, monthsConversion: "25%", todaysConversion: "25%", level: "Silver", status: "Active" },
     { id: 3, name: "Samir Patel", agentId: "AG303", todaysCalls: 78, monthsConversion: "25%", todaysConversion: "25%", level: "Gold", status: "Active" },
@@ -74,7 +75,7 @@ const MyTeam = () => {
         myAgents.length > 0 &&
         myAgents.every((agent: Agent) => selectedAgents.includes(agent.agentId));
     return (
-        <div className="p-6 ">
+        <div className=" ">
             <h3 className="text-xl font-semibold mb-6">My agents</h3>
             <StatsCard />
             {/* Bulk Actions */}
@@ -146,7 +147,7 @@ const MyTeam = () => {
                 </div>
 
             </div>
-            <div className="my-4">
+            <div className="my-4 overflow-x-scroll">
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
