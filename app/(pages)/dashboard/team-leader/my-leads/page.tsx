@@ -1,39 +1,21 @@
 'use client'
+import StatsCard from "@/components/pages/dashboard/shared/StatsCard";
+import AssignLeadsToTeam from "@/components/pages/dashboard/teamLeader/assignleades/AssignLeadsToTeam";
+import { Button } from "@/components/ui/button";
 // app/page.tsx (or any component file)
 import CustomPagination from "@/components/ui/CustomPagination";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Lead } from "@/types/teamleader.types";
+import { debounce } from "@/utills/debounce";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { User, Users, Phone, Mail, MoreVertical, Pencil, Eye, Trash2 } from "lucide-react";
+import { User, Users, Phone, Mail, MoreVertical, Pencil, Eye, Trash2, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-const statsFromBackend = [
-    { id: 1, title: "Total Leads", value: 38, description: "Total leads received" },
-    { id: 2, title: "Active Leads", value: 18, description: "Currently active leads" },
-    { id: 3, title: "Contacted", value: 22, description: "Leads already contacted" },
-    { id: 4, title: "Email Leads", value: 12, description: "Leads contacted via email" },
-];
 
-const styleConfig = [
-    {
-        from: "from-[#2a86ff34]", text: "#2A85FF",
-        icon: <Users className="text-[#2A85FF] w-6 h-6" />
-    },
-    {
-        from: "from-[#00a65633]", text: "#00A656",
-        icon: <User className="text-[#00A656] w-6 h-6" />
-    },
-    {
-        from: "from-[#ff9d3426]", text: "#FF9D34",
-        icon: <Phone className="text-[#FF9D34] w-6 h-6" />
-    },
-    {
-        from: "from-[#7f5fff34]", text: "#7F5FFF",
-        icon: <Mail className="text-[#7F5FFF] w-6 h-6" />
-    },
-];
 const myLeads = [
     {
         id: 0,
@@ -120,8 +102,16 @@ const keys = [
     "checkbox", "LeadID", "Lead Name", "Mobile Number", "Lead Source", "Interested Product", "Status", "Priority", "Action",
 ]
 const Page = () => {
-    const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
-    const toggleSelection = (leadId: number) => {
+    const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState("");
+    const [filters, setFilters] = useState({
+        limit: 10,
+        page: 1,
+        search: "",
+        status: "",
+        priority: "",
+    });
+    const toggleSelection = (leadId: string) => {
         setSelectedLeads((prev) =>
             prev.includes(leadId)
                 ? prev.filter((id) => id !== leadId)
@@ -130,8 +120,8 @@ const Page = () => {
     };
 
     const toggleSelectAll = () => {
-        const currentOrderIds = myLeads.map((lead: Lead) => lead.id);
-        const allSelected = currentOrderIds.every((id: number) =>
+        const currentOrderIds = myLeads.map((lead: Lead) => lead.leadId);
+        const allSelected = currentOrderIds.every((id: string) =>
             selectedLeads.includes(id)
         );
         if (allSelected) {
@@ -140,36 +130,91 @@ const Page = () => {
             );
         } else {
             const newSelections = currentOrderIds.filter(
-                (id: number) => !selectedLeads.includes(id)
+                (id: string) => !selectedLeads.includes(id)
             );
             setSelectedLeads((prev) => [...prev, ...newSelections]);
         }
     };
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleSearch = async (val: any) => {
+        setFilters({ ...filters, search: val });
+    };
+    const debouncedLog = debounce(handleSearch, 1000, { leading: false });
     const allPageLeadsSelected =
         myLeads.length > 0 &&
-        myLeads.every((lead: Lead) => selectedLeads.includes(lead.id));
+        myLeads.every((lead: Lead) => selectedLeads.includes(lead.leadId));
     return (
         <div className="p-6 ">
             <h3 className="text-xl font-semibold mb-6">My Leads</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {statsFromBackend.map((card, index) => {
-                    const styles = styleConfig[index % styleConfig.length];
-                    return (
-                        <div key={card.id} className="bgGlass rounded-2xl! overflow-hidden">
-                            <div
-                                className={`bg-linear-to-br ${styles.from} to-[#7f5fff04] text-white p-4 shadow-md`}
-                            >
-                                <div className="flex items-center justify-between">
-                                    <h4 className={`text-lg font-semibold `}>{card.title}</h4>
-                                    {styles.icon}
-                                </div>
-                                <p className={`text-3xl mt-4 font-bold text-[${styles.text}]`}>{card.value}</p>
-                                <p className="text-sm mt-2 text-gray-300">{card.description}</p>
-                            </div>
-                        </div>
-                    );
-                })}
+            <StatsCard />
+            {/* Bulk Actions */}
+            {selectedLeads.length > 0 && (
+                <div className="mb-2 flex items-center gap-4 text-sm text-muted-foreground  justify-end my-4">
+                    <Button
+                        variant="outline"
+                        className="border border-yellow-600! cursor-pointer py-6 rounded-2xl"
+                        size="sm"
+                        onClick={() => setSelectedLeads([])}
+                    >
+                        <X className="w-4 h-4 mr-1" />
+                        Selected Leads {selectedLeads.length}
+                    </Button>
+                    {/* <Button
+                        variant="outline"
+                        onClick={() => console.log('clicked')}
+                        className="cursor-pointer py-6 rounded-2xl"
+                    >
+                        Assign to Agent
+                    </Button> */}
+                    <AssignLeadsToTeam selectedLeads={selectedLeads} />
+                </div>
+            )}
+            {/* Filter Options */}
+            <div className="flex justify-between gap-4 my-4 ">
+                <Input
+                    placeholder="Search product by id name sku...."
+                    className="w-[40%]"
+                    value={inputValue}
+                    icon={<Search />}
+                    onChange={(e) => {
+                        debouncedLog(e.target.value);
+                        setInputValue(e.target.value);
+                    }}
+                />
+
+                <div className="flex  gap-4">
+                    <Select
+                        onValueChange={(val) =>
+                            setFilters((f) => ({ ...f, status: val }))
+                        }
+                        defaultValue="orderDate"
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="orderDate">Order Date</SelectItem>
+                            <SelectItem value="commission">Commission</SelectItem>
+                            <SelectItem value="totalAmount">Total Amount</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Select
+                        onValueChange={(val) =>
+                            setFilters((f) => ({ ...f, priority: val }))
+                        }
+                        defaultValue="orderDate"
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="orderDate">Order Date</SelectItem>
+                            <SelectItem value="commission">Commission</SelectItem>
+                            <SelectItem value="totalAmount">Total Amount</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
             </div>
             <div className="my-4">
                 <Table className="w-full">
@@ -206,8 +251,8 @@ const Page = () => {
                                     <input
                                         className="cursor-pointer"
                                         type="checkbox"
-                                        checked={selectedLeads.includes(lead.id)}
-                                        onChange={() => toggleSelection(lead.id)}
+                                        checked={selectedLeads.includes(lead.leadId)}
+                                        onChange={() => toggleSelection(lead.leadId)}
                                     />
                                 </TableCell>
                                 <TableCell className="px-4 py-3">{lead.leadId}</TableCell>
