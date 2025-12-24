@@ -232,7 +232,7 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] py-4 pl-4",
+          " fixed inset-y-0 z-10 hidden h-svh w-[248px] transition-[left,right,width] duration-200 ease-linear md:flex bg-[rgba(255, 255, 255, 0.06)] py-4 pl-4 ",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -244,17 +244,10 @@ function Sidebar({
         )}
         {...props}
       >
-        {/* <LiquidGlass
-          borderRadius="16px"
-          shadowIntensity="xs"
-          glowIntensity="xs"
-          width="100%"
-        >
-        </LiquidGlass> */}
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-[rgba(255,255,255,0.10)] cursor-default h-full p-3 w-full group-data-[collapsible=icon]:p-2 rounded-2xl relative"
+          className="bg-[rgba(255,255,255,0.10)] cursor-default h-full px-3 pt-2 pb-1 w-full group-data-[collapsible=icon]:p-2 rounded-2xl relative"
         >
           <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-2xl pointer-events-none" />
           <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-2xl pointer-events-none" />

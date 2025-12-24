@@ -190,7 +190,7 @@ const Navbar: React.FC = () => {
                   Profile
                 </Link>
                 <Link
-                  href="/dashboard/settings"
+                  href="/dashboard/analysis/settings"
                   className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
                   Settings

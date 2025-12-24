@@ -11,7 +11,7 @@ import { useUpdatePasswordMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { passwordRules } from "@/components/auth/Registration";
+import { passwordRules } from "./register/RegisterComponent";
 
 const changePasswordSchema = z
   .object({

@@ -1,4 +1,3 @@
-import Login from "@/components/auth/Login";
 import LoginComponent from "@/components/auth/login/LoginComponent";
 import LoginText from "@/components/auth/login/LoginText";
 

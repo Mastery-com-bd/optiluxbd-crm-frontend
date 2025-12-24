@@ -63,13 +63,6 @@ export default function Navbar() {
     }
   };
 
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/login") ||
-    pathname?.startsWith("/register")
-  )
-    return null;
-
   return (
     <motion.nav
       initial={{ y: -60, opacity: 0 }}
