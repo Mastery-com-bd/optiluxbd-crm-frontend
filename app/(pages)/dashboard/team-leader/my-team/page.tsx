@@ -1,108 +1,38 @@
 'use client'
 import StatsCard from "@/components/pages/dashboard/shared/StatsCard";
-import AssignLeadsToTeam from "@/components/pages/dashboard/teamLeader/assignleades/AssignLeadsToTeam";
 import { Button } from "@/components/ui/button";
-// app/page.tsx (or any component file)
-import CustomPagination from "@/components/ui/CustomPagination";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Lead } from "@/types/teamleader.types";
 import { debounce } from "@/utills/debounce";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { User, Users, Phone, Mail, MoreVertical, Pencil, Eye, Trash2, Search, X } from "lucide-react";
-import Link from "next/link";
+import { Eye, MoreVertical, Pencil, Search, Trash2, X } from "lucide-react";
 import { useState } from "react";
+const myAgents = [
+    { id: 1, name: "Ayaan Khan", agentId: "AG101", todaysCalls: 40, monthsConversion: "25%", todaysConversion: "25%", level: "Bronze", status: "Deactive" },
+    { id: 2, name: "Fatima Ali", agentId: "AG202", todaysCalls: 30, monthsConversion: "25%", todaysConversion: "25%", level: "Silver", status: "Active" },
+    { id: 3, name: "Samir Patel", agentId: "AG303", todaysCalls: 78, monthsConversion: "25%", todaysConversion: "25%", level: "Gold", status: "Active" },
+    { id: 4, name: "Layla Rahman", agentId: "AG404", todaysCalls: 76, monthsConversion: "25%", todaysConversion: "25%", level: "Platinum", status: "Active" },
+    { id: 5, name: "Omar Siddiqui", agentId: "AG505", todaysCalls: 45, monthsConversion: "25%", todaysConversion: "25%", level: "Diamond", status: "Deactive" },
+    { id: 6, name: "Nadia Hussain", agentId: "AG606", todaysCalls: 82, monthsConversion: "25%", todaysConversion: "25%", level: "Legend", status: "Active" },
+    { id: 7, name: "Rashid Khan", agentId: "AG707", todaysCalls: 91, monthsConversion: "25%", todaysConversion: "25%", level: "Sales Samurai", status: "Active" },
+    { id: 8, name: "Zara Iqbal", agentId: "AG808", todaysCalls: 53, monthsConversion: "25%", todaysConversion: "25%", level: "Call Machine", status: "Deactive" },
+];
 
-
-const myLeads = [
-    {
-        id: 0,
-        "leadId": "LD-98989",
-        "leadName": "Aminul Islam",
-        "mobileNumber": "01780530300",
-        "leadSource": "Facebook",
-        "interestedProduct": "RB3025",
-        "status": "Assigned",
-        "priority": "High"
-    },
-    {
-        id: 1,
-        "leadId": "LD-98989",
-        "leadName": "Fatema Rahman",
-        "mobileNumber": "01518660316",
-        "leadSource": "Website",
-        "interestedProduct": "RB3025",
-        "status": "Assigned",
-        "priority": "Medium"
-    },
-    {
-        id: 2,
-        "leadId": "LD-98989",
-        "leadName": "Shakib Al Hasan",
-        "mobileNumber": "01518660316",
-        "leadSource": "Organic",
-        "interestedProduct": "PR17WS",
-        "status": "Assigned",
-        "priority": "Low"
-    },
-    {
-        id: 3,
-        "leadId": "LD-98989",
-        "leadName": "Nusrat Jahan",
-        "mobileNumber": "01518660316",
-        "leadSource": "Referral",
-        "interestedProduct": "BLBOO1",
-        "status": "Unassigned",
-        "priority": "High"
-    },
-    {
-        id: 4,
-        "leadId": "LD-98989",
-        "leadName": "Rashidul Karim",
-        "mobileNumber": "01518660316",
-        "leadSource": "Whatsapp",
-        "interestedProduct": "BLBOO1",
-        "status": "Unassigned",
-        "priority": "Low"
-    },
-    {
-        id: 5,
-        "leadId": "LD-98989",
-        "leadName": "Sadia Begum",
-        "mobileNumber": "01780530300",
-        "leadSource": "Facebook",
-        "interestedProduct": "RB3025",
-        "status": "Unassigned",
-        "priority": "Low"
-    },
-    {
-        id: 6,
-        "leadId": "LD-98989",
-        "leadName": "Tariq Ahmed",
-        "mobileNumber": "01780530300",
-        "leadSource": "Organic",
-        "interestedProduct": "PR17WS",
-        "status": "Assigned",
-        "priority": "High"
-    },
-    {
-        id: 7,
-        "leadId": "LD-98989",
-        "leadName": "Zainab Sultana",
-        "mobileNumber": "01780530300",
-        "leadSource": "Facebook",
-        "interestedProduct": "PR17WS",
-        "status": "Assigned",
-        "priority": "High"
-    }
-]
 const keys = [
-    "checkbox", "LeadID", "Lead Name", "Mobile Number", "Lead Source", "Interested Product", "Status", "Priority", "Action",
-]
-const Page = () => {
-    const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+    "checkbox",
+    "Agent Name",
+    "Agent ID",
+    "Today's Calls",
+    "This Month's Conversion",
+    "Today's Conversion",
+    "Level",
+    "Status",
+    "Action"
+];
+
+const MyTeam = () => {
+    const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [filters, setFilters] = useState({
         limit: 10,
@@ -111,53 +41,53 @@ const Page = () => {
         status: "",
         priority: "",
     });
-    const toggleSelection = (leadId: string) => {
-        setSelectedLeads((prev) =>
-            prev.includes(leadId)
-                ? prev.filter((id) => id !== leadId)
-                : [...prev, leadId]
-        );
-    };
-
-    const toggleSelectAll = () => {
-        const currentOrderIds = myLeads.map((lead: Lead) => lead.leadId);
-        const allSelected = currentOrderIds.every((id: string) =>
-            selectedLeads.includes(id)
-        );
-        if (allSelected) {
-            setSelectedLeads((prev) =>
-                prev.filter((id) => !currentOrderIds.includes(id))
-            );
-        } else {
-            const newSelections = currentOrderIds.filter(
-                (id: string) => !selectedLeads.includes(id)
-            );
-            setSelectedLeads((prev) => [...prev, ...newSelections]);
-        }
-    };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSearch = async (val: any) => {
         setFilters({ ...filters, search: val });
     };
     const debouncedLog = debounce(handleSearch, 1000, { leading: false });
-    const allPageLeadsSelected =
-        myLeads.length > 0 &&
-        myLeads.every((lead: Lead) => selectedLeads.includes(lead.leadId));
+    const toggleSelection = (agentId: string) => {
+        setSelectedAgents((prev) =>
+            prev.includes(agentId)
+                ? prev.filter((id) => id !== agentId)
+                : [...prev, agentId]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        const currentOrderIds = myAgents.map((agent: Agent) => agent.agentId);
+        const allSelected = currentOrderIds.every((id: string) =>
+            selectedAgents.includes(id)
+        );
+        if (allSelected) {
+            setSelectedAgents((prev) =>
+                prev.filter((id) => !currentOrderIds.includes(id))
+            );
+        } else {
+            const newSelections = currentOrderIds.filter(
+                (id: string) => !selectedAgents.includes(id)
+            );
+            setSelectedAgents((prev) => [...prev, ...newSelections]);
+        }
+    };
+    const allPageAgentsSelected =
+        myAgents.length > 0 &&
+        myAgents.every((agent: Agent) => selectedAgents.includes(agent.agentId));
     return (
         <div className="p-6 ">
-            <h3 className="text-xl font-semibold mb-6">My Leads</h3>
+            <h3 className="text-xl font-semibold mb-6">My agents</h3>
             <StatsCard />
             {/* Bulk Actions */}
-            {selectedLeads.length > 0 && (
+            {selectedAgents.length > 0 && (
                 <div className="mb-2 flex items-center gap-4 text-sm text-muted-foreground  justify-end my-4">
                     <Button
                         variant="outline"
                         className="border border-yellow-600! cursor-pointer py-6 rounded-2xl"
                         size="sm"
-                        onClick={() => setSelectedLeads([])}
+                        onClick={() => setSelectedAgents([])}
                     >
                         <X className="w-4 h-4 mr-1" />
-                        Selected Leads {selectedLeads.length}
+                        Selected agents {selectedAgents.length}
                     </Button>
                     {/* <Button
                         variant="outline"
@@ -166,7 +96,7 @@ const Page = () => {
                     >
                         Assign to Agent
                     </Button> */}
-                    <AssignLeadsToTeam selectedLeads={selectedLeads} />
+                    {/* <AssignagentsToTeam selectedAgents={selectedAgents} /> */}
                 </div>
             )}
             {/* Filter Options */}
@@ -231,7 +161,7 @@ const Page = () => {
                                         <input
                                             className="cursor-pointer"
                                             type="checkbox"
-                                            checked={allPageLeadsSelected}
+                                            checked={allPageAgentsSelected}
                                             onChange={toggleSelectAll}
                                         />
                                     ) : (
@@ -242,64 +172,36 @@ const Page = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {myLeads?.map((lead: Lead) => (
-                            <TableRow
-                                key={lead.id}
-                                className="border-muted hover:bg-muted/50 transition-colors"
-                            >
+                        {myAgents.map((agent) => (
+                            <TableRow key={agent.id} className="border-muted hover:bg-muted/50 transition-colors">
                                 <TableCell className="px-4 py-3">
                                     <input
                                         className="cursor-pointer"
                                         type="checkbox"
-                                        checked={selectedLeads.includes(lead.leadId)}
-                                        onChange={() => toggleSelection(lead.leadId)}
+                                        checked={selectedAgents.includes(agent.agentId)}
+                                        onChange={() => toggleSelection(agent.agentId)}
                                     />
                                 </TableCell>
-                                <TableCell className="px-4 py-3">{lead.leadId}</TableCell>
-                                <TableCell className="px-4 py-3">{lead.leadName}</TableCell>
-                                <TableCell className="px-4 py-3 text-sm text-center">{lead.mobileNumber}</TableCell>
-                                <TableCell className="px-4 py-3 text-sm text-center">{lead.leadSource}</TableCell>
-                                <TableCell className="px-4 py-3 text-sm font-medium text-center">{lead.interestedProduct}</TableCell>
-
-                                {/* ✅ Styled Status Pill */}
-                                <TableCell className="px-4 py-3 text-sm font-semibold text-center">
-                                    <span
-                                        className={`px-4 py-1 text-sm font-medium rounded-md
-                                                         ${lead.status === "Assigned"
-                                                ? "bg-green-800/30 text-green-400 border border-green-500/30"
-                                                : "bg-red-800/30 text-red-400 border border-red-500/30"
-                                            }`}
-                                    >
-                                        {lead.status}
-                                    </span>
-                                </TableCell>
-
-                                {/* ✅ Styled Priority Pill */}
+                                <TableCell className="px-4 py-3">{agent.name}</TableCell>
+                                <TableCell className="px-4 py-3">{agent.agentId}</TableCell>
+                                <TableCell className="px-4 py-3 text-center">{agent.todaysCalls}</TableCell>
+                                <TableCell className="px-4 py-3 text-center">{agent.monthsConversion}</TableCell>
+                                <TableCell className="px-4 py-3 text-center">{agent.todaysConversion}</TableCell>
+                                <TableCell className="px-4 py-3 text-center">{agent.level}</TableCell>
                                 <TableCell className="px-4 py-3 text-center">
-                                    <span
-                                        className={`px-4 py-1 text-sm font-medium rounded-md border ${lead.priority === "High"
-                                            ? "bg-red-800/30 text-red-400 border-red-500/30"
-                                            : lead.priority === "Medium"
-                                                ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
-                                                : "bg-blue-800/30 text-blue-300 border-blue-400/30"
-                                            }`}
-                                    >
-                                        {lead.priority}
+                                    <span className={`px-4 py-1 text-sm font-medium rounded-md ${agent.status === "Active" ? "bg-green-800/30 text-green-400" : "bg-red-800/30 text-red-400"}`}>
+                                        {agent.status}
                                     </span>
                                 </TableCell>
-
-                                {/* Action Dropdown */}
                                 <TableCell className="px-4 py-3 text-center">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger className="cursor-pointer">
                                             <MoreVertical className="h-4 w-4" />
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="w-[180px] flex flex-col">
-                                            <Link href={`/dashboard/admin/products/all-products/${lead.id}`}>
-                                                <DropdownMenuItem className="cursor-pointer">
-                                                    <Eye className="w-4 h-4 mr-2" /> View
-                                                </DropdownMenuItem>
-                                            </Link>
+                                            <DropdownMenuItem className="cursor-pointer">
+                                                <Eye className="w-4 h-4 mr-2" /> View
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem className="cursor-pointer">
                                                 <Pencil className="w-4 h-4 mr-2" /> Update
                                             </DropdownMenuItem>
@@ -324,4 +226,4 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default MyTeam;

@@ -257,18 +257,19 @@ export const crmRoutes: TCrmNavigation = {
         //     "ALLOCATIONS VIEW OWN",
         //   ],
         // },
-        // {
-        //   title: "My Leads",
-        //   path: "/dashboard/leads/agents",
-        //   roles: ["AGENT"],
-        //   permissions: [
-        //     "ALLOCATIONS ASSIGN LEADER",
-        //     "ALLOCATIONS DISTRIBUTE",
-        //     "ALLOCATIONS REPORTS VIEW",
-        //     "ALLOCATIONS REPORTS VIEW OWN",
-        //     "ALLOCATIONS VIEW OWN",
-        //   ],
-        // },
+        {
+          title: "My Leads",
+          path: "/dashboard/team-leader/my-leads",
+          // roles: ["AGENT"],
+          // permissions: [
+          //   "ALLOCATIONS ASSIGN LEADER",
+          //   "ALLOCATIONS DISTRIBUTE",
+          //   "ALLOCATIONS REPORTS VIEW",
+          //   "ALLOCATIONS REPORTS VIEW OWN",
+          //   "ALLOCATIONS VIEW OWN",
+          // ],
+        },
+
       ],
     },
 
@@ -330,6 +331,18 @@ export const crmRoutes: TCrmNavigation = {
           title: "Lead Assignment",
           path: "/dashboard/team/assign-leads",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "My Team",
+          path: "/dashboard/team-leader/my-team",
+          // roles: ["AGENT"],
+          // permissions: [
+          //   "ALLOCATIONS ASSIGN LEADER",
+          //   "ALLOCATIONS DISTRIBUTE",
+          //   "ALLOCATIONS REPORTS VIEW",
+          //   "ALLOCATIONS REPORTS VIEW OWN",
+          //   "ALLOCATIONS VIEW OWN",
+          // ],
         },
       ],
     },
