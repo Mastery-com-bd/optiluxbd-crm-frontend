@@ -12,7 +12,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import SubItemButton from "@/components/ui/SubItemButton";
+import SubItemButton from "@/components/pages/shared/dashboard/sidebar/buttons/SubItemButton";
 import { NavRoute } from "@/constants/CRM_Navigation";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
