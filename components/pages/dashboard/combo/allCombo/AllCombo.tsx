@@ -393,32 +393,20 @@ const AllCombo = () => {
       {/* filtyer section */}
       <div className="flex items-center justify-between">
         {/* search bar */}
-        <div className=" w-full flex items-center gap-3">
-          <div className="relative">
-            <Search
-              size={16}
-              className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-            />
-            <Input
-              className="px-10 py-1.5 w-64 text-sm bg-transparent"
-              value={inputValue}
-              onChange={(e) => {
-                debouncedLog(e.target.value);
-                setInputValue(e.target.value);
-              }}
-              placeholder="Search product by name"
-            />
-          </div>
-
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="12px"
-          >
-            <Button className=" w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
-              <Funnel size={16} />
-            </Button>
-          </LiquidGlass>
+        <div className="flex  gap-3">
+          <Input
+            className=" py-1.5 w-64 text-sm bg-transparent"
+            value={inputValue}
+            icon={<Search />}
+            onChange={(e) => {
+              debouncedLog(e.target.value);
+              setInputValue(e.target.value);
+            }}
+            placeholder="Search product by name"
+          />
+          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
+            <Funnel size={16} />
+          </Button>
         </div>
 
         {/* dropdown */}
