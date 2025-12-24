@@ -1,12 +1,11 @@
-import ForgetPassword from "@/components/auth/ForgetPassword";
+import ForgetPasswordComponent from "@/components/auth/forgetPassword/ForgetPasswordComponent";
+import LoginText from "@/components/auth/login/LoginText";
 
 const ForgetPassowrd = () => {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center space-y-6">
-      <ForgetPassword />
-      <p className="text-sm text-gray-500">
-        © <span>{new Date().getFullYear()}</span> Mastery — by Team Mastery
-      </p>
+    <section className="h-screen px-4 lg:px-44 flex flex-col lg:flex-row items-center lg:justify-between ">
+      <LoginText />
+      <ForgetPasswordComponent />
     </section>
   );
 };
