@@ -19,7 +19,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { passwordRules } from "@/components/auth/Registration";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCreateUserByAdminMutation } from "@/redux/features/user/userApi";
+import { passwordRules } from "@/components/auth/register/RegisterComponent";
 
 const createUserSchema = z.object({
   name: z.string().min(1, "Name is required"),

@@ -41,9 +41,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ServiceWorkerRegistration />
-            <Navbar />
             {children}
-            <Footer />
             <Toaster richColors position="top-center" />
           </ThemeProvider>
         </body>
