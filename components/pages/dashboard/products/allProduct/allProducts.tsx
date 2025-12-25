@@ -27,7 +27,6 @@ import {
   useGetAllProductQuery,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
-import PaginationControls from "@/components/ui/paginationComponent";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
 import { Product } from "@/types/product";
@@ -42,9 +41,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAppSelector } from "@/redux/hooks";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
   Table,
@@ -108,7 +104,7 @@ const AllProducts = () => {
       console.error("Error deleting product:", error);
     }
   };
-  
+
   const HandlePageChange = (page: number) => {
     setFilters({ ...filters, page });
   };
@@ -272,11 +268,10 @@ const AllProducts = () => {
                       <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${
-                                                    product.status === "ACTIVE"
-                                                      ? "text-green-500"
-                                                      : "text-red-500"
-                                                  }`}
+                                                  ${product.status === "ACTIVE"
+                              ? "text-green-500"
+                              : "text-red-500"
+                            }`}
                         >
                           {product.status.toLocaleLowerCase()}
                         </span>
