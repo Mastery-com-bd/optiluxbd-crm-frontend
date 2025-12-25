@@ -260,7 +260,11 @@ const LoginComponent = () => {
   return (
     <div className="rounded-xl border border-[#221F33] bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-8 py-4 lg:w-[25vw] space-y-4">
       <div className="space-y-5">
-        <Image src={logo} height={100} width={100} alt="brand logo" />
+        <div className="flex items-center justify-start">
+          <Link href="/">
+            <Image src={logo} height={100} width={100} alt="brand logo" />
+          </Link>
+        </div>
 
         <div className="space-y-1">
           <h1 className="text-2xl font-medium text-[#C3C0D8]">Welcome</h1>
@@ -285,7 +289,7 @@ const LoginComponent = () => {
             type="submit"
             disabled={isSubmitting}
             onClick={handleAdmin}
-            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2"
+            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : "Owner"}
           </button>
@@ -293,7 +297,7 @@ const LoginComponent = () => {
             type="submit"
             disabled={isSubmitting}
             onClick={handleAgent}
-            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2"
+            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : "Agent"}
           </button>
@@ -301,7 +305,7 @@ const LoginComponent = () => {
             type="submit"
             disabled={isSubmitting}
             onClick={handleteamLeader}
-            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2"
+            className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : " Team Leader"}
           </button>

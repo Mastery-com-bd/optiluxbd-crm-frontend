@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { SidebarMenuSubButton } from "@/components/ui/sidebar";
-import SidebarButtonSvg from "../svgIcon/SidebarButtonSvg";
+import SidebarButtonSvg from "../../../../../svgIcon/SidebarButtonSvg";
 import { NavRoute } from "@/constants/CRM_Navigation";
 
 type SubItemButtonProps = {

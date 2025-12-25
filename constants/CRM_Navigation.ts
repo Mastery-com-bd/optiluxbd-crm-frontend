@@ -1,16 +1,18 @@
 import LeadsTitleIcon from "@/components/svgIcon/LeadsTitleIcon";
 import {
-  Package,
   ShoppingCart,
   Users,
-  Users2,
-  Activity,
-  Tags,
-  MessageCircleWarning,
   CircleGauge,
   UsersRound,
   GitFork,
   PackageCheck,
+  FileStack,
+  Handbag,
+  Contact,
+  Phone,
+  ChartColumn,
+  Info,
+  Settings,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -27,8 +29,18 @@ export type TCrmNavigation = {
   dashboard: NavRoute;
   coreManagement: NavRoute[];
   teamAndSales: NavRoute[];
-  deliveryCommunication: NavRoute[];
-  analyticsAndSettings: NavRoute[];
+  deliveryCommunication: {
+    communication: NavRoute;
+    courierAndDelivery: NavRoute[];
+  };
+  analyticsAndSettings: {
+    analytics?: NavRoute[];
+    childLessRoutes: {
+      reports: NavRoute;
+      settings: NavRoute;
+      help: NavRoute;
+    };
+  };
 };
 
 export const crmRoutes: TCrmNavigation = {
@@ -45,7 +57,7 @@ export const crmRoutes: TCrmNavigation = {
     //CATEGORIES
     {
       title: "Categories",
-      icon: Tags,
+      icon: FileStack,
       // permissions: [
       //   "CATEGORIES CREATE",
       //   "CATEGORIES UPDATE",
@@ -58,8 +70,8 @@ export const crmRoutes: TCrmNavigation = {
       // ],
       children: [
         {
-          title: "Parent Categories",
-          path: "/dashboard/admin/product-category/parent-category",
+          title: "Overview",
+          path: "/dashboard/categories",
           // permissions: [
           //   "CATEGORIES CREATE",
           //   "CATEGORIES UPDATE",
@@ -68,8 +80,8 @@ export const crmRoutes: TCrmNavigation = {
           // ],
         },
         {
-          title: "Sub Categories",
-          path: "/dashboard/admin/product-category/sub-category",
+          title: "All Category",
+          path: "/dashboard/categories/all",
           // permissions: [
           //   "SUBCATEGORIES CREATE",
           //   "SUBCATEGORIES UPDATE",
@@ -83,7 +95,7 @@ export const crmRoutes: TCrmNavigation = {
     // products route
     {
       title: "Products",
-      icon: Package,
+      icon: Handbag,
       // permissions: [
       //   "PRODUCTS VIEW",
       //   "PRODUCTS CREATE",
@@ -109,6 +121,11 @@ export const crmRoutes: TCrmNavigation = {
         {
           title: "Low Stock Products",
           path: "/dashboard/admin/products/low-stock-products",
+          // permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
+        },
+        {
+          title: "History",
+          path: "/dashboard/admin/products/history",
           // permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
         },
       ],
@@ -171,22 +188,22 @@ export const crmRoutes: TCrmNavigation = {
           // permissions: ["ORDERS VIEW"],
         },
         {
-          title: "Payments",
+          title: "Invoice Generator",
           path: "/dashboard/admin/orders/payments",
           // permissions: ["ORDERS VIEW"],
         },
-        {
-          title: "My Orders",
-          path: "/dashboard/agent/orders/my-orders",
-          // permissions: ["ORDERS VIEW OWN"],
-          // roles: ["AGENT"],
-        },
-        {
-          title: "Create Order",
-          path: `/dashboard/agent/orders/create-order/${0}`,
-          // permissions: ["ORDERS CREATE"],
-          // roles: ["AGENT"],
-        },
+        // {
+        //   title: "My Orders",
+        //   path: "/dashboard/agent/orders/my-orders",
+        //   permissions: ["ORDERS VIEW OWN"],
+        //   roles: ["AGENT"],
+        // },
+        // {
+        //   title: "Create Order",
+        //   path: `/dashboard/agent/orders/create-order/${0}`,
+        //   permissions: ["ORDERS CREATE"],
+        //   roles: ["AGENT"],
+        // },
         // {
         //   title: "Top Sellers",
         //   path: "/dashboard/admin/orders/top-sellers",
@@ -307,6 +324,44 @@ export const crmRoutes: TCrmNavigation = {
   teamAndSales: [
     // team leader management route
     {
+      title: "Agents",
+      icon: Contact,
+      // permissions: [
+      //   "ALLOCATIONS ASSIGN LEADER",
+      //   "ALLOCATIONS DISTRIBUTE",
+      //   "ALLOCATIONS REPORTS VIEW",
+      //   "ALLOCATIONS REPORTS VIEW OWN",
+      //   "ALLOCATIONS VIEW OWN",
+      // ],
+      children: [
+        {
+          title: "All Agents",
+          path: "/dashboard/agent",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "Attendence",
+          path: "/dashboard/agent/attendance",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "Team & Hierarchy",
+          path: "/dashboard/agent/team",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "Call Tasks",
+          path: "/dashboard/agent/all-task",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "Leaderboard",
+          path: "/dashboard/agent/leaderboard",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+      ],
+    },
+    {
       title: "Teams",
       icon: UsersRound,
       // permissions: [
@@ -349,157 +404,192 @@ export const crmRoutes: TCrmNavigation = {
   ],
 
   // delivery and communication
-  deliveryCommunication: [
-    // Courier route
-    {
-      title: "Courier & Delivery",
-      icon: PackageCheck,
-      // permissions: [
-      //   "ORDERS VIEW",
-      //   "ORDERS CREATE",
-      //   "ORDERS UPDATE",
-      //   "ORDERS DELETE",
-      //   "ORDERS VIEW OWN",
-      // ],
-      // roles: ["owner", "LEADER"],
-      children: [
-        {
-          title: "Courier Overview",
-          path: "/dashboard/couriar/local",
-          // permissions: ["ORDERS VIEW"],
-        },
-        {
-          title: "All Courier",
-          children: [
-            {
-              title: "Pathao",
-              path: "/dashboard/couriar/pathao",
-            },
-            {
-              title: "Redex",
-              path: "/dashboard/couriar/redex",
-            },
-            {
-              title: "Steedfast",
-              path: "/dashboard/couriar/steadfast",
-            },
-          ],
-          // permissions: ["ORDERS VIEW"],
-        },
-        {
-          title: "Courier Assignemnts",
-          path: "/dashboard/couriar/local",
-          // permissions: ["ORDERS VIEW"],
-        },
-        // {
-        //   title: "Steadfast",
-        //   path: "/dashboard/couriar/steadFast",
-        //   permissions: ["ORDERS VIEW"],
-        // },
-        // {
-        //   title: "Pathao",
-        //   path: "/dashboard/couriar/pathao",
-        //   permissions: ["ORDERS VIEW"],
-        // },
-        // {
-        //   title: "RedX",
-        //   path: "/dashboard/couriar/redx",
-        //   permissions: ["ORDERS VIEW"],
-        // },
-      ],
+  deliveryCommunication: {
+    // communication
+    communication: {
+      title: "Communication",
+      icon: Phone,
+      path: "/dashboard/communication",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
     },
-  ],
+    courierAndDelivery: [
+      {
+        title: "Courier & Delivery",
+        icon: PackageCheck,
+        // permissions: [
+        //   "ORDERS VIEW",
+        //   "ORDERS CREATE",
+        //   "ORDERS UPDATE",
+        //   "ORDERS DELETE",
+        //   "ORDERS VIEW OWN",
+        // ],
+        // roles: ["owner", "LEADER"],
+        children: [
+          {
+            title: "Courier Overview",
+            path: "/dashboard/couriar",
+            // permissions: ["ORDERS VIEW"],
+          },
+          {
+            title: "All Courier",
+            children: [
+              {
+                title: "Pathao",
+                path: "/dashboard/couriar/pathao",
+              },
+              {
+                title: "Redex",
+                path: "/dashboard/couriar/redx",
+              },
+              {
+                title: "Steedfast",
+                path: "/dashboard/couriar/steadFast",
+              },
+            ],
+            // permissions: ["ORDERS VIEW"],
+          },
+          {
+            title: "Courier Assignemnts",
+            path: "/dashboard/couriar/assignments",
+            // permissions: ["ORDERS VIEW"],
+          },
+          // {
+          //   title: "Steadfast",
+          //   path: "/dashboard/couriar/steadFast",
+          //   permissions: ["ORDERS VIEW"],
+          // },
+          // {
+          //   title: "Pathao",
+          //   path: "/dashboard/couriar/pathao",
+          //   permissions: ["ORDERS VIEW"],
+          // },
+          // {
+          //   title: "RedX",
+          //   path: "/dashboard/couriar/redx",
+          //   permissions: ["ORDERS VIEW"],
+          // },
+        ],
+      },
+    ],
+    // Courier route
+  },
 
   // amalytics and settings
-  analyticsAndSettings: [
+  analyticsAndSettings: {
+    childLessRoutes: {
+      reports: {
+        title: "Reports & Analytics",
+        icon: ChartColumn,
+        path: "/dashboard/analysis",
+        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+        // roles: ["owner", "TEAM_LEADER"],
+      },
+      help: {
+        title: "Help",
+        icon: Info,
+        path: "/dashboard/analysis/help",
+        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+        // roles: ["owner", "TEAM_LEADER"],
+      },
+      settings: {
+        title: "Settings",
+        icon: Settings,
+        path: "/dashboard/analysis/settings",
+        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+        // roles: ["owner", "TEAM_LEADER"],
+      },
+    },
     // complain route
-    {
-      title: "Complaint",
-      icon: MessageCircleWarning,
-      // permissions: [
-      //   "COMPLAIN VIEW",
-      //   "COMPLAIN CREATE",
-      //   "COMPLAIN UPDATE",
-      //   "COMPLAIN DELETE",
-      // ],
-      children: [
-        {
-          title: "Report user's complain",
-          path: "/dashboard/agent/complaint",
-          // permissions: ["COMPLAINT CREATE", "COMPLAINT VIEW", "COMPLAINT UPDATE", "COMPLAINT DELETE"],
-        },
-      ],
-    },
-
+    // {
+    //   title: "Complaint",
+    //   icon: MessageCircleWarning,
+    //   permissions: [
+    //     "COMPLAIN VIEW",
+    //     "COMPLAIN CREATE",
+    //     "COMPLAIN UPDATE",
+    //     "COMPLAIN DELETE",
+    //   ],
+    //   children: [
+    //     {
+    //       title: "Report user's complain",
+    //       path: "/dashboard/agent/complaint",
+    //       permissions: [
+    //         "COMPLAINT CREATE",
+    //         "COMPLAINT VIEW",
+    //         "COMPLAINT UPDATE",
+    //         "COMPLAINT DELETE",
+    //       ],
+    //     },
+    //   ],
+    // },
     // hr and staff route
-    {
-      title: "HR & Staff",
-      icon: Users2,
-      // permissions: ["USERS CREATE", "USERS VIEW", "ROLES MANAGE", "ROLES VIEW"],
-      // roles: ["owner"],
-      children: [
-        {
-          title: "All Employee",
-          path: "/dashboard/admin/manage-users",
-          // permissions: ["USERS VIEW"],
-        },
-        {
-          title: "Add Employee",
-          path: "/dashboard/hr&staff/staff/add",
-          // permissions: ["USERS CREATE"],
-        },
-        {
-          title: "Roles & Permissions",
-          path: "/dashboard/hr&staff/roles",
-          // permissions: ["ROLES MANAGE"],
-        },
-        {
-          title: "Pending Approval",
-          path: "/dashboard/admin/approve-user",
-          // permissions: ["USERS VIEW"],
-        },
-      ],
-    },
-
+    // {
+    //   title: "HR & Staff",
+    //   icon: Users2,
+    //   permissions: ["USERS CREATE", "USERS VIEW", "ROLES MANAGE", "ROLES VIEW"],
+    //   roles: ["owner"],
+    //   children: [
+    //     {
+    //       title: "All Employee",
+    //       path: "/dashboard/admin/manage-users",
+    //       permissions: ["USERS VIEW"],
+    //     },
+    //     {
+    //       title: "Add Employee",
+    //       path: "/dashboard/hr&staff/staff/add",
+    //       permissions: ["USERS CREATE"],
+    //     },
+    //     {
+    //       title: "Roles & Permissions",
+    //       path: "/dashboard/hr&staff/roles",
+    //       permissions: ["ROLES MANAGE"],
+    //     },
+    //     {
+    //       title: "Pending Approval",
+    //       path: "/dashboard/admin/approve-user",
+    //       permissions: ["USERS VIEW"],
+    //     },
+    //   ],
+    // },
     // activity
-    {
-      title: "Activity",
-      icon: Activity,
-      children: [
-        {
-          title: "All Activity",
-          path: "/dashboard/activity",
-          // permissions: ["AUDIT VIEW"],
-          // roles: ["owner"],
-        },
-        {
-          title: "My Activity",
-          path: "/dashboard/my-activity",
-        },
-      ],
-    },
-
+    // {
+    //   title: "Activity",
+    //   icon: Activity,
+    //   children: [
+    //     {
+    //       title: "All Activity",
+    //       path: "/dashboard/activity",
+    //       // permissions: ["AUDIT VIEW"],
+    //       // roles: ["owner"],
+    //     },
+    //     {
+    //       title: "My Activity",
+    //       path: "/dashboard/my-activity",
+    //     },
+    //   ],
+    // },
     // reminder
-    {
-      title: "Reminder",
-      icon: Activity,
-      children: [
-        {
-          title: "All Reminders",
-          path: "/dashboard/reminders",
-          // permissions: ["AUDIT VIEW"],
-        },
-        // {
-        //   title: "Customer Reminder",
-        //   path: "/dashboard/reminders/customer-reminders",
-        //   // permissions: ["AUDIT VIEW"],
-        // },
-        {
-          title: "Upcoming Reminders",
-          path: "/dashboard/reminders/upcoming-reminders",
-          // permissions: ["AUDIT VIEW"],
-        },
-      ],
-    },
-  ],
+    // {
+    //   title: "Reminder",
+    //   icon: Activity,
+    //   children: [
+    //     {
+    //       title: "All Reminders",
+    //       path: "/dashboard/reminders",
+    //       permissions: ["AUDIT VIEW"],
+    //     },
+    //     {
+    //       title: "Customer Reminder",
+    //       path: "/dashboard/reminders/customer-reminders",
+    //       permissions: ["AUDIT VIEW"],
+    //     },
+    //     {
+    //       title: "Upcoming Reminders",
+    //       path: "/dashboard/reminders/upcoming-reminders",
+    //       permissions: ["AUDIT VIEW"],
+    //     },
+    //   ],
+    // },
+  },
 };

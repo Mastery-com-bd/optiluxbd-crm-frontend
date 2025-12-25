@@ -8,17 +8,23 @@ import GreenSvgForButton from "../svgIcon/GreenSvgForButton";
 import RedSvgForButton from "../svgIcon/RedSvgForButton";
 import ButtonSvgGlow from "../svgIcon/ButtonSvgGlow";
 import YellowSVGForButton from "../svgIcon/YellowSVGForButton";
+import PurpleButtonSvg from "../svgIcon/PurpleButtonSvg";
+import LightPurple from "../svgIcon/LightPurple";
+import CornerPurpleSvg from "../svgIcon/CornerPurpleSvg";
 
 type TButtonComponentProps = {
   buttonName?: string;
   icon?: LucideIcon;
   varient?:
-  | "green"
-  | "yellow"
-  | "red"
-  | "dark yellow"
-  | "light yellow"
-  | "default";
+    | "green"
+    | "yellow"
+    | "red"
+    | "dark yellow"
+    | "light yellow"
+    | "purple"
+    | "light purple"
+    | "deep purple"
+    | "default";
   clasName?: string;
   borderClass?: string;
   handleSubmit?: () => Promise<void>;
@@ -58,8 +64,8 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
                 varient === "green"
                   ? "text-success"
                   : varient === "red"
-                    ? "text-[#F50F0F]"
-                    : "text-white"
+                  ? "text-[#F50F0F]"
+                  : "text-white"
               }
             />
           )}
@@ -116,6 +122,36 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
             </div>
             <div className="pointer-events-none">
               <RedSvgForButton />
+            </div>
+          </>
+        )}
+        {varient === "purple" && (
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,transparent_0%,rgba(220,63,255,1)_50%,transparent_100%)]" />
+            </div>
+            <div className="pointer-events-none">
+              <PurpleButtonSvg />
+            </div>
+          </>
+        )}
+        {varient === "light purple" && (
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,transparent_0%,rgba(220,63,255,1)_50%,transparent_100%)]" />
+            </div>
+            <div className="pointer-events-none">
+              <LightPurple />
+            </div>
+          </>
+        )}
+        {varient === "deep purple" && (
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,transparent_0%,rgba(220,63,255,1)_50%,transparent_100%)]" />
+            </div>
+            <div className="pointer-events-none">
+              <CornerPurpleSvg />
             </div>
           </>
         )}
