@@ -14,11 +14,9 @@ import { usePathname } from "next/navigation";
 
 type TCoreManagementRoute = {
   sidebarRoutes?: NavRoute[];
-  platform: string;
+  platform?: string;
   singleRoute: {
-    reports: NavRoute;
-    settings: NavRoute;
-    help: NavRoute;
+    [key: string]: NavRoute;
   };
 };
 
@@ -31,7 +29,8 @@ const ChildLessRoute = ({ platform, singleRoute }: TCoreManagementRoute) => {
 
   return (
     <div>
-      <SidebarGroupLabel>{platform}</SidebarGroupLabel>
+      {platform && <SidebarGroupLabel>{platform}</SidebarGroupLabel>}
+
       <SidebarMenu>
         {visibleRoutes.map((item, i) => {
           const isActive = pathname === item.path;
