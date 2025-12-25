@@ -27,7 +27,6 @@ import {
   useGetAllProductQuery,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
-import PaginationControls from "@/components/ui/paginationComponent";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
 import { Product } from "@/types/product";
@@ -42,9 +41,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAppSelector } from "@/redux/hooks";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
   Table,
@@ -63,6 +59,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomerPagination from "../../customers/components/pagination";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -108,6 +105,9 @@ const AllProducts = () => {
     }
   };
 
+  const HandlePageChange = (page: number) => {
+    setFilters({ ...filters, page });
+  };
   const keys = [
     "Product",
     "SKU",
@@ -268,11 +268,10 @@ const AllProducts = () => {
                       <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${
-                                                    product.status === "ACTIVE"
-                                                      ? "text-green-500"
-                                                      : "text-red-500"
-                                                  }`}
+                                                  ${product.status === "ACTIVE"
+                              ? "text-green-500"
+                              : "text-red-500"
+                            }`}
                         >
                           {product.status.toLocaleLowerCase()}
                         </span>
@@ -341,10 +340,10 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+        <CustomerPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={HandlePageChange}
         />
       </div>
 

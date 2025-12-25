@@ -1,6 +1,7 @@
 'use client'
 import LowStockProducts from "@/components/pages/dashboard/products/lowStockProducts/LowStockProducts";
 import { OverviewCard } from "@/components/pages/dashboard/shared/overviewCard";
+import PageHeader from "@/components/pages/dashboard/shared/pageHeader";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import { useHasPermission } from "@/utills/permission";
 import { ArrowBigDown, ArrowUp, Box, Plus } from "lucide-react";
@@ -48,11 +49,7 @@ const Page = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <div className="">
-                        <h3 className="text-2xl font-bold">Low stock products</h3>
-                        <br />
-                        <p className="text-gray-500">Browse and manage your complete product catalog.</p>
-                    </div>
+                    <PageHeader title="Low Stock Products" description="Browse and manage your complete product catalog"/>
                 </div>
                 {permission && (
                     <Link href={"/dashboard/admin/products/add-product"}>
