@@ -63,6 +63,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
+import CustomerPagination from "../../customers/components/pagination";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -107,7 +108,10 @@ const AllProducts = () => {
       console.error("Error deleting product:", error);
     }
   };
-
+  
+  const HandlePageChange = (page: number) => {
+    setFilters({ ...filters, page });
+  };
   const keys = [
     "Product",
     "SKU",
@@ -330,10 +334,10 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+        <CustomerPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={HandlePageChange}
         />
       </div>
 
