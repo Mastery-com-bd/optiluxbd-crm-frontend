@@ -13,6 +13,9 @@ import {
   ChartColumn,
   Info,
   Settings,
+  CalendarClock,
+  Target,
+  CircleUserRound,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -40,6 +43,19 @@ export type TCrmNavigation = {
       settings: NavRoute;
       help: NavRoute;
     };
+  };
+  agentRoute?: {
+    dashboard: NavRoute;
+    attendence: NavRoute;
+    myLeads: NavRoute;
+    profile: NavRoute;
+    settings: NavRoute;
+  };
+  teamRoute?: {
+    dashboard: NavRoute;
+    myLeads: NavRoute;
+    myTeam: NavRoute;
+    settings: NavRoute;
   };
 };
 
@@ -286,7 +302,6 @@ export const crmRoutes: TCrmNavigation = {
           //   "ALLOCATIONS VIEW OWN",
           // ],
         },
-
       ],
     },
 
@@ -591,5 +606,73 @@ export const crmRoutes: TCrmNavigation = {
     //     },
     //   ],
     // },
+  },
+
+  agentRoute: {
+    dashboard: {
+      title: "Dashboard",
+      icon: CircleGauge,
+      path: "/dashboard/agentDashboard",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    attendence: {
+      title: "Attendence",
+      icon: CalendarClock,
+      path: "/dashboard/agentDashboard/attendance",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    myLeads: {
+      title: "My Leads",
+      icon: Target,
+      path: "/dashboard/agentDashboard/leads",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    profile: {
+      title: "Profile",
+      icon: CircleUserRound,
+      path: "/dashboard/agentDashboard/profile",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    settings: {
+      title: "Settings",
+      icon: Settings,
+      path: "/dashboard/analysis/settings",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+  },
+  teamRoute: {
+    dashboard: {
+      title: "Dashboard",
+      icon: CircleGauge,
+      path: "/dashboard/team-leader/home",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    myLeads: {
+      title: "My Leads",
+      icon: Target,
+      path: "/dashboard/team-leader/my-leads",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    myTeam: {
+      title: "My Team",
+      icon: Users,
+      path: "/dashboard/team-leader/my-team",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
+    settings: {
+      title: "Settings",
+      icon: Settings,
+      path: "/dashboard/analysis/settings",
+      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
+      // roles: ["owner", "TEAM_LEADER"],
+    },
   },
 };

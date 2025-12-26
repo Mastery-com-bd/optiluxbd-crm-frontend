@@ -1,24 +1,23 @@
 "use client";
 
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import { Card } from "@/components/ui/card";
 import ImageUploader from "@/components/ui/ImageUploader";
 import { useGetCustomerByIdQuery } from "@/redux/features/customers/cutomersApi";
 import { SquarePen, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
-import Overview from "./Overview";
-import OrderHistory from "./OrderHistory";
-import Note from "./Note";
-import ButtonComponent from "@/components/ui/ButtonComponent";
+import Overview from "../../customers/CustomerDetails/Overview";
+import OrderHistory from "../../customers/CustomerDetails/OrderHistory";
+import Note from "../../customers/CustomerDetails/Note";
+import AdvanceProfile from "./AdvanceProfile";
 
-const buttons = ["Overview", "Order History", "Note"];
-
+const buttons = ["Overview", "Order History", "Note", "Advance Profile"];
 const CustomerProfile = ({ id }: { id: string }) => {
   const [enabled, setEnabled] = useState(false);
   const [current, setCurrent] = useState(buttons[0]);
   const { data, isLoading } = useGetCustomerByIdQuery(id);
   const customerData = data?.data;
-  //   const [imageUpload] = useUserImageUploadMutation();
 
   const handleChange = async (imageFile: File) => {
     const formData = new FormData();
@@ -41,7 +40,6 @@ const CustomerProfile = ({ id }: { id: string }) => {
     //   toast.error(errorInfo, { id: toastId, duration: 3000 });
     // }
   };
-
   if (isLoading) {
     return <div>loading...</div>;
   }
@@ -185,6 +183,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
           {current === "Overview" && <Overview />}
           {current === "Order History" && <OrderHistory />}
           {current === "Note" && <Note />}
+          {current === "Advance Profile" && <AdvanceProfile />}
         </div>
       </div>
     </section>

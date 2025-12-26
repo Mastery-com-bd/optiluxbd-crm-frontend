@@ -229,7 +229,7 @@ const AllCustomers = () => {
           totalPages={pagination.totalPages}
           onPageChange={HandlePageChange}
         />
-      </div>
+      </div>  
     </div>
   );
 };

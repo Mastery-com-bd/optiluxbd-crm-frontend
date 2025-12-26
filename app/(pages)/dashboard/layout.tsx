@@ -39,17 +39,19 @@ export default function RootLayout({
         text-white`}
     >
       {/* Layout Structure */}
-      <SidebarProvider className="px-4" defaultOpen={true}>
-        <AppSidebar />
-        <SidebarInset>
-          <Navbar />
-          <AuthGuard>
-            <div className="flex flex-1 flex-col max-w-[1135px] w-full mx-auto gap-4 py-4">
-              {children}
-            </div>
-          </AuthGuard>
-        </SidebarInset>
-      </SidebarProvider>
+      <div className="max-w-[1440px] mx-auto relative">
+        <SidebarProvider className="px-4" defaultOpen={true}>
+          <AppSidebar />
+          <SidebarInset>
+            <Navbar />
+            <AuthGuard>
+              <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden max-w-[1135px]">
+                {children}
+              </div>
+            </AuthGuard>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
     </div>
   );
 }
