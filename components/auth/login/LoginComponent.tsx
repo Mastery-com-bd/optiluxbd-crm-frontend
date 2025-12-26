@@ -84,7 +84,6 @@ const LoginComponent = () => {
           roles: roles,
         };
         const { role } = getPermissions(res?.data?.userData);
-
         dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, { id: toastId, duration: 3000 });
@@ -96,8 +95,10 @@ const LoginComponent = () => {
             router.push("/activeAccount");
             return;
           }
-          if (role.includes("ADMIN")) {
+          if (role.includes("Owner")) {
             router.push("/dashboard");
+          } else if (role.includes("Agent")) {
+            router.push("dashboard/agentDashboard/profile");
           } else {
             router.push("/dashboard/profile");
           }
@@ -113,11 +114,7 @@ const LoginComponent = () => {
     }
   };
 
-  const handleAdmin = async () => {
-    const data = {
-      email: "organization1@gmail.com",
-      password: "Password@123",
-    };
+  const handleAdmin = async (data: { email: string; password: string }) => {
     const toastId = toast.loading("logging in");
     try {
       const res = await login(data).unwrap();
@@ -141,111 +138,24 @@ const LoginComponent = () => {
           roles: roles,
         };
         const token = res?.data?.token;
+        const { role } = getPermissions(res?.data?.userData);
         dispatch(setUser(user as TAuthUSer));
         dispatch(setToken(token));
         toast.success(res?.message, { id: toastId, duration: 3000 });
-        reset();
         if (redirect) {
           router.push(redirect);
         } else {
-          router.push("/dashboard");
-        }
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.message ||
-        error?.data?.errors[0]?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { id: toastId, duration: 3000 });
-    }
-  };
-
-  const handleAgent = async () => {
-    const data = {
-      email: "agent1@organization1.com",
-      password: "Password@123",
-    };
-    const toastId = toast.loading("logging in");
-    try {
-      // const res = await userLogin(data);
-      const res = await login(data).unwrap();
-      if (res?.success) {
-        const token = res?.data?.token;
-        const roles: TUSerRole[] =
-          res?.data?.userData?.roles?.map((r: any) => ({
-            userId: r.userId,
-            role: {
-              name: r.role.name,
-              permissions:
-                r.role.permissions?.map((p: any) => ({
-                  name: p.permission.name,
-                })) || [],
-            },
-          })) || [];
-        const user: TAuthUSer = {
-          id: res?.data?.userData?.id,
-          name: res?.data?.userData?.name,
-          email: res?.data?.userData?.email,
-          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
-          roles: roles,
-        };
-        dispatch(setUser(user as TAuthUSer));
-        dispatch(setToken(token));
-        toast.success(res?.message, { id: toastId, duration: 3000 });
-        reset();
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          router.push("/dashboard/profile");
-        }
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.message ||
-        error?.data?.errors[0]?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { id: toastId, duration: 3000 });
-    }
-  };
-
-  const handleteamLeader = async () => {
-    const data = {
-      email: "teamleader@organization1.com",
-      password: "Password@123",
-    };
-    const toastId = toast.loading("logging in");
-    try {
-      const res = await login(data).unwrap();
-      if (res?.success) {
-        const token = res?.data?.token;
-        const roles: TUSerRole[] =
-          res?.data?.userData?.roles?.map((r: any) => ({
-            userId: r.userId,
-            role: {
-              name: r.role.name,
-              permissions:
-                r.role.permissions?.map((p: any) => ({
-                  name: p.permission.name,
-                })) || [],
-            },
-          })) || [];
-        const user: TAuthUSer = {
-          id: res?.data?.userData?.id,
-          name: res?.data?.userData?.name,
-          email: res?.data?.userData?.email,
-          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
-          roles: roles,
-        };
-        dispatch(setUser(user as TAuthUSer));
-        dispatch(setToken(token));
-        toast.success(res?.message, { id: toastId, duration: 3000 });
-        reset();
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          router.push("/dashboard/profile");
+          if (!role.length) {
+            router.push("/activeAccount");
+            return;
+          }
+          if (role.includes("Owner")) {
+            router.push("/dashboard");
+          } else if (role.includes("Agent")) {
+            router.push("dashboard/agentDashboard/profile");
+          } else {
+            router.push("/dashboard/profile");
+          }
         }
       }
     } catch (error: any) {
@@ -288,7 +198,12 @@ const LoginComponent = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            onClick={handleAdmin}
+            onClick={() =>
+              handleAdmin({
+                email: "organization1@gmail.com",
+                password: "Password@123",
+              })
+            }
             className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : "Owner"}
@@ -296,7 +211,12 @@ const LoginComponent = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            onClick={handleAgent}
+            onClick={() =>
+              handleAdmin({
+                email: "agent1@organization1.com",
+                password: "Password@123",
+              })
+            }
             className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : "Agent"}
@@ -304,7 +224,12 @@ const LoginComponent = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            onClick={handleteamLeader}
+            onClick={() =>
+              handleAdmin({
+                email: "teamleader@organization1.com",
+                password: "Password@123",
+              })
+            }
             className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
           >
             {isSubmitting ? "Logging in..." : " Team Leader"}
