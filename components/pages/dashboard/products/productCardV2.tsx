@@ -27,7 +27,7 @@ const ProductCardV2 = ({
   return (
     <LiquidGlass
       borderRadius="12px"
-      className="relative w-full  overflow-hidden p-5 "
+      className="relative  overflow-hidden p-5 "
     >
       {/* Product Image */}
       <div className="relative aspect-square  w-[325px] h-[290px] overflow-hidden rounded-[12px] bg-white mb-4">
