@@ -15,14 +15,16 @@ type PropsType = {
 
 const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: PropsType) => {
     return (
-        <div className="w-[355px]! rounded-[14px] md:w-1/3 bgGlass p-4  flex flex-col items-center shadow-lg justify-between">
-            <Image
-                src={product.image_url}
-                alt={product.name}
-                height={290}
-                width={323}
-                className="rounded-2xl object-cover"
-            />
+        <div className=" rounded-[14px] w-full bgGlass p-4  flex flex-col items-center shadow-lg justify-between">
+            <div className=" h-[290px] w-full">
+                <img
+                    src={product.image_url}
+                    alt={product.name}
+                    // height={290}
+                    // width={323}
+                    className="rounded-2xl object-cover"
+                />
+            </div>
             {/* Thumbnails */}
             <div className="flex flex-col justify-between gap-3 w-full mt-4  text-white">
                 <div className="flex w-full justify-between ">
@@ -41,29 +43,21 @@ const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: Props
                         />
                     </Link>
 
-                    <button
-                        className=
-                        "relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden"
+                    <ButtonComponent
+                        varient="green"
+                        icon={Pencil}
+                        clasName="p-4 "
+                    />
 
-                    >
-                        <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-                            <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,transparent_0%,var(--color-success)_50%,transparent_100%)]" />
-                        </div>
-                        <div className="pointer-events-none">
-                            <GreenSvgForButton />
-                        </div>
-                        <Pencil />
-                    </button>
-
-                    <Button variant={"red"}
+                    <ButtonComponent
+                        varient="red"
                         onClick={() => {
                             setDeleteProductId(product.id);
                             setDeleteDialogOpen(true);
                         }}
-                        className="cursor-pointer p-6! rounded-[12px]!"
-                    >
-                        <Trash />
-                    </Button>
+                        icon={Trash}
+                        className=" p-4  "
+                    />
                 </div>
             </div>
         </div>
