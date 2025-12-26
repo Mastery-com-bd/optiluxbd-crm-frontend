@@ -1,6 +1,5 @@
 "use client";
 
-import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { useState } from "react";
 import { ChevronDown, Funnel, Logs, Plus, Search, Upload } from "lucide-react";
@@ -21,6 +20,7 @@ import TableView from "./TableView";
 import ComboOverView from "./ComboOverView";
 
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -30,6 +30,7 @@ const AllCombo = () => {
     limit: 10,
     page: 1,
   });
+  const [show, setShow] = useState("10");
   // get all combo
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -331,42 +332,26 @@ const AllCombo = () => {
   };
 
   const [inputValue, setInputValue] = useState("");
-  // const [tagInput, setTagInput] = useState("");
   const [is_active, setIs_active] = useState("All");
   const [is_featured, setIs_featured] = useState("All");
-  // const [priceRange, setPriceRange] = useState([1, 100000]);
   const [view, setView] = useState<"Table View" | "Grid View">("Grid View");
 
   const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
   };
 
-  // const handleTag = async (val: any) => {
-  //   const cleaned = val
-  //     .split(",")
-  //     .map((v: string) => v.trim())
-  //     .filter((v: string) => v !== "")
-  //     .join(",");
-  //   setFilters((prev) => ({
-  //     ...prev,
-  //     tags: cleaned,
-  //     page: 1,
-  //   }));
-  // };
-
   const debouncedLog = debounce(handleSearch, 100, { leading: false });
-  // const debouncedLogTag = debounce(handleTag, 100, { leading: false });
 
   if (isLoading) {
     return <CombocardSkeleton />;
   }
 
   return (
-    <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full px-4">
+    <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full ">
       {/* header section */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ">
         <div>
-          <h1 className="text-3xl font-semibold">All Combo Pack</h1>
+          <h1 className="text-3xl font-semibold leading-8">All Combo Pack</h1>
           <p className="text-[#A1A1A1] leading-5">
             Browse and manage All Combo Pack
           </p>
@@ -435,7 +420,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-gray-800 text-gray-100"
+              className="bg-white/5 backdrop-blur-2xl"
             >
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
@@ -480,7 +465,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-gray-800 text-gray-100"
+              className="bg-white/5 backdrop-blur-2xl"
             >
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
@@ -519,7 +504,7 @@ const AllCombo = () => {
 
               <DropdownMenuContent
                 align="center"
-                className="rounded-xl bg-gray-800 text-gray-100"
+                className="rounded-xl bg-white/5 backdrop-blur-2xl"
               >
                 {["Table View", "Grid View"].map((item) => (
                   <DropdownMenuItem
@@ -554,13 +539,62 @@ const AllCombo = () => {
             <TableView packages={comboPackages} />
           </div>
         )}
+      </div>
 
-        {/* Pagination Controls */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
+        <CustomPagination
+          currentPage={pagination.page}
+          totalPages={10}
+          onPageChange={(page) => setFilters({ ...filters, page })}
         />
+
+        <div className="flex items-center gap-6">
+          <p className="text-sm text-[#7E7E7E]">
+            Showing 1 to 10 of 10 entries
+          </p>
+          {/* status drodpown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LiquidGlass
+                glowIntensity="xs"
+                shadowIntensity="xs"
+                borderRadius="12px"
+              >
+                <Button
+                  variant="default"
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+                >
+                  <p className="flex items-center gap-2">
+                    <span className="text-[14px]">Show {show}</span>
+                    <ChevronDown size={18} />
+                  </p>
+                </Button>
+              </LiquidGlass>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white/5 backdrop-blur-2xl"
+            >
+              {["10", "20", "30", "40", "50"].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setShow(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      limit: Number(item),
+                      page: 1,
+                    }));
+                  }}
+                  className={item === show ? "font-medium" : ""}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </section>
   );

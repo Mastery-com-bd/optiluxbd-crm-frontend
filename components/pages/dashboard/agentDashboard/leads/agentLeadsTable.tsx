@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChevronDownIcon, MoreVerticalIcon, Search } from "lucide-react";
+import Link from "next/link";
 
 const AgentLeadsTable = () => {
   return (
@@ -109,7 +110,14 @@ const AgentLeadsTable = () => {
                     <DropdownMenuContent>
                       <DropdownMenuLabel>My Account</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link
+                          href={`/dashboard/agentDashboard/leads/${10}`}
+                          className="w-full"
+                        >
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
                       <DropdownMenuItem>Billing</DropdownMenuItem>
                       <DropdownMenuItem>Team</DropdownMenuItem>
                       <DropdownMenuItem>Subscription</DropdownMenuItem>
