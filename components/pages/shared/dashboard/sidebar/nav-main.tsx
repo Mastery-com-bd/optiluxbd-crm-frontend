@@ -1,9 +1,10 @@
 "use client";
 import { SidebarGroup } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
-import SubItemButton from "@/components/ui/SubItemButton";
+import SubItemButton from "@/components/pages/shared/dashboard/sidebar/buttons/SubItemButton";
 import { NavRoute, TCrmNavigation } from "@/constants/CRM_Navigation";
 import CoreManagement from "./sidebarRoutes/CoreManagement";
+import ChildLessRoute from "./sidebarRoutes/ChildrenLessRoute";
 
 export function NavMain({
   items,
@@ -19,7 +20,9 @@ export function NavMain({
   // team and sales hub
   const teamAndSalesHub = items?.teamAndSales;
   //  delivery and communication
-  const deliveryAndCommunication = items?.deliveryCommunication;
+  const deliveryAndCommunication =
+    items?.deliveryCommunication?.courierAndDelivery;
+  const communicationRoute = items?.deliveryCommunication?.communication;
   // analytics and settings
   const analyticsAndSettings = items?.analyticsAndSettings;
 
@@ -41,10 +44,11 @@ export function NavMain({
       <CoreManagement
         sidebarRoutes={deliveryAndCommunication}
         platform="Delivery & Communication"
+        singleRoute={communicationRoute}
       />
       {/* settings and analytics */}
-      <CoreManagement
-        sidebarRoutes={analyticsAndSettings}
+      <ChildLessRoute
+        singleRoute={analyticsAndSettings.childLessRoutes!}
         platform="Analytics & Settings"
       />
     </SidebarGroup>

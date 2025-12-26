@@ -12,7 +12,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import SubItemButton from "@/components/ui/SubItemButton";
+import SubItemButton from "@/components/pages/shared/dashboard/sidebar/buttons/SubItemButton";
 import { NavRoute } from "@/constants/CRM_Navigation";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
@@ -24,14 +24,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-type TCoreManagementRoute = { sidebarRoutes: NavRoute[]; platform: string };
+type TCoreManagementRoute = {
+  sidebarRoutes: NavRoute[];
+  platform: string;
+  singleRoute?: NavRoute;
+};
 
-const CoreManagement = ({ sidebarRoutes, platform }: TCoreManagementRoute) => {
+const CoreManagement = ({
+  sidebarRoutes,
+  platform,
+  singleRoute,
+}: TCoreManagementRoute) => {
   const user = useAppSelector(currentUser);
   const { role, permissions } = getPermissions(user as TAuthUSer);
   const pathname = usePathname();
   const visibleRoutes = getSidebarRoutes(sidebarRoutes, role, permissions);
   const [open, setOpen] = useState(false);
+  const isActiveCommunication = pathname === singleRoute?.path;
 
   return (
     <div>
@@ -66,6 +75,12 @@ const CoreManagement = ({ sidebarRoutes, platform }: TCoreManagementRoute) => {
           return (
             <Collapsible key={i} asChild className="group/collapsible">
               <SidebarMenuItem>
+                {singleRoute && (
+                  <SubItemButton
+                    isActive={isActiveCommunication}
+                    subItem={singleRoute}
+                  />
+                )}
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     asChild
@@ -168,9 +183,9 @@ const CoreManagement = ({ sidebarRoutes, platform }: TCoreManagementRoute) => {
                                           {/* ✅ Open / close icons */}
                                           <p className="flex items-center">
                                             {open ? (
-                                              <Plus size={16} />
-                                            ) : (
                                               <Minus size={16} />
+                                            ) : (
+                                              <Plus size={16} />
                                             )}
                                           </p>
                                         </div>

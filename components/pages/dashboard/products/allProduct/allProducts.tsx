@@ -14,19 +14,19 @@ import {
 } from "@/components/ui/select";
 import {
   Eye,
+  Funnel,
   Grid2X2,
   MoreVertical,
   Pencil,
-  Plus,
   Search,
   Trash2,
+  Upload,
 } from "lucide-react";
 import {
   useDeleteProductMutation,
   useGetAllProductQuery,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
-import PaginationControls from "@/components/ui/paginationComponent";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
 import { Product } from "@/types/product";
@@ -41,9 +41,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAppSelector } from "@/redux/hooks";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
   Table,
@@ -61,6 +58,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
+import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomerPagination from "../../customers/components/pagination";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -106,6 +105,9 @@ const AllProducts = () => {
     }
   };
 
+  const HandlePageChange = (page: number) => {
+    setFilters({ ...filters, page });
+  };
   const keys = [
     "Product",
     "SKU",
@@ -120,19 +122,32 @@ const AllProducts = () => {
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
+        <div className="flex gap-2 p-2">
+          <ButtonComponent varient="purple" buttonName="Bulk Upload" />
+          <ButtonComponent varient="light purple" buttonName="Draft Product" />
+          <ButtonComponent
+            varient="deep purple"
+            buttonName="Single Upload Product"
+            icon={Upload}
+          />
+        </div>
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
+          <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
+            <div className="flex  gap-3">
               <Input
-                placeholder="Search product by id name sku...."
+                className=" py-1.5 w-64 text-sm bg-transparent"
                 value={inputValue}
                 icon={<Search />}
                 onChange={(e) => {
                   debouncedLog(e.target.value);
                   setInputValue(e.target.value);
                 }}
+                placeholder="Search product by name"
               />
+              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer border-none bgGlass">
+                <Funnel size={16} />
+              </Button>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select
@@ -192,142 +207,143 @@ const AllProducts = () => {
         {/* Product Table */}
         {isLoading ? (
           <Loading />
-        ) : (
-          !isGridView ?
-            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 pt-2 border-none ">
-              <div className="overflow-x-auto w-full">
-                <Table className="w-full">
-                  <TableHeader>
-                    <TableRow>
-                      {keys.map((label, ind) => (
-                        <TableHead
-                          first={ind === 0}
-                          last={ind === keys.length - 1}
-                          key={label}
-                          className="text-left text-xs font-semibold uppercase text-muted-foreground"
-                        >
-                          {label}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {PRODUCTS?.map((product: Product) => (
-                      <TableRow
-                        key={product.id}
-                        className="border-muted hover:bg-muted/50 transition-colors"
+        ) : !isGridView ? (
+          <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 pt-2 border-none ">
+            <div className="overflow-x-auto w-full">
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow>
+                    {keys.map((label, ind) => (
+                      <TableHead
+                        first={ind === 0}
+                        last={ind === keys.length - 1}
+                        key={label}
+                        className="text-left text-xs font-semibold uppercase text-muted-foreground"
                       >
-                        <TableCell className="px-4 py-3">
-                          <div>
-                            <div className="flex items-center gap-3">
-                              <Image
-                                src={
-                                  product?.image_url ||
-                                  "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
-                                }
-                                alt={product.name}
-                                width={48}
-                                height={48}
-                                className="w-12 h-12 rounded-lg object-cover"
-                              />
-                              <div>
-                                <p className="font-medium">{product.name}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  by {product.by}
-                                </p>
-                              </div>
+                        {label}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {PRODUCTS?.map((product: Product) => (
+                    <TableRow
+                      key={product.id}
+                      className="border-muted hover:bg-muted/50 transition-colors"
+                    >
+                      <TableCell className="px-4 py-3">
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={
+                                product?.image_url ||
+                                "https://res.cloudinary.com/dbb6nen3p/image/upload/v1762848442/no_image_s3demz.png"
+                              }
+                              alt={product.name}
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                            <div>
+                              <p className="font-medium">{product.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                by {product.by}
+                              </p>
                             </div>
                           </div>
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm text-center">
-                          {product.sku}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm text-center">
-                          {product?.subCategory?.name}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm font-medium text-center">
-                          {product.stock}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-sm font-semibold text-center">
-                          ${product.price}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-center">
-                          <span
-                            className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {product.sku}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm text-center">
+                        {product?.subCategory?.name}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-medium text-center">
+                        {product.stock}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-sm font-semibold text-center">
+                        ${product.price}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
+                        <span
+                          className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
                                                   ${product.status === "ACTIVE"
-                                ? "text-green-500"
-                                : "text-red-500"
-                              }`}
+                              ? "text-green-500"
+                              : "text-red-500"
+                            }`}
+                        >
+                          {product.status.toLocaleLowerCase()}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {new Date(product.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "2-digit",
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center ">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="cursor-pointer">
+                            <MoreVertical className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-[180px] flex flex-col "
                           >
-                            {product.status.toLocaleLowerCase()}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {new Date(product.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "2-digit",
-                            }
-                          )}
-                        </TableCell>
-                        <TableCell className="px-4 py-3 text-center ">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger className="cursor-pointer">
-                              <MoreVertical className="h-4 w-4" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="w-[180px] flex flex-col "
+                            <Link
+                              href={`/dashboard/admin/products/all-products/${product.id}`}
                             >
-                              <Link
-                                href={`/dashboard/admin/products/all-products/${product.id}`}
-                              >
-                                <DropdownMenuItem className="cursor-pointer">
-                                  <Eye className="w-4 h-4 mr-2" /> view
-                                </DropdownMenuItem>
-                              </Link>
                               <DropdownMenuItem className="cursor-pointer">
-                                <Pencil className="w-4 h-4 mr-2" />
-                                Update
+                                <Eye className="w-4 h-4 mr-2" /> view
                               </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setDeleteProductId(product.id);
-                                  setDeleteDialogOpen(true);
-                                }}
-                                className="cursor-pointer"
-                              >
-                                <Trash2 className="w-4 h-4 text-destructive mr-2" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </Card> :
-            <div className="grid grid-cols-3 gap-6 w-[1150px]  my-6">
-              {PRODUCTS?.map((product: Product) => (
-                <ProductCart
-                  key={product.id} product={product}
-                  setDeleteProductId={setDeleteProductId}
-                  setDeleteDialogOpen={setDeleteDialogOpen}
-                />
-              ))}
+                            </Link>
+                            <DropdownMenuItem className="cursor-pointer">
+                              <Pencil className="w-4 h-4 mr-2" />
+                              Update
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setDeleteProductId(product.id);
+                                setDeleteDialogOpen(true);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-3 gap-6 w-[1150px]  my-6">
+            {PRODUCTS?.map((product: Product) => (
+              <ProductCart
+                key={product.id}
+                product={product}
+                setDeleteProductId={setDeleteProductId}
+                setDeleteDialogOpen={setDeleteDialogOpen}
+              />
+            ))}
+          </div>
         )}
 
         {/* Pagination */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+        <CustomerPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={HandlePageChange}
         />
       </div>
 
