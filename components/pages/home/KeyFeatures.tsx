@@ -1,32 +1,45 @@
 'use client';
+import FeaturedSection2ndSVG from '@/components/svgIcon/FeaturedSection2ndSVG';
+import FeaturedSectionLightSVG from '@/components/svgIcon/FeaturedSectionLightSVG';
+import ButtonComponent from '@/components/ui/ButtonComponent';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { motion } from 'framer-motion';
-import { Zap, Repeat, BarChart } from 'lucide-react';
+import { Zap, Repeat, BarChart, ChevronRight, ChevronLeft } from 'lucide-react';
+import Image from 'next/image';
 
-export default function KeyFeatures() {
+export default function OurFeatures() {
     const featureCards = [
         {
-            title: "Lead Management",
-            icon: <Zap size={20} />,
+            title: "Real-time Agent Conversion Rate Tracking",
+            Image: "/images/feature-carousel-img-1.png",
             description:
-                "Organize and manage all your leads in one place, from initial contact to conversion, with easy access to all relevant info.",
+                "Importance of data processing includes better increased productivity and profits, target, right decisions, more accurate and reliable.",
         },
         {
-            title: "Sales Automation",
-            icon: <Repeat size={20} />,
+            title: "Realtime Orders Status Ratio",
+            Image: "/images/feature-carousel-img-2.png",
             description:
-                "Automate repetitive tasks and set up custom workflows to save time and ensure nothing falls through the cracks.",
+                "Importance of data processing includes better increased productivity and profits, target, right decisions, more accurate and reliable.",
         },
         {
             title: "Analytics & Reporting",
-            icon: <BarChart size={20} />,
+            Image: "/images/feature-carousel-img-3.png",
+            description:
+                "Gain valuable insights into your sales performance with real-time metrics and customizable reports.",
+        },
+        {
+            title: "Analytics",
+            Image: "/images/feature-carousel-img-3.png",
             description:
                 "Gain valuable insights into your sales performance with real-time metrics and customizable reports.",
         },
     ];
 
     return (
-        <section className="w-full px-6 md:px-12 lg:px-20 py-20 bg-white">
-            <div className='max-w-[1444px] mx-auto'>
+        <section className="w-full px-6 md:px-12 lg:px-20 py-32 bg-[#030115] relative">
+            <div className='max-w-[1440px] mx-auto '>
+                <FeaturedSectionLightSVG />
+                <FeaturedSection2ndSVG />
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -35,53 +48,52 @@ export default function KeyFeatures() {
                     transition={{ duration: 0.6 }}
                     className="text-center max-w-3xl mx-auto mb-12"
                 >
-                    <p className="text-xs font-bold text-yellow-800 bg-yellow-200 inline-block px-4 py-1 rounded-full">
-                        KEY FEATURES
-                    </p>
-                    <h2 className="mt-4 text-3xl md:text-4xl font-bold text-gray-900">
-                        Powerful Features to Drive Sales Success
+                    <h2 className="mt-4 text-[56px] md:text-4xl font-bold ">
+                        Our Features
                     </h2>
-                    <p className="mt-4 text-sm text-gray-600">
-                        Our platform is packed with features designed to streamline your sales workflow and maximize productivity.
+                    <p className="mt-4 text-sm text-[#9A98B9]">
+                        Manage leads, sales, teams, and operations — all in one smart CRM platform
                     </p>
                 </motion.div>
 
-                {/* Cards Animated */}
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={{
-                        hidden: {},
-                        visible: {
-                            transition: {
-                                staggerChildren: 0.2,
-                            },
-                        },
-                    }}
-                >
-                    {featureCards.map((card, index) => (
-                        <motion.div
-                            key={index}
-                            variants={{
-                                hidden: { opacity: 0, y: 40 },
-                                visible: { opacity: 1, y: 0 },
-                            }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                            className="bg-linear-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
-                        >
-                            <div className="w-10 h-10 bg-yellow-400 text-white flex items-center justify-center rounded-md mb-4">
-                                {card.icon}
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{card.title}</h3>
-                            <p className="text-sm text-gray-700 mb-4">{card.description}</p>
-                            <a href="#" className="text-sm font-medium text-yellow-600 hover:underline">
-                                Explore All Features &rarr;
-                            </a>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                {/* Main Carousel Area */}
+                <div className="relative px-12">
+                    <Carousel className="w-full ">
+                        <CarouselContent>
+                            {featureCards.map((card, index) => (
+                                <CarouselItem key={index} className=' flex justify-between max-h-[394px]'>
+                                    {/* Left Side: Image Content */}
+                                    <div className=" w-1/2">
+                                        <Image
+                                            src={card.Image}
+                                            alt={card.title}
+                                            width={600}
+                                            height={400}
+                                            className="mx-auto"
+                                        />
+                                    </div>
+
+                                    {/* Right Side: Text Content */}
+                                    <div className="w-1/2 text-left space-y-6">
+                                        <h3 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                                            {card.title}
+                                        </h3>
+                                        <p className="text-[#9A98B9] text-lg leading-relaxed max-w-md">
+                                            {card.description}
+                                        </p>
+
+                                        <ButtonComponent buttonName='Make your first purchase' varient='purple' />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <div className="flex justify-center gap-4 mt-12">
+                            <CarouselPrevious className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10"  />
+
+                            <CarouselNext className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10" />
+                        </div>
+                    </Carousel>
+                </div>
             </div>
         </section>
     );
