@@ -1,32 +1,40 @@
 'use client';
+import FeaturedSectionLightSVG from '@/components/svgIcon/FeaturedSectionLightSVG';
 import { motion } from 'framer-motion';
 import { Zap, Repeat, BarChart } from 'lucide-react';
 
-export default function KeyFeatures() {
+export default function OurFeatures() {
     const featureCards = [
         {
-            title: "Lead Management",
-            icon: <Zap size={20} />,
+            title: "Real-time Agent Conversion Rate Tracking",
+            Image: "/images/feature-carousel-img-1.png",
             description:
-                "Organize and manage all your leads in one place, from initial contact to conversion, with easy access to all relevant info.",
+                "Importance of data processing includes better increased productivity and profits, target, right decisions, more accurate and reliable.",
         },
         {
-            title: "Sales Automation",
-            icon: <Repeat size={20} />,
+            title: "Realtime Orders Status Ratio",
+            Image: "/images/feature-carousel-img-2.png",
             description:
-                "Automate repetitive tasks and set up custom workflows to save time and ensure nothing falls through the cracks.",
+                "Importance of data processing includes better increased productivity and profits, target, right decisions, more accurate and reliable.",
         },
         {
             title: "Analytics & Reporting",
-            icon: <BarChart size={20} />,
+            Image: "/images/feature-carousel-img-3.png",
+            description:
+                "Gain valuable insights into your sales performance with real-time metrics and customizable reports.",
+        },
+        {
+            title: "Analytics",
+            Image: "/images/feature-carousel-img-3.png",
             description:
                 "Gain valuable insights into your sales performance with real-time metrics and customizable reports.",
         },
     ];
 
     return (
-        <section className="w-full px-6 md:px-12 lg:px-20 py-20 bg-white">
-            <div className='max-w-[1444px] mx-auto'>
+        <section className="w-full px-6 md:px-12 lg:px-20 py-32 bg-[#030115] relative">
+            <div className='max-w-[1440px] mx-auto '>
+                <FeaturedSectionLightSVG />
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -35,14 +43,11 @@ export default function KeyFeatures() {
                     transition={{ duration: 0.6 }}
                     className="text-center max-w-3xl mx-auto mb-12"
                 >
-                    <p className="text-xs font-bold text-yellow-800 bg-yellow-200 inline-block px-4 py-1 rounded-full">
-                        KEY FEATURES
-                    </p>
-                    <h2 className="mt-4 text-3xl md:text-4xl font-bold text-gray-900">
-                        Powerful Features to Drive Sales Success
+                    <h2 className="mt-4 text-[56px] md:text-4xl font-bold ">
+                        Our Features
                     </h2>
-                    <p className="mt-4 text-sm text-gray-600">
-                        Our platform is packed with features designed to streamline your sales workflow and maximize productivity.
+                    <p className="mt-4 text-sm text-[#9A98B9]">
+                        Manage leads, sales, teams, and operations — all in one smart CRM platform
                     </p>
                 </motion.div>
 
@@ -69,18 +74,20 @@ export default function KeyFeatures() {
                                 visible: { opacity: 1, y: 0 },
                             }}
                             transition={{ duration: 0.6, ease: 'easeOut' }}
-                            className="bg-linear-to-br from-yellow-100 to-yellow-200 p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
+                            className="p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
                         >
-                            <div className="w-10 h-10 bg-yellow-400 text-white flex items-center justify-center rounded-md mb-4">
-                                {card.icon}
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{card.title}</h3>
-                            <p className="text-sm text-gray-700 mb-4">{card.description}</p>
-                            <a href="#" className="text-sm font-medium text-yellow-600 hover:underline">
-                                Explore All Features &rarr;
-                            </a>
+
                         </motion.div>
                     ))}
+                    <Carousel>
+                        <CarouselContent>
+                            <CarouselItem>...</CarouselItem>
+                            <CarouselItem>...</CarouselItem>
+                            <CarouselItem>...</CarouselItem>
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                    </Carousel>
                 </motion.div>
             </div>
         </section>

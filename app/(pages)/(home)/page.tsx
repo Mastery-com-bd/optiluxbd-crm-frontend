@@ -4,15 +4,16 @@ import PricingSection from "@/components/pages/home/PricingSection";
 import RealTimeSection from "@/components/pages/home/RealTimeSection";
 import StatsSection from "@/components/pages/home/StatsSection";
 import TestimonialsSection from "@/components/pages/home/TestimonialsSection";
-import WhyChooseUs from "@/components/pages/home/WhyChooseUs";
+import SecondSection from "@/components/pages/home/SecondSection";
 
 const Home: React.FC = () => {
   return (
     <div>
       <HeroBanner />
-      <WhyChooseUs />
-      <StatsSection />
+      <SecondSection />
       <KeyFeatures />
+      <StatsSection />
+
       <TestimonialsSection />
       <PricingSection />
       <RealTimeSection />

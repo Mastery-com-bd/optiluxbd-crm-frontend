@@ -1,16 +1,5 @@
 'use client'
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Lottie from 'lottie-react';
-import {
-    Layers,
-    SquareAsterisk,
-    Circle,
-    Hourglass,
-    RefreshCw,
-} from "lucide-react";
-import animationData from '@/public/lottie/About Us Team.json';
 import HeroSvg from "@/components/svgIcon/HeroSvg";
 import HeroCircle from "@/components/svgIcon/HeroCircle";
 import ButtonComponent from "@/components/ui/ButtonComponent";
@@ -65,71 +54,19 @@ export default function HeroBanner() {
                             className="mt-6 flex justify-center sm:flex-row items-center gap-3 sm:gap-2"
                         >
 
-                            <ButtonComponent 
-                            buttonName="Get Start" 
-                            varient="purple"
-                            clasName="px-8 py-3" 
+                            <ButtonComponent
+                                buttonName="Get Start"
+                                varient="purple"
+                                clasName="px-8 py-3"
                             />
-                            <ButtonComponent 
-                            buttonName="Buy Now" 
-                            varient="yellow"
-                            clasName="px-8 py-3" 
+                            <ButtonComponent
+                                buttonName="Buy Now"
+                                varient="yellow"
+                                clasName="px-8 py-3"
                             />
                         </motion.div>
                     </motion.div>
-
-                    {/* Right image + cards
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 0.6 }}
-                        viewport={{ once: true }}
-                        className="lg:max-w-[50%] relative w-full flex justify-center items-center z-10"
-                    >
-                        <div
-                            className="relative bg-cover bg-center bg-no-repeat  w-full flex justify-center"
-                            style={{ backgroundImage: "url('/images/person-bg.png')" }}
-                        >
-                            <Lottie animationData={animationData}></Lottie>
-                        </div>
-
-                    </motion.div> */}
                 </div>
-
-                {/* Icons section */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 1.5 }}
-                    viewport={{ once: true }}
-                    className="mt-20 w-full flex flex-col items-center"
-                >
-                    <p className="text-sm text-neutral-300 mb-4">
-                        Trusted by teams around the world
-                    </p>
-                    <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 text-white opacity-80">
-                        <motion.div whileHover={{ scale: 1.1 }} className="flex items-center gap-2">
-                            <Layers size={20} />
-                            <span>Layers</span>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} className="flex items-center gap-2">
-                            <SquareAsterisk size={20} />
-                            <span>Quotient</span>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} className="flex items-center gap-2">
-                            <Circle size={20} />
-                            <span>Circoole</span>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} className="flex items-center gap-2">
-                            <Hourglass size={20} />
-                            <span>Hourglass</span>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} className="flex items-center gap-2">
-                            <RefreshCw size={20} />
-                            <span>Command+R</span>
-                        </motion.div>
-                    </div>
-                </motion.div>
             </div>
         </motion.div>
     );
