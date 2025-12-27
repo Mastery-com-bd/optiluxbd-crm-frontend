@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  ChevronDown,
   Eye,
   Funnel,
   Grid2X2,
@@ -27,7 +28,6 @@ import {
   useGetAllProductQuery,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
-import PaginationControls from "@/components/ui/paginationComponent";
 import Link from "next/link";
 import { debounce } from "@/utills/debounce";
 import { Product } from "@/types/product";
@@ -42,9 +42,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useAppSelector } from "@/redux/hooks";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
   Table,
@@ -63,6 +60,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomPagination from "@/components/ui/CustomPagination";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -85,6 +84,7 @@ const AllProducts = () => {
     totalPages: 1,
     total: 0,
   };
+  const [show, setShow] = useState("10");
   const [inputValue, setInputValue] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
@@ -108,6 +108,9 @@ const AllProducts = () => {
     }
   };
 
+  const HandlePageChange = (page: number) => {
+    setFilters({ ...filters, page });
+  };
   const keys = [
     "Product",
     "SKU",
@@ -268,11 +271,10 @@ const AllProducts = () => {
                       <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${
-                                                    product.status === "ACTIVE"
-                                                      ? "text-green-500"
-                                                      : "text-red-500"
-                                                  }`}
+                                                  ${product.status === "ACTIVE"
+                              ? "text-green-500"
+                              : "text-red-500"
+                            }`}
                         >
                           {product.status.toLocaleLowerCase()}
                         </span>
@@ -328,7 +330,7 @@ const AllProducts = () => {
             </div>
           </Card>
         ) : (
-          <div className="grid grid-cols-3 gap-6 w-[1150px]  my-6">
+          <div className="grid grid-cols-3 gap-6  my-6">
             {PRODUCTS?.map((product: Product) => (
               <ProductCart
                 key={product.id}
@@ -341,11 +343,60 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
-        />
+        <div className="flex items-center justify-between">
+          <CustomPagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={(page) => setFilters({ ...filters, page })}
+          />
+
+          <div className="flex items-center gap-6">
+            <p className="text-sm text-[#7E7E7E]">
+              Showing 1 to 10 of 10 entries
+            </p>
+            {/* status drodpown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <LiquidGlass
+                  glowIntensity="xs"
+                  shadowIntensity="xs"
+                  borderRadius="12px"
+                >
+                  <Button
+                    variant="default"
+                    className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+                  >
+                    <p className="flex items-center gap-2">
+                      <span className="text-[14px]">Show {show}</span>
+                      <ChevronDown size={18} />
+                    </p>
+                  </Button>
+                </LiquidGlass>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-white/5 backdrop-blur-2xl"
+              >
+                {["10", "20", "30", "40", "50"].map((item) => (
+                  <DropdownMenuItem
+                    key={item}
+                    onClick={() => {
+                      setShow(item);
+                      setFilters((prev) => ({
+                        ...prev,
+                        limit: Number(item),
+                        page: 1,
+                      }));
+                    }}
+                    className={item === show ? "font-medium" : ""}
+                  >
+                    {item}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
 
       {/* Delete Confirm Dialog */}
