@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -40,7 +40,13 @@ const setPasswordSchema = z
 
 export type TSetNewPass = z.infer<typeof setPasswordSchema>;
 
-const SetNewPassword = ({ token }: { token: string }) => {
+const SetNewPassword = ({
+  token,
+  setOpen,
+}: {
+  token: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
   const [resetPassword] = useResetPasswordMutation();
@@ -66,6 +72,7 @@ const SetNewPassword = ({ token }: { token: string }) => {
         toast.success(res?.message, { id: toastId, duration: 3000 });
         router.push("/login");
         reset();
+        setOpen(true);
       }
     } catch (error: any) {
       const errorInfo =
