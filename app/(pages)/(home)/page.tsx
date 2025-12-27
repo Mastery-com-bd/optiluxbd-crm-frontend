@@ -12,11 +12,10 @@ const Home: React.FC = () => {
       <HeroBanner />
       <SecondSection />
       <KeyFeatures />
-      <StatsSection />
-
       <TestimonialsSection />
+      {/* <StatsSection />
       <PricingSection />
-      <RealTimeSection />
+      <RealTimeSection /> */}
     </div>
   );
 };

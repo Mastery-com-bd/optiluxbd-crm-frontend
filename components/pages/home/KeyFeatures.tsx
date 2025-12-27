@@ -1,7 +1,11 @@
 'use client';
+import FeaturedSection2ndSVG from '@/components/svgIcon/FeaturedSection2ndSVG';
 import FeaturedSectionLightSVG from '@/components/svgIcon/FeaturedSectionLightSVG';
+import ButtonComponent from '@/components/ui/ButtonComponent';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { motion } from 'framer-motion';
-import { Zap, Repeat, BarChart } from 'lucide-react';
+import { Zap, Repeat, BarChart, ChevronRight, ChevronLeft } from 'lucide-react';
+import Image from 'next/image';
 
 export default function OurFeatures() {
     const featureCards = [
@@ -35,6 +39,7 @@ export default function OurFeatures() {
         <section className="w-full px-6 md:px-12 lg:px-20 py-32 bg-[#030115] relative">
             <div className='max-w-[1440px] mx-auto '>
                 <FeaturedSectionLightSVG />
+                <FeaturedSection2ndSVG />
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -51,44 +56,44 @@ export default function OurFeatures() {
                     </p>
                 </motion.div>
 
-                {/* Cards Animated */}
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={{
-                        hidden: {},
-                        visible: {
-                            transition: {
-                                staggerChildren: 0.2,
-                            },
-                        },
-                    }}
-                >
-                    {featureCards.map((card, index) => (
-                        <motion.div
-                            key={index}
-                            variants={{
-                                hidden: { opacity: 0, y: 40 },
-                                visible: { opacity: 1, y: 0 },
-                            }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                            className="p-6 rounded-xl shadow-sm h-full cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-lg"
-                        >
-
-                        </motion.div>
-                    ))}
-                    <Carousel>
+                {/* Main Carousel Area */}
+                <div className="relative px-12">
+                    <Carousel className="w-full ">
                         <CarouselContent>
-                            <CarouselItem>...</CarouselItem>
-                            <CarouselItem>...</CarouselItem>
-                            <CarouselItem>...</CarouselItem>
+                            {featureCards.map((card, index) => (
+                                <CarouselItem key={index} className=' flex justify-between max-h-[394px]'>
+                                    {/* Left Side: Image Content */}
+                                    <div className=" w-1/2">
+                                        <Image
+                                            src={card.Image}
+                                            alt={card.title}
+                                            width={600}
+                                            height={400}
+                                            className="mx-auto"
+                                        />
+                                    </div>
+
+                                    {/* Right Side: Text Content */}
+                                    <div className="w-1/2 text-left space-y-6">
+                                        <h3 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                                            {card.title}
+                                        </h3>
+                                        <p className="text-[#9A98B9] text-lg leading-relaxed max-w-md">
+                                            {card.description}
+                                        </p>
+
+                                        <ButtonComponent buttonName='Make your first purchase' varient='purple' />
+                                    </div>
+                                </CarouselItem>
+                            ))}
                         </CarouselContent>
-                        <CarouselPrevious />
-                        <CarouselNext />
+                        <div className="flex justify-center gap-4 mt-12">
+                            <CarouselPrevious className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10"  />
+
+                            <CarouselNext className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10" />
+                        </div>
                     </Carousel>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

@@ -2,8 +2,8 @@ const FeaturedSectionLightSVG = () => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="1413" height="727"
-            viewBox="0 0 1413 727"
+            width="1440" height="727"
+            viewBox="0 0 1440 727"
             fill="none"
             className="absolute bottom-0 left-0 w-full h-full object-cover pointer-events-none"
         >
@@ -11,7 +11,7 @@ const FeaturedSectionLightSVG = () => {
                 <ellipse
                     cx="706.379"
                     cy="269.695"
-                    rx="397.574"
+                    rx="127.574"
                     ry="99.6313"
                     transform="rotate(-14.0959 706.379 269.695)"
                     fill="url(#paint0_radial_1535_58500)"
