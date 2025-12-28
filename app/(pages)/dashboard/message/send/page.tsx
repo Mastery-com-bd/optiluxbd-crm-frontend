@@ -1,9 +1,9 @@
-import SendMessage from '@/components/pages/dashboard/message/sendMessage'
+import SendMessageTabs from '@/components/pages/dashboard/message/sendMessageTabs'
 
 const Page = () => {
   return (
     <div>
-        <SendMessage />
+        <SendMessageTabs />
     </div>
   )
 }

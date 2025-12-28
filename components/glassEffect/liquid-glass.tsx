@@ -138,9 +138,10 @@ export const LiquidGlass = ({
             boxShadow: shadowStyles[shadowIntensity],
           }}
         />
-
-        {/* Content */}
-        {children}
+        <div className="relative z-50">
+          {/* Content */}
+          {children}
+        </div>
       </div>
     </>
   );
