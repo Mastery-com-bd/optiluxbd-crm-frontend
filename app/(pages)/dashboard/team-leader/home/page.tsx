@@ -1,9 +1,11 @@
-const page = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+import TeamLeaderDashboard from "@/components/pages/dashboard/team-leader/dashboard/TeamLeaderDashboard";
+
+const TeamLeaderDashboardPage = () => {
+  return (
+    <section>
+      <TeamLeaderDashboard />
+    </section>
+  );
 };
 
-export default page;
+export default TeamLeaderDashboardPage;

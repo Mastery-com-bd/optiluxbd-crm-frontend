@@ -1,4 +1,4 @@
-import TeamOverview from "@/components/pages/dashboard/teamLeader/teamOverview/TeamOverview";
+import TeamOverview from "@/components/pages/dashboard/admin/teamLeader/teamOverview/TeamOverview";
 
 const TeamOverviewPage = () => {
   return (

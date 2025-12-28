@@ -266,42 +266,6 @@ export const crmRoutes: TCrmNavigation = {
           //   "ALLOCATIONS VIEW OWN",
           // ],
         },
-        // {
-        //   title: "All Teams",
-        //   path: "/dashboard/leads/admin/all-teams",
-        //   roles: ["owner"],
-        //   permissions: [
-        //     "ALLOCATIONS ASSIGN LEADER",
-        //     "ALLOCATIONS DISTRIBUTE",
-        //     "ALLOCATIONS REPORTS VIEW",
-        //     "ALLOCATIONS REPORTS VIEW OWN",
-        //     "ALLOCATIONS VIEW OWN",
-        //   ],
-        // },
-        // {
-        //   title: "My Team",
-        //   path: "/dashboard/leads/leaders",
-        //   roles: ["TEAM_LEADER"],
-        //   permissions: [
-        //     "ALLOCATIONS ASSIGN LEADER",
-        //     "ALLOCATIONS DISTRIBUTE",
-        //     "ALLOCATIONS REPORTS VIEW",
-        //     "ALLOCATIONS REPORTS VIEW OWN",
-        //     "ALLOCATIONS VIEW OWN",
-        //   ],
-        // },
-        {
-          title: "My Leads",
-          path: "/dashboard/team-leader/my-leads",
-          // roles: ["AGENT"],
-          // permissions: [
-          //   "ALLOCATIONS ASSIGN LEADER",
-          //   "ALLOCATIONS DISTRIBUTE",
-          //   "ALLOCATIONS REPORTS VIEW",
-          //   "ALLOCATIONS REPORTS VIEW OWN",
-          //   "ALLOCATIONS VIEW OWN",
-          // ],
-        },
       ],
     },
 
@@ -402,18 +366,6 @@ export const crmRoutes: TCrmNavigation = {
           path: "/dashboard/team/assign-leads",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
-        {
-          title: "My Team",
-          path: "/dashboard/team-leader/my-team",
-          // roles: ["AGENT"],
-          // permissions: [
-          //   "ALLOCATIONS ASSIGN LEADER",
-          //   "ALLOCATIONS DISTRIBUTE",
-          //   "ALLOCATIONS REPORTS VIEW",
-          //   "ALLOCATIONS REPORTS VIEW OWN",
-          //   "ALLOCATIONS VIEW OWN",
-          // ],
-        },
       ],
     },
   ],
@@ -510,7 +462,7 @@ export const crmRoutes: TCrmNavigation = {
       settings: {
         title: "Settings",
         icon: Settings,
-        path: "/dashboard/analysis/settings",
+        path: "/dashboard/settings",
         // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
         // roles: ["owner", "TEAM_LEADER"],
       },
@@ -645,6 +597,7 @@ export const crmRoutes: TCrmNavigation = {
       // roles: ["owner", "TEAM_LEADER"],
     },
   },
+
   teamRoute: {
     dashboard: {
       title: "Dashboard",
