@@ -75,7 +75,7 @@ export function Input({
           type={type}
           data-slot="input"
           className={cn(
-            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none"
+            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none z-50"
           )}
           {...props}
         />
