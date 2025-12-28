@@ -73,25 +73,21 @@ export default function TestimonialsSection() {
 
     return (
         <section
-            className="text-white relative overflow-hidden"
+            className="text-white relative overflow-hidden "
             style={{
-                backgroundImage: " linear-gradient(204deg,rgba(123, 5, 128, 0.34) 12%, rgba(0, 0, 0, 1) 53%, rgba(123, 5, 128, 0.12) 100%)"
+                backgroundImage: "linear-gradient(204deg,rgba(187, 51, 255, 0.34) 11%, rgba(0, 0, 0, 1) 53%, rgba(153, 51, 255, 0.12) 100%)"
             }}
         >
-            {/* Background Glows */}
-            {/* <LightForSection3 /> */}
-            {/* <div className="absolute top-10 right-[-10%] w-[400px] h-[400px] bg-purple-600/10 blur-[120px] rounded-full" />
-            <div className="absolute bottom-10 left-[-10%] w-[300px] h-[300px] bg-indigo-700/10 blur-[100px] rounded-full" /> */}
 
             <div className="w-full backdrop-blur-3xl  bg-black/5 ">
-                <div className='max-w-[1400px] mx-auto relative z-10 py-24 px-6 md:px-12 lg:px-20'>
+                <div className='max-w-[1400px] mx-auto relative z-10 py-24 px-6 md:px-12 lg:px-20 '>
                     <div className="mb-16 text-center">
                         <h2 className="text-4xl md:text-6xl font-serif text-white opacity-90 leading-tight">
                             What our client say about us
                         </h2>
                     </div>
 
-                    <Carousel setApi={setApi} opts={{ align: "start", loop: false }} className="w-full">
+                    <Carousel setApi={setApi} opts={{ align: "start", loop: false }} className="w-full border border-white/0">
                         <CarouselContent className="-ml-4">
                             {groupedData.map((group, idx) => (
                                 <CarouselItem key={idx} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
@@ -136,7 +132,7 @@ function TestimonialCard({ data, height }: { data: any, height: string }) {
     return (
 
         <LiquidGlass
-            className="bg-transparent h-full"
+            className="bg-transparent h-full overflow-hidden"
             borderRadius="20px">
             <div className={`${height}  p-8 flex flex-col justify-between hover:bg-white/[0.07] transition-all duration-500 group bg-no-repeat`}>
                 <div className="flex justify-between flex-col  h-full">
