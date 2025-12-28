@@ -366,18 +366,6 @@ export const crmRoutes: TCrmNavigation = {
           path: "/dashboard/team/assign-leads",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
-        {
-          title: "My Team",
-          path: "/dashboard/team-leader/my-team",
-          // roles: ["AGENT"],
-          // permissions: [
-          //   "ALLOCATIONS ASSIGN LEADER",
-          //   "ALLOCATIONS DISTRIBUTE",
-          //   "ALLOCATIONS REPORTS VIEW",
-          //   "ALLOCATIONS REPORTS VIEW OWN",
-          //   "ALLOCATIONS VIEW OWN",
-          // ],
-        },
       ],
     },
   ],
