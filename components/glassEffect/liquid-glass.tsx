@@ -28,7 +28,7 @@ interface LiquidGlassCardProps {
 export const LiquidGlass = ({
   children,
   className = "",
-  
+
   expandable = false,
   showBG = true,
   width,
@@ -138,10 +138,9 @@ export const LiquidGlass = ({
             boxShadow: shadowStyles[shadowIntensity],
           }}
         />
-        <div className="relative z-30">
-          {/* Content */}
-          {children}
-        </div>
+
+        {/* Content */}
+        {children}
       </div>
     </>
   );
