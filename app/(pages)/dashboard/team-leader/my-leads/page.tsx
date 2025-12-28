@@ -3,7 +3,6 @@ import StatsCard from "@/components/pages/dashboard/shared/StatsCard";
 import AssignLeadsToTeam from "@/components/pages/dashboard/teamLeader/assignleades/AssignLeadsToTeam";
 import { Button } from "@/components/ui/button";
 // app/page.tsx (or any component file)
-import CustomPagination from "@/components/ui/CustomPagination";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Lead } from "@/types/teamleader.types";
 import { debounce } from "@/utills/debounce";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { User, Users, Phone, Mail, MoreVertical, Pencil, Eye, Trash2, Search, X } from "lucide-react";
+import { Eye, MoreVertical, Pencil, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
