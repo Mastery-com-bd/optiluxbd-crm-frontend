@@ -1,4 +1,4 @@
-import LeadOverview from "@/components/pages/dashboard/leads/lead-overview/LeadOverview";
+import LeadOverview from "@/components/pages/dashboard/admin/leads/lead-overview/LeadOverview";
 
 const LeadOverviewPage = () => {
   return (

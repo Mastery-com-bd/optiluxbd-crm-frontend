@@ -1,10 +1,7 @@
 "use client";
-
-import ButtonComponent from "@/components/ui/ButtonComponent";
 import AddLeadsModal from "../all-leads/AddLeadsModal";
 import ChartSection from "./ChartSection";
 import LeadOverviewCard from "./LeadOverviewCard";
-import { Edit, Pencil, Plus, Trash2 } from "lucide-react";
 
 const LeadOverview = () => {
   return (
@@ -19,7 +16,6 @@ const LeadOverview = () => {
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <AddLeadsModal />
-          <ButtonComponent buttonName="Add Leads" icon={Trash2} />
         </div>
       </div>
 
