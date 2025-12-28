@@ -1,5 +1,5 @@
 "use client";
-import SuccessMail from "@/components/auth/SuccessMail";
+import SuccessMail from "@/components/auth/verify email/SuccessMail";
 import { Suspense } from "react";
 
 const VerifyEmailProvider = () => {

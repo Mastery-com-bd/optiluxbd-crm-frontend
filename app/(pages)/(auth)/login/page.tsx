@@ -3,7 +3,7 @@ import LoginText from "@/components/auth/login/LoginText";
 
 const LoginPage = () => {
   return (
-    <section className="h-screen px-4 lg:px-44 flex flex-col lg:flex-row items-center lg:justify-between ">
+    <section className="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-x-6 lg:gap-x-56">
       <LoginText />
       <LoginComponent />
     </section>
