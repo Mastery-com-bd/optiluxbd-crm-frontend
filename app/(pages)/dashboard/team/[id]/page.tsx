@@ -1,4 +1,4 @@
-import TeamDetails from "@/components/pages/dashboard/teamLeader/teamDetails/TeamDetails";
+import TeamDetails from "@/components/pages/dashboard/admin/teamLeader/teamDetails/TeamDetails";
 
 const TeamDetailsPage = async ({
   params,

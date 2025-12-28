@@ -1,4 +1,4 @@
-import CustomerOverview from "@/components/pages/dashboard/customers/overview/CustomerOverview";
+import CustomerOverview from "@/components/pages/dashboard/admin/customers/overview/CustomerOverview";
 
 const CustomerOverviewPage = () => {
   return (

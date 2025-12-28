@@ -2,7 +2,7 @@
 
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Plus } from "lucide-react";
-import ComboOverView from "../../combo/allCombo/ComboOverView";
+import ComboOverView from "../../../combo/allCombo/ComboOverView";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,

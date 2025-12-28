@@ -1,5 +1,4 @@
-import AllCustomers from "@/components/pages/dashboard/customers/allCustomers/AllCustomers";
-import Customers from "@/components/pages/dashboard/customers/allCustomers/customers/Customers";
+import Customers from "@/components/pages/dashboard/admin/customers/customers/Customers";
 
 const AllCustomersPage = () => {
   return (

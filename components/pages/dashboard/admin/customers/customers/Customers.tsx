@@ -7,9 +7,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronDown, Search, Upload } from "lucide-react";
-import CustomerTableSkeleton from "../CustomerTableSkeleton";
-import CustomerTable from "../../components/customerTable";
-import CustomerPagination from "../../components/pagination";
+import CustomerTableSkeleton from "./CustomerTableSkeleton";
+import CustomerTable from "./customerTable";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import {
   DropdownMenu,
