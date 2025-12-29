@@ -1,4 +1,4 @@
-import Assignleades from "@/components/pages/dashboard/teamLeader/assignleades/Assignleades";
+import Assignleades from "@/components/pages/dashboard/admin/teamLeader/assignleades/Assignleades";
 
 const LeadAssignmentPage = () => {
   return (

@@ -1,4 +1,4 @@
-import AllTeams from "@/components/pages/dashboard/teamLeader/team/AllTeams";
+import AllTeams from "@/components/pages/dashboard/admin/teamLeader/team/AllTeams";
 
 const AllTeamsPage = () => {
   return (

@@ -11,8 +11,9 @@ import { useForgetPasswordMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { MoveRight } from "lucide-react";
 import LargeYellowSvg from "@/components/svgIcon/LargeYellowSvg";
-import RegistrationSuccess from "../register/RegistrationSuccess";
 import Link from "next/link";
+import LoginText from "../login/LoginText";
+import SubmissionSuccess from "../register/SubmissionSuccess";
 
 const forgetPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -51,81 +52,99 @@ const ForgetPasswordComponent = () => {
       toast.error(errorInfo, { id: toastId, duration: 3000 });
     }
   };
+
   return (
     <>
       {open ? (
-        <RegistrationSuccess
-          title="Password Reset Link Sent"
-          description="Great job! you have send email successfully. To continue,
-        please check your email address. We’ve sent a confirmation link to your
-        inbox."
-          from="forget"
+        <SubmissionSuccess
+          title="Check Your Email Inbox"
+          content="we have sent a password reset link to your email. Please check your inbox  "
+          path="/forgot-password"
+          buttonName="send again"
+          buttonTitle="Didn`t get any Email ?"
+          open={open}
+          setOpen={setOpen}
         />
       ) : (
-        <div className="rounded-xl border border-[#221F33] bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-8 py-4 lg:w-[25vw] space-y-6">
-          <div className="space-y-5">
-            <div className="flex items-center justify-start">
-              <Link href="/">
-                <Image src={logo} height={100} width={100} alt="brand logo" />
-              </Link>
-            </div>
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-x-6 lg:gap-x-56">
+          <LoginText />
 
-            <div className="space-y-1">
-              <h1 className="text-2xl font-medium text-[#C3C0D8]">
-                Forgot Password
-              </h1>
-              <p className="text-[#9B98AE]">
-                Enter your registered email address <br /> and we’ll send you a
-                secure password <br /> reset link.
+          <div className="rounded-lg border border-[#221F33] bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-8 py-4 lg:w-[25vw] relative">
+            {/* top and bottom border */}
+            <div className="absolute top-0 left-0 inset-1 border-l border-t border-[#221F33] rounded-tl-lg pointer-events-none" />
+            <div className="absolute bottom-0 right-0 inset-1 border-r border-b border-[#221F33] rounded-br-lg pointer-events-none" />
+
+            <div className="space-y-4">
+              <div className="space-y-5">
+                <div className="flex items-center justify-start">
+                  <Link href="/">
+                    <Image
+                      src={logo}
+                      height={100}
+                      width={100}
+                      alt="brand logo"
+                    />
+                  </Link>
+                </div>
+
+                <div className="space-y-1">
+                  <h1 className="text-2xl font-medium text-[#C3C0D8]">
+                    Forgot Password
+                  </h1>
+                  <p className="text-[#9B98AE]">
+                    Enter your registered email address <br /> and we’ll send
+                    you a secure password <br /> reset link.
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Email */}
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Email Address"
+                  className={`${
+                    errors.email && "border-red-500 dark:border-red-400"
+                  } bg-transparent text-[#514D6A] placeholder:text-[#514D6A] placeholder:text-sm outline-none border border-[#2C293D] py-2 px-5 rounded-full w-full`}
+                  {...register("email", { required: "Email is required" })}
+                />
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full"
+                >
+                  {/* top and bottom line */}
+                  <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
+                  <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
+
+                  {/* Button text */}
+                  <p className="flex items-center gap-2">
+                    <span className="text-sm">Submit</span>
+                    <MoveRight />
+                  </p>
+
+                  <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+                    <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+                  </div>
+                  <div className="pointer-events-none">
+                    <LargeYellowSvg />
+                  </div>
+                </button>
+              </form>
+              <p className="flex justify-center gap-1 text-[#9B98AE]">
+                Back to
+                <Link
+                  className="bg-linear-to-b from-[#C3C0D8] to-[#4E0C73] bg-clip-text text-transparent underline underline-offset-2 decoration-[#4E0C73]"
+                  href="/login"
+                >
+                  Login
+                </Link>
               </p>
             </div>
           </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email */}
-            <input
-              id="email"
-              type="email"
-              placeholder="Email Address"
-              className={`${
-                errors.email && "border-red-500 dark:border-red-400"
-              } bg-transparent text-[#514D6A] placeholder:text-[#514D6A] placeholder:text-sm outline-none border border-[#2C293D] py-2 px-5 rounded-full w-full`}
-              {...register("email", { required: "Email is required" })}
-            />
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full"
-            >
-              {/* top and bottom line */}
-              <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
-              <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
-
-              {/* Button text */}
-              <p className="flex items-center gap-2">
-                <span className="text-sm">Submit</span>
-                <MoveRight />
-              </p>
-
-              <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-                <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-              </div>
-              <div className="pointer-events-none">
-                <LargeYellowSvg />
-              </div>
-            </button>
-          </form>
-          <p className="flex justify-center gap-1 text-[#9B98AE]">
-            Back to
-            <Link
-              className="bg-linear-to-b from-[#C3C0D8] to-[#4E0C73] bg-clip-text text-transparent underline underline-offset-2 decoration-[#4E0C73]"
-              href="/login"
-            >
-              Login
-            </Link>
-          </p>
         </div>
       )}
     </>

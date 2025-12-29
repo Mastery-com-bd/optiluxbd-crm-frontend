@@ -106,28 +106,6 @@ const Navbar: React.FC = () => {
             />
           </div>
           <div className="flex items-center gap-4">
-            {/* <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
-              <button
-                onClick={() => {
-                  setTheme("light");
-                  console.log("clicked sun");
-                }}
-                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                aria-label="Switch to light mode"
-              >
-                <SunIcon className="w-6 h-6" />
-              </button>
-              <button
-                onClick={() => {
-                  setTheme("dark");
-                  console.log("clicked moon");
-                }}
-                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                aria-label="Switch to dark mode"
-              >
-                <MoonIcon className="w-6 h-6" />
-              </button>
-            </div> */}
             <NotificationBell />
             <Popover>
               <PopoverTrigger asChild className="bg-transparent">
@@ -193,7 +171,7 @@ const Navbar: React.FC = () => {
                   href="/dashboard/analysis/settings"
                   className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  Settings
+                  My Settings
                 </Link>
                 <hr className="my-2" />
                 <button
