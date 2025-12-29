@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import {
   Form,
   FormControl,
@@ -31,7 +32,7 @@ const formSchema = z.object({
   message: z.string().min(1, "Message is required"),
 });
 
-const SendMessage = () => {
+const SingleSendMessage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,7 +85,10 @@ const SendMessage = () => {
   }
 
   return (
-    <div className="bg-[#1E1B2E] rounded-3xl p-8 shadow-2xl w-full mx-auto border border-white/5">
+    <LiquidGlass
+      borderRadius="32px"
+      className=" p-8 shadow-2xl w-full mx-auto border border-white/5"
+    >
       <h2 className="text-2xl font-semibold text-white mb-8">Send Message</h2>
 
       <Form {...form}>
@@ -97,12 +101,13 @@ const SendMessage = () => {
                 control={form.control}
                 name="recipient"
                 render={({ field }) => (
-                  <FormItem className="space-y-2">
+                  <FormItem className="space-y-2 ">
                     <FormLabel className="text-gray-300">Recipient</FormLabel>
-                    <div className="relative">
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <FormControl>
+                    <div className="">
+                      {/* <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" /> */}
+                      <FormControl className="pl-4!">
                         <Input
+                          icon={<Search className="w-5 h-5" />}
                           placeholder="Search lead or customer"
                           className="pl-12 h-12 bg-white/5 border-white/10 text-white placeholder:text-gray-500 rounded-xl focus-visible:ring-1 focus-visible:ring-purple-500"
                           {...field}
@@ -241,23 +246,36 @@ const SendMessage = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="pt-10 flex justify-end">
-            <Button
+          <div className="pt-10 flex justify-start">
+            <button
               type="submit"
-              className="w-full sm:w-auto min-w-[200px] h-12 text-white text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden border-0"
-              style={{
-                background: "linear-gradient(90deg, #634c48 0%, #8e6a52 100%)",
-              }}
+              className={`relative w-full max-w-[400px] py-2 flex items-center justify-center cursor-pointer bg-white/5 rounded-xl
+              }`}
             >
-              {/* Gradient overlay for the glow effect */}
-              <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000" />
-              <span className="relative z-10">Send Message</span>
-            </Button>
+              {/* Button text */}
+              <span className="relative z-10">Send Now</span>
+
+              <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none" />
+
+              <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none" />
+
+              <div className="absolute z-20 bottom-0 left-0 w-full">
+                <span
+                  className="block w-full h-[1.5px]"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
+                  }}
+                />
+              </div>
+
+              <ButtonSvgGlow />
+            </button>
           </div>
         </form>
       </Form>
-    </div>
+    </LiquidGlass>
   );
 };
 
-export default SendMessage;
+export default SingleSendMessage;
