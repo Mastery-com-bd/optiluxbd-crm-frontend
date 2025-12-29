@@ -1,4 +1,5 @@
 "use client";
+
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import {
   ArrowDownIcon,
@@ -15,7 +16,7 @@ const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 const stats = [
   {
     icon: Box,
-    label: "Active Combo",
+    label: "Active Agent",
     value: "128",
     change: 36.8,
     isPositive: true,
@@ -23,7 +24,7 @@ const stats = [
   },
   {
     icon: User,
-    label: "Total Sales",
+    label: "New Leads",
     value: "512",
     change: 36.8,
     isPositive: false,
@@ -31,23 +32,23 @@ const stats = [
   },
   {
     icon: Briefcase,
-    label: "Revenue Generated",
-    value: "120.4k",
+    label: "Total Sales",
+    value: "6812",
     change: 36.8,
     isPositive: true,
     highlight: true,
   },
   {
     icon: ArrowUpRight,
-    label: "Avg. Discount",
-    value: "25%",
+    label: "Total Orders",
+    value: "8565",
     change: 36.8,
     isPositive: true,
     highlight: false,
   },
 ];
 
-const ComboOverView = () => {
+const Overview = () => {
   const [activeFilter, setActiveFilter] = useState("1Y");
   return (
     <div className="space-y-6 w-full mx-auto">
@@ -90,7 +91,12 @@ const ComboOverView = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <div key={index} className="">
+            <div
+              key={index}
+              className={`${
+                index !== stats.length - 1 ? "border-r border-white/5" : ""
+              }`}
+            >
               {/* Icon */}
               <LiquidGlass
                 showBG={false}
@@ -145,4 +151,4 @@ const ComboOverView = () => {
   );
 };
 
-export default ComboOverView;
+export default Overview;
