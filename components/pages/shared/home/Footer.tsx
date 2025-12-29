@@ -1,16 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Mail,
-  MailIcon,
-  MapPin,
-  Phone,
-  Sparkles,
-} from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
+import FooterLight from "@/components/svgIcon/FooterLight";
 
 export default function Footer() {
   const pathname = usePathname();
@@ -22,91 +15,124 @@ export default function Footer() {
   )
     return null;
 
+  const footerLinks = {
+    company: [
+      { name: "Homepage", href: "/" },
+      { name: "Contact Us", href: "/contact" },
+      { name: "Sign In", href: "/login" },
+      { name: "Sign Up", href: "/register" },
+    ],
+    solutions: [
+      { name: "Advanced Prompts", href: "#" },
+      { name: "Documentation", href: "#" },
+      { name: "How It Works", href: "#" },
+      { name: "Media Kit", href: "#" },
+    ],
+    resources: [
+      { name: "Blog", href: "#" },
+      { name: "Blog Single", href: "#" },
+      { name: "Case Studies", href: "#" },
+      { name: "Case Studies Single", href: "#" },
+    ],
+    aboutUs: [
+      { name: "Our Patents", href: "#" },
+      { name: "Our Services", href: "#" },
+      { name: "Our Story", href: "#" },
+      { name: "Our Team", href: "#" },
+    ],
+  };
+
   return (
-    <footer className="bg-black text-white">
-      {/* CTA Section */}
-      <div className="bg-black text-center py-12 px-6 border-b border-orange-500">
-        <div className="max-w-[1444px] mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-semibold leading-relaxed">
-            <span className="text-yellow-500">Discover</span> How Our CRM <br />
-            Can <span className="text-orange-400">Transform Your Sales</span>
-          </h2>
-          <div className="mt-6 flex justify-center">
-            <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 flex gap-2 items-center">
-              Start Free Trial <ArrowRight size={16} />
-            </Button>
+    <footer className=" text-white pt-20 pb-10 px-6 md:px-12 lg:px-20 relative overflow-hidden">
+      <FooterLight />
+      <div className="max-w-[1440px] mx-auto relative z-10">
+
+        {/* Main Grid Section */}
+        <div className="flex justify-between gap-12 mb-16">
+          {/* Brand & Contact Info */}
+          <div className="lg:col-span-1 space-y-6 w-[30%]">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-400 rounded-lg flex items-center justify-center">
+                {/* Logo Icon */}
+                <div className="w-4 h-4 border-2 border-white rotate-45" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight">Optilux</span>
+            </div>
+
+            <div className="space-y-4 text-[#9B98AE] text-sm leading-relaxed">
+              <div>
+                <p className="font-semibold text-white mb-1">Address:</p>
+                <p >3760 West Drive, Chicago, IL 60606</p>
+              </div>
+              <div>
+                <p className="font-semibold text-white mb-1">Contact:</p>
+                <p>319-270-8254</p>
+                <p>contact@synthmind.com</p>
+              </div>
+            </div>
+
+            {/* Social Icons */}
+            <div className="flex gap-4 text-[#9B98AE]">
+              <Facebook size={20} className="hover:text-white cursor-pointer transition-colors" />
+              <Instagram size={20} className="hover:text-white cursor-pointer transition-colors" />
+              <Twitter size={20} className="hover:text-white cursor-pointer transition-colors" />
+              <Linkedin size={20} className="hover:text-white cursor-pointer transition-colors" />
+              <Youtube size={20} className="hover:text-white cursor-pointer transition-colors" />
+            </div>
+          </div>
+
+          {/* Links Sections */}
+          <div className="lg:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-8 w-[70%] justify-end">
+            {/* Company */}
+            <div className="">
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-200">Company</h4>
+              <ul className="space-y-4 text-sm text-[#9B98AE]">
+                {footerLinks.company.map((link) => (
+                  <li key={link.name}><Link href={link.href} className="hover:text-white transition-colors">{link.name}</Link></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Solutions */}
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-200">Solutions</h4>
+              <ul className="space-y-4 text-sm text-[#9B98AE]">
+                {footerLinks.solutions.map((link) => (
+                  <li key={link.name}><Link href={link.href} className="hover:text-white transition-colors">{link.name}</Link></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-200">Resources</h4>
+              <ul className="space-y-4 text-sm text-[#9B98AE]">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.name}><Link href={link.href} className="hover:text-white transition-colors">{link.name}</Link></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* About Us */}
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-200">About Us</h4>
+              <ul className="space-y-4 text-sm text-[#9B98AE]">
+                {footerLinks.aboutUs.map((link) => (
+                  <li key={link.name}><Link href={link.href} className="hover:text-white transition-colors">{link.name}</Link></li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Grid & Contact Section */}
-      <div className="max-w-[1444px] mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
-        {/* Brand */}
-        <div>
-          <h3 className="flex items-center gap-2 font-semibold text-yellow-400 mb-2">
-            <Sparkles size={16} /> SalesSync
-          </h3>
-          <p className="text-gray-300">
-            Manage your sales in one place. Automate tasks, get real-time
-            insights, and boost your conversion.
-          </p>
-        </div>
-
-        {/* About Us */}
-        <div>
-          <h4 className="font-semibold text-orange-400 mb-2">About Us</h4>
-          <ul className="space-y-1 text-gray-300">
-            <li>Our Story</li>
-            <li>Careers</li>
-            <li>Partners</li>
-            <li>Blog</li>
-            <li>Contact</li>
-          </ul>
-        </div>
-
-        {/* Resources */}
-        <div>
-          <h4 className="font-semibold text-orange-400 mb-2">Resources</h4>
-          <ul className="space-y-1 text-gray-300">
-            <li>Integrations</li>
-            <li>Docs</li>
-            <li>Sales Tips</li>
-            <li>FAQs</li>
-            <li>Help Center</li>
-          </ul>
-        </div>
-
-        {/* Contact */}
-        <div>
-          <h4 className="font-semibold text-orange-400 mb-2">Contact</h4>
-          <ul className="space-y-2 text-gray-300">
-            <li className="flex items-center gap-2">
-              <Mail size={16} /> info@salesync.com
-            </li>
-            <li className="flex items-center gap-2">
-              <Phone size={16} /> +1 (800) 123-4567
-            </li>
-            <li className="flex items-center gap-2">
-              <MapPin size={16} /> New York, USA
-            </li>
-            <li className="flex items-center gap-2">
-              <MailIcon size={16} />{" "}
-              <Link href="/verify-email">Verify Email</Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-700 py-4 px-6 text-center text-xs sm:flex sm:items-center sm:justify-between text-gray-400">
-        <p>© {new Date().getFullYear()} SalesSync. All rights reserved.</p>
-        <div className="flex gap-4 justify-center sm:justify-end mt-2 sm:mt-0">
-          <a href="#" className="hover:underline">
-            Terms of Service
-          </a>
-          <a href="#" className="hover:underline">
-            Privacy Policy
-          </a>
+        {/* Bottom Bar */}
+        {/* <hr /> */}
+        <div className="pt-8   flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+          <p>© {new Date().getFullYear()} Optilux BD. All rights reserved</p>
+          <div className="flex gap-8">
+            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>
