@@ -1,24 +1,24 @@
 "use client";
 
-import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
-import { TCustomer } from "@/types/customer.types";
-import { debounce } from "@/utills/debounce";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ChevronDown, Search, Upload } from "lucide-react";
-import CustomerTableSkeleton from "./CustomerTableSkeleton";
-import CustomerTable from "./customerTable";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
+import CustomPagination from "@/components/ui/CustomPagination";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
+import { TCustomer } from "@/types/customer.types";
+import { debounce } from "@/utills/debounce";
+import { ChevronDown, Search, Upload } from "lucide-react";
+import { useState } from "react";
 import CreateCustomerModal from "./CreateCustomerModal";
-import ButtonComponent from "@/components/ui/ButtonComponent";
-import CustomPagination from "@/components/ui/CustomPagination";
+import CustomerTable from "./customerTable";
+import CustomerTableSkeleton from "./CustomerTableSkeleton";
 
 const Customers = () => {
   const [filters, setFilters] = useState({

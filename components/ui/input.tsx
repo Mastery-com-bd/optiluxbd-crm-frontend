@@ -65,20 +65,22 @@ export function Input({
           className
         )}
       >
-        {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
-        {icon && (
-          <span className="flex items-center shrink-0 text-[#8a8a96] w-5 h-5">
-            {icon}
-          </span>
-        )}
-        <input
-          type={type}
-          data-slot="input"
-          className={cn(
-            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none z-50"
+        <div className="flex items-center gap-2.5 w-full">
+          {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
+          {icon && (
+            <span className="flex items-center shrink-0 text-[#8a8a96] w-5 h-5">
+              {icon}
+            </span>
           )}
-          {...props}
-        />
+          <input
+            type={type}
+            data-slot="input"
+            className={cn(
+              "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none z-50"
+            )}
+            {...props}
+          />
+        </div>
       </LiquidGlass>
     </div>
   );

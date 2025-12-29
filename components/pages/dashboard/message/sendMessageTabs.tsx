@@ -1,14 +1,14 @@
 "use client";
 
-import MessagePage from "@/components/pages/dashboard/message/messagePage";
-import SendMessageTabs from "@/components/pages/dashboard/message/sendMessageTabs";
+import SingleSendMessage from "@/components/pages/dashboard/message/singleSendMessage";
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import BulkSendMessage from "./bulkSendMessage";
 
-const buttons = ["Templates", "Send Message", "Message History"];
+const buttons = ["Single Send", "Bulk Send"];
 
-const Page = () => {
+const SendMessageTabs = () => {
   const [current, setCurrent] = useState(buttons[0]);
   return (
     <div>
@@ -57,15 +57,12 @@ const Page = () => {
           })}
         </Card>
 
-        {current === "Templates" && <MessagePage />}
-        {current === "Send Message" && <SendMessageTabs />}
-        {current === "Message History" && (
-          <div className="w-full h-[1.5px] bg-white/20">Message History</div>
-        )}
+        {current === "Single Send" && <SingleSendMessage />}
+        {current === "Bulk Send" && <BulkSendMessage />}
       </div>
       {/* <MessagePage /> */}
     </div>
   );
 };
 
-export default Page;
+export default SendMessageTabs;
