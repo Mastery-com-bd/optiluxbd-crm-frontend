@@ -36,7 +36,7 @@ const stats = [
     value: "6812",
     change: 36.8,
     isPositive: true,
-    highlight: true,
+    highlight: false,
   },
   {
     icon: ArrowUpRight,
@@ -113,7 +113,9 @@ const Overview = () => {
 
               {/* Value */}
               <p
-                className={`text-[32px] font-normal leading-10 text-white mb-3`}
+                className={`text-[32px] font-normal leading-10 mb-3 ${
+                  stat.highlight ? "text-success" : "text-white"
+                }`}
               >
                 {stat.value}
               </p>
@@ -137,11 +139,26 @@ const Overview = () => {
                       }`}
                     >
                       {stat.change}
-                    </span>{" "}
+                    </span>
                     %
                   </div>
                 </LiquidGlass>
-                <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                {stat.label === "Active Agent" && (
+                  <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                )}
+                {stat.label === "New Leads" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Requires attention
+                  </span>
+                )}
+                {stat.label === "Total Sales" && (
+                  <span className="text-[#EBEBEB] text-sm">Need to assign</span>
+                )}
+                {stat.label === "Total Orders" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Lead to Customer
+                  </span>
+                )}
               </div>
             </div>
           ))}

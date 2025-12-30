@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import UploadImage from "../../../ui/UploadImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera } from "lucide-react";
+import UploadImage from "@/components/ui/UploadImage";
 
 interface TSettingsImageUploaderProps {
   label: string;

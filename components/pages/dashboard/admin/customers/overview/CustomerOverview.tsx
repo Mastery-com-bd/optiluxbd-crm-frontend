@@ -2,7 +2,6 @@
 
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Plus } from "lucide-react";
-import ComboOverView from "../../../combo/allCombo/ComboOverView";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -13,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import OverviewCard from "./OverviewCard";
 
 type TOverviewdata = {
   month:
@@ -153,7 +153,7 @@ const CustomerOverview = () => {
         />
       </div>
       <div className="w-full ">
-        <ComboOverView />
+        <OverviewCard />
       </div>
       <LiquidGlass
         shadowIntensity="xxs"
