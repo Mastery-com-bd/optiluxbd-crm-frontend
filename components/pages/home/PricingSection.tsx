@@ -1,9 +1,8 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
-import { Check, CheckCircle } from 'lucide-react';
-import Background from "@/components/svgIcon/Background.svg";
-import Image from 'next/image';
+import { type Variants } from 'framer-motion';
+import { Check } from 'lucide-react';
+import sectionBg from "@/components/svgIcon/Background.svg";
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useState } from 'react';
@@ -54,8 +53,11 @@ const cardVariants: Variants = {
 export default function PricingSection() {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
     return (
-        <section className=" bg-[#030115] text-white relative ">
-            <Image src={Background} alt='light-bg' className='absolute bottom-0 left-52' />
+        <section
+            className=" bg-[#030115] text-white relative  bg-no-repeat bg-bottom"
+            style={{ backgroundImage: `url(${sectionBg.src})` }}
+        >
+            {/* <Image src={Background} alt='light-bg' className='absolute bottom-0 border border-red-600' /> */}
             <div className='max-w-[1240px] mx-auto py-40'>
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-16">

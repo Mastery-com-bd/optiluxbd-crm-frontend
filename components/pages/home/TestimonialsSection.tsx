@@ -135,7 +135,7 @@ function TestimonialCard({ data, height }: { data: any, height: string }) {
             className="bg-transparent h-full overflow-hidden"
             borderRadius="20px">
             <div className={`${height}  p-8 flex flex-col justify-between hover:bg-white/[0.07] transition-all duration-500 group bg-no-repeat`}>
-                <div className="flex justify-between flex-col  h-full">
+                <div className="flex justify-between flex-col h-full">
                     <div className="">
                         {/* User Profile */}
                         <div className="mb-6 flex items-center gap-4">
