@@ -35,10 +35,10 @@ import {
   X,
 } from "lucide-react";
 import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
-import { TSettings } from "./settings.types";
 import Link from "next/link";
 import { useUpdateSettingsMutation } from "@/redux/features/settings/settingsApi";
 import { toast } from "sonner";
+import { TSettings } from "./settings.types";
 
 type TSocialSettingsprops = {
   editing: "" | "brand" | "contact" | "social";

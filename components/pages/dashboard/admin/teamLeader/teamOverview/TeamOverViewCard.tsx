@@ -27,7 +27,7 @@ const stats = [
     label: "Total Members",
     value: "512",
     change: 36.8,
-    isPositive: false,
+    isPositive: true,
     highlight: false,
   },
   {
@@ -36,7 +36,7 @@ const stats = [
     value: "63%",
     change: 36.8,
     isPositive: true,
-    highlight: false,
+    highlight: true,
   },
   {
     icon: TargetIcon,
@@ -90,7 +90,12 @@ const TeamOverViewCard = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <div key={index} className="">
+            <div
+              key={index}
+              className={`${
+                index !== stats.length - 1 ? "border-r border-white/5" : ""
+              }`}
+            >
               {/* Icon */}
               <LiquidGlass
                 showBG={false}
@@ -107,7 +112,9 @@ const TeamOverViewCard = () => {
 
               {/* Value */}
               <p
-                className={`text-[32px] font-normal leading-10 text-white mb-3`}
+                className={`text-[32px] font-normal leading-10  mb-3 ${
+                  stat.highlight ? "text-success" : "text-white"
+                }`}
               >
                 {stat.value}
               </p>

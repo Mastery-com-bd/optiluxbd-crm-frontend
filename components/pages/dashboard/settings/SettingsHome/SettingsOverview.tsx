@@ -3,10 +3,10 @@ import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ArrowUpRight,
-  Box,
-  Briefcase,
+  Target,
+  TrendingUp,
   User,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -14,8 +14,8 @@ const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 
 const stats = [
   {
-    icon: Box,
-    label: "Active Combo",
+    icon: Users,
+    label: "Active Users",
     value: "128",
     change: 36.8,
     isPositive: true,
@@ -23,32 +23,33 @@ const stats = [
   },
   {
     icon: User,
-    label: "Total Sales",
+    label: "API Connection",
     value: "512",
     change: 36.8,
     isPositive: false,
     highlight: false,
   },
   {
-    icon: Briefcase,
-    label: "Revenue Generated",
-    value: "120.4k",
+    icon: TrendingUp,
+    label: "Total Backups",
+    value: "63%",
     change: 36.8,
     isPositive: true,
     highlight: true,
   },
   {
-    icon: ArrowUpRight,
-    label: "Avg. Discount",
-    value: "25%",
+    icon: Target,
+    label: "Notifications",
+    value: "8555",
     change: 36.8,
     isPositive: true,
     highlight: false,
   },
 ];
 
-const ComboOverView = () => {
+const SettingsOverview = () => {
   const [activeFilter, setActiveFilter] = useState("1Y");
+
   return (
     <div className="space-y-6 w-full mx-auto">
       {/* Overview Card */}
@@ -138,11 +139,26 @@ const ComboOverView = () => {
                       }`}
                     >
                       {stat.change}
-                    </span>{" "}
+                    </span>
                     %
                   </div>
                 </LiquidGlass>
-                <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                {stat.label === "Active Users" && (
+                  <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                )}
+                {stat.label === "API Connection" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Requires attention
+                  </span>
+                )}
+                {stat.label === "Total Backups" && (
+                  <span className="text-[#EBEBEB] text-sm">Need to assign</span>
+                )}
+                {stat.label === "Notifications" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    Lead to Customer
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -152,4 +168,4 @@ const ComboOverView = () => {
   );
 };
 
-export default ComboOverView;
+export default SettingsOverview;

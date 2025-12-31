@@ -1,5 +1,11 @@
+import Settings from "@/components/pages/dashboard/settings/SettingsHome/Settings";
+
 const SettingsPage = () => {
-  return <div>this is settings page</div>;
+  return (
+    <section>
+      <Settings />
+    </section>
+  );
 };
 
 export default SettingsPage;

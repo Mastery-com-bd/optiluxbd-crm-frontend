@@ -1,12 +1,5 @@
 "use client";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Rectangle,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   ChartContainer,
@@ -58,6 +51,7 @@ const LeadOvreviewBarChart = () => {
             horizontal={true}
             stroke="#FFFFFF"
             strokeDasharray="6 6"
+            strokeOpacity=".5"
           />
 
           <XAxis
