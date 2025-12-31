@@ -17,13 +17,16 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 const dummyProducts = [
-    { id: 1, name: "Premium Coffee Beans", price: 25.00, sku: "CF-001" },
-    { id: 2, name: "Stainless Steel Grinder", price: 45.00, sku: "GR-052" },
-    { id: 3, name: "Paper Filters (100pk)", price: 8.50, sku: "FL-109" },
-    { id: 4, name: "Glass Pour Over", price: 32.00, sku: "GL-441" },
-    { id: 5, name: "Digital Coffee Scale", price: 19.99, sku: "SC-902" },
+    { id: 1, name: "Premium Coffee Beans", price: 25.00, sku: "CF-001", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 2, name: "Stainless Steel Grinder", price: 45.00, sku: "GR-052", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 3, name: "Paper Filters (100pk)", price: 8.50, sku: "FL-109", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 4, name: "Glass Pour Over", price: 32.00, sku: "GL-441", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 5, name: "Digital Coffee Scale", price: 19.99, sku: "SC-902", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 5, name: "Digital Coffee Scale", price: 19.99, sku: "SC-902", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
+    { id: 5, name: "Digital Coffee Scale", price: 19.99, sku: "SC-902", img: "https://i.ibb.co.com/KxJvdpz3/t-shirt.jpg" },
 ];
 
 const CreateComboModal = () => {
@@ -111,9 +114,20 @@ const CreateComboModal = () => {
                                     <div className="space-y-3 w-full px-4">
                                         {selectedProducts.map((product) => (
                                             <div key={product.id} className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/10 group">
-                                                <div>
-                                                    <p className="text-sm font-medium">{product.name}</p>
-                                                    <p className="text-xs text-gray-500">${product.price}</p>
+                                                <div className="flex gap-4">
+                                                    <div>
+                                                        <Image
+                                                            src={product.img}
+                                                            alt={product.name}
+                                                            height={80}
+                                                            width={80}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-medium">{product.name}</p>
+                                                        <p className="text-xs text-gray-500">${product.price}</p>
+                                                    </div>
+
                                                 </div>
                                                 <div className="flex justify-between w-[40%] items-center">
                                                     <div className="flex gap-3 items-center bg-black/20 px-2 py-1 rounded-md border border-white/5">
@@ -132,7 +146,7 @@ const CreateComboModal = () => {
                             </ScrollArea>
                         </div>
 
-                        <div className="p-4 flex flex-col gap-4">
+                        <div className="p-4 flex flex-col gap-4 bgGlass">
                             <Label>Combo Price</Label>
                             <Input placeholder="Enter Combo Price" type="number" onChange={(e) => setComboPrice(e.target.value)} />
                             <hr className="border-white/10" />
@@ -142,7 +156,7 @@ const CreateComboModal = () => {
                     </div>
 
                     {/* ডান পাশ: Product Selection */}
-                    <div className="flex flex-col space-y-4">
+                    <div className="flex flex-col space-y-4 overflow-y-auto">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
                             <Input
@@ -152,8 +166,8 @@ const CreateComboModal = () => {
                             />
                         </div>
 
-                        <ScrollArea className="flex-1 rounded-xl border border-white/10 p-2">
-                            <div className="space-y-1">
+                        <ScrollArea className="flex-1 rounded-xl border border-white/10 p-2 ">
+                            <div className="space-y-1 ">
                                 {dummyProducts
                                     .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
                                     .map((product) => {
@@ -162,11 +176,16 @@ const CreateComboModal = () => {
                                             <div
                                                 key={product.id}
                                                 onClick={() => toggleProduct(product)}
-                                                className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${isSelected ? 'bg-yellow-500/10 border border-yellow-500/50' : 'hover:bg-white/5 border border-transparent'}`}
+                                                className={`flex items-center bg-white/5 backdrop-blur-xl justify-between p-3 rounded-lg cursor-pointer transition-all ${isSelected ? ' border border-yellow-500/50' : 'hover:bg-white/5 border border-transparent'}`}
                                             >
-                                                <div>
-                                                    <p className="text-sm font-medium">{product.name}</p>
-                                                    <p className="text-xs text-gray-500">SKU: {product.sku}</p>
+                                                <div className="flex gap-4">
+                                                    <div>
+                                                        <Image src={product.img} alt={product.name} height={40} width={40} />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-medium">{product.name}</p>
+                                                        <p className="text-xs text-gray-500">SKU: {product.sku}</p>
+                                                    </div>
                                                 </div>
                                                 <p className="text-sm font-semibold">${product.price}</p>
                                             </div>
