@@ -36,3 +36,29 @@ export const storageData: TStorageData[] = [
 export const getPercentage = (usage: number, total: number) => {
   return Math.min((usage / total) * 100, 100);
 };
+
+// current settings configuration const and type
+export type TCurrentConfiguration = {
+  name: string;
+  value: string;
+};
+
+export const currentConfiguration: TCurrentConfiguration[] = [
+  { name: "Company", value: "OptiluxBD" },
+  { name: "Currency", value: "BDT" },
+  { name: "Timezone", value: "Asia/Dhaka" },
+  { name: "Date Format", value: "DD/MM/YYYY" },
+  { name: "Language", value: "English US" },
+];
+
+// system information const and type
+export type TSystemInformation = {
+  name: string;
+  value: string;
+};
+export const systemInformation: TSystemInformation[] = [
+  { name: "Version", value: "v2.5.1" },
+  { name: "Last Update", value: "15 Dec, 2024" },
+  { name: "Database", value: "Connected" },
+  { name: "Cache", value: "Active" },
+];
