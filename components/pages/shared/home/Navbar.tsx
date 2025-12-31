@@ -3,6 +3,7 @@
 
 import { NotificationBell } from "@/components/notification/NotificationBell";
 import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -247,32 +248,25 @@ export default function Navbar() {
             {user ? (
               <>
                 <Link href={dashboardRoute}>
-                  <Button
-                    className="bg-orange-500 hover:bg-orange-600 text-white flex gap-2 cursor-pointer"
-                    size="sm"
-                    variant="default"
-                  >
-                    <LayoutDashboard size={16} />
-                    Dashboard
-                  </Button>
+                  <ButtonComponent buttonName="Dashboard" icon={LayoutDashboard} varient="yellow"/>
                 </Link>
-                <Button
+                {/* <Button
                   onClick={handleLogOut}
                   variant="ghost"
                   className="text-red-400 hover:text-white p-2 cursor-pointer"
                 >
                   <LogOut size={18} />
-                </Button>
+                </Button> */}
               </>
             ) : (
-              <Link href="/login">
-                <Button
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold cursor-pointer"
-                  size="sm"
-                >
-                  <LogIn size={16} className="mr-2" /> Login
-                </Button>
-              </Link>
+              <div className="flex  gap-3">
+                <Link href="/login">
+                  <ButtonComponent buttonName="Sign In" varient="purple" />
+                </Link>
+                <Link href="/register">
+                  <ButtonComponent buttonName="Sign Up" varient="yellow" />
+                </Link>
+              </div>
             )}
           </div>
         </div>

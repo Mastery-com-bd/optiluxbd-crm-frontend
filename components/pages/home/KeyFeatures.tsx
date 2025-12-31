@@ -4,7 +4,6 @@ import FeaturedSectionLightSVG from '@/components/svgIcon/FeaturedSectionLightSV
 import ButtonComponent from '@/components/ui/ButtonComponent';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { motion } from 'framer-motion';
-import { Zap, Repeat, BarChart, ChevronRight, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 
 export default function OurFeatures() {
@@ -61,7 +60,7 @@ export default function OurFeatures() {
                     <Carousel className="w-full ">
                         <CarouselContent>
                             {featureCards.map((card, index) => (
-                                <CarouselItem key={index} className=' flex justify-between max-h-[394px]'>
+                                <CarouselItem key={index} className=' flex justify-between gap-5 max-h-[394px]'>
                                     {/* Left Side: Image Content */}
                                     <div className=" w-1/2">
                                         <Image
@@ -88,7 +87,7 @@ export default function OurFeatures() {
                             ))}
                         </CarouselContent>
                         <div className="flex justify-center gap-4 mt-12">
-                            <CarouselPrevious className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10"  />
+                            <CarouselPrevious className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10" />
 
                             <CarouselNext className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white/10" />
                         </div>

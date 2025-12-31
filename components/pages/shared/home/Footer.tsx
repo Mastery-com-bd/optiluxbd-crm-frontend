@@ -126,7 +126,6 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        {/* <hr /> */}
         <div className="pt-8   flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
           <p>© {new Date().getFullYear()} Optilux BD. All rights reserved</p>
           <div className="flex gap-8">
