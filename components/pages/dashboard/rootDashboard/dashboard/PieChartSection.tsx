@@ -1,5 +1,7 @@
 "use client";
-import { type ChartConfig } from "@/components/ui/chart";
+
+import { ChartConfig } from "@/components/ui/chart";
+import { useMemo, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,37 +9,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMemo, useState } from "react";
 import ReusablePieChart from "@/components/ui/ReusablePieChart";
 
 const chartData = [
-  { name: "Referral", value: 25, fill: "#1EAAE7" },
-  { name: "Organic", value: 30, fill: "#FF7A30" },
-  { name: "Facebook", value: 20, fill: "#6418C3" },
-  { name: "Cold Call", value: 15, fill: "#DE9C3A" },
-  { name: "LinkedIn", value: 10, fill: "#2BC155" },
+  { name: "Processing", value: 25, fill: "#1EAAE7" },
+  { name: "Cancelled", value: 30, fill: "#FF7A30" },
+  { name: "Returned", value: 20, fill: "#6418C3" },
+  { name: "Pending", value: 15, fill: "#DE9C3A" },
+  { name: "Deliveried", value: 10, fill: "#2BC155" },
 ];
 
 const chartConfig = {
-  Referral: { label: "Referral", color: "#1EAAE7" },
-  Organic: { label: "Organic", color: "#FF7A30" },
-  Facebook: { label: "Facebook", color: "#6418C3" },
-  "Cold Call": { label: "Cold Call", color: "var(--success)" },
-  LinkedIn: { label: "LinkedIn", color: "var(--brand)" },
+  Processing: { label: "Processing", color: "#1EAAE7" },
+  Cancelled: { label: "Cancelled", color: "#FF7A30" },
+  Returned: { label: "Returned", color: "#6418C3" },
+  Pending: { label: "Pending", color: "var(--success)" },
+  Deliveried: { label: "Deliveried", color: "var(--brand)" },
 } satisfies ChartConfig;
 
-const PieChartComponent = () => {
+const PieChartSection = () => {
   const [activeCategory, setActiveCategory] = useState(chartData[0].name);
   const categories = useMemo(() => chartData.map((item) => item.name), []);
-
+  console.log(categories);
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Lead Source</h1>
+        <h1 className="text-xl text-white/80 w-full">Order Status Ratio</h1>
         <Select value={activeCategory} onValueChange={setActiveCategory}>
           <SelectTrigger
-            className="h-7 w-[140px] rounded-lg pl-2.5"
+            className="w-36 h-6 rounded-lg px-2 py-1"
             aria-label="Select Source"
           >
             <SelectValue placeholder="Select category" />
@@ -74,7 +75,7 @@ const PieChartComponent = () => {
       </div>
 
       <ReusablePieChart
-        id="pie-interactive"
+        id="pie-revenew"
         chartData={chartData}
         valueKey="value"
         nameKey="name"
@@ -85,4 +86,4 @@ const PieChartComponent = () => {
   );
 };
 
-export default PieChartComponent;
+export default PieChartSection;

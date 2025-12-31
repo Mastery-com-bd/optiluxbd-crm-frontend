@@ -3,52 +3,66 @@ import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ArrowUpRight,
   Box,
-  Briefcase,
-  User,
+  LucideIcon,
+  RotateCcw,
+  Truck,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
 const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 
-const stats = [
+type TStats = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  change: number;
+  isPositive?: boolean;
+  highlight?: boolean;
+};
+
+const stats: TStats[] = [
   {
-    icon: Box,
-    label: "Active Combo",
-    value: "128",
-    change: 36.8,
-    isPositive: true,
-    highlight: false,
-  },
-  {
-    icon: User,
-    label: "Total Sales",
+    icon: Users,
+    label: "Total Customers",
     value: "512",
     change: 36.8,
-    isPositive: false,
-    highlight: false,
+    isPositive: true,
   },
   {
-    icon: Briefcase,
-    label: "Revenue Generated",
-    value: "120.4k",
+    icon: Box,
+    label: "Total Revenue",
+    value: "128K",
+    change: 36.8,
+    isPositive: false,
+  },
+  {
+    icon: Truck,
+    label: "Avg Order Value",
+    value: "635",
     change: 36.8,
     isPositive: true,
     highlight: true,
   },
   {
-    icon: ArrowUpRight,
-    label: "Avg. Discount",
-    value: "25%",
+    icon: RotateCcw,
+    label: "VIP Customers",
+    value: "34",
     change: 36.8,
-    isPositive: true,
+    isPositive: false,
     highlight: false,
   },
 ];
 
-const ComboOverView = () => {
+const Overviewcard = () => {
   const [activeFilter, setActiveFilter] = useState("1Y");
+
+  const getTextColor = (highlight?: boolean) => {
+    if (highlight === true) return "text-success";
+    if (highlight === false) return "text-[#F73F3F]";
+    return "text-white";
+  };
   return (
     <div className="space-y-6 w-full mx-auto">
       {/* Overview Card */}
@@ -106,15 +120,19 @@ const ComboOverView = () => {
               </LiquidGlass>
 
               {/* Label */}
-              <p className={`text-lg text-white font-medium mb-2`}>
+              <p
+                className={`text-lg font-medium mb-2 ${getTextColor(
+                  stat.highlight
+                )}`}
+              >
                 {stat.label}
               </p>
 
               {/* Value */}
               <p
-                className={`text-[32px] font-normal leading-10 mb-3 ${
-                  stat.highlight ? "text-success" : "text-white"
-                }`}
+                className={`text-[32px] font-normal leading-10 mb-3 ${getTextColor(
+                  stat.highlight
+                )}`}
               >
                 {stat.value}
               </p>
@@ -142,7 +160,21 @@ const ComboOverView = () => {
                     %
                   </div>
                 </LiquidGlass>
-                <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                {stat.label === "Total Customers" && (
+                  <span className="text-[#EBEBEB] text-sm">
+                    {" "}
+                    Assigned from last Year
+                  </span>
+                )}
+                {stat.label === "Total Revenue" && (
+                  <span className="text-[#EBEBEB] text-sm">vs last year</span>
+                )}
+                {stat.label === "Avg Order Value" && (
+                  <span className="text-[#EBEBEB] text-sm">Need to assign</span>
+                )}
+                {stat.label === "VIP Customers" && (
+                  <span className="text-[#EBEBEB] text-sm">from last year</span>
+                )}
               </div>
             </div>
           ))}
@@ -152,4 +184,4 @@ const ComboOverView = () => {
   );
 };
 
-export default ComboOverView;
+export default Overviewcard;

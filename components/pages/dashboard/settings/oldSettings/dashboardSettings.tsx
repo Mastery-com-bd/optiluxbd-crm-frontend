@@ -22,7 +22,6 @@ import {
 } from "@/redux/features/settings/settingsApi";
 import { Pencil, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { TSettings } from "./settings.types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   currentSettings,
@@ -34,11 +33,12 @@ import {
   setPhone,
   setSiteName,
 } from "@/redux/features/settings/settingsSlice";
-import SettingsSkeleton from "./SettingsSkeleton";
 import { toast } from "sonner";
+import { TSettings } from "./settings.types";
+import SettingsSkeleton from "./SettingsSkeleton";
+import { convertDate } from "@/utills/dateConverter";
 import SettingsImageUploader from "./SettingsImageUploader";
 import SocialSettings from "./SocialSettings";
-import { convertDate } from "@/utills/dateConverter";
 
 export default function DashboardSettings() {
   const { data, isLoading } = useGetSettingsdataQuery(undefined, {
