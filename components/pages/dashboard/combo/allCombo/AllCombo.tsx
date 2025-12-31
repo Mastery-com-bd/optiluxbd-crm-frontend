@@ -21,6 +21,7 @@ import ComboOverView from "./ComboOverView";
 
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
+import CreateComboModal from "./CreateComboModal";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -362,11 +363,7 @@ const AllCombo = () => {
             icon={Upload}
             varient="default"
           />
-          <ButtonComponent
-            buttonName="Create Combo"
-            icon={Plus}
-            varient="dark yellow"
-          />
+          <CreateComboModal />
         </div>
       </div>
 
