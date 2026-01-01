@@ -12,6 +12,7 @@ import PurpleButtonSvg from "../svgIcon/PurpleButtonSvg";
 import LightPurple from "../svgIcon/LightPurple";
 import CornerPurpleSvg from "../svgIcon/CornerPurpleSvg";
 import SuccessButtonSvg from "../svgIcon/SuccessButtonSvg";
+import FulWidthlYellowSvg from "../svgIcon/FulWidthlYellowSvg";
 
 type TButtonComponentProps = {
   buttonName?: string;
@@ -22,6 +23,7 @@ type TButtonComponentProps = {
     | "red"
     | "dark yellow"
     | "light yellow"
+    | "full yellow"
     | "purple"
     | "light purple"
     | "deep purple"
@@ -102,6 +104,16 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
             </div>
             <div className="pointer-events-none">
               <YellowSVGForButton />
+            </div>
+          </>
+        )}
+        {varient === "full yellow" && (
+          <>
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+            </div>
+            <div className="pointer-events-none">
+              <FulWidthlYellowSvg />
             </div>
           </>
         )}

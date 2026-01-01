@@ -10,8 +10,9 @@ import Overview from "./Overview";
 import OrderHistory from "./OrderHistory";
 import Note from "./Note";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import AdvanceProfile from "../../../agentDashboard/customerProfile/AdvanceProfile";
 
-const buttons = ["Overview", "Order History", "Note"];
+const buttons = ["Overview", "Order History", "Note", "Advance Profile"];
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [enabled, setEnabled] = useState(false);
@@ -185,6 +186,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
           {current === "Overview" && <Overview />}
           {current === "Order History" && <OrderHistory />}
           {current === "Note" && <Note />}
+          {current === "Advance Profile" && <AdvanceProfile />}
         </div>
       </div>
     </section>

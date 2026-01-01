@@ -18,10 +18,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn(
-        "min-w-full",
-        className
-      )}
+      className={cn("min-w-full", className)}
       {...props}
     />
   );
@@ -63,23 +60,42 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   );
 }
 
-function TableHead({ first, last, children, className, ...props }: React.ComponentProps<"th"> & {
+function TableHead({
+  first,
+  last,
+  children,
+  secondClass,
+  className,
+  ...props
+}: React.ComponentProps<"th"> & {
   first?: boolean;
   last?: boolean;
+  secondClass?: string;
 }) {
   return (
     <th
       data-slot="table-head"
       className={cn(
-        "text-foreground h-10  text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-foreground h-10 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
     >
-      <div className={`px-4 py-3 bg-white/10 border border-y-white/40   border-x-white/20 ${first ? "rounded-tl-2xl rounded-bl-2xl" : last ? "rounded-tr-2xl rounded-br-2xl" : ""} text-center text-white`}>
+      <div
+        className={cn(
+          `px-4 py-3 bg-white/10 border border-y-white/40   border-x-white/20 ${
+            first
+              ? "rounded-tl-2xl rounded-bl-2xl"
+              : last
+              ? "rounded-tr-2xl rounded-br-2xl"
+              : ""
+          } text-center text-white`,
+          secondClass
+        )}
+      >
         {children}
       </div>
-    </th >
+    </th>
   );
 }
 
