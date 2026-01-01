@@ -38,7 +38,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#2A85FF]",
     title: "Users & Roles",
     description: "Manage user accounts, roles, and permission settings",
-    path: "/dashboard/settings/role&permission",
+    path: "/dashboard/settings/users&Roles",
     tags: ["User Management", "Role Permission", "Access Control"],
   },
   {
