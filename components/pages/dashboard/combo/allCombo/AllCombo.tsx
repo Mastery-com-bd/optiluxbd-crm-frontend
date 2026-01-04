@@ -31,6 +31,7 @@ const AllCombo = () => {
     limit: 10,
     page: 1,
   });
+  // a comment here
   const [show, setShow] = useState("10");
   // get all combo
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
@@ -399,12 +400,10 @@ const AllCombo = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -417,8 +416,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -430,8 +428,7 @@ const AllCombo = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === is_featured ? "font-medium" : ""}
-                >
+                  className={item === is_featured ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
@@ -444,12 +441,10 @@ const AllCombo = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -462,8 +457,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -475,8 +469,7 @@ const AllCombo = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === is_active ? "font-medium" : ""}
-                >
+                  className={item === is_active ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
@@ -487,28 +480,24 @@ const AllCombo = () => {
           <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
-            borderRadius="48px"
-          >
+            borderRadius="48px">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent"
-                >
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent">
                   <Logs />
                 </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent
                 align="center"
-                className="rounded-xl bg-white/5 backdrop-blur-2xl"
-              >
+                className="rounded-xl bg-white/5 backdrop-blur-2xl">
                 {["Table View", "Grid View"].map((item) => (
                   <DropdownMenuItem
                     key={item}
                     onClick={() => setView(item as "Table View" | "Grid View")}
-                    className="cursor-pointer"
-                  >
+                    className="cursor-pointer">
                     {item}
                   </DropdownMenuItem>
                 ))}
@@ -556,12 +545,10 @@ const AllCombo = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">Show {show}</span>
                     <ChevronDown size={18} />
@@ -571,8 +558,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["10", "20", "30", "40", "50"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -584,8 +570,7 @@ const AllCombo = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === show ? "font-medium" : ""}
-                >
+                  className={item === show ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
