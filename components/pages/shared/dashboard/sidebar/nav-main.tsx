@@ -33,7 +33,8 @@ export function NavMain({
   const teamRoute = items?.teamRoute;
 
   const user = useAppSelector(currentUser);
-  const { role } = getPermissions(user as TAuthUSer);
+  // const { role } = getPermissions(user as TAuthUSer);
+  const role = ["Owner"];
 
   return (
     <SidebarGroup className="space-y-2">

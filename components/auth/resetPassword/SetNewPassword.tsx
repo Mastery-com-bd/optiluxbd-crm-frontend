@@ -85,7 +85,7 @@ const SetNewPassword = ({
   };
 
   return (
-    <div className="rounded-lg border border-[#221F33] bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-8 py-4 lg:w-[25vw] relative">
+    <div className="rounded-lg bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-4 py-4 max-w-sm relative">
       <div className="absolute top-0 left-0 inset-1 border-l border-t border-[#221F33] rounded-tl-lg pointer-events-none" />
       <div className="absolute bottom-0 right-0 inset-1 border-r border-b border-[#221F33] rounded-br-lg pointer-events-none" />
 
@@ -136,8 +136,7 @@ const SetNewPassword = ({
             <button
               type="button"
               onClick={toggle}
-              className="absolute right-4 top-3 text-[#514D6A] "
-            >
+              className="absolute right-4 top-3 text-[#514D6A] ">
               {visible ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
 
@@ -148,8 +147,7 @@ const SetNewPassword = ({
                   .map((rule) => (
                     <div
                       key={rule.label}
-                      className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out"
-                    >
+                      className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out">
                       <X size={14} className="text-red-700" />
                       <span className="text-[#514D6A]">{rule.label}</span>
                     </div>
@@ -176,8 +174,7 @@ const SetNewPassword = ({
             <button
               type="button"
               onClick={toggle}
-              className="absolute right-4 top-3 text-[#514D6A] "
-            >
+              className="absolute right-4 top-3 text-[#514D6A] ">
               {visible ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
@@ -187,8 +184,7 @@ const SetNewPassword = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full"
-          >
+            className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full text-white">
             {/* top and bottom line */}
             <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
             <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
