@@ -67,8 +67,6 @@ export default function SecondSection() {
                             className='cursor-pointer'
                             direction='left'
                             speed={40}
-                            gradient
-                            gradientColor='#030012'
                             gradientWidth={600}
                         >
                             {
