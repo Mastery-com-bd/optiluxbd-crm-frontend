@@ -84,6 +84,7 @@ export default function SecondSection() {
                                 )
                             }
                         </Marquee>
+                        //rjannat
                     </div>
                 </div>
             </div>
