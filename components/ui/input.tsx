@@ -36,61 +36,21 @@ export function Input({
   borderRadius?: string;
 }) {
   return (
-    <div className="relative w-full">
-      {/* Glass background with custom fading borders */}
-      <div
+    <div className="relative h-11 effect flex items-center gap-3 px-4   bg-white/10 backdrop-blur-3xl rounded-2xl focus-within:border-white/30 focus-within:shadow-md transition-[box-shadow,border-color]">
+      {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
+      {icon && (
+        <span className="flex items-center shrink-0 text-[#8a8a96] w-4 h-4">
+          {icon}
+        </span>
+      )}
+      <input
+        type={type}
+        data-slot="input"
         className={cn(
-          "relative flex items-center gap-2.5 w-full px-5 py-2.5  backdrop-blur-xl",
-          className
+          " bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none"
         )}
-      >
-        {/* Border that fades at top-right and bottom-left */}
-        <div
-          className={`absolute inset-0 rounded-[${borderRadius}] pointer-events-none bg-none`}
-          style={{
-            background: `
-              linear-gradient(to left, transparent 3%, #9d9da8 10%, #9d9da8 90%, transparent 95%) top / 100% 1px no-repeat,
-              linear-gradient(to right, transparent 3%, #9d9da8 10%, #9d9da8 90%, transparent 95%) bottom / 100% 1px no-repeat,
-              linear-gradient(to bottom, transparent 30%, #9d9da8 50%, transparent 90%) left / 1px 100% no-repeat,
-              linear-gradient(to top, transparent 50%, #9d9da8 70%, transparent 80%) right / 1px 100% no-repeat
-            `,
-          }}
-        />
-
-        {/* Top-left corner piece */}
-        <div
-          className="absolute top-0 left-0 w-6 h-[50%] pointer-events-none"
-          style={{
-            borderTop: "1px solid #9d9da8",
-            borderLeft: "1px solid #9d9da8",
-            borderTopLeftRadius: "1rem",
-          }}
-        />
-        {/* Bottom-right corner piece */}
-        <div
-          className="absolute bottom-0 right-0 w-6 h-6 pointer-events-none"
-          style={{
-            borderBottom: "1px solid #9d9da8",
-            borderRight: "1px solid #9d9da8",
-            borderBottomRightRadius: "1rem",
-          }}
-        />
-
-        {/* <Search className="w-6 h-6 text-[#8a8a96] shrink-0" strokeWidth={1.5} /> */}
-        {icon && (
-          <span className="flex items-center shrink-0 text-[#8a8a96] w-5 h-5">
-            {icon}
-          </span>
-        )}
-        <input
-          type={type}
-          data-slot="input"
-          className={cn(
-            "flex-1 bg-transparent text-[#9a9aa6] placeholder-[#8a8a96] text-base font-light outline-none"
-          )}
-          {...props}
-        />
-      </div>
+        {...props}
+      />
     </div>
   );
 }

@@ -137,7 +137,7 @@ const AllProducts = () => {
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
-            <div className="flex  gap-3">
+            <div className="flex  gap-3 items-center">
               <Input
                 className=" py-1.5 w-64 text-sm bg-transparent"
                 value={inputValue}
@@ -148,7 +148,7 @@ const AllProducts = () => {
                 }}
                 placeholder="Search product by name"
               />
-              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer border-none bgGlass">
+              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
                 <Funnel size={16} />
               </Button>
             </div>
@@ -199,10 +199,10 @@ const AllProducts = () => {
               </Select>
               <Button
                 variant="default"
-                className="rounded-full py-6 cursor-pointer text-2xl bg-white/15"
+                className="rounded-full  cursor-pointer text-2xl effect size-10"
                 onClick={() => setIsGridView((prev) => !prev)}
               >
-                <Grid2X2 className="size-6" />
+                <Grid2X2 className="size-4" />
               </Button>
             </div>
           </div>

@@ -174,5 +174,5 @@
     -1.2px -1.1px 1px -.5px #ffffff8d,
     0px 0px 0px 0px #000000a1 inset,
     -4px -4px 10px 10px #0000005b inset;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(100px);
 }
