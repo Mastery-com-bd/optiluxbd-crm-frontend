@@ -91,13 +91,11 @@ const Navbar: React.FC = () => {
       >
         <div className="w-full flex items-center justify-between gap-2">
           <div className="relative">
-            <Search
-              size={16}
-              className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-            />
+            
             <Input
               className="px-10 py-1.5 w-64 text-sm bg-transparent"
               value={inputValue}
+              icon={<Search className="size-4" />}
               onChange={(e) => {
                 debouncedLog(e.target.value);
                 setInputValue(e.target.value);

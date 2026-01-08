@@ -357,21 +357,12 @@ const AllProducts = () => {
             {/* status drodpown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <LiquidGlass
-                  glowIntensity="xs"
-                  shadowIntensity="xs"
-                  borderRadius="12px"
-                >
-                  <Button
-                    variant="default"
-                    className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                  >
-                    <p className="flex items-center gap-2">
-                      <span className="text-[14px]">Show {show}</span>
-                      <ChevronDown size={18} />
-                    </p>
-                  </Button>
-                </LiquidGlass>
+                <div className="effect p-2.5 rounded-xl cursor-pointer">
+                  <p className="flex items-center gap-2 ">
+                    <span className="text-[14px]">Show {show}</span>
+                    <ChevronDown size={18} />
+                  </p>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"

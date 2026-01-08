@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import AddCategory from "../addCategory";
 import CategoryCard from "../category-card";
+import PageHeader from "../../shared/pageHeader";
+import { Input } from "@/components/ui/input";
 
 type Child = { id: string; name: string; image: string };
 type Parent = {
@@ -96,12 +98,7 @@ const AllCategories = () => {
   return (
     <div className="min-h-screen w-full p-6">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-[32px] font-semibold">All Category</h1>
-          <p className="text-[16px] font-normal text-[#A1A1A1]">
-            Browse all categories & subcategories
-          </p>
-        </div>
+        <PageHeader title="All Category" description="Browse and manage All Category" />
         <div>
           <AddCategory />
         </div>
@@ -111,28 +108,25 @@ const AllCategories = () => {
         {/* Sidebar */}
         <aside className="col-span-3">
           <div className="relative mb-4.5">
-            <input
+            <Input
+              icon={<Search />}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search in category"
-              className="w-full rounded-xl border border-white/20 bg-white/10 px-10 py-2 text-sm backdrop-blur-xl placeholder:text-white/70 focus-visible:ring-2"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/70" />
           </div>
           <div className="space-y-3">
             {filteredParents.map((p) => {
               const active = current.id === p.id;
               return (
-                <LiquidGlass
+                <div
                   key={p.id}
-                  borderRadius="12px"
-                  shadowIntensity="xxs"
-                  className="cursor-pointer w-[260px]"
+                  className="w-[260px] rounded-[12px] effect cursor-pointer hover:scale-[1.02] transition-transform"
                 >
                   <button
                     onClick={() => setCurrent(p)}
                     className={cn(
-                      "w-[260px] relative flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden"
+                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden "
                     )}
                   >
                     {active && (
@@ -182,22 +176,20 @@ const AllCategories = () => {
                         </defs>
                       </svg>
                     )}
-                    <LiquidGlass
-                      borderRadius="12px"
-                      shadowIntensity="xxs"
-                      className="flex items-center justify-center "
+                    <div
+                      className="flex items-center justify-center cursor-pointer effect rounded-[12px] overflow-hidden bg-transparent!"
                     >
                       <img
                         src={p.image}
                         alt={p.name}
                         className=" w-24 h-24 object-contain"
                       />
-                    </LiquidGlass>
+                    </div>
                     <div className="flex-1">
                       <div className="font-medium">{p.name}</div>
                     </div>
                   </button>
-                </LiquidGlass>
+                </div>
               );
             })}
           </div>

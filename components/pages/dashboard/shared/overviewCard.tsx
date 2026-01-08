@@ -1,6 +1,4 @@
 "use client";
-
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { ArrowDownIcon, ArrowUpIcon, LucideIcon } from "lucide-react";
 import { useState } from "react";
 

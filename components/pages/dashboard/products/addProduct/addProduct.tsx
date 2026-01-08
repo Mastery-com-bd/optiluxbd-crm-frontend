@@ -39,6 +39,7 @@ import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery, } from "@/re
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
@@ -210,7 +211,7 @@ const AddProduct = () => {
             <div className="flex flex-col lg:flex-row gap-6  w-full">
               {/* Product Details Section */}
               <div className="flex-1 min-w-0  ">
-                <div className="bgGlass rounded-xl p-6 h-full flex flex-col justify-between">
+                <div className="effect rounded-xl p-6 h-full flex flex-col justify-between">
                   <h2 className="text-xl font-semibold text-white">Product details</h2>
                   <div>
                     <Label htmlFor="productName">Product Name *</Label>
@@ -230,7 +231,9 @@ const AddProduct = () => {
                   <div>
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
+
                       id="sku"
+                      placeholder="Inter an unique SKU"
                       {...register("sku")}
                       className="mt-2"
                     />
@@ -314,7 +317,7 @@ const AddProduct = () => {
               {/* Pricing + Color Section */}
               <div className="flex-1 min-w-0 flex flex-col gap-6">
                 {/* Stock & Pricing */}
-                <div className="bgGlass rounded-xl p-6  space-y-5">
+                <div className="effect rounded-xl p-6  space-y-5">
                   <h2 className="text-xl font-semibold text-white">Stock & Pricing</h2>
 
                   <div className="flex justify-between gap-2">
@@ -387,7 +390,7 @@ const AddProduct = () => {
                 </div>
 
                 {/* Available Color */}
-                <div className="bgGlass rounded-xl p-6 space-y-5">
+                <div className="effect rounded-xl p-6 space-y-5">
                   <div className="flex items-center justify-between">
                     <h2 className="text-white font-medium">Available Color</h2>
                     {/* a radio button here. */}
@@ -403,7 +406,7 @@ const AddProduct = () => {
                       <Checkbox
                         disabled={!colorEnabled}
                         key={c}
-                        className={`p-3 accent-white cursor-pointer flex justify-center rounded-full border`}
+                        className={`p-3 accent-white cursor-pointer flex justify-center rounded-full `}
                         style={{ backgroundColor: c }}
                         onClick={() => {
                           if (selectedColor.includes(c)) {
@@ -418,7 +421,7 @@ const AddProduct = () => {
                     {/* Add new color button */}
                     <span
                       onClick={() => setColorOpen(true)}
-                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer ${!colorEnabled ? "hidden" : "block"}`}
+                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center effect p-1 cursor-pointer ${!colorEnabled ? "hidden" : "block"}`}
                     >
                       <Plus />
                     </span>
@@ -428,30 +431,34 @@ const AddProduct = () => {
 
               {/* Product Image Upload */}
               <div className="flex-1 min-w-0">
-                <div className="bgGlass rounded-xl p-6 h-full flex flex-col border border-white/20 shadow-lg">
+                <div className="effect rounded-xl p-6 h-full flex flex-col  shadow-lg">
                   <h2 className="text-lg font-medium text-white mb-4">Product Image</h2>
                   <div
                     className="border-2 border-dashed border-white/30 bg-white/10 hover:bg-white/20 transition duration-300 px-4 py-8 text-center w-full h-full rounded-2xl cursor-pointer flex flex-col justify-center items-center"
                     onClick={handleDivClick}
                   >
-                    <Image className="w-10 h-10 mx-auto mb-4 text-white opacity-80" />
-                    <p className="text-base font-semibold text-white mb-2">Upload your product image.</p>
-                    <p className="text-sm text-white/70">Only PNG, JPG format allowed.</p>
-                    <p className="text-sm text-white/70">500x500 pixels are recommended.</p>
+                    <div className={previewUrl ? "hidden" : "block"}>
+                      <Image className="w-10 h-10 mx-auto mb-4 text-white opacity-80" />
+                      <p className="text-base font-semibold text-white mb-2">Upload your product image.</p>
+                      <p className="text-sm text-white/70">Only PNG, JPG format allowed.</p>
+                      <p className="text-sm text-white/70">500x500 pixels are recommended.</p>
+                    </div>
 
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      ref={fileInputRef}
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          const file = e.target.files[0]
-                          setImage(file)
-                          setPreviewUrl(URL.createObjectURL(file))
-                        }
-                      }}
-                    />
+                    <div className="hidden">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        className=""
+                        ref={fileInputRef}
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            const file = e.target.files[0]
+                            setImage(file)
+                            setPreviewUrl(URL.createObjectURL(file))
+                          }
+                        }}
+                      />
+                    </div>
 
                     {image && (
                       <p className="text-sm mt-4 text-green-400 font-medium">
@@ -476,7 +483,7 @@ const AddProduct = () => {
             <div className="grid grid-cols-3 w-full gap-6 my-6">
               {/* Organize */}
               <div className="flex flex-col gap-6">
-                <Card className="bgGlass p-5 rounded-2xl text-white space-y-4">
+                <Card className="border-none! effect p-5 rounded-2xl text-white space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-medium">Available Size</h3>
                     <Switch
@@ -509,13 +516,13 @@ const AddProduct = () => {
                     {/* Add new size button */}
                     <span
                       onClick={() => setSizeOpen(true)}
-                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center bgGlass p-1 cursor-pointer ${!sizeEnabled ? "hidden" : "block"} `}
+                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center effect p-1 cursor-pointer ${!sizeEnabled ? "hidden" : "block"} `}
                     >
                       <Plus />
                     </span>
                   </div>
                 </Card>
-                <Card className="p-6 space-y-4 bgGlass ">
+                <Card className="p-6 space-y-4 effect ">
                   <h2 className="text-lg font-semibold">Organize</h2>
                   <div>
                     <Label>Brand</Label>
@@ -551,10 +558,10 @@ const AddProduct = () => {
                 </Card>
               </div>
               {/* Product description */}
-              <Card className=" space-y-4 bgGlass col-span-2 flex flex-col gap-0">
+              <Card className="border-none! space-y-4 effect col-span-2 flex flex-col gap-0">
                 <CardHeader className="">Product Description</CardHeader>
                 <CardContent className="h-full">
-                  <div className="flex gap-2 border-b p-2 px-4 bgGlass rounded-b-none!  overflow-auto">
+                  <div className="flex gap-2 border-b p-2 px-4 effect rounded-b-none!  overflow-auto">
                     <Bold className="w-4 h-4" />
                     <Italic className="w-4 h-4" />
                     <Underline className="w-4 h-4" />
@@ -569,7 +576,7 @@ const AddProduct = () => {
                       id="description"
                       {...register("description")}
                       placeholder="Product description..."
-                      className="h-full bgGlass border-t-0! rounded-t-none!"
+                      className="h-full effect border-t-0! rounded-t-none!"
                     />
                   </div>
                 </CardContent>
@@ -579,30 +586,24 @@ const AddProduct = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row justify-end gap-4 mt-8">
-            <Button
-              type="button"
-              variant="red"
+            <ButtonComponent
+              buttonName="Discard"
+              varient="red"
               onClick={onDiscard}
               disabled={isSubmitting}
-              className="py-5 rounded-2xl"
-            >
-              Discard
-            </Button>
-            <Button
-              variant="purple"
+            />
+            <ButtonComponent
+              buttonName="Save as Draft"
+              varient="purple"
               disabled={isSubmitting}
               className="py-5 rounded-2xl"
-            >
-              Save as Draft
-            </Button>
-            <Button
-              variant="yellow"
+            />
+            <ButtonComponent
+              buttonName={`${isSubmitting ? "Publishing..." : "Publish & Save"}`}
+              varient="yellow"
               type="submit"
               disabled={isSubmitting}
-              className="py-5 rounded-2xl"
-            >
-              {isSubmitting ? "Publishing..." : "Publish"}
-            </Button>
+            />
           </div>
         </form>
       </div>

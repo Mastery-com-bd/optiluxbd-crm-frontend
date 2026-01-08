@@ -164,9 +164,17 @@
 }
 
 .effect {
-  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff67,
-    -1.2px -1.1px 1px -.5px #ffffff8d;
+  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+    1px 1px 10px 2px #00000044;
   background-color:#FDFDFD1A;
+  backdrop-filter: blur(20px);
+}
+.effectBlack{
+  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+    1px 1px 10px 2px #00000044;
+  background-color:#DFE3E71A;
   backdrop-filter: blur(20px);
 }
 .overviewButtonEffect {

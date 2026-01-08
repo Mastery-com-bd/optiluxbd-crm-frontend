@@ -1,6 +1,7 @@
 "use client";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import {
   Dialog,
   DialogClose,
@@ -26,23 +27,11 @@ const AddCategory = () => {
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative">
-            <LiquidGlass
-              glowIntensity="none"
-              borderRadius="10px"
-              className="w-fit"
-            >
-              <Button
-                style={{
-                  backgroundImage: "url('/svg/button-background.svg')",
-                  backgroundSize: "cover",
-                }}
-                className="rounded-xl bg-transparent border-none"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create New Category
-              </Button>
-              <div className="w-full absolute bottom-0 left-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-[#FFB13F] to-transparent h-[1.5px]" />
-            </LiquidGlass>
+            <ButtonComponent 
+            buttonName="Create Category"
+            icon={Plus}
+            varient="yellow"
+            />
           </div>
         </DialogTrigger>
         <DialogContent className="md:max-w-[425px] p-0 overflow-hidden">
@@ -75,9 +64,8 @@ const AddCategory = () => {
                 Category Image
               </label>
               <div
-                className={`relative flex flex-col items-center justify-center border border-dashed border-white rounded-2xl ${
-                  categoryImage ? "py-3" : "py-6"
-                } bg-white/20 text-center mt-1.5 cursor-pointer hover:bg-white/25 transition-colors`}
+                className={`relative flex flex-col items-center justify-center border border-dashed border-white rounded-2xl ${categoryImage ? "py-3" : "py-6"
+                  } bg-white/20 text-center mt-1.5 cursor-pointer hover:bg-white/25 transition-colors`}
                 onClick={() => {
                   const input = document.createElement("input");
                   input.type = "file";

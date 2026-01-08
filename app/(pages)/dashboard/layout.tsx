@@ -47,7 +47,7 @@ export default function RootLayout({
             {/* <AuthGuard>
               
             </AuthGuard> */}
-            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden max-w-[1135px]">
+            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 px-4 overflow-hidden max-w-[1135px]">
               {children}
             </div>
           </SidebarInset>
