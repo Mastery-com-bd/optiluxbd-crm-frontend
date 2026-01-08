@@ -8,16 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
+import Switcher from "./Switcher";
 
-type TNotificationData= {
-    title: string,
-    description: string,
-    emailNotification: boolean,
-    smsNotification: boolean,
-    pushNotification: boolean,
-    template: boolean
-}
+type TNotificationData = {
+  title: string;
+  description: string;
+  emailNotification: boolean;
+  smsNotification: boolean;
+  pushNotification: boolean;
+  template: boolean;
+};
 
 const notificationData: TNotificationData[] = [
   {
@@ -88,8 +88,11 @@ const notificationData: TNotificationData[] = [
 ];
 
 const NotificationTrigger = () => {
+  const headers = ["Trigger", "Email", "SMS", "Push", "Template"];
 
-    const headers = ["Trigger", "Email", "SMS", "Push", "Template"];
+  const handleChange = async (checked: boolean) => {
+    console.log(checked);
+  };
 
   return (
     <Card className="bg-[rgba(255,255,255,0.10)] w-full rounded-2xl relative py-4 px-6">
@@ -107,54 +110,66 @@ const NotificationTrigger = () => {
         </div>
 
         {/* table section */}
-         <Table className="">
-            {/* Header */}
-            <TableHeader>
-              <TableRow className="">
-                {headers.map((header, i) => (
-                  <TableHead key={i} className="text-left">{header}</TableHead>
-                ))}
-               
-              </TableRow>
-            </TableHeader>
-
-            {/* Body */}
-            <TableBody>
-              {notificationData.map((item) => (
-                <TableRow key={item.title} className="border-none">
-                  {/* Trigger */}
-                  <TableCell className="align-top">
-                    <div className="space-y-1">
-                      <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {item.description}
-                      </p>
-                    </div>
-                  </TableCell>
-
-                  {/* Email */}
-                  <TableCell className="text-center">
-                    <Switch checked={item.emailNotification} />
-                  </TableCell>
-
-                  {/* SMS */}
-                  <TableCell className="text-center">
-                    <Switch checked={item.smsNotification} />
-                  </TableCell>
-
-                  {/* Push */}
-                  <TableCell className="text-center">
-                    <Switch checked={item.pushNotification} />
-                  </TableCell>
-
-                  {/* Template */}
-                  <TableCell className="text-center">
-                    <Switch checked={item.template} />
-                  </TableCell>
-                </TableRow>
+        <Table className="">
+          {/* Header */}
+          <TableHeader className="border-none">
+            <TableRow className="border-b border-white/5">
+              {headers.map((item, i) => (
+                <TableHead key={i} secondClass="bg-transparent border-none ">
+                  <h1 className="flex items-center justify-start"> {item}</h1>
+                </TableHead>
               ))}
-            </TableBody>
-          </Table>
+            </TableRow>
+          </TableHeader>
+
+          {/* Body */}
+
+          <TableBody className="border-none">
+            {notificationData.map((item) => (
+              <TableRow
+                key={item.title}
+                className="border-none hover:bg-transparent">
+                {/* Trigger */}
+                <TableCell className="py-4 border-none">
+                  <div className="space-y-1">
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                </TableCell>
+
+                {/* Email */}
+                <TableCell className="py-4 px-4 text-text-secondary border-none">
+                  <Switcher
+                    title="email"
+                    data={item.emailNotification}
+                    onChange={handleChange}
+                  />
+                </TableCell>
+                <TableCell className="py-4 px-4 text-text-secondary border-none">
+                  <Switcher
+                    title="sms"
+                    data={item.smsNotification}
+                    onChange={handleChange}
+                  />
+                </TableCell>
+                <TableCell className="py-4 px-4 text-text-secondary border-none">
+                  <Switcher
+                    title="push"
+                    data={item.pushNotification}
+                    onChange={handleChange}
+                  />
+                </TableCell>
+
+                {/* Template */}
+                <TableCell className="py-4 pr-12 text-text-secondary border-none ">
+                  <div className="h-8 w-full rounded-full bg-[rgba(44,44,44,0.20)] border border-[#404040]" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </Card>
   );
