@@ -1,5 +1,4 @@
-"use client";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+"use client"; 
 import { Button } from "@/components/ui/button";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import {
@@ -10,31 +9,60 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Image as ImageIcon, Plus, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Image as ImageIcon, Plus, X, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+// Validation Schema
+const formSchema = z.object({
+  categoryName: z.string().min(1, "Category name is required"),
+  categoryImage: z.any().optional(),
+  subCategories: z.array(
+    z.object({
+      name: z.string().min(1, "Subcategory name is required"),
+      image: z.any().optional(),
+    })
+  ),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 const AddCategory = () => {
-  const [categoryImage, setCategoryImage] = useState<File | null>(null);
-  const [subCategory, setSubCategory] = useState<
-    {
-      name: string;
-      image: File | null;
-    }[]
-  >([{ name: "", image: null }]);
+  // 1. Hook Form Setup
+  const { register, control, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      categoryName: "",
+      subCategories: [{ name: "", image: null }],
+    },
+  });
+
+  // 2. Field Array for Subcategories
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "subCategories",
+  });
+
+  const categoryImage = watch("categoryImage");
+
+  const onSubmit = (data: FormValues) => {
+    console.log("Form Data:", data);
+    // Ekhane tomar API call hobe
+  };
+
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild>
           <div className="relative">
-            <ButtonComponent 
-            buttonName="Create Category"
-            icon={Plus}
-            varient="yellow"
-            />
+            <ButtonComponent buttonName="Create Category" icon={Plus} varient="yellow" />
           </div>
         </DialogTrigger>
-        <DialogContent className="md:max-w-[425px] p-0 overflow-hidden">
+        <DialogContent className="max-w-[403px]! p-0 overflow-hidden bg-[#1a102e] border-white/10">
           <div className="p-6 space-y-3">
             <DialogHeader className="px-0 pt-0 text-left">
               <DialogTitle className="text-xl font-semibold text-white">
@@ -42,168 +70,115 @@ const AddCategory = () => {
               </DialogTitle>
             </DialogHeader>
 
-            {/* Category Name */}
-            <div className="space-y-2 mt-3">
-              <span className="text-[16px] font-normal text-white mb-4">
-                Category Name
-              </span>
-              <LiquidGlass
-                borderRadius="14px"
-                className="bg-none mt-1.5 shadow-none"
-              >
-                <input
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Category Name */}
+              <div className="space-y-2">
+                <Label className="text-white">Category Name</Label>
+                <Input
+                  {...register("categoryName")}
                   placeholder="Enter Category name"
-                  className="w-full h-11 rounded-[14px] bg-none px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/20"
+                  className="bg-white/10 border-white/20 text-white"
                 />
-              </LiquidGlass>
-            </div>
-
-            {/* Category Image */}
-            <div className="space-y-2">
-              <label className="text-[16px] font-normal text-white">
-                Category Image
-              </label>
-              <div
-                className={`relative flex flex-col items-center justify-center border border-dashed border-white rounded-2xl ${categoryImage ? "py-3" : "py-6"
-                  } bg-white/20 text-center mt-1.5 cursor-pointer hover:bg-white/25 transition-colors`}
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/png, image/jpeg";
-                  input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) {
-                      setCategoryImage(file);
-                    }
-                  };
-                  input.click();
-                }}
-              >
-                {categoryImage ? (
-                  <div>
-                    <span
-                      className="absolute top-3 right-3 border border-white p-1 rounded-full bg-rose-500 cursor-pointer z-50"
-                      onClick={() => setCategoryImage(null)}
-                    >
-                      <X className="w-4 h-4 text-white" />
-                    </span>
-                    <Image
-                      width={128}
-                      height={128}
-                      src={URL.createObjectURL(categoryImage)}
-                      alt="Category preview"
-                      className="w-32 h-32 object-cover rounded-xl mb-3"
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <div className="size-10 rounded-full bg-white/5 flex items-center justify-center mb-3 border border-white/10">
-                      <ImageIcon className="size-5 text-white/70" />
-                    </div>
-                    <p className="text-sm text-white/90 mb-1">
-                      Upload your Category image.
-                    </p>
-                    <p className="text-[10px] text-white/40">
-                      Only PNG, JPG format allowed.
-                    </p>
-                    <p className="text-[10px] text-white/40">
-                      500x500 pixels are recommended.
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Sub Category Name */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-[16px] font-normal text-white">
-                  Sub Category Name
-                </label>
-                <button
-                  onClick={() =>
-                    setSubCategory([...subCategory, { name: "", image: null }])
-                  }
-                  className="size-6 rounded-md bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors border border-white/10"
-                >
-                  <Plus className="size-4 text-white/70" />
-                </button>
+                {errors.categoryName && <p className="text-xs text-red-500">{errors.categoryName.message}</p>}
               </div>
 
-              <div className="space-y-3 -mt-1.5">
-                {subCategory.map((i, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <LiquidGlass
-                      borderRadius="14px"
-                      className="bg-none mt-1.5 shadow-none flex-1"
-                    >
-                      <input
-                        placeholder="Enter Category name"
-                        className="w-full h-11 rounded-[14px] bg-none px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/20"
-                      />
-                    </LiquidGlass>
-                    <div
-                      className="w-[88px] h-11 border border-dashed border-white rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:bg-white/10 transition-colors"
-                      onClick={() => {
-                        const input = document.createElement("input");
-                        input.type = "file";
-                        input.accept = "image/png, image/jpeg";
-                        input.onchange = (e) => {
-                          const file = (e.target as HTMLInputElement).files?.[0];
-                          if (file) {
-                            const updated = [...subCategory];
-                            updated[idx].image = file;
-                            setSubCategory(updated);
-                          }
-                        };
-                        input.click();
-                      }}
-                    >
-                      {i.image ? (
-                        <Image
-                          width={32}
-                          height={32}
-                          src={URL.createObjectURL(i.image)}
-                          alt="Sub preview"
-                          className="w-8 h-8 object-cover rounded"
-                        />
-                      ) : (
-                        <>
-                          <ImageIcon className="size-3 text-white" />
-                          <span className="text-[8px] text-white">Upload Img</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="flex justify-end gap-3 pt-2">
-              <DialogClose>
-                <Button
-                  asChild
-                  variant="outline"
-                  className=" h-11 rounded-xl bg-none bg-transparent text-white hover:bg-white/5 hover:text-white"
-                >
-                  Cancel
-                </Button>
-              </DialogClose>
-              <LiquidGlass
-                borderRadius="14px"
-                className="bg-none mt-1.5 shadow-none"
-              >
-                <Button
-                  style={{
-                    backgroundImage: "url('/svg/button-background.svg')",
+              {/* Category Image Upload */}
+              <div className="space-y-2">
+                <Label className="text-white">Category Image</Label>
+                <div
+                  className="relative flex flex-col items-center justify-center border border-dashed border-white/30 rounded-2xl py-6 bg-white/5 cursor-pointer hover:bg-white/10"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) setValue("categoryImage", file);
+                    };
+                    input.click();
                   }}
-                  className="w-[142px] h-12 rounded-[14px]"
                 >
-                  Add
-                </Button>
-              </LiquidGlass>
-            </div>
+                  {categoryImage ? (
+                    <div className="relative">
+                      <Image
+                        src={URL.createObjectURL(categoryImage)}
+                        alt="Preview" width={100} height={100}
+                        className="rounded-lg object-cover w-24 h-24"
+                      />
+                      <X className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 size-5 cursor-pointer" onClick={(e) => { e.stopPropagation(); setValue("categoryImage", null); }} />
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <ImageIcon className="mx-auto size-6 text-white/50 mb-2" />
+                      <p className="text-xs text-white/60">Upload Category Image</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Dynamic Sub-Categories */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Sub Category</Label>
+                  <button
+                    type="button"
+                    onClick={() => append({ name: "", image: null })}
+                    className="size-6 rounded bg-white/10 flex items-center justify-center hover:bg-white/20 border border-white/10"
+                  >
+                    <Plus className="size-4 text-white" />
+                  </button>
+                </div>
+
+                <div className="max-h-40 overflow-y-auto space-y-3 pr-1 custom-scrollbar p-2  ">
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="flex items-center gap-2 ">
+                      <Input
+                        {...register(`subCategories.${index}.name`)}
+                        placeholder="Sub-category name"
+                      />
+
+                      {/* Sub-category Image Small Upload */}
+                      <div
+                        className="size-10 border border-dashed border-white/30 rounded flex items-center justify-center cursor-pointer bg-white/5"
+                        onClick={() => {
+                          const input = document.createElement("input");
+                          input.type = "file";
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (file) setValue(`subCategories.${index}.image`, file);
+                          };
+                          input.click();
+                        }}
+                      >
+                        {watch(`subCategories.${index}.image`) ? (
+                          <Image
+                            src={URL.createObjectURL(watch(`subCategories.${index}.image`))}
+                            alt="sub" width={40} height={40} className="size-full object-cover rounded"
+                          />
+                        ) : (
+                          <ImageIcon className="size-4 text-white/40" />
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="p-2 text-red-400 hover:text-red-500"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="flex justify-end gap-3 pt-4">
+                <DialogClose asChild>
+                  <Button variant="ghost" className="text-white cursor-pointer hover:text-red-700">Cancel</Button>
+                </DialogClose>
+                <ButtonComponent buttonName="Create Category" type="submit" varient="yellow" clasName="cursor-pointer"/>
+              </div>
+            </form>
           </div>
         </DialogContent>
       </Dialog>
