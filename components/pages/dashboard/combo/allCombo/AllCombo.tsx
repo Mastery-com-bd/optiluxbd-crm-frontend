@@ -399,12 +399,10 @@ const AllCombo = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -417,8 +415,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -430,8 +427,7 @@ const AllCombo = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === is_featured ? "font-medium" : ""}
-                >
+                  className={item === is_featured ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
@@ -444,12 +440,10 @@ const AllCombo = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -462,8 +456,7 @@ const AllCombo = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "Yes", "No"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -475,8 +468,7 @@ const AllCombo = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === is_active ? "font-medium" : ""}
-                >
+                  className={item === is_active ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
@@ -487,28 +479,24 @@ const AllCombo = () => {
           <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
-            borderRadius="48px"
-          >
+            borderRadius="48px">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent"
-                >
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent">
                   <Logs />
                 </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent
                 align="center"
-                className="rounded-xl bg-white/5 backdrop-blur-2xl"
-              >
+                className="rounded-xl bg-white/5 backdrop-blur-2xl">
                 {["Table View", "Grid View"].map((item) => (
                   <DropdownMenuItem
                     key={item}
                     onClick={() => setView(item as "Table View" | "Grid View")}
-                    className="cursor-pointer"
-                  >
+                    className="cursor-pointer">
                     {item}
                   </DropdownMenuItem>
                 ))}
@@ -539,60 +527,14 @@ const AllCombo = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <CustomPagination
-          currentPage={pagination.page}
-          totalPages={10}
-          onPageChange={(page) => setFilters({ ...filters, page })}
-        />
-
-        <div className="flex items-center gap-6">
-          <p className="text-sm text-[#7E7E7E]">
-            Showing 1 to 10 of 10 entries
-          </p>
-          {/* status drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">Show {show}</span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["10", "20", "30", "40", "50"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setShow(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      limit: Number(item),
-                      page: 1,
-                    }));
-                  }}
-                  className={item === show ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      <CustomPagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
+      />
     </section>
   );
 };

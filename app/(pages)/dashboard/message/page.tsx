@@ -1,7 +1,7 @@
 "use client";
 
 import MessagePage from "@/components/pages/dashboard/message/messagePage";
-import SendMessageTabs from "@/components/pages/dashboard/message/sendMessageTabs";
+import SendMessageTabs from "@/components/pages/dashboard/message/sendMessage/sendMessageTabs";
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";

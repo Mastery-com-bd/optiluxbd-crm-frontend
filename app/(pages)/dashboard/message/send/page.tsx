@@ -1,11 +1,11 @@
-import SendMessageTabs from '@/components/pages/dashboard/message/sendMessageTabs'
+import SendMessageTabs from "@/components/pages/dashboard/message/sendMessage/sendMessageTabs";
 
 const Page = () => {
   return (
     <div>
-        <SendMessageTabs />
+      <SendMessageTabs />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

@@ -1,6 +1,6 @@
 "use client";
 
-import SingleSendMessage from "@/components/pages/dashboard/message/singleSendMessage";
+import SingleSendMessage from "@/components/pages/dashboard/message/sendMessage/singleSendMessage";
 import ButtonSvgGlow from "@/components/svgIcon/ButtonSvgGlow";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";

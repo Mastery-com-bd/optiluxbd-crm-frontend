@@ -15,6 +15,7 @@ import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
 import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import AssignLeadsTable from "../../teamLeader/assignleades/AssignLeadsTable";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const AllLeads = () => {
   const [filters, setFilters] = useState({
@@ -76,12 +77,10 @@ const AllLeads = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -94,8 +93,7 @@ const AllLeads = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "Hot", "Warm", "Cold"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -107,8 +105,7 @@ const AllLeads = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === tag ? "font-medium" : ""}
-                >
+                  className={item === tag ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
@@ -121,12 +118,10 @@ const AllLeads = () => {
               <LiquidGlass
                 glowIntensity="xs"
                 shadowIntensity="xs"
-                borderRadius="12px"
-              >
+                borderRadius="12px">
                 <Button
                   variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
                   <p className="flex items-center gap-2">
                     <span className="text-[14px]">
                       {" "}
@@ -139,8 +134,7 @@ const AllLeads = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
+              className="bg-white/5 backdrop-blur-2xl">
               {["All", "High", "Medium", "Low"].map((item) => (
                 <DropdownMenuItem
                   key={item}
@@ -152,16 +146,14 @@ const AllLeads = () => {
                       page: 1,
                     }));
                   }}
-                  className={item === priority ? "font-medium" : ""}
-                >
+                  className={item === priority ? "font-medium" : ""}>
                   {item}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
           <button
-            className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
-          >
+            className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}>
             {/* Button text */}
             <p className="flex items-center gap-2">
               <Upload size={18} />
@@ -184,54 +176,14 @@ const AllLeads = () => {
       {/* all leads table */}
       <AssignLeadsTable />
 
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-6">
-          <p className="text-sm text-[#7E7E7E]">
-            Showing 1 to 10 of 10 entries
-          </p>
-          {/* status drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">Show {show}</span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["10", "20", "30", "40", "50"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setShow(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      limit: Number(item),
-                      page: 1,
-                    }));
-                  }}
-                  className={item === show ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      <CustomPagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
+      />
     </div>
   );
 };

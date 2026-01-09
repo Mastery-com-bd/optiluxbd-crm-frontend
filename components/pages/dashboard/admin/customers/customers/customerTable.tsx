@@ -1,7 +1,4 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Edit,
-  Eye,
-  MoreHorizontal,
-  MoreVertical,
-  Pencil,
-  Trash,
-  Trash2,
-} from "lucide-react";
+import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export interface Customer {
@@ -196,8 +185,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                 first={ind === 0}
                 last={ind === headers.length - 1}
                 key={label}
-                className="text-left text-xs font-semibold uppercase text-muted-foreground"
-              >
+                className="text-left text-xs font-semibold uppercase text-muted-foreground">
                 {label}
               </TableHead>
             ))}
@@ -236,9 +224,8 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
               <TableCell className=" px-6">
                 <div
                   className={`${getTierTextColor(
-                    item?.tier
-                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}
-                >
+                    item?.tier,
+                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}>
                   <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
                   <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
                   {item?.tier}
@@ -248,9 +235,8 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
               <TableCell className=" px-6">
                 <div
                   className={`${getStatusColor(
-                    item?.status
-                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}
-                >
+                    item?.status,
+                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}>
                   <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
                   <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
                   {item?.status}
@@ -264,8 +250,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-[180px] flex flex-col "
-                  >
+                    className="w-[180px] flex flex-col ">
                     <Link href={`/dashboard/customers/${2}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         <Eye className="w-4 h-4 mr-2" />
@@ -283,8 +268,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                       //     setDeleteProductId(product.id);
                       //     setDeleteDialogOpen(true);
                       //   }}
-                      className="cursor-pointer"
-                    >
+                      className="cursor-pointer">
                       <Trash2 className="w-4 h-4 text-destructive mr-2" />
                       Delete
                     </DropdownMenuItem>
