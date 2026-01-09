@@ -125,7 +125,7 @@ const AllProducts = () => {
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
-        <div className="flex gap-2 p-2">
+        {/* <div className="flex gap-2 p-2">
           <ButtonComponent varient="purple" buttonName="Bulk Upload" />
           <ButtonComponent varient="light purple" buttonName="Draft Product" />
           <ButtonComponent
@@ -133,13 +133,13 @@ const AllProducts = () => {
             buttonName="Single Upload Product"
             icon={Upload}
           />
-        </div>
+        </div> */}
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
             <div className="flex  gap-3 items-center">
               <Input
-                className=" py-1.5 w-64 text-sm bg-transparent"
+                className="w-64 text-sm bg-transparent"
                 value={inputValue}
                 icon={<Search />}
                 onChange={(e) => {
@@ -172,7 +172,7 @@ const AllProducts = () => {
                   {categories?.map((category: { id: number; name: string }) => (
                     <SelectItem key={category.id} value={category.name}>
                       {category.name}
-                    </SelectItem>
+                    </SelectItem> 
                   ))}
                 </SelectContent>
               </Select>

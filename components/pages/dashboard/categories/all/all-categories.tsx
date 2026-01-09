@@ -96,7 +96,7 @@ const AllCategories = () => {
   }, [query]);
 
   return (
-    <div className="min-h-screen w-full p-6">
+    <div className="min-h-screen w-full ">
       <div className="flex items-center justify-between mb-6">
         <PageHeader title="All Category" description="Browse and manage All Category" />
         <div>

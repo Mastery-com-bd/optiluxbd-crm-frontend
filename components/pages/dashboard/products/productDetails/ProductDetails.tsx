@@ -44,7 +44,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
   );
 
   return (
-    <div className="min-h-screen text-white p-10 ]">
+    <div className="min-h-screen text-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-4">
@@ -55,27 +55,27 @@ const ProductDetails: React.FC<ProductDetailsProps> = () => {
         {/* Content */}
         <div className="flex gap-6  mt-10">
           {/* Left Image Panel */}
-          <div className="w-full md:w-1/3 bgGlass p-6  flex flex-col items-center shadow-lg justify-between">
+          <div className="w-full md:w-1/3 effect p-6 rounded-xl border-none!  flex flex-col items-center shadow-lg justify-between">
             <img
               src={product.image_url}
               alt={product.name}
-              className="rounded-3xl  object-cover w-full h-auto "
+              className="rounded-[12px]  object-cover w-full h-auto "
             />
             {/* Thumbnails */}
-            <div className="flex justify-between w-full mt-4 ">
+            <div className="flex justify-between w-full mt-4 gap-2">
               {[1, 2, 3].map((_, i) => (
                 <img
                   key={i}
                   src={product.image_url}
                   alt="thumb"
-                  className="w-24 h-24 object-cover rounded-lg border border-white/20"
+                  className="w-20 h-20 object-cover rounded-[12px] border border-white/20"
                 />
               ))}
             </div>
           </div>
 
           {/* Right Content Area */}
-          <div className="w-full md:w-2/3 bgGlass rounded-lg p-6 shadow-lg space-y-4">
+          <div className="w-full md:w-2/3 rounded-2xl effect p-6 shadow-lg space-y-4">
             <h2 className="text-2xl font-semibold">{product.name}</h2>
 
             <div className="flex items-center gap-3 text-lg my-6">

@@ -200,7 +200,7 @@ const AddProduct = () => {
   const subCategories = subcategoriesData?.subCategories;
 
   return (
-    <div className="min-h-screen  text-foreground p-4 lg:p-8">
+    <div className="min-h-screen  text-foreground ">
       <div className=" max-w-[1130px] mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Add Product</h1>

@@ -139,11 +139,11 @@ export const crmRoutes: TCrmNavigation = {
           path: "/dashboard/admin/products/low-stock-products",
           // permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
         },
-        {
-          title: "History",
-          path: "/dashboard/admin/products/history",
-          // permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
-        },
+        // {
+        //   title: "History",
+        //   path: "/dashboard/admin/products/history",
+        //   // permissions: ["PRODUCTS DELETE", "PRODUCTS VIEW", "PRODUCTS UPDATE"],
+        // },
       ],
     },
 

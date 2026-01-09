@@ -48,7 +48,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

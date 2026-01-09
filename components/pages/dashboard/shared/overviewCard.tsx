@@ -66,7 +66,7 @@ export function OverviewCard({ stats }: OverviewCardProps) {
               {/* Change */}
               {stat.change && (
                 <div className="flex items-center gap-2">
-                    <div className={`flex justify-center items-center px-2 py-1.5 gap-1 effect rounded-xl ${stat?.isPositive ? "bg-[#00A6560D]!" : "bg-[#FF6A550D]!"}`}>
+                    <div className={`flex justify-center items-center px-2 py-1.5 gap-1 effectBlack bg-transparent rounded-xl ${stat?.isPositive ? "bg-[#00A6560D]!" : "bg-[#FF6A550D]!"}`}>
                       {stat.isPositive ? (
                         <div>
                           {stat?.isPositive ? (
