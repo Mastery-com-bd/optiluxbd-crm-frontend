@@ -15,13 +15,9 @@ import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
   Eye,
+  Funnel,
   Grid2X2,
-  Grid3x3,
-  List,
   MoreVertical,
   Pencil,
   Plus,
@@ -42,6 +38,7 @@ import { useDeleteProductMutation, useGetAllProductQuery } from "@/redux/feature
 import { Product } from "@/types/product";
 import PaginationControls from "@/components/ui/paginationComponent";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import PageHeader from "../../shared/pageHeader";
 
 
 
@@ -102,17 +99,14 @@ const DraftsProducts = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground p-4 md:p-6 lg:p-8">
-      <div className="max-w-[1600px] mx-auto">
+    <div className="min-h-screen bg-transparent text-foreground ">
+      <div className=" mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <div className="">
-              <h3 className="text-2xl font-bold">Drafts Products</h3>
-              <br />
-              <p>Browse and manage your complete product catalog.</p>
-            </div>
-          </div>
+          <PageHeader
+            title="Drafts Products"
+            description="Browse and manage your complete product catalog."
+          />
           {permissions.includes("PRODUCTS CREATE") && (
             <Link href={"/dashboard/admin/products/add-product"}>
               <Button className="cursor-pointer" variant="yellow">
@@ -123,18 +117,22 @@ const DraftsProducts = () => {
           )}
         </div>
         {/* Filters */}
-        <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-4 md:p-5 mb-5">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
+        <Card className="bg-transparent p-0  text-card-foreground border-none shadow-sm  mb-5">
+          <div className="flex justify-between lg:flex-row gap-4 ">
+            <div className="flex  gap-3 items-center ">
               <Input
-                placeholder="Search product by id name sku...."
+                className="w-64 text-sm bg-transparent"
                 value={inputValue}
                 icon={<Search />}
                 onChange={(e) => {
                   debouncedLog(e.target.value);
                   setInputValue(e.target.value);
                 }}
+                placeholder="Search product by name"
               />
+              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
+                <Funnel size={16} />
+              </Button>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select
@@ -183,10 +181,10 @@ const DraftsProducts = () => {
               </Select>
               <Button
                 variant="default"
-                className="rounded-full py-6 cursor-pointer text-2xl bg-white/15"
+                className="rounded-full  cursor-pointer text-2xl effect size-10"
                 onClick={() => setIsGridView((prev) => !prev)}
               >
-                <Grid2X2 className="size-6" />
+                <Grid2X2 className="size-4" />
               </Button>
             </div>
           </div>
@@ -196,7 +194,7 @@ const DraftsProducts = () => {
           <Loading />
         ) : (
           !isGridView ?
-            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none">
+            <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 border-none px-0">
               <div className="overflow-x-auto w-full">
                 <Table className="w-full">
                   <TableHeader>

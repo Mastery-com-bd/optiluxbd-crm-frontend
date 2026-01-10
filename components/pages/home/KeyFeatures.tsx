@@ -63,13 +63,16 @@ export default function OurFeatures() {
                                 <CarouselItem key={index} className=' flex justify-between gap-5 max-h-[394px]'>
                                     {/* Left Side: Image Content */}
                                     <div className=" w-1/2">
-                                        <Image
-                                            src={card.Image}
-                                            alt={card.title}
-                                            width={600}
-                                            height={400}
-                                            className="mx-auto"
-                                        />
+                                        <div className='flex justify-center items-center h-full'>
+
+                                            <Image
+                                                src={card.Image}
+                                                alt={card.title}
+                                                width={200}
+                                                height={200}
+                                                className={`object-contain w-full h-[400px] rounded-lg`}
+                                            />
+                                        </div>
                                     </div>
 
                                     {/* Right Side: Text Content */}

@@ -162,3 +162,25 @@
   /* Rounded corners */
   border-radius: 6px;
 }
+
+.effect {
+  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+    1px 1px 10px 2px #00000044;
+  background-color:#FDFDFD1A;
+  backdrop-filter: blur(20px);
+}
+.effectBlack{
+  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+    1px 1px 10px 2px #00000044;
+  background-color:#DFE3E71A;
+  backdrop-filter: blur(20px);
+}
+.overviewButtonEffect {
+  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff67,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+    0px 0px 0px 0px #000000a1 inset,
+    -4px -4px 10px 10px #0000005b inset;
+  backdrop-filter: blur(100px);
+}

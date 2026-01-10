@@ -1,25 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { pageHeader } from "@/styles/headerAndDecription";
+import PageHeader from "@/components/pages/dashboard/shared/pageHeader";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import Image from "next/image";
 
 const RefundDetails = () => {
     return (
-        <div className="w-full max-w-[1133px] mx-auto">
+        <div className="w-full ">
             <div className="flex justify-between">
-                <div>
-                    <h3 className={`${pageHeader.pageHeader}`}>Request Details</h3>
-                    <p>
-                        <span className={`${pageHeader.pageDes}`} >Request ID: </span>
-                        <span>request idd...</span>
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant={"purple"} className="py-3 px-4 text-[14px]! rounded-2xl cursor-pointer">
-                        Reject Request
-                    </Button>
-                    <Button variant={"yellow"} className="py-3 px-4 text-[14px]! rounded-2xl cursor-pointer">
-                        Approve Request
-                    </Button>
+                <PageHeader title="Request Details" description={`Request ID: ${"request idd..."}`} />
+                <div className="gird grid-cols-2">
+                    <ButtonComponent buttonName="Reject Request" varient="purple" />
+                    <ButtonComponent buttonName="Approve Request" varient="yellow" />
                 </div>
             </div>
             <div className="flex gap-6 mt-6">
