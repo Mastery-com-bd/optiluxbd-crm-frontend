@@ -1,3 +1,4 @@
+'use client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,15 +7,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  GLDropdownMenu,
-  GLDropdownMenuContent,
-  GLDropdownMenuItem,
-  GLDropdownMenuLabel,
-  GLDropdownMenuSeparator,
-  GLDropdownMenuTrigger,
-} from "@/components/ui/glass-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -23,9 +17,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDownIcon, MoreVerticalIcon, Search } from "lucide-react";
+import { MoreVerticalIcon, Search } from "lucide-react";
+import { useState } from "react";
 
 const AllAgentTable = () => {
+  const [teamValue, setTeamValue] = useState("all");
+  const [levelValue,setLevelValue] = useState("all");
   return (
     <div className="py-7">
       <div className="flex justify-between items-center mb-8">
@@ -36,38 +33,65 @@ const AllAgentTable = () => {
             icon={<Search size={16} />}
           />
         </div>
-        <div className="flex items-center gap-8">
-          <GLDropdownMenu>
-            <GLDropdownMenuTrigger className="focus:outline-none">
-              <div className="flex items-center gap-2 focus:outline-none">
-                <span>Team</span> <ChevronDownIcon size={16} />
-              </div>
-            </GLDropdownMenuTrigger>
-            <GLDropdownMenuContent>
-              <GLDropdownMenuLabel>My Account</GLDropdownMenuLabel>
-              <GLDropdownMenuSeparator />
-              <GLDropdownMenuItem>Profile</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Billing</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Team</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Subscription</GLDropdownMenuItem>
-            </GLDropdownMenuContent>
-          </GLDropdownMenu>
-          <GLDropdownMenu>
-            <GLDropdownMenuTrigger className="focus:outline-none">
-              <div className="flex items-center gap-2 focus:outline-none">
-                <span>Level</span> <ChevronDownIcon size={16} />
-              </div>
-            </GLDropdownMenuTrigger>
-            <GLDropdownMenuContent>
-              <GLDropdownMenuLabel>My Account</GLDropdownMenuLabel>
-              <GLDropdownMenuSeparator />
-              <GLDropdownMenuItem>Profile</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Billing</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Team</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Subscription</GLDropdownMenuItem>
-            </GLDropdownMenuContent>
-          </GLDropdownMenu>
-        </div>
+        <div className="flex flex-wrap items-center gap-3">
+  {/* Team Select */}
+  <Select
+    value={teamValue} // Apnar state variable (e.g., const [teamValue, setTeamValue] = useState(""))
+    onValueChange={(value) => {
+      setTeamValue(value);
+      // Jodi filter thake tahole niche set korun
+      // setFilters((prev) => ({
+      //   ...prev,
+      //   team: value === "all" ? undefined : value,
+      //   page: 1,
+      // }));
+    }}
+  >
+    <SelectTrigger className="w-40" aria-label="Team Filter">
+      <SelectValue placeholder="Team" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Teams</SelectItem>
+      <SelectItem value="Profile">Profile</SelectItem>
+      <SelectItem value="Billing">Billing</SelectItem>
+      <SelectItem value="Team">Team</SelectItem>
+      <SelectItem value="Subscription">Subscription</SelectItem>
+    </SelectContent>
+  </Select>
+
+  {/* Level Select */}
+  <Select
+    value={levelValue} 
+    onValueChange={(value) => {
+      setLevelValue(value);
+      // setFilters((prev) => ({
+      //   ...prev,
+      //   level: value === "all" ? undefined : value,
+      //   page: 1,
+      // }));
+    }}
+  >
+    <SelectTrigger className="w-40" aria-label="Level Filter">
+      <SelectValue placeholder="Level" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Levels</SelectItem>
+      <SelectItem value="Profile">Profile</SelectItem>
+      <SelectItem value="Billing">Billing</SelectItem>
+      <SelectItem value="Team">Team</SelectItem>
+      <SelectItem value="Subscription">Subscription</SelectItem>
+    </SelectContent>
+  </Select>
+
+  {/* Grid View Toggle Button */}
+  {/* <Button
+    variant="default"
+    className="rounded-full cursor-pointer effect size-10 flex items-center justify-center"
+    onClick={() => setIsGridView((prev) => !prev)}
+  >
+    <Grid2X2 className="size-4" />
+  </Button> */}
+</div>
       </div>
       <Table>
         <TableHeader>
