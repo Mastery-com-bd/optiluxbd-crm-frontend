@@ -1,20 +1,21 @@
-"uase client";
+"use client"
 
 import ButtonComponent from "@/components/ui/ButtonComponent";
-import SmtpConfigura from "./SmtpConfigura";
-import SmsGateway from "./SmsGateway";
+import Overview from "./Overview";
+import NotificationTrigger from "./NotificationTrigger";
+import NotificationPreference from "./NotificationPreference";
 
-const EmailAnbdSmsSettings = () => {
+const Notification = () => {
   return (
     <div className="space-y-6">
-      {/* header section */}
+      {/* header */}
       <div className="flex items-center justify-between ">
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold leading-8">
-            Email & SMS Settings
+            Notification Settings
           </h1>
           <p className="text-[#A1A1A1] leading-5">
-            Configure email SMTP and SMS gateway settings
+            Configure notification triggers and channels
           </p>
         </div>
         <div className="flex items-center justify-end gap-3 ">
@@ -22,14 +23,16 @@ const EmailAnbdSmsSettings = () => {
         </div>
       </div>
 
-      {/* left section */}
+      {/* overview card */}
+      <Overview />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <SmtpConfigura />
-        <SmsGateway />
-      </div>
+      {/* main content */}
+      <NotificationTrigger />
+
+      {/* preference */}
+      <NotificationPreference />
     </div>
   );
 };
 
-export default EmailAnbdSmsSettings;
+export default Notification;

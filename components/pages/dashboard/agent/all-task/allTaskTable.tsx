@@ -1,3 +1,5 @@
+"use client";
+import CustomPagination from "@/components/ui/CustomPagination";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,10 +26,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChevronDownIcon, MoreVerticalIcon, Search } from "lucide-react";
+import { useState } from "react";
 
 const AllTaskTable = () => {
+  const [filters, setFilters] = useState({
+    search: "",
+    customerLevel: "",
+    gender: "",
+    isMarried: "",
+    thana: "",
+    district: "",
+    sortBy: "createdAt",
+    order: "desc",
+    limit: 10,
+    page: 1,
+  });
+  const [show, setShow] = useState("10");
+
   return (
-    <div className="py-7">
+    <div className="space-y-5">
       <div className="flex justify-between items-center mb-8">
         <div className="relative w-full max-w-[340px]">
           <Input
@@ -87,8 +104,7 @@ const AllTaskTable = () => {
                 first={ind === 0}
                 last={ind === 8}
                 key={label}
-                className="text-left text-xs font-semibold uppercase text-muted-foreground"
-              >
+                className="text-left text-xs font-semibold uppercase text-muted-foreground">
                 {label}
               </TableHead>
             ))}
@@ -126,6 +142,15 @@ const AllTaskTable = () => {
           ))}
         </TableBody>
       </Table>
+
+      <CustomPagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
+      />
     </div>
   );
 };

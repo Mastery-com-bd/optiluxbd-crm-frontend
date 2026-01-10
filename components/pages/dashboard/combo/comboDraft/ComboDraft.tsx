@@ -10,8 +10,8 @@ import { Funnel, LayoutGrid, Search, Table } from "lucide-react";
 import { useState } from "react";
 import TableView from "../allCombo/TableView";
 import CardView from "../allCombo/CardView";
-import PaginationControls from "@/components/ui/paginationComponent";
 import CombocardSkeleton from "../allCombo/CombocardSkeleton";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const ComboDraft = () => {
   const [filters, setFilters] = useState({
@@ -21,6 +21,7 @@ const ComboDraft = () => {
     limit: 10,
     page: 1,
   });
+  const [show, setShow] = useState("10");
   // get all combo
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -76,8 +77,7 @@ const ComboDraft = () => {
           <LiquidGlass
             glowIntensity="xs"
             shadowIntensity="xs"
-            borderRadius="12px"
-          >
+            borderRadius="12px">
             <Button className=" w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
               <Funnel size={16} />
             </Button>
@@ -87,13 +87,11 @@ const ComboDraft = () => {
         <LiquidGlass
           glowIntensity="xs"
           shadowIntensity="xs"
-          borderRadius="48px"
-        >
+          borderRadius="48px">
           <Button
             onClick={() => setTabulerView(!tabulerView)}
             variant="ghost"
-            className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent"
-          >
+            className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent">
             {tabulerView ? <LayoutGrid /> : <Table />}
           </Button>
         </LiquidGlass>
@@ -113,10 +111,13 @@ const ComboDraft = () => {
         </div>
       )}
 
-      <PaginationControls
-        pagination={pagination}
-        onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-        onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+      <CustomPagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
       />
     </div>
   );

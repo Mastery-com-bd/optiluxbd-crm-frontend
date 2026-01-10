@@ -1,5 +1,11 @@
+import MessageComponent from "@/components/pages/dashboard/message/MessageComponent";
+
 const CommunicationPage = () => {
-  return <div>this is communication page</div>;
+  return (
+    <section>
+      <MessageComponent />
+    </section>
+  );
 };
 
 export default CommunicationPage;

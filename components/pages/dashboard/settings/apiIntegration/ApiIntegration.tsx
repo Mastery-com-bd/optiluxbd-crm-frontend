@@ -1,9 +1,8 @@
-
-
+"use client"
 const ApiIntegration = () => {
     return (
         <div>
-            this is api integration
+            this is api integration page
         </div>
     );
 };

@@ -74,7 +74,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#2A85FF]",
     title: "API & Integrations",
     description: "Third-party APIs, courier services, and payment gateways",
-    path: "/dashboard/settings/api-integration",
+    path: "/dashboard/settings/api-Integration",
     tags: ["Courier APIs", "Payment Gateways", "Webhooks"],
   },
 ];

@@ -30,7 +30,7 @@ const UserTable = ({ userData }: { userData: TUserData[] }) => {
             <TableRow key={index} className="border-none hover:bg-transparent">
               {/* User */}
               <TableCell className="py-4 border-none">
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage
                       src={
@@ -77,8 +77,7 @@ const UserTable = ({ userData }: { userData: TUserData[] }) => {
                     user.status === "Active"
                       ? "bg-green-500/10 text-green-500"
                       : "bg-red-500/10 text-red-500"
-                  }`}
-                >
+                  }`}>
                   <div className="absolute top-0 left-0 inset-4 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
                   <div className="absolute bottom-0 right-0 inset-4 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
 
