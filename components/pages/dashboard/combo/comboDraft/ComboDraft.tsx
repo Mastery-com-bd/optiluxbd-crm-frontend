@@ -13,6 +13,7 @@ import CardView from "../allCombo/CardView";
 import CombocardSkeleton from "../allCombo/CombocardSkeleton";
 import PageHeader from "../../shared/pageHeader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const ComboDraft = () => {
   const [isGridView, setIsGridView] = useState(true);
