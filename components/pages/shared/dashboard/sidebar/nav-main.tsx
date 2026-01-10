@@ -34,7 +34,7 @@ export function NavMain({
 
   const user = useAppSelector(currentUser);
   // const { role } = getPermissions(user as TAuthUSer);
-  const role = ["Owner"];
+  const role = ["Owner"]; // --- IGNORE ---
 
   return (
     <SidebarGroup className="space-y-2">

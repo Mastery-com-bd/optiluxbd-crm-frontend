@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ButtonComponent from "@/components/ui/ButtonComponent";
-import OverviewCard from "./OverviewCard";
 
 type TOverviewdata = {
   month:
@@ -153,7 +152,7 @@ const CustomerOverview = () => {
         />
       </div>
       <div className="w-full ">
-        <OverviewCard />
+        {/* <ComboOverView /> */}
       </div>
       <LiquidGlass
         shadowIntensity="xxs"

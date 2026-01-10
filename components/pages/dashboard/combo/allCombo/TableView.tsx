@@ -35,7 +35,7 @@ const TableView = ({ packages }: { packages: TComboPackage[] }) => {
   ];
 
   return (
-    <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden w-full ">
+    <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden w-full border-none p-0">
       <div className="overflow-x-auto w-full">
         <Table className="w-full">
           <TableHeader>

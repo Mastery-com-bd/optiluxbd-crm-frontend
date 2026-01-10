@@ -41,7 +41,7 @@ const chartConfig = {
 
 export function MonthlyOrder() {
     return (
-        <Card className="rounded-2xl bgGlass p-4 border border-white/10 shadow-xl">
+        <Card className="rounded-[12px]! p-4 effectBlack border-none ">
             <CardHeader>
                 <CardTitle>Monthly Orders</CardTitle>
                 <CardDescription>

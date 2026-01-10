@@ -123,7 +123,7 @@ const AllProducts = () => {
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
-        <div className="flex gap-2 p-2">
+        {/* <div className="flex gap-2 p-2">
           <ButtonComponent varient="purple" buttonName="Bulk Upload" />
           <ButtonComponent varient="light purple" buttonName="Draft Product" />
           <ButtonComponent
@@ -131,13 +131,13 @@ const AllProducts = () => {
             buttonName="Single Upload Product"
             icon={Upload}
           />
-        </div>
+        </div> */}
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
-            <div className="flex  gap-3">
+            <div className="flex  gap-3 items-center">
               <Input
-                className=" py-1.5 w-64 text-sm bg-transparent"
+                className="w-64 text-sm bg-transparent"
                 value={inputValue}
                 icon={<Search />}
                 onChange={(e) => {
@@ -146,7 +146,7 @@ const AllProducts = () => {
                 }}
                 placeholder="Search product by name"
               />
-              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer border-none bgGlass">
+              <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
                 <Funnel size={16} />
               </Button>
             </div>
@@ -169,7 +169,7 @@ const AllProducts = () => {
                   {categories?.map((category: { id: number; name: string }) => (
                     <SelectItem key={category.id} value={category.name}>
                       {category.name}
-                    </SelectItem>
+                    </SelectItem> 
                   ))}
                 </SelectContent>
               </Select>
@@ -195,9 +195,10 @@ const AllProducts = () => {
               </Select>
               <Button
                 variant="default"
-                className="rounded-full py-6 cursor-pointer text-2xl bg-white/15"
-                onClick={() => setIsGridView((prev) => !prev)}>
-                <Grid2X2 className="size-6" />
+                className="rounded-full  cursor-pointer text-2xl effect size-10"
+                onClick={() => setIsGridView((prev) => !prev)}
+              >
+                <Grid2X2 className="size-4" />
               </Button>
             </div>
           </div>
@@ -333,14 +334,51 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <CustomPagination
-          currentPage={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={(page) => setFilters({ ...filters, page })}
-          show={show}
-          setShow={setShow}
-          setFilters={setFilters}
-        />
+        <div className="flex items-center justify-between">
+          <CustomPagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={(page) => setFilters({ ...filters, page })}
+          />
+
+          <div className="flex items-center gap-6">
+            <p className="text-sm text-[#7E7E7E]">
+              Showing 1 to 10 of 10 entries
+            </p>
+            {/* status drodpown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="effect p-2.5 rounded-xl cursor-pointer">
+                  <p className="flex items-center gap-2 ">
+                    <span className="text-[14px]">Show {show}</span>
+                    <ChevronDown size={18} />
+                  </p>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-white/5 backdrop-blur-2xl"
+              >
+                {["10", "20", "30", "40", "50"].map((item) => (
+                  <DropdownMenuItem
+                    key={item}
+                    onClick={() => {
+                      setShow(item);
+                      setFilters((prev) => ({
+                        ...prev,
+                        limit: Number(item),
+                        page: 1,
+                      }));
+                    }}
+                    className={item === show ? "font-medium" : ""}
+                  >
+                    {item}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
 
       {/* Delete Confirm Dialog */}

@@ -1,8 +1,7 @@
 "use client";
-
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { useState } from "react";
-import { ChevronDown, Funnel, Logs, Plus, Search, Upload } from "lucide-react";
+import { ChevronDown, Funnel, Grid2X2, Logs, Plus, Search, Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/utills/debounce";
 import {
@@ -14,14 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { TComboPackage } from "@/types/comboPackage";
 import CombocardSkeleton from "./CombocardSkeleton";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import CardView from "./CardView";
 import TableView from "./TableView";
-import ComboOverView from "./ComboOverView";
-
-import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
 import CreateComboModal from "./CreateComboModal";
+import PageHeader from "../../shared/pageHeader";
+import { useHasPermission } from "@/utills/permission";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Box, User, Briefcase, ArrowUpRight } from 'lucide-react';
+import { OverviewCard } from "../../shared/overviewCard";
 
 const AllCombo = () => {
   const [filters, setFilters] = useState({
@@ -334,9 +334,10 @@ const AllCombo = () => {
   };
 
   const [inputValue, setInputValue] = useState("");
-  const [is_active, setIs_active] = useState("All");
-  const [is_featured, setIs_featured] = useState("All");
-  const [view, setView] = useState<"Table View" | "Grid View">("Grid View");
+  const hasPermission = useHasPermission("COMBO CREATE");
+  const [isGridView, setIsGridView] = useState(true);
+  const [status, setStatus] = useState("all");
+  // const [category, setCategory] = useState("all");
 
   const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
@@ -347,36 +348,66 @@ const AllCombo = () => {
   if (isLoading) {
     return <CombocardSkeleton />;
   }
-
+  
+const stats = [
+  {
+    icon: Box, // Active Combo icon
+    label: "Active Combo",
+    value: "128",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
+  },
+  {
+    icon: User, // Total Sales icon
+    label: "Total Sales",
+    value: "512",
+    isPositive: false,
+    change: "36.8%",
+    highlight: false,
+  },
+  {
+    icon: Briefcase, // Revenue Generated icon
+    label: "Revenue Generated",
+    value: "120.4k",
+    isPositive: true,
+    change: "36.8%",
+    highlight: true,
+    highlightColor: "text-emerald-400" // Figma-te eta green color-e highlighted
+  },
+  {
+    icon: ArrowUpRight, // Avg. Discount icon
+    label: "Avg. Discount",
+    value: "25%",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
+  },
+];
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full ">
       {/* header section */}
       <div className="flex items-center justify-between ">
-        <div>
-          <h1 className="text-3xl font-semibold leading-8">All Combo Pack</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Browse and manage All Combo Pack
-          </p>
-        </div>
+        <PageHeader
+          title="Combo Packages"
+          description="Manage your combo packages here"
+        />
         <div className="flex items-center justify-end gap-3 ">
-          <ButtonComponent
-            buttonName="Bulk Upload"
-            icon={Upload}
-            varient="default"
-          />
-          <CreateComboModal />
+          {hasPermission && (
+            <CreateComboModal />
+          )}
         </div>
       </div>
 
       {/* stats card section */}
       <div className="w-full ">
-        <ComboOverView />
+        <OverviewCard stats={stats}/>
       </div>
 
       {/* filtyer section */}
       <div className="flex items-center justify-between">
         {/* search bar */}
-        <div className="flex  gap-3">
+        <div className="flex gap-3 items-center">
           <Input
             className=" py-1.5 w-64 text-sm bg-transparent"
             value={inputValue}
@@ -385,157 +416,134 @@ const AllCombo = () => {
               debouncedLog(e.target.value);
               setInputValue(e.target.value);
             }}
-            placeholder="Search product by name"
+            placeholder="Search by combo name"
           />
-          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
+          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
             <Funnel size={16} />
           </Button>
         </div>
 
         {/* dropdown */}
-        <div className="flex items-center gap-7">
-          {/* category dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px">
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {is_featured === "All" ? "All Categories" : is_featured}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl">
-              {["All", "Yes", "No"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setIs_featured(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      is_featured: item === "All" ? undefined : item === "Yes",
-                      page: 1,
-                    }));
-                  }}
-                  className={item === is_featured ? "font-medium" : ""}>
-                  {item}
-                </DropdownMenuItem>
+        <div className="flex flex-wrap items-center gap-3">
+          {/* <Select
+            value={category}
+            onValueChange={(value) => {
+              setCategory(value);
+              setFilters((prev) => ({
+                ...prev,
+                category: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-40" aria-label="Category Filter">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories?.map((category: { id: number; name: string }) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* status drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px">
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {is_active === "All" ? "All Status" : is_active}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl">
-              {["All", "Yes", "No"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setIs_active(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      is_active: item === "All" ? undefined : item === "Yes",
-                      page: 1,
-                    }));
-                  }}
-                  className={item === is_active ? "font-medium" : ""}>
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* view button table or grid */}
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="48px">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent">
-                  <Logs />
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent
-                align="center"
-                className="rounded-xl bg-white/5 backdrop-blur-2xl">
-                {["Table View", "Grid View"].map((item) => (
-                  <DropdownMenuItem
-                    key={item}
-                    onClick={() => setView(item as "Table View" | "Grid View")}
-                    className="cursor-pointer">
-                    {item}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </LiquidGlass>
+            </SelectContent>
+          </Select> */}
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            variant="default"
+            className="rounded-full  cursor-pointer text-2xl effect size-10"
+            onClick={() => setIsGridView((prev) => !prev)}
+          >
+            <Grid2X2 className="size-4" />
+          </Button>
         </div>
       </div>
 
       <div className="mx-auto ">
         {/* card section */}
-        {view === "Grid View" && (
+        {isGridView ?
           <div className="flex justify-center">
             <div className="grid grid-cols-3 gap-8">
               {comboPackages.map((item, i) => (
                 <CardView key={i} item={item} />
               ))}
             </div>
-          </div>
-        )}
-
-        {/* table section */}
-        {view === "Table View" && (
+          </div> :
           <div className="flex justify-center">
             <TableView packages={comboPackages} />
           </div>
-        )}
+        }`
       </div>
 
       {/* Pagination */}
-      <CustomPagination
-        currentPage={1}
-        totalPages={10}
-        onPageChange={(page) => setFilters({ ...filters, page })}
-        show={show}
-        setShow={setShow}
-        setFilters={setFilters}
-      />
+      <div className="flex items-center justify-between">
+        <CustomPagination
+          currentPage={pagination.page}
+          totalPages={10}
+          onPageChange={(page) => setFilters({ ...filters, page })}
+        />
+
+        <div className="flex items-center gap-6">
+          <p className="text-sm text-[#7E7E7E]">
+            Showing 1 to 10 of 10 entries
+          </p>
+          {/* status drodpown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="default"
+                className="flex effect items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+              >
+                <p className="flex items-center gap-2">
+                  <span className="text-[14px]">Show {show}</span>
+                  <ChevronDown size={18} />
+                </p>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white/5 backdrop-blur-2xl"
+            >
+              {["10", "20", "30", "40", "50"].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setShow(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      limit: Number(item),
+                      page: 1,
+                    }));
+                  }}
+                  className={item === show ? "font-medium" : ""}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
     </section>
   );
 };

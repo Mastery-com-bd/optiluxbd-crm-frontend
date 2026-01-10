@@ -24,7 +24,7 @@ export function OrderStatusRatio() {
     const categories = useMemo(() => chartData.map((item) => item.name), []);
 
     return (
-        <div className="space-y-4 bgGlass h-full p-4">
+        <div className="space-y-4 effectBlack rounded-[12px] h-full p-4">
             {/* header */}
             <div className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold">Order Status Ratio</h1>

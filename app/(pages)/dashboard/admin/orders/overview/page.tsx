@@ -1,8 +1,9 @@
 'use client'
-import { MonthlyOrder } from "@/components/pages/dashboard/admin/orders/MonthlyOrder";11
+import { MonthlyOrder } from "@/components/pages/dashboard/admin/orders/MonthlyOrder"; 11
 import { OrderStatusRatio } from "@/components/pages/dashboard/admin/orders/OrderStatusRatio";
 import { OrderTable } from "@/components/pages/dashboard/admin/orders/OrderTable";
 import { OverviewCard } from "@/components/pages/dashboard/shared/overviewCard";
+import PageHeader from "@/components/pages/dashboard/shared/pageHeader";
 import { AlertTriangle, Box, User, XCircle } from "lucide-react";
 
 const page = () => {
@@ -44,8 +45,8 @@ const page = () => {
   return (
     <div className="">
       <div className="w-full mx-auto">
-        <h3 className="text-xl mb-2 font-bold">Orders</h3>
-        <div>
+        <PageHeader title="Order Overview" description="View and manage all orders" />
+        <div className="mt-4">
           <OverviewCard stats={stats} />
           <div className="flex justify-between my-10 gap-4">
             <div className="w-[65%]">
@@ -55,6 +56,7 @@ const page = () => {
               <OrderStatusRatio />
             </div>
           </div>
+          <PageHeader title="Recent Orders" description="Latest orders from your customers" />
           <OrderTable />
         </div>
       </div>
