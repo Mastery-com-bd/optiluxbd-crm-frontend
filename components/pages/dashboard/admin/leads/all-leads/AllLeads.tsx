@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Search, Upload } from "lucide-react";
+import { ChevronDown, Funnel, Grid2X2, Search, Upload } from "lucide-react";
 import AddLeadsModal from "./AddLeadsModal";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
-import CornerGlowSvg from "@/components/svgIcon/CornerGlowSvg";
 import AssignLeadsTable from "../../teamLeader/assignleades/AssignLeadsTable";
+import PageHeader from "../../../shared/pageHeader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const AllLeads = () => {
   const [filters, setFilters] = useState({
@@ -28,6 +29,9 @@ const AllLeads = () => {
   const [tag, setTag] = useState("All");
   const [priority, setPriority] = useState("All");
   const [show, setShow] = useState("10");
+  const [category, setCategory] = useState("all");
+  const [status, setStatus] = useState("all");
+  const [isGridView, setIsGridView] = useState(false);
 
   const handleSearch = (query: string) => {
     setFilters((prev) => ({ ...prev, search: query, page: 1 }));
@@ -39,10 +43,7 @@ const AllLeads = () => {
       {/* headers */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">All Leads</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Manage, filter, and assign your leads.
-          </p>
+          <PageHeader title="All Leads" description="Manage, filter, and assign your leads." />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <AddLeadsModal />
@@ -50,134 +51,74 @@ const AllLeads = () => {
       </div>
 
       {/* filter section */}
-      <div className="flex items-center justify-between">
-        {/* search bar */}
-        <div className="relative">
-          <Search
-            size={16}
-            className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-          />
+      <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
+        <div className="flex  gap-3 items-center">
           <Input
-            className="px-10 py-1.5 w-64 text-sm bg-transparent"
+            className="w-64 text-sm bg-transparent"
             value={inputValue}
+            icon={<Search />}
             onChange={(e) => {
               debouncedLog(e.target.value);
               setInputValue(e.target.value);
             }}
-            placeholder="Search Agent by name or ID"
+            placeholder="Search product by name"
           />
+          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
+            <Funnel size={16} />
+          </Button>
         </div>
-
-        {/* dropdown */}
-        <div className="flex items-center gap-8">
-          {/* tag drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {tag === "All" ? "Tag" : tag}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["All", "Hot", "Warm", "Cold"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setTag(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      tag: item === "All" ? undefined : item,
-                      page: 1,
-                    }));
-                  }}
-                  className={item === tag ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* priority dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {priority === "All" ? "Priority" : priority}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["All", "High", "Medium", "Low"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setPriority(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      priority: item === "All" ? undefined : item,
-                      page: 1,
-                    }));
-                  }}
-                  className={item === priority ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <button
-            className={`relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden`}
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            value={category}
+            onValueChange={(value) => {
+              setCategory(value);
+              setFilters((prev) => ({
+                ...prev,
+                category: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
           >
-            {/* Button text */}
-            <p className="flex items-center gap-2">
-              <Upload size={18} />
-              <span className="text-sm">Export</span>
-            </p>
-
-            {/* top and bottom line */}
-            <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
-
-            {/* bottom yellow glow line */}
-            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-            </div>
-            <CornerGlowSvg />
-          </button>
+            <SelectTrigger className="w-40" aria-label="Category Filter">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {["high", "medium", "low"]?.map((category: string) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            variant="default"
+            className="rounded-full  cursor-pointer text-2xl effect size-10"
+            onClick={() => setIsGridView((prev) => !prev)}
+          >
+            <Grid2X2 className="size-4" />
+          </Button>
         </div>
       </div>
 

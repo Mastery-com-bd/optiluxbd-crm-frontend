@@ -59,9 +59,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
-import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);

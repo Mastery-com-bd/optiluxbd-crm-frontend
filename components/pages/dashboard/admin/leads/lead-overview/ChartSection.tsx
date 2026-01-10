@@ -26,10 +26,8 @@ const ChartSection = () => {
   return (
     <div className="grid grid-cols-[1fr_2fr] gap-6">
       {/* pie chart */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 py-4">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
+      <Card className=" h-full relative effect rounded-4xl px-6 py-4">
+       
 
         {/* main content */}
         <div className=" w-full h-full rounded-3xl ">
@@ -71,10 +69,7 @@ const ChartSection = () => {
       </Card>
 
       {/* bar chart */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 pt-4 pb-0">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
+      <Card className=" h-full relative effect rounded-4xl px-6 pt-4 pb-0">
 
         {/* main content */}
         <div className=" w-full h-full rounded-3xl">
