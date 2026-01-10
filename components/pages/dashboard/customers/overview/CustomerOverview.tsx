@@ -151,7 +151,7 @@ const CustomerOverview = () => {
           varient="dark yellow"
         />
       </div>
-      <div className="w-full ">
+      <div className="w-full">
         {/* <ComboOverView /> */}
       </div>
       <LiquidGlass

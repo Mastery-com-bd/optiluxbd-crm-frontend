@@ -1,11 +1,50 @@
+'use client';
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { pageHeader } from "@/styles/headerAndDecription";
 import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { Box, Briefcase, User, Archive, LucideIcon } from 'lucide-react';
+import PageHeader from "@/components/pages/dashboard/shared/pageHeader";
+import { OverviewCard } from "@/components/pages/dashboard/shared/overviewCard";
 
+const stats = [
+    {
+        icon: Box,
+        label: "Total Return Requests",
+        value: "128",
+        isPositive: true,
+        change: "36.8%",
+        highlight: false,
+    },
+    {
+        icon: Briefcase,
+        label: "Total Refunded Amount",
+        value: "৳52,300",
+        isPositive: true,
+        change: "36.8%",
+        highlight: false,
+    },
+    {
+        icon: User,
+        label: "Approved Returns",
+        value: "512",
+        isPositive: false,
+        change: "36.8%",
+        highlight: true,
+        highlightColor: "text-emerald-400" // Green color as per Figma
+    },
+    {
+        icon: Archive,
+        label: "Pending Returns",
+        value: "12",
+        isPositive: true,
+        change: "36.8%",
+        highlight: true,
+        highlightColor: "text-orange-400" // Orange/Amber color as per Figma
+    },
+];
 const ReturnAndRefunds = () => {
     const keys = [
         "Request ID",
@@ -121,8 +160,10 @@ const ReturnAndRefunds = () => {
 
     return (
         <div className="w-full">
-            <h3 className={`${pageHeader.pageHeader}`}>Return & Refunds</h3>
-            <p className={`${pageHeader.pageDes}`}>Process customer and refund request</p>
+            <PageHeader title="Return & Refunds" description="Process customer and refund request" />
+            <div className="mt-4">
+                <OverviewCard stats={stats} />
+            </div>
             <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 border-none rounded-none! my-6">
                 <div className="overflow-x-auto">
                     <Table className="">

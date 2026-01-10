@@ -6,14 +6,18 @@ import { Input } from "@/components/ui/input";
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { TComboPackage } from "@/types/comboPackage";
 import { debounce } from "@/utills/debounce";
-import { Funnel, LayoutGrid, Search, Table } from "lucide-react";
+import { Funnel, Grid2X2, LayoutGrid, Search, Table } from "lucide-react";
 import { useState } from "react";
 import TableView from "../allCombo/TableView";
 import CardView from "../allCombo/CardView";
 import PaginationControls from "@/components/ui/paginationComponent";
 import CombocardSkeleton from "../allCombo/CombocardSkeleton";
+import PageHeader from "../../shared/pageHeader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ComboDraft = () => {
+  const [isGridView, setIsGridView] = useState(true);
+  const [status, setStatus] = useState("all");
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "created_at",
@@ -47,56 +51,64 @@ const ComboDraft = () => {
     <div className="min-h-screen bg-transparent text-foreground space-y-4 w-full px-4">
       {/* header section */}
       <div>
-        <h1 className="text-3xl font-semibold">Draft Combo Packs</h1>
+        {/* <h1 className="text-3xl font-semibold">Draft Combo Packs</h1>
         <p className="text-[#A1A1A1] leading-5">
           Browse and manage your complete product catalog
-        </p>
+        </p> */}
+        <PageHeader
+          title="Draft Combo Packs"
+          description="Browse and manage your complete product catalog"
+        />
       </div>
 
       {/* filtyer section */}
       <div className="flex items-center justify-between">
         {/* search bar */}
-        <div className=" w-full flex items-center gap-3">
-          <div className="relative">
-            <Search
-              size={16}
-              className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-            />
-            <Input
-              className="px-10 py-1.5 w-64 text-sm bg-transparent"
-              value={inputValue}
-              onChange={(e) => {
-                debouncedLog(e.target.value);
-                setInputValue(e.target.value);
-              }}
-              placeholder="Search product by name"
-            />
-          </div>
-
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="12px"
-          >
-            <Button className=" w-9 h-9 p-2.5 rounded-[12px] bg-transparent cursor-pointer">
-              <Funnel size={16} />
-            </Button>
-          </LiquidGlass>
-        </div>
-        {/* view button table or grid */}
-        <LiquidGlass
-          glowIntensity="xs"
-          shadowIntensity="xs"
-          borderRadius="48px"
-        >
-          <Button
-            onClick={() => setTabulerView(!tabulerView)}
-            variant="ghost"
-            className="flex flex-col items-center justify-center gap-2 p-3 rounded-[48px] border-none cursor-pointer bg-transparent"
-          >
-            {tabulerView ? <LayoutGrid /> : <Table />}
+        <div className="flex  gap-3 items-center">
+          <Input
+            className="w-64 text-sm bg-transparent"
+            value={inputValue}
+            icon={<Search />}
+            onChange={(e) => {
+              debouncedLog(e.target.value);
+              setInputValue(e.target.value);
+            }}
+            placeholder="Search combo by name"
+          />
+          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
+            <Funnel size={16} />
           </Button>
-        </LiquidGlass>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            variant="default"
+            className="rounded-full  cursor-pointer text-2xl effect size-10"
+            onClick={() => setIsGridView((prev) => !prev)}
+          >
+            <Grid2X2 className="size-4" />
+          </Button>
+        </div>
       </div>
 
       {tabulerView ? (
