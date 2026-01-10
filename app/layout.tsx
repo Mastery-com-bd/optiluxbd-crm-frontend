@@ -32,18 +32,14 @@ export default function RootLayout({
     <html lang="en">
       <ReactProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
-            disableTransitionOnChange
-          >
+            disableTransitionOnChange>
             <ServiceWorkerRegistration />
-            <div className="">
-              {children}
-            </div>
+            <div className="">{children}</div>
             <Toaster richColors position="top-center" />
           </ThemeProvider>
         </body>

@@ -19,8 +19,7 @@ const IndicatorButtonComponent = ({
   return (
     <Link
       href={path}
-      className={`relative w-full py-2 flex items-center justify-center gap-2 cursor-pointer bg-white/10 rounded-xl overflow-hidden`}
-    >
+      className={`relative w-full py-2 flex items-center justify-center gap-2 cursor-pointer bg-white/10 rounded-xl overflow-hidden text-white`}>
       {/* top and bottom border */}
       <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/40 rounded-tl-xl pointer-events-none" />
       <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/40 rounded-br-xl pointer-events-none" />

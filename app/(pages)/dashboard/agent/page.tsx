@@ -1,13 +1,11 @@
-import { AgentOverview } from "@/components/pages/dashboard/agent/agentOverview";
-import AllAgentTable from "@/components/pages/dashboard/agent/allAgentTable";
+import AllAgent from "@/components/pages/dashboard/agent/all-agent/AllAgent";
 
-const Page = () => {
+const AllAgentTable = () => {
   return (
-    <div className="min-h-screen w-full max-w-[1132px] mx-auto">
-      <AgentOverview />
-      <AllAgentTable />
-    </div>
+    <section>
+      <AllAgent />
+    </section>
   );
 };
 
-export default Page;
+export default AllAgentTable;

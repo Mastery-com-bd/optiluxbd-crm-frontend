@@ -59,8 +59,7 @@ const ResendMailComponent = () => {
       ) : (
         <FaildComponent
           title="Opps An Error Occured"
-          content="it means your email is not verified yet to login. You can resend your email to get the verification link"
-        >
+          content="it means your email is not verified yet to login. You can resend your email to get the verification link">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <input
@@ -77,8 +76,7 @@ const ResendMailComponent = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full"
-            >
+              className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full text-white">
               {/* top and bottom line */}
               <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
               <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />

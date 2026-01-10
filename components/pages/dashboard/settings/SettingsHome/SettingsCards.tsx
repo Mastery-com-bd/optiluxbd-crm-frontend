@@ -56,7 +56,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#7F5FFF]",
     title: "Notification Settings",
     description: "Manage notification triggers and delivery channels",
-    path: "/dashboard/settings/notification",
+    path: "/dashboard/settings/notifications",
     tags: ["Email Alerts", "SMS Alert", "Push Notification"],
   },
   {
@@ -74,7 +74,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#2A85FF]",
     title: "API & Integrations",
     description: "Third-party APIs, courier services, and payment gateways",
-    path: "/dashboard/settings/general",
+    path: "/dashboard/settings/api-Integration",
     tags: ["Courier APIs", "Payment Gateways", "Webhooks"],
   },
 ];

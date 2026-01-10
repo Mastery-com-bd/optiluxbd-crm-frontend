@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  ChevronDown,
   Eye,
   Funnel,
   Grid2X2,
@@ -61,7 +60,6 @@ import {
 import ProductCart from "../productCard/ProductCart";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const AllProducts = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -98,7 +96,7 @@ const AllProducts = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await toast.promise(deleteProduct(id).unwrap(), {
+      toast.promise(deleteProduct(id).unwrap(), {
         loading: "Deleting product...",
         success: "Product deleted successfully!",
         error: "Failed to delete product.",
@@ -162,8 +160,7 @@ const AllProducts = () => {
                     category: value === "all" ? undefined : value,
                     page: 1,
                   }));
-                }}
-              >
+                }}>
                 <SelectTrigger className="w-40" aria-label="Category Filter">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
@@ -185,8 +182,7 @@ const AllProducts = () => {
                     status: value === "all" ? undefined : value,
                     page: 1,
                   }));
-                }}
-              >
+                }}>
                 <SelectTrigger className="w-36" aria-label="Status Filter">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -221,8 +217,7 @@ const AllProducts = () => {
                         first={ind === 0}
                         last={ind === keys.length - 1}
                         key={label}
-                        className="text-left text-xs font-semibold uppercase text-muted-foreground"
-                      >
+                        className="text-left text-xs font-semibold uppercase text-muted-foreground">
                         {label}
                       </TableHead>
                     ))}
@@ -232,8 +227,7 @@ const AllProducts = () => {
                   {PRODUCTS?.map((product: Product) => (
                     <TableRow
                       key={product.id}
-                      className="border-muted hover:bg-muted/50 transition-colors"
-                    >
+                      className="border-muted hover:bg-muted/50 transition-colors">
                       <TableCell className="px-4 py-3">
                         <div>
                           <div className="flex items-center gap-3">
@@ -271,11 +265,11 @@ const AllProducts = () => {
                       <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${product.status === "ACTIVE"
-                              ? "text-green-500"
-                              : "text-red-500"
-                            }`}
-                        >
+                                                  ${
+                                                    product.status === "ACTIVE"
+                                                      ? "text-green-500"
+                                                      : "text-red-500"
+                                                  }`}>
                           {product.status.toLocaleLowerCase()}
                         </span>
                       </TableCell>
@@ -286,7 +280,7 @@ const AllProducts = () => {
                             year: "numeric",
                             month: "short",
                             day: "2-digit",
-                          }
+                          },
                         )}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-center ">
@@ -296,11 +290,9 @@ const AllProducts = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="end"
-                            className="w-[180px] flex flex-col "
-                          >
+                            className="w-[180px] flex flex-col ">
                             <Link
-                              href={`/dashboard/admin/products/all-products/${product.id}`}
-                            >
+                              href={`/dashboard/admin/products/all-products/${product.id}`}>
                               <DropdownMenuItem className="cursor-pointer">
                                 <Eye className="w-4 h-4 mr-2" /> view
                               </DropdownMenuItem>
@@ -315,8 +307,7 @@ const AllProducts = () => {
                                 setDeleteProductId(product.id);
                                 setDeleteDialogOpen(true);
                               }}
-                              className="cursor-pointer"
-                            >
+                              className="cursor-pointer">
                               <Trash2 className="w-4 h-4 text-destructive mr-2" />
                               Delete
                             </DropdownMenuItem>
@@ -408,8 +399,7 @@ const AllProducts = () => {
                   handleDelete(deleteProductId);
                   setDeleteDialogOpen(false);
                 }
-              }}
-            >
+              }}>
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>

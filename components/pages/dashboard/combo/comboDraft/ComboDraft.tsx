@@ -10,7 +10,6 @@ import { Funnel, Grid2X2, LayoutGrid, Search, Table } from "lucide-react";
 import { useState } from "react";
 import TableView from "../allCombo/TableView";
 import CardView from "../allCombo/CardView";
-import PaginationControls from "@/components/ui/paginationComponent";
 import CombocardSkeleton from "../allCombo/CombocardSkeleton";
 import PageHeader from "../../shared/pageHeader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -25,6 +24,7 @@ const ComboDraft = () => {
     limit: 10,
     page: 1,
   });
+  const [show, setShow] = useState("10");
   // get all combo
   const { data, isLoading } = useGetAllComboPackageQuery(filters, {
     refetchOnMountOrArgChange: false,
@@ -125,10 +125,13 @@ const ComboDraft = () => {
         </div>
       )}
 
-      <PaginationControls
-        pagination={pagination}
-        onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-        onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+      <CustomPagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
       />
     </div>
   );
