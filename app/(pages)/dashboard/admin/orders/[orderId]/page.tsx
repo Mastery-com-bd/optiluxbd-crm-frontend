@@ -2,7 +2,6 @@
 import { ShippingAddressCard } from "@/components/pages/dashboard/admin/orders/signleOrder/BillingDetailsCard";
 import { CustomerDetailsCard } from "@/components/pages/dashboard/admin/orders/signleOrder/CustomerDetailsCard";
 import { OrderSummarySection } from "@/components/pages/dashboard/admin/orders/signleOrder/OrderSummarySection";
-import { ShippingActivity } from "@/components/pages/dashboard/admin/orders/signleOrder/ShippingActivity";
 import { ContactPersonCard } from "@/components/pages/dashboard/admin/orders/signleOrder/ShippingAddressCard";
 import { useGetSingleOrderQuery } from "@/redux/features/orders/ordersApi";
 import { useParams } from "next/navigation";
@@ -15,7 +14,8 @@ import OrderDetailsPDF from "@/components/pages/dashboard/admin/orders/signleOrd
 
 const SingleProductPage = () => {
   const { orderId } = useParams();
-  const { data: orderData, isLoading: orderLoading } = useGetSingleOrderQuery(orderId);
+  const { data: orderData, isLoading: orderLoading } =
+    useGetSingleOrderQuery(orderId);
   const order = orderData?.data;
   const customer = order?.customer;
   const formattedDate = new Date(order?.orderDate).toLocaleString("en-US", {
@@ -26,14 +26,15 @@ const SingleProductPage = () => {
     minute: "2-digit",
     hour12: true,
   });
-  if (orderLoading)
-    return <Loading />
+  if (orderLoading) return <Loading />;
   return (
     <div className=" m-4 lg:m-8">
       <div className="flex justify-between items-center">
         <div className="">
           <h3 className="mb-3 text-xl font-bold">Orders Details</h3>
-          <p className="text-gray-400">OrderID ORD-{order?.id}  .placed on {formattedDate} </p>
+          <p className="text-gray-400">
+            OrderID ORD-{order?.id} .placed on {formattedDate}{" "}
+          </p>
         </div>
         <div className="flex gap-3">
           <TrackOrderCard />
@@ -49,7 +50,9 @@ const SingleProductPage = () => {
             <OrderSummarySection order={order} />
           </Card>
           <Card className="bgGlass">
-            <CardHeader className=" text-lg font-semibold">Transactions</CardHeader>
+            <CardHeader className=" text-lg font-semibold">
+              Transactions
+            </CardHeader>
             <div className="grid grid-cols-3 items-center justify-between w-full">
               {/* Left: Payment Method */}
               <div className="flex items-center gap-3">
@@ -62,7 +65,9 @@ const SingleProductPage = () => {
                 />
                 <div className="flex flex-col">
                   <span className="font-medium text-sm">bKash</span>
-                  <span className="text-xs text-muted-foreground">bKash pay</span>
+                  <span className="text-xs text-muted-foreground">
+                    bKash pay
+                  </span>
                 </div>
                 {order?.payment?.trxId && (
                   <span className="bg-orange-500 text-white text-xs font-semibold px-2 py-0.5 rounded-lg ml-2">
@@ -84,8 +89,8 @@ const SingleProductPage = () => {
 
               {/* Right: Amount */}
               <div className="text-right ">
-                <p className="text-gray-400">Total</p>
-                ৳ {parseFloat(order?.payment?.amount)?.toLocaleString()}
+                <p className="text-gray-400">Total</p>৳{" "}
+                {parseFloat(order?.payment?.amount)?.toLocaleString()}
               </div>
             </div>
           </Card>

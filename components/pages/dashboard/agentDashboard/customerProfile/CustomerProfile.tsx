@@ -7,9 +7,9 @@ import ImageUploader from "@/components/ui/ImageUploader";
 import { useGetCustomerByIdQuery } from "@/redux/features/customers/cutomersApi";
 import { SquarePen, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
-import Overview from "../../customers/CustomerDetails/Overview";
-import OrderHistory from "../../customers/CustomerDetails/OrderHistory";
-import Note from "../../customers/CustomerDetails/Note";
+import Overview from "../../admin/customers/CustomerDetails/Overview";
+import OrderHistory from "../../admin/customers/CustomerDetails/OrderHistory";
+import Note from "../../admin/customers/CustomerDetails/Note";
 import AdvanceProfile from "./AdvanceProfile";
 
 const buttons = ["Overview", "Order History", "Note", "Advance Profile"];

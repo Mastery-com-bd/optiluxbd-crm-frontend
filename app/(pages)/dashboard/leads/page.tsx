@@ -1,4 +1,4 @@
-import AllLeads from "@/components/pages/dashboard/leads/all-leads/AllLeads";
+import AllLeads from "@/components/pages/dashboard/admin/leads/all-leads/AllLeads";
 
 const AllLeadsPage = () => {
   return (

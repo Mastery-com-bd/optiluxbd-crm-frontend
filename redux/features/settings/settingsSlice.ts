@@ -1,4 +1,4 @@
-import { TSettings } from "@/components/pages/dashboard/settings/settings.types";
+import { TSettings } from "@/components/pages/dashboard/settings/oldSettings/settings.types";
 import { RootState } from "@/redux/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

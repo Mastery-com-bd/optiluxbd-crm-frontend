@@ -1,10 +1,10 @@
-import DashboardHome from "@/components/pages/dashboard/rootDashboard/DashboardHome";
+import Dashboard from "@/components/pages/dashboard/rootDashboard/dashboard/Dashboard";
 import React from "react";
 
 const Home: React.FC = () => {
   return (
     <div>
-      <DashboardHome />
+      <Dashboard />
     </div>
   );
 };

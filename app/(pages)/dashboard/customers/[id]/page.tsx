@@ -1,18 +1,17 @@
-import CustomerProfile from "@/components/pages/dashboard/customers/CustomerDetails/CustomerProfile";
-import EditCustomerPage from "@/components/pages/dashboard/customers/CustomerDetails/EditCustomerPage";
+import CustomerProfile from "@/components/pages/dashboard/admin/customers/CustomerDetails/CustomerProfile";
 
-const CustomerdetailsPage = async ({
+const CustomerDetailsPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
+
   return (
-    <div>
-      {/* <EditCustomerPage /> */}
+    <section>
       <CustomerProfile id={id} />
-    </div>
+    </section>
   );
 };
 
-export default CustomerdetailsPage;
+export default CustomerDetailsPage;
