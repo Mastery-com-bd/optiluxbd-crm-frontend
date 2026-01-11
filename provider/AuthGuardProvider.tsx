@@ -23,8 +23,8 @@ const alwaysAllowedRoutes = [
   "/dashboard/agent/all-task",
   "/dashboard/agent/attendance",
   "/dashboard/agent/call-history",
-  "/dashboard/agent/leaderboard",
-  "/dashboard/agent/team",
+            "/dashboard/agent/leaderboard",
+            "/dashboard/agent/team",
   "/dashboard/agent/profile",
 ];
 
