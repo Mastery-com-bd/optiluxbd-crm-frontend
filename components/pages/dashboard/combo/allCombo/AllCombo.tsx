@@ -348,42 +348,42 @@ const AllCombo = () => {
   if (isLoading) {
     return <CombocardSkeleton />;
   }
-  
-const stats = [
-  {
-    icon: Box, // Active Combo icon
-    label: "Active Combo",
-    value: "128",
-    isPositive: true,
-    change: "36.8%",
-    highlight: false,
-  },
-  {
-    icon: User, // Total Sales icon
-    label: "Total Sales",
-    value: "512",
-    isPositive: false,
-    change: "36.8%",
-    highlight: false,
-  },
-  {
-    icon: Briefcase, // Revenue Generated icon
-    label: "Revenue Generated",
-    value: "120.4k",
-    isPositive: true,
-    change: "36.8%",
-    highlight: true,
-    highlightColor: "text-emerald-400" // Figma-te eta green color-e highlighted
-  },
-  {
-    icon: ArrowUpRight, // Avg. Discount icon
-    label: "Avg. Discount",
-    value: "25%",
-    isPositive: true,
-    change: "36.8%",
-    highlight: false,
-  },
-];
+
+  const stats = [
+    {
+      icon: Box, // Active Combo icon
+      label: "Active Combo",
+      value: "128",
+      isPositive: true,
+      change: "36.8%",
+      highlight: false,
+    },
+    {
+      icon: User, // Total Sales icon
+      label: "Total Sales",
+      value: "512",
+      isPositive: false,
+      change: "36.8%",
+      highlight: false,
+    },
+    {
+      icon: Briefcase, // Revenue Generated icon
+      label: "Revenue Generated",
+      value: "120.4k",
+      isPositive: true,
+      change: "36.8%",
+      highlight: true,
+      highlightColor: "text-emerald-400" // Figma-te eta green color-e highlighted
+    },
+    {
+      icon: ArrowUpRight, // Avg. Discount icon
+      label: "Avg. Discount",
+      value: "25%",
+      isPositive: true,
+      change: "36.8%",
+      highlight: false,
+    },
+  ];
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full ">
       {/* header section */}

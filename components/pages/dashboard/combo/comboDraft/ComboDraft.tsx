@@ -127,7 +127,7 @@ const ComboDraft = () => {
       )}
 
       <CustomPagination
-        currentPage={1}
+        currentPage={pagination.page}
         totalPages={10}
         onPageChange={(page) => setFilters({ ...filters, page })}
         show={show}
