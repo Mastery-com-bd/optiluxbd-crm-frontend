@@ -1,37 +1,12 @@
 "use client";
 import { SidebarGroup } from "@/components/ui/sidebar";
-import { usePathname } from "next/navigation";
-import SubItemButton from "@/components/pages/shared/dashboard/sidebar/buttons/SubItemButton";
 import { NavRoute, TCrmNavigation } from "@/constants/CRM_Navigation";
 import CoreManagement from "./sidebarRoutes/CoreManagement";
-import ChildLessRoute from "./sidebarRoutes/ChildrenLessRoute";
 import { useAppSelector } from "@/redux/hooks";
 import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 
-export function NavMain({
-  items,
-  dashboradItem,
-}: {
-  items: TCrmNavigation;
-  dashboradItem: NavRoute;
-}) {
-  const pathname = usePathname();
-  const isActiveDashboard = pathname === dashboradItem.path;
-  // core management
-  const coreManagement = items?.coreManagement;
-  // team and sales hub
-  const teamAndSalesHub = items?.teamAndSales;
-  //  delivery and communication
-  const deliveryAndCommunication =
-    items?.deliveryCommunication?.courierAndDelivery;
-  const communicationRoute = items?.deliveryCommunication?.communication;
-  // analytics and settings
-  const analyticsAndSettings = items?.analyticsAndSettings;
-  // agent route
-  const agentRoute = items?.agentRoute;
-  const teamRoute = items?.teamRoute;
-
+export function NavMain({ items }: { items: TCrmNavigation }) {
   const user = useAppSelector(currentUser);
   // const { role } = getPermissions(user as TAuthUSer);
   const role = ["Owner"]; // --- IGNORE ---
@@ -40,37 +15,40 @@ export function NavMain({
     <SidebarGroup className="space-y-2">
       {role.includes("Agent") && (
         <>
-          <ChildLessRoute singleRoute={agentRoute!} />
+          <CoreManagement
+            sidebarRoutes={items?.agentRoute?.routes as NavRoute[]}
+          />
         </>
       )}
       {role.includes("Team Leader") && (
         <>
-          <ChildLessRoute singleRoute={teamRoute!} />
+          <CoreManagement
+            sidebarRoutes={items?.teamRoute?.routes as NavRoute[]}
+          />
         </>
       )}
 
       {role.includes("Owner") && (
         <>
-          <SubItemButton isActive={isActiveDashboard} subItem={dashboradItem} />
+          <CoreManagement sidebarRoutes={items?.dashboard?.routes} />
           {/* core management */}
           <CoreManagement
-            sidebarRoutes={coreManagement}
+            sidebarRoutes={items?.coreManagement}
             platform="Core Management"
           />
           {/* team and sales hub */}
           <CoreManagement
-            sidebarRoutes={teamAndSalesHub}
+            sidebarRoutes={items?.teamAndSales}
             platform="Team & Sales Hub"
           />
           {/* delivery and communication */}
           <CoreManagement
-            sidebarRoutes={deliveryAndCommunication}
+            sidebarRoutes={items?.deliveryCommunication.routes}
             platform="Delivery & Communication"
-            singleRoute={communicationRoute}
           />
           {/* settings and analytics */}
-          <ChildLessRoute
-            singleRoute={analyticsAndSettings.childLessRoutes!}
+          <CoreManagement
+            sidebarRoutes={items?.analyticsAndSettings?.routes}
             platform="Analytics & Settings"
           />
         </>

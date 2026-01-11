@@ -29,45 +29,35 @@ export interface NavRoute {
 }
 
 export type TCrmNavigation = {
-  dashboard: NavRoute;
+  dashboard: {
+    routes: NavRoute[];
+  };
   coreManagement: NavRoute[];
   teamAndSales: NavRoute[];
   deliveryCommunication: {
-    communication: NavRoute;
-    courierAndDelivery: NavRoute[];
+    routes: NavRoute[];
   };
   analyticsAndSettings: {
-    analytics?: NavRoute[];
-    childLessRoutes: {
-      reports: NavRoute;
-      settings: NavRoute;
-      help: NavRoute;
-    };
+    routes: NavRoute[];
   };
   agentRoute?: {
-    dashboard: NavRoute;
-    attendence: NavRoute;
-    myLeads: NavRoute;
-    profile: NavRoute;
-    settings: NavRoute;
+    routes: NavRoute[];
   };
   teamRoute?: {
-    dashboard: NavRoute;
-    myLeads: NavRoute;
-    myTeam: NavRoute;
-    settings: NavRoute;
+    routes: NavRoute[];
   };
 };
 
 export const crmRoutes: TCrmNavigation = {
   dashboard: {
-    title: "Dashboard",
-    icon: CircleGauge,
-    path: "/dashboard",
-    // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-    // roles: ["owner", "TEAM_LEADER"],
+    routes: [
+      {
+        title: "Dashboard",
+        icon: CircleGauge,
+        path: "/dashboard",
+      },
+    ],
   },
-
   // core management
   coreManagement: [
     //CATEGORIES
@@ -372,26 +362,17 @@ export const crmRoutes: TCrmNavigation = {
 
   // delivery and communication
   deliveryCommunication: {
-    // communication
-    communication: {
-      title: "Communication",
-      icon: Phone,
-      path: "/dashboard/communication",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    courierAndDelivery: [
+    routes: [
+      {
+        title: "Communication",
+        icon: Phone,
+        path: "/dashboard/communication",
+      },
+
       {
         title: "Courier & Delivery",
         icon: PackageCheck,
-        // permissions: [
-        //   "ORDERS VIEW",
-        //   "ORDERS CREATE",
-        //   "ORDERS UPDATE",
-        //   "ORDERS DELETE",
-        //   "ORDERS VIEW OWN",
-        // ],
-        // roles: ["owner", "LEADER"],
+
         children: [
           {
             title: "Courier Overview",
@@ -421,211 +402,114 @@ export const crmRoutes: TCrmNavigation = {
             path: "/dashboard/couriar/assignments",
             // permissions: ["ORDERS VIEW"],
           },
-          // {
-          //   title: "Steadfast",
-          //   path: "/dashboard/couriar/steadFast",
-          //   permissions: ["ORDERS VIEW"],
-          // },
-          // {
-          //   title: "Pathao",
-          //   path: "/dashboard/couriar/pathao",
-          //   permissions: ["ORDERS VIEW"],
-          // },
-          // {
-          //   title: "RedX",
-          //   path: "/dashboard/couriar/redx",
-          //   permissions: ["ORDERS VIEW"],
-          // },
         ],
       },
     ],
-    // Courier route
   },
 
   // amalytics and settings
   analyticsAndSettings: {
-    childLessRoutes: {
-      reports: {
+    routes: [
+      {
         title: "Reports & Analytics",
         icon: ChartColumn,
         path: "/dashboard/analysis",
-        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-        // roles: ["owner", "TEAM_LEADER"],
       },
-      help: {
+      {
         title: "Help",
         icon: Info,
         path: "/dashboard/analysis/help",
-        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-        // roles: ["owner", "TEAM_LEADER"],
       },
-      settings: {
+      {
         title: "Settings",
         icon: Settings,
-        path: "/dashboard/settings",
-        // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-        // roles: ["owner", "TEAM_LEADER"],
+        children: [
+          {
+            title: "General Settings",
+            path: "/dashboard/settings/general",
+          },
+          {
+            title: "Users & Roles",
+            path: "/dashboard/settings/users&Roles",
+          },
+          {
+            title: "Email & SMS",
+            path: "/dashboard/settings/email&sms",
+          },
+          {
+            title: "Notification",
+            path: "/dashboard/settings/notification",
+          },
+          {
+            title: "Backup & Restore",
+            path: "/dashboard/settings/backup&restore",
+          },
+          {
+            title: "Api Integration",
+            path: "/dashboard/settings/api-Integration",
+          },
+        ],
       },
-    },
-    // complain route
-    // {
-    //   title: "Complaint",
-    //   icon: MessageCircleWarning,
-    //   permissions: [
-    //     "COMPLAIN VIEW",
-    //     "COMPLAIN CREATE",
-    //     "COMPLAIN UPDATE",
-    //     "COMPLAIN DELETE",
-    //   ],
-    //   children: [
-    //     {
-    //       title: "Report user's complain",
-    //       path: "/dashboard/agent/complaint",
-    //       permissions: [
-    //         "COMPLAINT CREATE",
-    //         "COMPLAINT VIEW",
-    //         "COMPLAINT UPDATE",
-    //         "COMPLAINT DELETE",
-    //       ],
-    //     },
-    //   ],
-    // },
-    // hr and staff route
-    // {
-    //   title: "HR & Staff",
-    //   icon: Users2,
-    //   permissions: ["USERS CREATE", "USERS VIEW", "ROLES MANAGE", "ROLES VIEW"],
-    //   roles: ["owner"],
-    //   children: [
-    //     {
-    //       title: "All Employee",
-    //       path: "/dashboard/admin/manage-users",
-    //       permissions: ["USERS VIEW"],
-    //     },
-    //     {
-    //       title: "Add Employee",
-    //       path: "/dashboard/hr&staff/staff/add",
-    //       permissions: ["USERS CREATE"],
-    //     },
-    //     {
-    //       title: "Roles & Permissions",
-    //       path: "/dashboard/hr&staff/roles",
-    //       permissions: ["ROLES MANAGE"],
-    //     },
-    //     {
-    //       title: "Pending Approval",
-    //       path: "/dashboard/admin/approve-user",
-    //       permissions: ["USERS VIEW"],
-    //     },
-    //   ],
-    // },
-    // activity
-    // {
-    //   title: "Activity",
-    //   icon: Activity,
-    //   children: [
-    //     {
-    //       title: "All Activity",
-    //       path: "/dashboard/activity",
-    //       // permissions: ["AUDIT VIEW"],
-    //       // roles: ["owner"],
-    //     },
-    //     {
-    //       title: "My Activity",
-    //       path: "/dashboard/my-activity",
-    //     },
-    //   ],
-    // },
-    // reminder
-    // {
-    //   title: "Reminder",
-    //   icon: Activity,
-    //   children: [
-    //     {
-    //       title: "All Reminders",
-    //       path: "/dashboard/reminders",
-    //       permissions: ["AUDIT VIEW"],
-    //     },
-    //     {
-    //       title: "Customer Reminder",
-    //       path: "/dashboard/reminders/customer-reminders",
-    //       permissions: ["AUDIT VIEW"],
-    //     },
-    //     {
-    //       title: "Upcoming Reminders",
-    //       path: "/dashboard/reminders/upcoming-reminders",
-    //       permissions: ["AUDIT VIEW"],
-    //     },
-    //   ],
-    // },
+    ],
   },
 
   agentRoute: {
-    dashboard: {
-      title: "Dashboard",
-      icon: CircleGauge,
-      path: "/dashboard/agentDashboard",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    attendence: {
-      title: "Attendence",
-      icon: CalendarClock,
-      path: "/dashboard/agentDashboard/attendance",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    myLeads: {
-      title: "My Leads",
-      icon: Target,
-      path: "/dashboard/agentDashboard/leads",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    profile: {
-      title: "Profile",
-      icon: CircleUserRound,
-      path: "/dashboard/agentDashboard/profile",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    settings: {
-      title: "Settings",
-      icon: Settings,
-      path: "/dashboard/analysis/settings",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
+    routes: [
+      {
+        title: "Dashboard",
+        icon: CircleGauge,
+        path: "/dashboard/agentDashboard",
+      },
+      {
+        title: "Attendence",
+        icon: CalendarClock,
+        path: "/dashboard/agentDashboard/attendance",
+      },
+      {
+        title: "My Leads",
+        icon: Target,
+        path: "/dashboard/agentDashboard/leads",
+      },
+      {
+        title: "Profile",
+        icon: CircleUserRound,
+        path: "/dashboard/agentDashboard/profile",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        path: "/dashboard/analysis/settings",
+      },
+    ],
   },
 
   teamRoute: {
-    dashboard: {
-      title: "Dashboard",
-      icon: CircleGauge,
-      path: "/dashboard/team-leader/home",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    myLeads: {
-      title: "My Leads",
-      icon: Target,
-      path: "/dashboard/team-leader/my-leads",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    myTeam: {
-      title: "My Team",
-      icon: Users,
-      path: "/dashboard/team-leader/my-team",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
-    settings: {
-      title: "Settings",
-      icon: Settings,
-      path: "/dashboard/analysis/settings",
-      // permissions: ["REPORTS VIEW", "AGENT-REPORTS VIEW"],
-      // roles: ["owner", "TEAM_LEADER"],
-    },
+    routes: [
+      {
+        title: "Dashboard",
+        icon: CircleGauge,
+        path: "/dashboard/team-leader/home",
+      },
+      {
+        title: "My Leads",
+        icon: Target,
+        path: "/dashboard/team-leader/my-leads",
+      },
+      {
+        title: "My Team",
+        icon: Users,
+        path: "/dashboard/team-leader/my-team",
+      },
+      {
+        title: "Profile",
+        icon: CircleUserRound,
+        path: "/dashboard/agentDashboard/profile",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        path: "/dashboard/analysis/settings",
+      },
+    ],
   },
 };

@@ -56,7 +56,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#7F5FFF]",
     title: "Notification Settings",
     description: "Manage notification triggers and delivery channels",
-    path: "/dashboard/settings/notifications",
+    path: "/dashboard/settings/notification",
     tags: ["Email Alerts", "SMS Alert", "Push Notification"],
   },
   {
