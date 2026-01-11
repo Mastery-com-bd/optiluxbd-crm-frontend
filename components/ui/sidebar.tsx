@@ -25,7 +25,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LiquidGlass } from "../glassEffect/liquid-glass";
 import { CustomScrollbar } from "./CustomScrollbar";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
@@ -249,8 +248,6 @@ function Sidebar({
           data-slot="sidebar-inner"
           className=" effect cursor-default h-full px-3 py-2 w-full group-data-[collapsible=icon]:p-2 rounded-2xl relative"
         >
-          {/* <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-2xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-2xl pointer-events-none" /> */}
           <CustomScrollbar>{children}</CustomScrollbar>
         </div>
       </div>

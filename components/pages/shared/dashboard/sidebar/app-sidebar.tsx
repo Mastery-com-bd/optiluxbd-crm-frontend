@@ -91,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarFooter>
           {/* <NavUser user={user as TAuthUSer} /> */}
           {role.includes("Agent") && (
-            <div className="w-full bg-[rgba(255,255,255,0.10)] rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
+            <div className="w-full bg-[rgba(255,255,255,0.05)] effect rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
               <div className="flex items-center gap-2">
                 <div className="rounded-full border border-[rgba(255,107,0,0.5)] bg-[linear-gradient(135deg,rgba(255,107,0,0.30)_0%,rgba(255,107,0,0.10)_100%)] text-[#FF6B00] p-2">
                   <PhoneCall size={22} />
@@ -133,7 +133,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarMenuItem key={"logout"} className="w-full">
             <SidebarMenuButton tooltip={"Logout"} asChild className=" px-0">
-              <button className="w-full text-left cursor-pointer">
+              <button
+                onClick={handleLogOut}
+                className="w-full text-left cursor-pointer"
+              >
                 <SidebarButtonEffect>
                   <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
                     <p className="flex items-center gap-2">
