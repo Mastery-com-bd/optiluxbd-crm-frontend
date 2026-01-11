@@ -34,8 +34,8 @@ const LeaderBoard = () => {
       <div className="w-full gap-10 flex items-center justify-center">
         {Array.from({ length: 3 }).map((_, index) => (
           <div key={index} className={` ${index !== 1 ? "" : "pb-72"}`}>
-            <div className="flex flex-col items-center ">
-              <div className="mb-2">
+            <div className="flex flex-col items-center">
+              <div className="mb-2 ">
                 <Image
                   width={90}
                   height={90}
@@ -80,8 +80,8 @@ const LeaderBoard = () => {
                 {leaders[index].team}
               </p>
             </div>
-            <div className="relative">
-              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="relative  ">
+              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
                 <span className="text-[80px] font-bold text-purple-400/30">
                   {index === 0 ? "2nd" : index === 1 ? "1st" : "3rd"}
                 </span>
@@ -92,15 +92,16 @@ const LeaderBoard = () => {
                 viewBox="0 0 236 281"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className=""
               >
                 <g opacity="0.94">
                   <path
                     opacity="0.36"
-                    d="M49.083 0L0 21.5663H235.504L194.916 0H49.083Z"
+                    d="M49.083 0L0 15.663H230.504L194.916 0H49.083Z"
                     fill="url(#paint0_linear_600_30896)"
                   />
                   <rect
-                    y="21.3486"
+                    y="15.486"
                     width="235.504"
                     height="258.855"
                     fill="url(#paint1_linear_600_30896)"
@@ -108,7 +109,7 @@ const LeaderBoard = () => {
                   <path
                     d="M13.0088 53.3721H222.828"
                     stroke="white"
-                    stroke-opacity="0.07"
+                    stroke-opacity="0.00"
                     stroke-width="0.667151"
                   />
                 </g>

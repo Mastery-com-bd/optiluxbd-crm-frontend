@@ -1,4 +1,3 @@
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Users } from "lucide-react";
 import PageHeader from "../../shared/pageHeader";
 
@@ -16,17 +15,13 @@ export function TeamHierarchyView() {
       {/* Director Card */}
       <div className="flex flex-col items-center">
         <div
-          className="neumorphism rounded-4xl p-8 flex flex-col items-center text-center"
+          className="neumorphism rounded-4xl p-8 flex flex-col items-center text-center w-md border-0"
         >
           {/* Icon Circle */}
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto"
-            style={{
-              background: "linear-gradient(145deg, #6b6175 0%, #4a4255 100%)",
-              border: "3px solid #5a5065",
-            }}
+            className="w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto effect"
           >
-            <Users className="w-10 h-10 text-[#9a9099]" strokeWidth={1.5} />
+            <Users className="w-10 h-10 " strokeWidth={1.5} />
           </div>
 
           {/* Title */}
