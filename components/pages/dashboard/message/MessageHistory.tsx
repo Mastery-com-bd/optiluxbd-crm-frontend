@@ -1,4 +1,7 @@
 "use client";
+import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
 import {
   DropdownMenu,
@@ -7,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -15,7 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { debounce } from "@/utills/debounce";
 import {
+  ChevronDown,
   Eye,
   Mail,
   MessageCircle,
@@ -23,7 +29,9 @@ import {
   MessageSquareText,
   MoreVertical,
   Pencil,
+  Search,
   Trash2,
+  Upload,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -117,6 +125,9 @@ const MessageHistory = () => {
     limit: 10,
     page: 1,
   });
+    const [inputValue, setInputValue] = useState("");
+    const [status, setStatus] = useState("All");
+    const [channel, setChannel] = useState("All");
 
   const headers = [
     "Date & Time",
@@ -156,8 +167,136 @@ const MessageHistory = () => {
     }
   };
 
+
+    const handleSearch = (query: string) => {
+      setFilters((prev) => ({ ...prev, search: query, page: 1 }));
+    };
+    const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+
   return (
     <div className="space-y-6">
+
+
+{/* filter section */}
+      <div className="flex items-center justify-between">
+        {/* search bar */}
+        <div className="relative">
+          <Search
+            size={16}
+            className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
+          />
+          <Input
+            className="px-10 py-1.5 w-64 text-sm bg-transparent"
+            value={inputValue}
+            onChange={(e) => {
+              debouncedLog(e.target.value);
+              setInputValue(e.target.value);
+            }}
+            placeholder="SSearch recipient or message..."
+          />
+        </div>
+
+        {/* dropdown */}
+        <div className="flex items-center gap-7">
+          {/* channel drodpown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LiquidGlass
+                glowIntensity="xs"
+                shadowIntensity="xs"
+                borderRadius="12px">
+                <Button
+                  variant="default"
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
+                  <p className="flex items-center gap-2">
+                    <span className="text-[14px]">
+                      {" "}
+                      {channel === "All" ? "All Channel" : channel}
+                    </span>
+                    <ChevronDown size={18} />
+                  </p>
+                </Button>
+              </LiquidGlass>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white/5 backdrop-blur-2xl">
+              {[
+                "SMS",
+                "WhatsApp",
+                "Email",
+                
+              ].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setChannel(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      tire: item === "All" ? undefined : item === "Yes",
+                      page: 1,
+                    }));
+                  }}
+                  className={item === channel ? "font-medium" : ""}>
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* status dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LiquidGlass
+                glowIntensity="xs"
+                shadowIntensity="xs"
+                borderRadius="12px">
+                <Button
+                  variant="default"
+                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
+                  <p className="flex items-center gap-2">
+                    <span className="text-[14px]">
+                      {" "}
+                      {status === "All" ? "Status" : status}
+                    </span>
+                    <ChevronDown size={18} />
+                  </p>
+                </Button>
+              </LiquidGlass>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white/5 backdrop-blur-2xl">
+              {["All", "Delivered", "Failed"].map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  onClick={() => {
+                    setStatus(item);
+                    setFilters((prev) => ({
+                      ...prev,
+                      status: item === "All" ? undefined : item === "Yes",
+                      page: 1,
+                    }));
+                  }}
+                  className={item === status ? "font-medium" : ""}>
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* export svg button */}
+          <div className="flex items-center justify-end ">
+            <ButtonComponent
+              buttonName="Export"
+              icon={Upload}
+              varient="dark yellow"
+            />
+          </div>
+        </div>
+      </div>
+
+
       <Table className="w-full">
         <TableHeader>
           <TableRow>
