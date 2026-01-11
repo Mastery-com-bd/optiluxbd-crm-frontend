@@ -13,6 +13,7 @@ import CardView from "../allCombo/CardView";
 import CombocardSkeleton from "../allCombo/CombocardSkeleton";
 import PageHeader from "../../shared/pageHeader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const ComboDraft = () => {
   const [isGridView, setIsGridView] = useState(true);
@@ -126,7 +127,7 @@ const ComboDraft = () => {
       )}
 
       <CustomPagination
-        currentPage={1}
+        currentPage={pagination.page}
         totalPages={10}
         onPageChange={(page) => setFilters({ ...filters, page })}
         show={show}
