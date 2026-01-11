@@ -15,14 +15,8 @@ export function TeamHierarchyView() {
 
       {/* Director Card */}
       <div className="flex flex-col items-center">
-        <LiquidGlass
-          className="relative rounded-[32px] p-8 flex flex-col items-center text-center"
-          style={{
-            width: "320px",
-            background: "linear-gradient(145deg, #1e1628 0%, #15101d 100%)",
-            border: "1px solid rgba(80, 60, 100, 0.3)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-          }}
+        <div
+          className="neumorphism rounded-4xl p-8 flex flex-col items-center text-center"
         >
           {/* Icon Circle */}
           <div
@@ -50,7 +44,7 @@ export function TeamHierarchyView() {
               <p className="text-[#9a9099] text-sm">Avg Conversion</p>
             </div>
           </div>
-        </LiquidGlass>
+        </div>
 
         {/* Connector Line */}
         <div className="w-px h-16 bg-[#4a4055] mt-0"></div>

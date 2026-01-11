@@ -164,23 +164,34 @@
 }
 
 .effect {
-  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+  box-shadow: 1.2px 1.1px 1px -.5px #ffffff8b,
     -1.2px -1.1px 1px -.5px #ffffff8d,
     1px 1px 10px 2px #00000044;
-  background-color:#FDFDFD1A;
+  background-color: #FDFDFD1A;
   backdrop-filter: blur(20px);
 }
-.effectBlack{
-  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff8b,
+
+.effectBlack {
+  box-shadow: 1.2px 1.1px 1px -.5px #ffffff8b,
     -1.2px -1.1px 1px -.5px #ffffff8d,
     1px 1px 10px 2px #00000044;
-  background-color:#DFE3E71A;
+  background-color: #DFE3E71A;
   backdrop-filter: blur(20px);
 }
+
 .overviewButtonEffect {
-  box-shadow: 1.2px 1.1px 1px -.5px   #ffffff67,
+  box-shadow: 1.2px 1.1px 1px -.5px #ffffff67,
     -1.2px -1.1px 1px -.5px #ffffff8d,
     0px 0px 0px 0px #000000a1 inset,
     -4px -4px 10px 10px #0000005b inset;
   backdrop-filter: blur(100px);
+}
+
+.neumorphism {
+  box-shadow: 20px 20px 60px #0000004a,
+    -20px -20px 60px #00000024,
+    1.2px 1.1px 1px -.5px #ffffff67,
+    -1.2px -1.1px 1px -.5px #ffffff8d,
+     4px 4px 1px 1px #00000026 inset,
+    -4px -4px 1px 1px #00000013 inset;
 }
