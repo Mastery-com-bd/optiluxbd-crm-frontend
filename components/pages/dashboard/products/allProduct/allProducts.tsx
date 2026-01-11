@@ -123,15 +123,6 @@ const AllProducts = () => {
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
-        {/* <div className="flex gap-2 p-2">
-          <ButtonComponent varient="purple" buttonName="Bulk Upload" />
-          <ButtonComponent varient="light purple" buttonName="Draft Product" />
-          <ButtonComponent
-            varient="deep purple"
-            buttonName="Single Upload Product"
-            icon={Upload}
-          />
-        </div> */}
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
