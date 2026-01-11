@@ -89,10 +89,10 @@ const RegisterComponent = () => {
           buttonTitle="Didn`t get any Email ?"
         />
       ) : (
-        <div className="rounded-lg border border-[#221F33] bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-8 py-4 lg:w-[25vw] relative">
+        <div className="rounded-lg bg-[linear-gradient(331deg,rgba(238,235,255,0.04)_-7.38%,rgba(238,235,255,0.02)_-7.37%,rgba(238,235,255,0.08)_107.38%)] px-4 py-4 max-w-sm relative ">
           {/* top and bottom border */}
-          <div className="absolute top-0 left-0 inset-1 border-l border-t border-[#221F33] rounded-tl-lg pointer-events-none" />
-          <div className="absolute bottom-0 right-0 inset-1 border-r border-b border-[#221F33] rounded-br-lg pointer-events-none" />
+          <div className="absolute top-0 left-0 inset-2 border-l border-t border-[#221F33] rounded-tl-lg pointer-events-none" />
+          <div className="absolute bottom-0 right-0 inset-2 border-r border-b border-[#221F33] rounded-br-lg pointer-events-none" />
 
           <div className="space-y-4">
             <div className="space-y-5">
@@ -120,7 +120,7 @@ const RegisterComponent = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
               {/* Email */}
               <input
                 id="email"
@@ -168,8 +168,7 @@ const RegisterComponent = () => {
                 <button
                   type="button"
                   onClick={toggle}
-                  className="absolute right-4 top-3 text-[#514D6A] "
-                >
+                  className="absolute right-4 top-3 text-[#514D6A] ">
                   {visible ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
 
@@ -180,8 +179,7 @@ const RegisterComponent = () => {
                       .map((rule) => (
                         <div
                           key={rule.label}
-                          className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out"
-                        >
+                          className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out">
                           <X size={14} className="text-red-700" />
                           <span className="text-[#514D6A]">{rule.label}</span>
                         </div>
@@ -195,24 +193,22 @@ const RegisterComponent = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full"
-              >
+                className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full text-white">
                 {/* top and bottom line */}
                 <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
                 <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
-
-                {/* Button text */}
-                <p className="flex items-center gap-2">
-                  <span className="text-sm">Create an Account</span>
-                  <MoveRight />
-                </p>
-
                 <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
                   <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
                 </div>
                 <div className="pointer-events-none">
                   <LargeYellowSvg />
                 </div>
+
+                {/* Button text */}
+                <p className="flex items-center gap-2">
+                  <span className="text-sm">Create An Account</span>
+                  <MoveRight />
+                </p>
               </button>
             </form>
 
@@ -221,8 +217,7 @@ const RegisterComponent = () => {
               Already have an account?
               <Link
                 className="bg-linear-to-b from-[#C3C0D8] to-[#4E0C73] bg-clip-text text-transparent underline underline-offset-2 decoration-[#4E0C73]"
-                href="/login"
-              >
+                href="/login">
                 Sign In
               </Link>
             </p>

@@ -6,8 +6,7 @@ const LargeYellowSvg = () => {
       viewBox="0 0 314 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl "
-    >
+      className="absolute w-full bottom-0 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl ">
       <g filter="url(#filter0_f_1787_42298)">
         <ellipse
           cx="154"
@@ -26,8 +25,7 @@ const LargeYellowSvg = () => {
           width="353"
           height="95"
           filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
-        >
+          colorInterpolationFilters="sRGB">
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"

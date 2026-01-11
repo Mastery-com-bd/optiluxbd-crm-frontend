@@ -1,7 +1,4 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Edit,
-  Eye,
-  MoreHorizontal,
-  MoreVertical,
-  Pencil,
-  Trash,
-  Trash2,
-} from "lucide-react";
+import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export interface Customer {
@@ -196,8 +185,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                 first={ind === 0}
                 last={ind === headers.length - 1}
                 key={label}
-                className="text-left text-xs font-semibold uppercase text-muted-foreground"
-              >
+                className="text-left text-xs font-semibold uppercase text-muted-foreground">
                 {label}
               </TableHead>
             ))}
@@ -260,8 +248,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-[180px] flex flex-col "
-                  >
+                    className="w-[180px] flex flex-col ">
                     <Link href={`/dashboard/customers/${2}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         <Eye className="w-4 h-4 mr-2" />
@@ -279,8 +266,7 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                       //     setDeleteProductId(product.id);
                       //     setDeleteDialogOpen(true);
                       //   }}
-                      className="cursor-pointer"
-                    >
+                      className="cursor-pointer">
                       <Trash2 className="w-4 h-4 text-destructive mr-2" />
                       Delete
                     </DropdownMenuItem>

@@ -20,29 +20,33 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="w-full">
-      {data?.success ? (
-        <div>
-          {open ? (
-            <SuccessComponent
-              title="Password reset Successfully!"
-              content="your password has reset successfully. You can login to your account with the new password"
-            />
-          ) : (
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-x-6 lg:gap-x-56">
-              <LoginText />
-              <SetNewPassword token={token as string} setOpen={setOpen} />
-            </div>
-          )}
-        </div>
-      ) : (
-        <FaildComponent
-          title="Opps An Error Occured"
-          content="it means your reset link is not correct or invalid to reset your password. You can resend your email to get the reset link"
-          buttonText="Resend Email"
-          path="/forgot-password"
-        />
-      )}
+    // <div className="w-full">
+    //   {data?.success ? (
+    //     <div>
+    //       {open ? (
+    //         <SuccessComponent
+    //           title="Password reset Successfully!"
+    //           content="your password has reset successfully. You can login to your account with the new password"
+    //         />
+    //       ) : (
+    //         <div className="flex flex-col lg:flex-row items-center justify-center gap-x-6 lg:gap-x-56">
+    //           <LoginText />
+    //           <SetNewPassword token={token as string} setOpen={setOpen} />
+    //         </div>
+    //       )}
+    //     </div>
+    //   ) : (
+    //     <FaildComponent
+    //       title="Opps An Error Occured"
+    //       content="it means your reset link is not correct or invalid to reset your password. You can resend your email to get the reset link"
+    //       buttonText="Resend Email"
+    //       path="/forgot-password"
+    //     />
+    //   )}
+    // </div>
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-x-6 lg:gap-x-56">
+      <LoginText />
+      <SetNewPassword token={token as string} setOpen={setOpen} />
     </div>
   );
 };
