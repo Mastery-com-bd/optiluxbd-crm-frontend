@@ -15,10 +15,7 @@ const Overview = () => {
       {/* card section */}
       <div className="flex items-center gap-5">
         {/* first card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl overflow-hidden">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
+        <Card className="border-none effect flex flex-row px-4 w-full relative rounded-3xl overflow-hidden">
           <TrendingUp
             size={100}
             className="text-[rgba(5,223,114,0.10)] absolute top-6 right-10"
@@ -39,11 +36,7 @@ const Overview = () => {
         </Card>
 
         {/* second card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-3xl pointer-events-none" />
-
+        <Card className=" flex flex-row px-4 w-full relative rounded-3xl effect">
           <ShoppingCart
             size={70}
             className="text-[rgba(81,162,255,0.20)] absolute top-6 right-12"
@@ -64,11 +57,7 @@ const Overview = () => {
         </Card>
 
         {/* third card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-3xl pointer-events-none" />
-
+        <Card className="effect flex flex-row px-4 w-full relative rounded-3xl">
           <Target
             size={70}
             className="text-[rgba(194,122,255,0.10)] absolute top-6 right-12"
@@ -90,7 +79,7 @@ const Overview = () => {
       </div>
 
       {/* status section */}
-      <Card className="bg-white/5 px-6 py-3 w-full rounded-4xl gap-3">
+      <Card className="effect px-6 py-3 w-full rounded-4xl gap-3">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="font-medium text-xl">Loyalty Status</h1>
@@ -129,7 +118,7 @@ const Overview = () => {
       </Card>
 
       {/* recent activity */}
-      <Card className="bg-white/5 px-6 py-3 w-full rounded-4xl gap-3">
+      <Card className="effect px-6 py-3 w-full rounded-4xl gap-3">
         <h1 className="font-medium text-xl">Recent Activity</h1>
         <div className="space-y-4">
           {/* order */}

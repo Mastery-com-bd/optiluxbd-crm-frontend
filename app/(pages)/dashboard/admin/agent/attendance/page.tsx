@@ -8,7 +8,7 @@ const Page = () => {
   return (
     <div className=" min-h-screen ">
       <AttendenceOverview />
-      <div className="flex gap-8 items-center justify-center mt-8">
+      <div className="flex gap-8 items-center justify-between mt-8">
         <AttendanceChart />
         <WeeklyAttendanceChart />
       </div>

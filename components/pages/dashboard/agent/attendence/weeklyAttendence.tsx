@@ -17,15 +17,15 @@ export default function WeeklyAttendanceChart() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   return (
-    <LiquidGlass
-      className="w-[370px] p-8 relative overflow-hidden"
+    <div
+      className="w-[40%]  effect rounded-4xl p-8 relative overflow-hidden"
       
     >
       {/* Header */}
       <h2 className="text-white text-2xl font-medium mb-8">Weekly Attendance</h2>
 
       {/* Chart */}
-      <div className="h-[350px] w-full">
+      <div className="h-[370px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
@@ -80,6 +80,6 @@ export default function WeeklyAttendanceChart() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </LiquidGlass>
+    </div>
   )
 }

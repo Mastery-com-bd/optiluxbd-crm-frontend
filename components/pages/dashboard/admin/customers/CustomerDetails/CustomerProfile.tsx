@@ -11,6 +11,7 @@ import OrderHistory from "./OrderHistory";
 import Note from "./Note";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import AdvanceProfile from "../../../agentDashboard/customerProfile/AdvanceProfile";
+import PageHeader from "../../../shared/pageHeader";
 
 const buttons = ["Overview", "Order History", "Note", "Advance Profile"];
 
@@ -51,10 +52,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Customer Profile</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            View add and edit customer details
-          </p>
+          <PageHeader title="Customer Profile" description="View add and edit customer details" />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <ButtonComponent
@@ -74,11 +72,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
       <div className="flex justify-between items-start gap-6">
         {/* left side */}
 
-        <Card className="bg-white/10 w-[30vw] px-6 py-6 rounded-4xl relative gap-4">
-          {/* border section */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
-
+        <Card className="w-[30vw] px-6 py-6 rounded-2xl relative gap-4 effect">
           {/* upper section */}
           <div className="flex justify-between ">
             <div className="h-10 w-20 border-2 border-[#F0B10080] rounded-full bg-[linear-gradient(90deg,#F0B1004D_0%,#D0870066_100%)] flex items-center justify-center gap-1">
@@ -96,14 +90,12 @@ const CustomerProfile = ({ id }: { id: string }) => {
             <button
               type="button"
               onClick={() => setEnabled(!enabled)}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition cursor-pointer ${
-                enabled ? "bg-blue-600" : "bg-white/10"
-              }`}
+              className={`relative inline-flex h-8 w-16 items-center rounded-full transition cursor-pointer ${enabled ? "bg-blue-600" : "bg-white/10"
+                }`}
             >
               <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white transition ${
-                  enabled ? "translate-x-9" : "translate-x-1"
-                }`}
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition ${enabled ? "translate-x-9" : "translate-x-1"
+                  }`}
               />
             </button>
           </div>
@@ -139,11 +131,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
 
         {/* right side */}
         <div className="w-full space-y-4">
-          <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
-            {/* top and bottom border */}
-            <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
-
+          <Card className="px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 effect">
             {/* upper section */}
             {buttons.map((item, i) => {
               const active = item === current;
@@ -151,9 +139,8 @@ const CustomerProfile = ({ id }: { id: string }) => {
                 <button
                   key={i}
                   onClick={() => setCurrent(item)}
-                  className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${
-                    active && "bg-white/5 rounded-xl"
-                  }`}
+                  className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${active && "bg-white/5 rounded-xl"
+                    }`}
                 >
                   {/* Button text */}
                   <span className="relative z-10">{item}</span>
@@ -192,5 +179,4 @@ const CustomerProfile = ({ id }: { id: string }) => {
     </section>
   );
 };
-
 export default CustomerProfile;

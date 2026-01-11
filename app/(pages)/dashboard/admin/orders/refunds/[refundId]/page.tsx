@@ -7,13 +7,13 @@ const RefundDetails = () => {
         <div className="w-full ">
             <div className="flex justify-between">
                 <PageHeader title="Request Details" description={`Request ID: ${"request idd..."}`} />
-                <div className="gird grid-cols-2">
+                <div className="flex items-center justify-center gap-4">
                     <ButtonComponent buttonName="Reject Request" varient="purple" />
                     <ButtonComponent buttonName="Approve Request" varient="yellow" />
                 </div>
             </div>
             <div className="flex gap-6 mt-6">
-                <div className="bgGlass p-6 w-[60%]">
+                <div className="effect rounded-[8px] p-6 w-[60%]">
                     <h3>Customer</h3>
                     <div>
                         <div className="flex gap-6 my-6">
@@ -36,7 +36,7 @@ const RefundDetails = () => {
                     </div>
                 </div>
                 {/* order summary */}
-                <div className="bgGlass w-[40%] p-6">
+                <div className="effect rounded-[8px] w-[40%] p-6">
                     <h3>order Summary</h3>
                     <div className="flex  justify-between my-6">
                         <div className="flex flex-col">
@@ -69,21 +69,21 @@ const RefundDetails = () => {
             </div>
             <div className="flex gap-6 mt-6">
                 {/* return reason */}
-                <div className="bgGlass p-6 w-1/2 ">
+                <div className="effect rounded-[8px] p-6 w-1/2 ">
                     <h3>Return Reason</h3>
                     <div className="my-4">
                         return reason........
                     </div>
                 </div>
                 {/* evidence photos */}
-                <div className="bgGlass p-6 w-1/2">
+                <div className="effect rounded-[8px] p-6 w-1/2">
                     <h3>Evidence Photos</h3>
                     <div className="flex gap-3 my-6">
 
-                        <div className="bgGlass p-6 h-[272px]! w-[250px]!">
+                        <div className="effect rounded-[8px] p-6 h-[272px]! w-[250px]!">
                             <Image src={"https://i.ibb.co.com/D5Bx5SZ/3.png"} height={272} width={250} alt="product image" />
                         </div>
-                        <div className="bgGlass p-4 h-[272px]! w-[250px]!">
+                        <div className="effect rounded-[8px] p-4 h-[272px]! w-[250px]!">
                             <Image src={"https://i.ibb.co.com/D5Bx5SZ/3.png"} height={272} width={250} alt="product image" />
                         </div>
                     </div>

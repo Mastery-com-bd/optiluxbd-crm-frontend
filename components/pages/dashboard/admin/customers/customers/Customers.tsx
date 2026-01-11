@@ -14,11 +14,13 @@ import { Input } from "@/components/ui/input";
 import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
 import { TCustomer } from "@/types/customer.types";
 import { debounce } from "@/utills/debounce";
-import { ChevronDown, Search, Upload } from "lucide-react";
+import { ChevronDown, Download, Funnel, Grid2X2, Search, Upload } from "lucide-react";
 import { useState } from "react";
 import CreateCustomerModal from "./CreateCustomerModal";
 import CustomerTable from "./customerTable";
 import CustomerTableSkeleton from "./CustomerTableSkeleton";
+import PageHeader from "../../../shared/pageHeader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Customers = () => {
   const [filters, setFilters] = useState({
@@ -34,10 +36,17 @@ const Customers = () => {
     page: 1,
   });
   const [inputValue, setInputValue] = useState("");
-  const [status, setStatus] = useState("All");
+  const [status, setStatus] = useState("all");
   const [tire, setTire] = useState("All");
   const [show, setShow] = useState("10");
-
+  const [category, setCategory] = useState("all");
+  const categories = [
+    { id: 1, name: "Electronics" },
+    { id: 2, name: "Apparel" },
+    { id: 3, name: "Home & Kitchen" },
+    { id: 4, name: "Books" },
+    { id: 5, name: "Sports" },
+  ];
   const { data, isLoading } = useGetAllCustomerQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
@@ -56,10 +65,7 @@ const Customers = () => {
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Customer Overview</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Operational overview and quick actions
-          </p>
+          <PageHeader title="All Customers" description="Operational overview and quick actions" />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <CreateCustomerModal />
@@ -67,124 +73,68 @@ const Customers = () => {
       </div>
 
       {/* filter section */}
-      <div className="flex items-center justify-between">
-        {/* search bar */}
-        <div className="relative">
-          <Search
-            size={16}
-            className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-          />
+      <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
+        <div className="flex  gap-3 items-center">
           <Input
-            className="px-10 py-1.5 w-64 text-sm bg-transparent"
+            className="w-64 text-sm bg-transparent"
             value={inputValue}
+            icon={<Search />}
             onChange={(e) => {
               debouncedLog(e.target.value);
               setInputValue(e.target.value);
             }}
-            placeholder="Search customer by id"
+            placeholder="Search product by name"
           />
+          <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
+            <Funnel size={16} />
+          </Button>
         </div>
-
-        {/* dropdown */}
-        <div className="flex items-center gap-7">
-          {/* tire drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px">
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {tire === "All" ? "Tire" : tire}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl">
-              {[
-                "All",
-                "BRONZE",
-                "SILVER",
-                "GOLD",
-                "DIAMOND",
-                "PLATINUM",
-                "VIP",
-              ].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setTire(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      tire: item === "All" ? undefined : item === "Yes",
-                      page: 1,
-                    }));
-                  }}
-                  className={item === tire ? "font-medium" : ""}>
-                  {item}
-                </DropdownMenuItem>
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            value={category}
+            onValueChange={(value) => {
+              setCategory(value);
+              setFilters((prev) => ({
+                ...prev,
+                category: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-40" aria-label="Category Filter">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories?.map((category: { id: number; name: string }) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* status dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px">
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {status === "All" ? "Status" : status}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl">
-              {["All", "Yes", "No"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setStatus(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      status: item === "All" ? undefined : item === "Yes",
-                      page: 1,
-                    }));
-                  }}
-                  className={item === status ? "font-medium" : ""}>
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* export svg button */}
-          <div className="flex items-center justify-end ">
-            <ButtonComponent
-              buttonName="Export"
-              icon={Upload}
-              varient="dark yellow"
-            />
-          </div>
+            </SelectContent>
+          </Select>
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}
+          >
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+          <ButtonComponent icon={Download} buttonName="Export" varient="yellow"/>
         </div>
       </div>
 
