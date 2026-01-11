@@ -86,10 +86,7 @@ export default function AttendanceChart() {
   const filters: FilterType[] = ["Daily", "Weekly", "Monthly"]
 
   return (
-    <LiquidGlass
-      className="w-[750px] p-8 relative overflow-hidden"
-      
-    >
+    <div className="effect p-8 rounded-4xl w-[60%]">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-white text-2xl font-medium">Attendance Comparison Chart</h2>
@@ -101,9 +98,8 @@ export default function AttendanceChart() {
               className="flex items-center gap-2 text-sm font-medium transition-colors"
             >
               <span
-                className={`w-3 h-3 rounded-full border-2 ${
-                  activeFilter === filter ? "bg-[#d4a855] border-[#d4a855]" : "bg-transparent border-gray-400"
-                }`}
+                className={`w-3 h-3 rounded-full border-2 ${activeFilter === filter ? "bg-[#d4a855] border-[#d4a855]" : "bg-transparent border-gray-400"
+                  }`}
               />
               <span className={activeFilter === filter ? "text-[#d4a855]" : "text-gray-300"}>{filter}</span>
             </button>
@@ -134,7 +130,7 @@ export default function AttendanceChart() {
             />
             <Tooltip content={<CustomTooltip />} cursor={false} />
             <Area
-            className="aaaaaaaaaaaaaaaaaaaaaaaa"
+              className="aaaaaaaaaaaaaaaaaaaaaaaa"
               type="monotone"
               dataKey="value"
               stroke="#d4a855"
@@ -146,6 +142,6 @@ export default function AttendanceChart() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </LiquidGlass>
+    </div>
   )
 }

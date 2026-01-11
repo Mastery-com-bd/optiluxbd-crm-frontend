@@ -10,10 +10,11 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Download, Printer } from 'lucide-react';
+import {  Printer } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PaymentDetails from '@/components/PDF/PaymentDetails';
+import ButtonComponent from '@/components/ui/ButtonComponent';
 
 const InvoiceDetails = () => {
     const invoiceData = {
@@ -76,16 +77,17 @@ const InvoiceDetails = () => {
                     >
                         {({ loading }) =>
                             loading ? (
-                                <Button variant={"yellow"} className="cursor-pointer">Loading PDF...</Button>
+                                <ButtonComponent buttonName='Loading PDF' varient='yellow'/>
                             ) : (
-                                <Button variant={"yellow"} className="cursor-pointer">Export PDF</Button>
+                               <ButtonComponent buttonName='Export PDF' varient='yellow'/>
                             )
                         }
                     </PDFDownloadLink>
-                    <Button variant="yellow" className='cursor-pointer'>
+                    {/* <Button variant="yellow" className='cursor-pointer'>
                         <Printer className="w-4 h-4 mr-2" />
                         Print
-                    </Button>
+                    </Button> */}
+                    <ButtonComponent buttonName='Print' varient='purple' icon={Printer}/>
                 </div>
             </div>
 

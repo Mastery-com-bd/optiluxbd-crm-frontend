@@ -1,4 +1,4 @@
-import React from 'react';
+'use client';
 import {
     Table,
     TableHeader,
@@ -17,7 +17,47 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import PageHeader from '@/components/pages/dashboard/shared/pageHeader';
+import { OverviewCard } from '@/components/pages/dashboard/shared/overviewCard';
+import { FileText, FileCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import ButtonComponent from '@/components/ui/ButtonComponent';
 
+const stats = [
+  {
+    icon: FileText,
+    label: "Drafts Invoices",
+    value: "128",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
+  },
+  {
+    icon: FileCheck,
+    label: "Issued Invoices",
+    value: "52",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
+  },
+  {
+    icon: CheckCircle2,
+    label: "Paid Invoices",
+    value: "512",
+    isPositive: false,
+    change: "36.8%",
+    highlight: true,
+    highlightColor: "text-emerald-500" // Design-e Paid status green color-e ache
+  },
+  {
+    icon: AlertCircle,
+    label: "Overdue Invoices",
+    value: "12",
+    isPositive: true,
+    change: "36.8%",
+    highlight: true,
+    highlightColor: "text-orange-500" // Design-e Overdue status orange color-e ache
+  },
+];
 const InvoiceAndPayments = () => {
     const keys = [
         'Invoice No.',
@@ -115,13 +155,11 @@ const InvoiceAndPayments = () => {
 
     return (
         <div className="mx-auto">
-            <h3 className="text-xl font-semibold mb-1">Invoice & Payments</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-                Manage invoices, payments and receipts
-            </p>
+            <PageHeader title="Invoice & Payments" description='Manage incoices, payments and recipts'/>
 
-            {/* TODO: OVERVIEW CARD */}
-
+            <div className='my-6'>
+                <OverviewCard stats={stats}/>
+            </div>
             <div className="overflow-x-auto">
                 <Table>
                     <TableHeader>
@@ -174,12 +212,7 @@ const InvoiceAndPayments = () => {
                                 <TableCell className="px-4 py-3 text-sm text-center">{row.amount}</TableCell>
                                 <TableCell className="px-4 py-3">
                                     <Link href={`/dashboard/admin/orders/payments/${row.id}`}>
-                                        <Button
-                                            className='cursor-pointer'
-                                            variant={"yellow"}>
-                                            <Eye className="w-4 h-4" />
-                                            View details
-                                        </Button>
+                                        <ButtonComponent buttonName='View details' varient='yellow' icon={Eye} />
                                     </Link>
                                 </TableCell>
                             </TableRow>

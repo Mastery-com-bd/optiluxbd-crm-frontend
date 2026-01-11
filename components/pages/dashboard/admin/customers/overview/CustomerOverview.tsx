@@ -12,21 +12,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import PageHeader from "../../../shared/pageHeader";
+import { OverviewCard } from "../../../shared/overviewCard";
+import { Box, User, Briefcase, ArrowUpRight } from 'lucide-react';
 
 type TOverviewdata = {
   month:
-    | "Jan"
-    | "Feb"
-    | "Mar"
-    | "Apr"
-    | "May"
-    | "Jun"
-    | "Jul"
-    | "Aug"
-    | "Sep"
-    | "Oct"
-    | "Nov"
-    | "Dec";
+  | "Jan"
+  | "Feb"
+  | "Mar"
+  | "Apr"
+  | "May"
+  | "Jun"
+  | "Jul"
+  | "Aug"
+  | "Sep"
+  | "Oct"
+  | "Nov"
+  | "Dec";
   first?: string;
   second?: string;
   third?: string;
@@ -136,122 +139,147 @@ const CustomerOverview = () => {
     return "bg-[rgba(251,44,54,0.4)]";
   };
 
+  const stats = [
+    {
+      icon: Box,
+      label: "Total Leads",
+      value: "128",
+      isPositive: true,
+      change: "36.8",
+      highlight: false,
+    },
+    {
+      icon: User,
+      label: "New Today",
+      value: "512",
+      isPositive: true,
+      change: "36.8",
+      highlight: false,
+    },
+    {
+      icon: Briefcase,
+      label: "Unassigned",
+      value: "12",
+      isPositive: true,
+      change: "36.8",
+      highlight: true,
+      highlightColor: "text-rose-500" // Design-e Red color-e highlighted
+    },
+    {
+      icon: ArrowUpRight,
+      label: "Assigned",
+      value: "85",
+      isPositive: true,
+      change: "36.8",
+      highlight: false,
+    },
+  ];
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Customer Overview</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Operational overview and quick actions.
-          </p>
+          <PageHeader title="Customer Overview" description="Operational overview and quick actions.  " />
         </div>
         <ButtonComponent
-          buttonName="Create New Team"
+          buttonName="Create New Customer"
           icon={Plus}
           varient="dark yellow"
         />
       </div>
       <div className="w-full ">
-        {/* <ComboOverView /> */}
+        <OverviewCard stats={stats} />
       </div>
-      <LiquidGlass
-        shadowIntensity="xxs"
-        glowIntensity="none"
-        className="rounded-3xl bg-white/5 backdrop-blur-3xl"
-      >
-        <Card className="bg-transparent rounded-3xl py-8 px-6">
-          <CardHeader className="px-0">
-            <CardTitle className="space-y-1">
-              <h1 className="text-3xl">Customer Retention Analysis</h1>
-              <p className="text-sm text-white/40">
-                Monthly retention rate heatmap showing customer retention over
-                time.
-              </p>
-            </CardTitle>
-          </CardHeader>
+      <Card className="effect border-none rounded-3xl py-8 px-6">
+        <CardHeader className="px-0">
+          <CardTitle className="space-y-1">
+            <h1 className="text-3xl">Customer Retention Analysis</h1>
+            <p className="text-sm text-white/40">
+              Monthly retention rate heatmap showing customer retention over
+              time.
+            </p>
+          </CardTitle>
+        </CardHeader>
 
-          <div className="overflow-x-auto w-full">
-            <Table className="w-full">
-              <TableHeader>
-                <TableRow>
-                  {keys.map((label, ind) => (
-                    <TableHead
-                      first={ind === 0}
-                      last={ind === keys.length - 1}
-                      key={label}
-                      className="text-left text-xs font-semibold uppercase text-muted-foreground"
-                    >
-                      {label}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data?.map((item: TOverviewdata, index) => {
-                  return (
-                    <TableRow
-                      key={index}
-                      className="border-muted hover:bg-muted/50 transition-colors"
-                    >
-                      <TableCell className="px-4 py-3">
-                        <div className="flex items-center justify-center">
-                          <p className="font-medium">{item?.month}</p>
-                        </div>
-                      </TableCell>
-                      {[
-                        "first",
-                        "second",
-                        "third",
-                        "fourth",
-                        "fifth",
-                        "sixth",
-                        "seventh",
-                      ].map((key) => {
-                        const value = item[key as keyof TOverviewdata];
-                        return (
-                          <TableCell key={key} className="px-4 py-3">
-                            <div
-                              className={`px-4 py-3 text-sm text-center rounded-3xl ${
-                                value
-                                  ? getCellBg(value)
-                                  : "bg-[rgba(255,255,255,0.05)]"
+        <div className="overflow-x-auto w-full">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                {keys.map((label, ind) => (
+                  <TableHead
+                    first={ind === 0}
+                    last={ind === keys.length - 1}
+                    key={label}
+                    className="text-left text-xs font-semibold uppercase text-muted-foreground"
+                  >
+                    {label}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data?.map((item: TOverviewdata, index) => {
+                return (
+                  <TableRow
+                    key={index}
+                    className="border-muted hover:bg-muted/50 transition-colors"
+                  >
+                    <TableCell className="px-4 py-3">
+                      <div className="flex items-center justify-center">
+                        <p className="font-medium">{item?.month}</p>
+                      </div>
+                    </TableCell>
+                    {[
+                      "first",
+                      "second",
+                      "third",
+                      "fourth",
+                      "fifth",
+                      "sixth",
+                      "seventh",
+                    ].map((key) => {
+                      const value = item[key as keyof TOverviewdata];
+                      return (
+                        <TableCell key={key} className="px-4 py-3">
+                          <div
+                            className={`px-4 py-3 text-sm text-center rounded-3xl ${value
+                              ? getCellBg(value)
+                              : "bg-[rgba(255,255,255,0.05)]"
                               }`}
-                            >
-                              {value ?? "-"}
-                            </div>
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-          <div className="flex items-center gap-6">
-            <p className="flex items-center gap-1">
-              <span className="h-4 w-4 bg-[rgba(0,201,80,0.60)]"></span>
-              <span className="text-white/50">High (85%+)</span>
-            </p>
-            <p className="flex items-center gap-1">
-              <span className="h-4 w-4 bg-[rgba(0,201,80,0.40)]"></span>
-              <span className="text-white/50">Good (70-84%)</span>
-            </p>
-            <p className="flex items-center gap-1">
-              <span className="h-4 w-4 bg-[rgba(240,177,0,0.40)]"></span>
-              <span className="text-white/50">Medium (60-69%)</span>
-            </p>
-            <p className="flex items-center gap-1">
-              <span className="h-4 w-4 bg-[rgba(255,105,0,0.40)]"></span>
-              <span className="text-white/50">Low (50-59%)</span>
-            </p>
-            <p className="flex items-center gap-1">
-              <span className="h-4 w-4 bg-[rgba(251,4,54,0.40)]"></span>
-              <span className="text-white/50">Poor (&lt;50%)</span>
-            </p>
-          </div>
-        </Card>
-      </LiquidGlass>
+                          >
+                            {value ?? "-"}
+                          </div>
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center gap-6">
+          <p className="flex items-center gap-1">
+            <span className="h-4 w-4 bg-[rgba(0,201,80,0.60)]"></span>
+            <span className="text-white/50">High (85%+)</span>
+          </p>
+          <p className="flex items-center gap-1">
+            <span className="h-4 w-4 bg-[rgba(0,201,80,0.40)]"></span>
+            <span className="text-white/50">Good (70-84%)</span>
+          </p>
+          <p className="flex items-center gap-1">
+            <span className="h-4 w-4 bg-[rgba(240,177,0,0.40)]"></span>
+            <span className="text-white/50">Medium (60-69%)</span>
+          </p>
+          <p className="flex items-center gap-1">
+            <span className="h-4 w-4 bg-[rgba(255,105,0,0.40)]"></span>
+            <span className="text-white/50">Low (50-59%)</span>
+          </p>
+          <p className="flex items-center gap-1">
+            <span className="h-4 w-4 bg-[rgba(251,4,54,0.40)]"></span>
+            <span className="text-white/50">Poor (&lt;50%)</span>
+          </p>
+        </div>
+      </Card>
     </section>
   );
 };

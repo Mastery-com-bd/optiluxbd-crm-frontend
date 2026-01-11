@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  ChevronDown,
   Eye,
   Funnel,
   Grid2X2,
@@ -58,7 +59,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
-import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
 
 const AllProducts = () => {
@@ -123,15 +123,6 @@ const AllProducts = () => {
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
-        {/* <div className="flex gap-2 p-2">
-          <ButtonComponent varient="purple" buttonName="Bulk Upload" />
-          <ButtonComponent varient="light purple" buttonName="Draft Product" />
-          <ButtonComponent
-            varient="deep purple"
-            buttonName="Single Upload Product"
-            icon={Upload}
-          />
-        </div> */}
         {/* Filters */}
         <Card className="bg-transparent border-none text-card-foreground border shadow-sm p-0">
           <div className="flex flex-col lg:flex-row gap-4 my-7 justify-between">
@@ -264,11 +255,10 @@ const AllProducts = () => {
                       <TableCell className="px-4 py-3 text-center">
                         <span
                           className={`px-6 bg-white/10 border border-white/20 py-1 text-sm font-medium rounded-md
-                                                  ${
-                                                    product.status === "ACTIVE"
-                                                      ? "text-green-500"
-                                                      : "text-red-500"
-                                                  }`}>
+                                                  ${product.status === "ACTIVE"
+                              ? "text-green-500"
+                              : "text-red-500"
+                            }`}>
                           {product.status.toLocaleLowerCase()}
                         </span>
                       </TableCell>

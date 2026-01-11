@@ -128,7 +128,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <Card className="bg-white/5 px-6 py-3 w-full rounded-4xl gap-3">
+    <Card className="effect px-6 py-3 w-full rounded-2xl gap-3">
       <h1 className="font-medium text-xl">
         Order History <span className="text-lg">({orderdata.length})</span>
       </h1>

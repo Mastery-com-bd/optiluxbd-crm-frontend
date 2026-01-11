@@ -224,10 +224,9 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
               <TableCell className=" px-6">
                 <div
                   className={`${getTierTextColor(
-                    item?.tier,
-                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}>
-                  <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
+                    item?.tier
+                  )}  px-2 py-1 effect rounded-lg w-full text-center `}
+                >
                   {item?.tier}
                 </div>
               </TableCell>
@@ -235,10 +234,9 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
               <TableCell className=" px-6">
                 <div
                   className={`${getStatusColor(
-                    item?.status,
-                  )} bg-[rgba(230,253,242,0.10)] px-2 py-1 rounded-lg w-full text-center relative backdrop-blur-2xl`}>
-                  <div className="absolute top-0 left-0 inset-1.5 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 inset-1.5 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
+                    item?.status
+                  )} effect px-2 py-1 rounded-lg w-full text-center `}
+                >
                   {item?.status}
                 </div>
               </TableCell>

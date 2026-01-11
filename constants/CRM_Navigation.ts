@@ -315,27 +315,27 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "All Agents",
-          path: "/dashboard/agent",
+          path: "/dashboard/admin/agent",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "Attendence",
-          path: "/dashboard/agent/attendance",
+          path: "/dashboard/admin/agent/attendance",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "Team & Hierarchy",
-          path: "/dashboard/agent/team",
+          path: "/dashboard/admin/agent/team",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "Call Tasks",
-          path: "/dashboard/agent/all-task",
+          path: "/dashboard/admin/agent/all-task",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "Leaderboard",
-          path: "/dashboard/agent/leaderboard",
+          path: "/dashboard/admin/agent/leaderboard",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
       ],
