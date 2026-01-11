@@ -9,7 +9,7 @@ import { getPermissions } from "@/utills/getPermissionAndRole";
 export function NavMain({ items }: { items: TCrmNavigation }) {
   const user = useAppSelector(currentUser);
   // const { role } = getPermissions(user as TAuthUSer);
-  const role = ["Owner"]; // --- IGNORE ---
+  const role = ["Agent"]; // --- IGNORE ---
 
   return (
     <SidebarGroup className="space-y-2">

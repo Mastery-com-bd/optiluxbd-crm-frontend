@@ -21,13 +21,12 @@ import {
   logOut,
   TAuthUSer,
 } from "@/redux/features/auth/authSlice";
-import { Collapsible } from "@/components/ui/collapsible";
 import { useRouter } from "next/navigation";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { baseApi } from "@/redux/api/baseApi";
-import SidebarButtonSvg from "@/components/svgIcon/SidebarButtonSvg";
 import { getPermissions } from "@/utills/getPermissionAndRole";
+import SidebarButtonEffect from "./buttons/ItemButton";
 // This is sample data.
 const data = {
   teams: [
@@ -47,9 +46,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
-  const [isHovered, setIsHovered] = React.useState(false);
   const user = useAppSelector(currentUser);
-  const { role } = getPermissions(user as TAuthUSer);
+  // const { role } = getPermissions(user as TAuthUSer);
+  const role = ["Agent"];
   const percent = 50;
 
   const handleLogOut = async () => {
@@ -77,7 +76,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <div className="flex flex-col justify-between h-full gap-10">
+      <div className="flex flex-col justify-between h-full ">
         <div>
           <SidebarHeader>
             <TeamSwitcher teams={data?.teams} />
@@ -92,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarFooter>
           {/* <NavUser user={user as TAuthUSer} /> */}
           {role.includes("Agent") && (
-            <div className="w-full bg-[rgba(255,255,255,0.10)] rounded-3xl p-3 space-y-3">
+            <div className="w-full bg-[rgba(255,255,255,0.10)] rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
               <div className="flex items-center gap-2">
                 <div className="rounded-full border border-[rgba(255,107,0,0.5)] bg-[linear-gradient(135deg,rgba(255,107,0,0.30)_0%,rgba(255,107,0,0.10)_100%)] text-[#FF6B00] p-2">
                   <PhoneCall size={22} />
@@ -132,46 +131,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           )}
           {/* allert card for agent */}
 
-          <Collapsible asChild className="group/collapsible ">
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                tooltip={"Logout"}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onClick={handleLogOut}
-                className="  cursor-pointer bg-transparent border-none rounded-lg py-1 flex justify-start items-center overflow-hidden w-full px-0"
-              >
-                <div className="relative cursor-pointer bg-transparent border-none rounded-lg py-1 flex justify-start items-center overflow-hidden w-full ">
-                  {isHovered && <SidebarButtonSvg />}
-
-                  {/* Top-left border */}
-                  {isHovered && (
-                    <div className="absolute top-0 left-px inset-1.5 border-l border-t border-white/20 rounded-tl-lg pointer-events-none" />
-                  )}
-
-                  {/* Bottom-right border */}
-                  {isHovered && (
-                    <div className="absolute bottom-0 right-px inset-1.5 border-r border-b border-white/20 rounded-br-lg pointer-events-none" />
-                  )}
-
-                  {/* Bottom gradient line */}
-                  {isHovered && (
-                    <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-                      <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-                    </div>
-                  )}
-
-                  {/* Link text */}
-                  <p className="flex items-center gap-2 px-4 group-data-[collapsible=icon]:px-3 text-red-600">
-                    <span>
-                      <LogOut size={16} />
-                    </span>{" "}
-                    <span className="text-sm">Logout</span>
-                  </p>
-                </div>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </Collapsible>
+          <SidebarMenuItem key={"logout"} className="w-full">
+            <SidebarMenuButton tooltip={"Logout"} asChild className=" px-0">
+              <button className="w-full text-left cursor-pointer">
+                <SidebarButtonEffect>
+                  <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
+                    <p className="flex items-center gap-2">
+                      <span>
+                        <LogOut size={16} />
+                      </span>
+                      <span className="text-red-600">Logout</span>
+                    </p>
+                  </div>
+                </SidebarButtonEffect>
+              </button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarFooter>
       </div>
       {/* <SidebarRail /> */}

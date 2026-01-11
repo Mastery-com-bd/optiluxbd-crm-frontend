@@ -63,9 +63,13 @@ const CoreManagement = ({
                     >
                       <button className="w-full text-left cursor-pointer">
                         <SidebarButtonEffect active={isActive}>
-                          <div className="flex items-center gap-2 px-4 py-1.5">
-                            {item.icon && <item.icon size={16} />}
-                            <span>{item.title}</span>
+                          <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
+                            <p className="flex items-center gap-2">
+                              <span>
+                                {item.icon && <item.icon size={16} />}
+                              </span>
+                              <span>{item.title}</span>
+                            </p>
                           </div>
                         </SidebarButtonEffect>
                       </button>
