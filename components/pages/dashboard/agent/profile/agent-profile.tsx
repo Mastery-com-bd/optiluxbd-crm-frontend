@@ -1,6 +1,6 @@
 "use client";
 
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import { div } from "@/components/glassEffect/liquid-glass";
 import {
   Calendar,
   Mail,
@@ -11,108 +11,87 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { PerformanceChart } from "./performance-chart";
+import { MonthlyAttendance } from "./monthly-attendence";
 
 export function AgentProfile() {
   return (
     <div className="w-full">
       {/* Header */}
 
-      <div className="flex gap-6">
+      <div className="flex gap-6 my-6 ">
         {/* Left Column - Profile Card */}
-        <LiquidGlass borderRadius="16px" className="w-[320px] shrink-0">
-          <div
-            className="rounded-2xl p-6"
-            style={{
-              background:
-                "linear-gradient(145deg, rgba(60, 40, 80, 0.6) 0%, rgba(30, 20, 50, 0.8) 100%)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-            }}
-          >
-            {/* Diamond Badge */}
-            <LiquidGlass
-              borderRadius="8px"
-              className="inline-block px-3 py-1 text-white text-sm mb-4"
-            >
-              Diamond
-            </LiquidGlass>
+        <div
+          className="rounded-4xl p-6 effect w-[360px] relative" 
+        >
+          {/* Diamond Badge */}
+          <span className="effect bg-transparent! rounded-[6px] text-center p-1 absolute">
+            Diamond
+          </span>
 
-            {/* Profile Image */}
-            <div className="flex justify-center mb-4">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-600">
-                <Image
-                  width={128}
-                  height={128}
-                  src="/agent-profile.png"
-                  alt="Karim Hossain"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Name and Role */}
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-white mb-1">
-                Karim Hossain
-              </h2>
-              <p className="text-gray-300 text-sm mb-1">Senior Sales Agent</p>
-              <p className="text-gray-400 text-sm">Team Alpha</p>
-            </div>
-
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <LiquidGlass
-                borderRadius="12px"
-                className="flex items-center gap-3 p-3 rounded-lg"
-                style={{ background: "rgba(255, 255, 255, 0.05)" }}
-              >
-                <Phone className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-300 text-sm">+880 1712-345001</span>
-              </LiquidGlass>
-              <LiquidGlass
-                borderRadius="12px"
-                className="flex items-center gap-3 p-3 rounded-lg"
-                style={{ background: "rgba(255, 255, 255, 0.05)" }}
-              >
-                <Mail className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-300 text-sm">
-                  karim.hossain@optiluxbd.com
-                </span>
-              </LiquidGlass>
-              <LiquidGlass
-                borderRadius="12px"
-                className="flex items-center gap-3 p-3 rounded-lg"
-                style={{ background: "rgba(255, 255, 255, 0.05)" }}
-              >
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-300 text-sm">Banani, Dhaka</span>
-              </LiquidGlass>
-              <LiquidGlass
-                borderRadius="12px"
-                className="flex items-center gap-3 p-3 rounded-lg"
-                style={{ background: "rgba(255, 255, 255, 0.05)" }}
-              >
-                <Calendar className="w-4 h-4 text-gray-400" />
-                <div>
-                  <span className="text-gray-400 text-xs block">Joined</span>
-                  <span className="text-gray-300 text-sm">1/15/2023</span>
-                </div>
-              </LiquidGlass>
+          {/* Profile Image */}
+          <div className="flex justify-center mb-2">
+            <div className="w-[95px] h-[95px] rounded-full overflow-hidden border-4 border-gray-600">
+              <Image
+                width={95}
+                height={95}
+                src="/agent-profile.png"
+                alt="Karim Hossain"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
-        </LiquidGlass>
+
+          {/* Name and Role */}
+          <div className="text-center mb-6">
+            <h2 className="text-[32px] font-bold text-white mb-1">
+              Karim Hossain
+            </h2>
+            <p className="text-gray-300 text-sm mb-1">Senior Sales Agent</p>
+            <p className="text-gray-400 text-sm">Team Alpha</p>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-3">
+            <div
+              className="effect flex items-center gap-3 p-3 rounded-lg"
+            >
+              <Phone className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300 text-sm">+880 1712-345001</span>
+            </div>
+            <div
+              className="effect flex items-center gap-3 p-3 rounded-lg"
+            >
+              <Mail className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300 text-sm">
+                karim.hossain@optiluxbd.com
+              </span>
+            </div>
+            <div
+              
+              className="effect flex items-center gap-3 p-3 rounded-lg"
+            >
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300 text-sm">Banani, Dhaka</span>
+            </div>
+            <div
+              className="effect flex items-center gap-3 p-3 rounded-lg"
+            >
+              <Calendar className="w-4 h-4 text-gray-400" />
+              <div>
+                <span className="text-gray-400 text-xs block">Joined</span>
+                <span className="text-gray-300 text-sm">1/15/2023</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Right Column */}
         <div className="flex-1 space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-4">
             {/* Conversion Rate */}
-            <LiquidGlass
-              borderRadius="12px"
-              className="rounded-xl p-5"
-              style={{
-                background:
-                  "linear-gradient(145deg, rgba(60, 40, 80, 0.4) 0%, rgba(30, 20, 50, 0.6) 100%)",
-              }}
+            <div
+              className="rounded-4xl p-5 effect"
             >
               <div className="relative flex items-start gap-3">
                 <svg
@@ -151,16 +130,11 @@ export function AgentProfile() {
                   </div>
                 </div>
               </div>
-            </LiquidGlass>
+            </div>
 
             {/* Calls This Month */}
-            <LiquidGlass
-              borderRadius="12px"
-              className="rounded-xl p-5"
-              style={{
-                background:
-                  "linear-gradient(145deg, rgba(60, 40, 80, 0.4) 0%, rgba(30, 20, 50, 0.6) 100%)",
-              }}
+            <div
+              className="rounded-4xl p-5 effect"
             >
               <div className="relative flex items-start gap-3">
                 <svg
@@ -191,16 +165,11 @@ export function AgentProfile() {
                   </div>
                 </div>
               </div>
-            </LiquidGlass>
+            </div>
 
             {/* Todays Target */}
-            <LiquidGlass
-              borderRadius="12px"
-              className="rounded-xl p-5"
-              style={{
-                background:
-                  "linear-gradient(145deg, rgba(60, 40, 80, 0.4) 0%, rgba(30, 20, 50, 0.6) 100%)",
-              }}
+            <div
+              className="rounded-4xl p-5 effect"
             >
               <div className="relative flex items-start gap-3">
                 <svg
@@ -209,7 +178,7 @@ export function AgentProfile() {
                   viewBox="0 0 84 84"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                   className="absolute -bottom-3 right-5"
+                  className="absolute -bottom-3 right-5"
                 >
                   <path
                     d="M42 77C61.33 77 77 61.33 77 42C77 22.67 61.33 7 42 7C22.67 7 7 22.67 7 42C7 61.33 22.67 77 42 77Z"
@@ -247,13 +216,14 @@ export function AgentProfile() {
                   </div>
                 </div>
               </div>
-            </LiquidGlass>
+            </div>
           </div>
 
           {/* Performance Chart */}
           <PerformanceChart />
         </div>
       </div>
+      <MonthlyAttendance />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Clock, Gem, Phone, Target } from "lucide-react";
+import { Clock, Gem } from "lucide-react";
 import Image from "next/image";
 import RankingsTable from "./RankingsTable";
 
