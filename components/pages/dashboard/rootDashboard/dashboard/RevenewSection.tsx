@@ -51,21 +51,15 @@ const RevenewSection = () => {
               {/* status drodpown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <LiquidGlass
-                    glowIntensity="xs"
-                    shadowIntensity="xs"
-                    borderRadius="12px"
+                  <Button
+                    variant="default"
+                    className="flex items-center text-[14px] effect font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
                   >
-                    <Button
-                      variant="default"
-                      className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                    >
-                      <p className="flex items-center gap-2">
-                        <span className="text-[14px]">{year}</span>
-                        <ChevronDown size={18} />
-                      </p>
-                    </Button>
-                  </LiquidGlass>
+                    <p className="flex items-center gap-2">
+                      <span className="text-[14px]">{year}</span>
+                      <ChevronDown size={18} />
+                    </p>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"

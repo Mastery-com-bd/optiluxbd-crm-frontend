@@ -15,6 +15,8 @@ import { IoLogoGoogle } from "react-icons/io5";
 import LargeYellowSvg from "@/components/svgIcon/LargeYellowSvg";
 import { useState } from "react";
 import SubmissionSuccess from "./SubmissionSuccess";
+import { signIn } from "next-auth/react";
+
 export const passwordRules = [
   { label: "Min 8 characters", regex: /^.{8,}$/ },
   { label: "At least 1 uppercase letter", regex: /[A-Z]/ },
@@ -25,10 +27,11 @@ export const passwordRules = [
 
 const registrationSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  phone: z
-    .string()
-    .min(11, "please enter a valid phone number")
-    .regex(/^01\d{9}$/, "please enter a valid phone number"),
+  // phone: z
+  //   .string()
+  //   .min(11, "please enter a valid phone number")
+  //   .regex(/^01\d{9}$/, "please enter a valid phone number"),
+  name: z.string().min(1, "Please enter your name"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -60,7 +63,7 @@ const RegisterComponent = () => {
   });
 
   const onSubmit = async (data: TRegisterForm) => {
-    data.phone = `+88${data.phone}`;
+    // data.phone = `+88${data.phone}`;
     try {
       const res = await registration(data).unwrap();
       if (res?.success) {
@@ -76,6 +79,12 @@ const RegisterComponent = () => {
         "Something went wrong!";
       toast.error(errorInfo, { duration: 3000 });
     }
+  };
+
+  const handleSocialLogin = () => {
+    signIn("google", {
+      callbackUrl: "http://localhost:3000",
+    });
   };
 
   return (
@@ -109,7 +118,10 @@ const RegisterComponent = () => {
                 <p className="text-[#9B98AE]">Complete the form to start</p>
               </div>
 
-              <button className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2">
+              <button
+                onClick={handleSocialLogin}
+                className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer hover:bg-white/5 duration-300"
+              >
                 <IoLogoGoogle /> Sign Up with Google
               </button>
 
@@ -121,7 +133,17 @@ const RegisterComponent = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
-              {/* Email */}
+              {/* name */}
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter your Name"
+                className={`${
+                  errors.email && "border-red-500 dark:border-red-400"
+                } bg-transparent text-[#514D6A] placeholder:text-[#514D6A] placeholder:text-sm outline-none border border-[#2C293D] py-2 px-5 rounded-full w-full`}
+                {...register("name", { required: "Name is required" })}
+              />
+              {/* email */}
               <input
                 id="email"
                 type="email"
@@ -131,7 +153,7 @@ const RegisterComponent = () => {
                 } bg-transparent text-[#514D6A] placeholder:text-[#514D6A] placeholder:text-sm outline-none border border-[#2C293D] py-2 px-5 rounded-full w-full`}
                 {...register("email", { required: "Email is required" })}
               />
-              <input
+              {/* <input
                 id="phone"
                 type="phone"
                 placeholder="Phone Number"
@@ -145,7 +167,7 @@ const RegisterComponent = () => {
                     message: "please enter a valid phone number",
                   },
                 })}
-              />
+              /> */}
               {/* Password */}
 
               <div className="relative space-y-1">
@@ -168,7 +190,8 @@ const RegisterComponent = () => {
                 <button
                   type="button"
                   onClick={toggle}
-                  className="absolute right-4 top-3 text-[#514D6A] ">
+                  className="absolute right-4 top-3 text-[#514D6A] "
+                >
                   {visible ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
 
@@ -179,7 +202,8 @@ const RegisterComponent = () => {
                       .map((rule) => (
                         <div
                           key={rule.label}
-                          className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out">
+                          className="flex items-center gap-2 text-sm transition-all duration-200 ease-in-out"
+                        >
                           <X size={14} className="text-red-700" />
                           <span className="text-[#514D6A]">{rule.label}</span>
                         </div>
@@ -193,7 +217,8 @@ const RegisterComponent = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full text-white">
+                className="relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden w-full text-white"
+              >
                 {/* top and bottom line */}
                 <div className="absolute top-0 left-0 inset-3 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
                 <div className="absolute bottom-0 right-0 inset-3 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
@@ -217,7 +242,8 @@ const RegisterComponent = () => {
               Already have an account?
               <Link
                 className="bg-linear-to-b from-[#C3C0D8] to-[#4E0C73] bg-clip-text text-transparent underline underline-offset-2 decoration-[#4E0C73]"
-                href="/login">
+                href="/login"
+              >
                 Sign In
               </Link>
             </p>
