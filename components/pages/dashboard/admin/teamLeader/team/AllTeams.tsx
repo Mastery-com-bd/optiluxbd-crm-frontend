@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "../../../shared/pageHeader";
 import CreateTeam from "./CreateTeam";
 import TeamCard from "./TeamCard";
 
@@ -122,17 +123,14 @@ const AllTeams = () => {
       {/* headers */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">All Teams</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Operational overview and quick actions.
-          </p>
+          <PageHeader title="All Teams" description="Operational overview and quick actions." />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <CreateTeam />
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5 justify-items-center px-6">
+      <div className="grid grid-cols-3 gap-5 justify-items-center ">
         {teamData.map((data, i) => {
           return <TeamCard key={i} data={data} />;
         })}

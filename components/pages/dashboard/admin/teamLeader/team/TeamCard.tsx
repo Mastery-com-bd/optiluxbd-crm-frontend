@@ -6,11 +6,7 @@ import Link from "next/link";
 
 const TeamCard = ({ data }: { data: TTeamdata }) => {
   return (
-    <Card className="bg-white/10 rounded-3xl gap-4 py-5 relative w-full">
-      {/* top and bottom border */}
-      <div className="absolute top-0 left-px inset-5 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-px inset-5 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-3xl pointer-events-none" />
-
+    <Card className="effect flex! flex-col justify-between overflow-hidden rounded-3xl gap-4 py-5 relative w-full">
       {/* team name leader and team moto */}
       <div className="space-y-2 px-5">
         <h1 className="text-lg font-semibold">{data?.teamName}</h1>
@@ -24,15 +20,11 @@ const TeamCard = ({ data }: { data: TTeamdata }) => {
       </div>
 
       {/* team member and lead info */}
-      <div className="border-y border-white/10 py-5 px-8 space-y-4">
+      <div className=" py-5 space-y-4">
         {/* member and leads card */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="grid grid-cols-2 border-t pt-4 gap-4">
           {/* member card */}
-          <div className="p-4 rounded-2xl bg-white/10 relative">
-            {/* top and bottom border */}
-            <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-2xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-2xl pointer-events-none" />
-
+          <div className="p-4 rounded-2xl neumorphism relative">
             {/* main content */}
             <div className="space-y-2">
               <h1 className="flex items-center gap-2">
@@ -46,10 +38,7 @@ const TeamCard = ({ data }: { data: TTeamdata }) => {
           </div>
 
           {/* leads card */}
-          <div className=" p-4 rounded-2xl bg-white/10 relative">
-            {/* top and bottom border */}
-            <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-2xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-2xl pointer-events-none" />
+          <div className=" p-4 rounded-2xl neumorphism relative">
             <div className="space-y-2">
               <h1 className="flex items-center gap-2">
                 <span className="text-[#FDC700]">
@@ -63,10 +52,7 @@ const TeamCard = ({ data }: { data: TTeamdata }) => {
         </div>
 
         {/* conversion rate */}
-        <div className="relative bg-white/10 rounded-3xl py-4 px-6">
-          <div className="absolute top-0 left-px inset-5 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-3xl pointer-events-none" />
-
+        <div className="relative neumorphism rounded-3xl py-4 px-6">
           {/*main content */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -105,9 +91,9 @@ const TeamCard = ({ data }: { data: TTeamdata }) => {
       </div>
 
       {/* team view button */}
-      <div className="px-5">
+      <div className="border-t pt-4">
         <Link href={`/dashboard/team/${2}`}>
-          <Button className="bg-white/10 rounded-4xl w-full text-sm font-medium cursor-pointer py-2">
+          <Button className="effect border-none! rounded-4xl w-full text-sm font-medium cursor-pointer py-6!">
             <span className="flex items-center gap-2">
               <Eye /> View Team Details
             </span>

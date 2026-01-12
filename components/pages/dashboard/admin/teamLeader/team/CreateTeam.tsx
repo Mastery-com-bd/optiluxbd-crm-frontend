@@ -6,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Label } from "@/components/ui/label";
 import { ImageIcon, Plus, X } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import { Input } from "@/components/ui/input";
 
 const teamLeaders = [
   { label: "Ruhul Khan", value: "ruhul" },
@@ -93,13 +93,7 @@ const CreateTeam = () => {
           <DialogTitle className="text-xl font-semibold text-white">
             Create New Team
           </DialogTitle>
-          <LiquidGlass
-            glowIntensity="xs"
-            shadowIntensity="xs"
-            borderRadius="16px"
-          >
-            <ButtonComponent buttonName="Create Team" varient="yellow" />
-          </LiquidGlass>
+          <ButtonComponent buttonName="Create Team" varient="yellow" />
         </DialogHeader>
         <>
           {/* upper section */}
@@ -108,20 +102,20 @@ const CreateTeam = () => {
             <div className="flex flex-col gap-2 w-full h-full ">
               {/* profile Image */}
               <div className="flex flex-col gap-1 ">
-                <label className="text-white text-sm">Profile Photo</label>
+                <Label className="text-white text-sm">Profile Photo</Label>
                 <div
                   className={` flex flex-col items-center justify-center border border-dashed border-white rounded-2xl w-full h-[24vh] py-6 bg-white/20 text-center cursor-pointer hover:bg-white/25 transition-colors`}
                   onClick={() => {
-                    const input = document.createElement("input");
-                    input.type = "file";
-                    input.accept = "image/png, image/jpeg";
-                    input.onchange = (e) => {
+                    const Input = document.createElement("input");
+                    Input.type = "file";
+                    Input.accept = "image/png, image/jpeg";
+                    Input.onchange = (e) => {
                       const file = (e.target as HTMLInputElement).files?.[0];
                       if (file) {
                         setImage(file);
                       }
                     };
-                    input.click();
+                    Input.click();
                   }}
                 >
                   {image ? (
@@ -167,7 +161,7 @@ const CreateTeam = () => {
                 <Label className="text-sm font-normal text-white">
                   Team Name
                 </Label>
-                <input
+                <Input
                   placeholder="Enter team name"
                   className="w-full py-2 rounded-lg text-sm bg-white/10 placeholder:text-sm px-4"
                 />
@@ -203,7 +197,7 @@ const CreateTeam = () => {
                 <Label className="text-sm font-normal text-white">
                   Target Calls/Day
                 </Label>
-                <input
+                <Input
                   type="number"
                   placeholder="enter target"
                   className="w-full py-2 rounded-lg text-sm bg-white/10 placeholder:text-sm px-4"
@@ -215,7 +209,7 @@ const CreateTeam = () => {
                 <Label className="text-sm font-normal text-white">
                   Target Conversion %
                 </Label>
-                <input
+                <Input
                   type="number"
                   placeholder="%"
                   className="w-full py-2 rounded-lg text-sm bg-white/10 placeholder:text-sm  px-4"
@@ -256,16 +250,12 @@ const CreateTeam = () => {
           </div>
 
           {/* Lower section agent list */}
-          <div className="bg-white/10 relative rounded-xl px-4 pt-2 w-1/2 h-[35vh] ">
-            {/* top and bottom border */}
-            <div className="absolute top-0 left-px inset-4 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-4 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-xl pointer-events-none" />
-
+          <div className="effect relative rounded-xl px-4 pt-2 w-1/2 h-[35vh] ">
             {/* main content */}
-            <div className="space-y-1 h-full overflow-y-auto no-scrollbar">
-              <input
+            <div className="space-y-1 h-full overflow-y-auto no-scrollbar p-1">
+              <Input
                 placeholder="Search agent by ID or Name"
-                className="w-full py-2 rounded-xl text-sm bg-white/10 placeholder:text-sm px-4 outline-none border border-white/5"
+                className=""
               />
               <p className="text-sm text-white/70 flex items-center justify-between">
                 <span>All Agents</span> <span>0 selected</span>

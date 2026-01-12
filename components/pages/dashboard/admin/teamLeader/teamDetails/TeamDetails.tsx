@@ -9,6 +9,7 @@ import Members from "./members/Members";
 import Leads from "./leads/Leads";
 import TeamOverview from "./overview/TeamOverview";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import PageHeader from "../../../shared/pageHeader";
 
 const buttons = ["OverView", "Member", "Leads"];
 
@@ -42,10 +43,7 @@ const TeamDetails = ({ id }: { id: string }) => {
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Team Profile</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            See the details of a specific team
-          </p>
+          <PageHeader title="Team Profile" description="See the details of a specific team" />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <ButtonComponent
@@ -62,26 +60,19 @@ const TeamDetails = ({ id }: { id: string }) => {
       </div>
 
       {/* main content */}
-      <div className="flex justify-between items-start gap-6">
+      <div className="grid grid-cols-3  gap-4">
         {/* left side */}
-
-        <Card className="bg-white/10 w-[30vw] px-6 py-6 rounded-4xl relative gap-4">
-          {/* border section */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-4xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-4xl pointer-events-none" />
-
+        <Card className="effect h-full   px-6 py-6 rounded-4xl relative gap-4">
           {/* upper section */}
-          <div className="flex gap-4">
-            <div className="h-7 w-20 relative bg-transparent rounded-[6px] flex items-center justify-center p-1">
-              <div className="absolute top-0 left-px inset-2 border-l-[1.5px] border-t-[1.5px] border-white/30 rounded-tl-[6px] pointer-events-none" />
-              <div className="absolute bottom-0 right-px inset-2 border-r-[1.5px] border-b-[1.5px] border-white/30 rounded-br-[6px] pointer-events-none" />
-              <span className="text-sm"> Diamond</span>
+          <div className="gap-4">
+            <span className="text-sm effect px-2 py-1 rounded-[12px] overflow-hidden">Diamond</span>
+            <div className="flex justify-center">
+              <ImageUploader
+                handleChange={handleChange}
+                id={id}
+                clasName="w-30 h-30 rounded-full shadow-md"
+              />
             </div>
-            <ImageUploader
-              handleChange={handleChange}
-              id={id}
-              clasName="w-30 h-30 rounded-full shadow-md"
-            />
           </div>
 
           {/* name section */}
@@ -92,10 +83,7 @@ const TeamDetails = ({ id }: { id: string }) => {
           </div>
 
           {/* info section */}
-          <div className=" rounded-2xl bg-white/10 relative p-4 mt-20">
-            {/* top and bottom border effect */}
-            <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+          <div className=" rounded-2xl effect neumorphism p-4 mt-20">
             <div>
               <h1 className="text-lg font-medium">Quick Stats</h1>
               <div className="grid grid-cols-[3fr_1fr] gap-2">
@@ -120,54 +108,51 @@ const TeamDetails = ({ id }: { id: string }) => {
         </Card>
 
         {/* right side */}
-        <div className="w-full space-y-4">
-          <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
-            {/* top and bottom border */}
-            <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
-            <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
+        <div className="col-span-2">
+          <div className=" space-y-4 ">
+            <Card className="effect px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
+              {/* upper section */}
+              {buttons.map((item, i) => {
+                const active = item === current;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(item)}
+                    className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${active && "bg-white/5 rounded-xl"
+                      }`}
+                  >
+                    {/* Button text */}
+                    <span className="relative z-10">{item}</span>
 
-            {/* upper section */}
-            {buttons.map((item, i) => {
-              const active = item === current;
-              return (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(item)}
-                  className={`relative w-full py-2 flex items-center justify-center cursor-pointer ${
-                    active && "bg-white/5 rounded-xl"
-                  }`}
-                >
-                  {/* Button text */}
-                  <span className="relative z-10">{item}</span>
+                    {active && (
+                      <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none" />
+                    )}
+                    {active && (
+                      <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none" />
+                    )}
 
-                  {active && (
-                    <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/30 rounded-tl-xl pointer-events-none" />
-                  )}
-                  {active && (
-                    <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/30 rounded-br-xl pointer-events-none" />
-                  )}
+                    {active && (
+                      <div className="absolute z-20 bottom-0 left-0 w-full">
+                        <span
+                          className="block w-full h-[1.5px]"
+                          style={{
+                            background:
+                              "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
+                          }}
+                        />
+                      </div>
+                    )}
 
-                  {active && (
-                    <div className="absolute z-20 bottom-0 left-0 w-full">
-                      <span
-                        className="block w-full h-[1.5px]"
-                        style={{
-                          background:
-                            "linear-gradient(to right, rgba(255,177,63,0) 0%, #FFB13F 50%, rgba(255,177,63,0) 100%)",
-                        }}
-                      />
-                    </div>
-                  )}
+                    {active && <ButtonSvgGlow />}
+                  </button>
+                );
+              })}
+            </Card>
 
-                  {active && <ButtonSvgGlow />}
-                </button>
-              );
-            })}
-          </Card>
-
-          {current === "OverView" && <TeamOverview />}
-          {current === "Member" && <Members />}
-          {current === "Leads" && <Leads />}
+            {current === "OverView" && <TeamOverview />}
+            {current === "Member" && <Members />}
+            {current === "Leads" && <Leads />}
+          </div>
         </div>
       </div>
     </section>

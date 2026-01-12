@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import AssignLeadsTable from "./AssignLeadsTable";
+import PageHeader from "../../../shared/pageHeader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Assignleades = () => {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
@@ -25,8 +27,8 @@ const Assignleades = () => {
     page: 1,
   });
   const [inputValue, setInputValue] = useState("");
-  const [tag, setTag] = useState("All");
-  const [priority, setPriority] = useState("All");
+  const [tag, setTag] = useState("all");
+  const [priority, setPriority] = useState("all");
   const [show, setShow] = useState("10");
 
   const handleSearch = (query: string) => {
@@ -39,10 +41,7 @@ const Assignleades = () => {
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Leads Assignment</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Manage, filter, and assign your leads.
-          </p>
+          <PageHeader title="Leads Assignment" description="Manage, filter, and assign your leads." />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <LiquidGlass
@@ -64,11 +63,9 @@ const Assignleades = () => {
       <div className="flex items-center justify-between">
         {/* search bar */}
         <div className="relative">
-          <Search
-            size={16}
-            className="absolute z-20 left-4 top-1/2 -translate-y-1/2  "
-          />
+
           <Input
+            icon={<Search />}
             className="px-10 py-1.5 w-64 text-sm bg-transparent"
             value={inputValue}
             onChange={(e) => {
@@ -80,96 +77,49 @@ const Assignleades = () => {
         </div>
 
         {/* dropdown */}
-        <div className="flex items-center gap-8">
-          {/* tag drodpown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {tag === "All" ? "Tag" : tag}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["All", "Hot", "Warm", "Cold"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setTag(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      tag: item === "All" ? undefined : item,
-                      page: 1,
-                    }));
-                  }}
-                  className={item === tag ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            value={tag}
+            onValueChange={(value) => {
+              setTag(value);
+              setFilters((prev) => ({
+                ...prev,
+                category: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}>
+            <SelectTrigger className="w-40" aria-label="Tag">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tag</SelectItem>
+              {["Hot","Warm", "Cold" ]?.map((category:string) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* status dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LiquidGlass
-                glowIntensity="xs"
-                shadowIntensity="xs"
-                borderRadius="12px"
-              >
-                <Button
-                  variant="default"
-                  className="flex items-center text-[14px] font-normal border-none px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
-                >
-                  <p className="flex items-center gap-2">
-                    <span className="text-[14px]">
-                      {" "}
-                      {priority === "All" ? "Priority" : priority}
-                    </span>
-                    <ChevronDown size={18} />
-                  </p>
-                </Button>
-              </LiquidGlass>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-white/5 backdrop-blur-2xl"
-            >
-              {["All", "High", "Medium", "Low"].map((item) => (
-                <DropdownMenuItem
-                  key={item}
-                  onClick={() => {
-                    setPriority(item);
-                    setFilters((prev) => ({
-                      ...prev,
-                      priority: item === "All" ? undefined : item,
-                      page: 1,
-                    }));
-                  }}
-                  className={item === priority ? "font-medium" : ""}
-                >
-                  {item}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SelectContent>
+          </Select>
+          <Select
+            value={priority}
+            onValueChange={(value) => {
+              setPriority(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}>
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Priority</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <AssignLeadsTable
