@@ -187,8 +187,7 @@ const AllProducts = () => {
               <Button
                 variant="default"
                 className="rounded-full  cursor-pointer text-2xl effect size-10"
-                onClick={() => setIsGridView((prev) => !prev)}
-              >
+                onClick={() => setIsGridView((prev) => !prev)}>
                 <Grid2X2 className="size-4" />
               </Button>
             </div>
@@ -333,44 +332,6 @@ const AllProducts = () => {
             setShow={setShow}
             setFilters={setFilters}
           />
-
-          <div className="flex items-center gap-6">
-            <p className="text-sm text-[#7E7E7E]">
-              Showing 1 to 10 of 10 entries
-            </p>
-            {/* status drodpown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="effect p-2.5 rounded-xl cursor-pointer">
-                  <p className="flex items-center gap-2 ">
-                    <span className="text-[14px]">Show {show}</span>
-                    <ChevronDown size={18} />
-                  </p>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="bg-white/5 backdrop-blur-2xl"
-              >
-                {["10", "20", "30", "40", "50"].map((item) => (
-                  <DropdownMenuItem
-                    key={item}
-                    onClick={() => {
-                      setShow(item);
-                      setFilters((prev) => ({
-                        ...prev,
-                        limit: Number(item),
-                        page: 1,
-                      }));
-                    }}
-                    className={item === show ? "font-medium" : ""}
-                  >
-                    {item}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </div>
       </div>
 
