@@ -1,6 +1,4 @@
 "use client";
-
-import { div } from "@/components/glassEffect/liquid-glass";
 import {
   Calendar,
   Mail,
