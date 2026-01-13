@@ -19,10 +19,7 @@ const TeamOverview = () => {
       {/* card section */}
       <div className="flex items-center gap-5">
         {/* first card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl overflow-hidden">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
+        <Card className="effect flex flex-row px-4 w-full relative rounded-3xl overflow-hidden">
           <TrendingUp
             size={100}
             className="text-[rgba(5,223,114,0.10)] absolute top-6 right-10"
@@ -43,11 +40,7 @@ const TeamOverview = () => {
         </Card>
 
         {/* second card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-3xl pointer-events-none" />
-
+        <Card className="effect flex flex-row px-4 w-full relative rounded-3xl">
           <Phone
             size={70}
             className="text-[rgba(81,162,255,0.20)] absolute top-6 right-12"
@@ -68,11 +61,7 @@ const TeamOverview = () => {
         </Card>
 
         {/* third card */}
-        <Card className="bg-white/5 flex flex-row px-4 w-full relative rounded-3xl">
-          {/* borders bottom and top */}
-          <div className="absolute top-0 left-px inset-5.5 border-l border-t border-white/20 rounded-tl-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-5.5 border-r border-b border-white/20 rounded-br-3xl pointer-events-none" />
-
+        <Card className="effect flex flex-row px-4 w-full relative rounded-3xl">
           <Target
             size={70}
             className="text-[rgba(194,122,255,0.10)] absolute top-6 right-12"
@@ -94,11 +83,7 @@ const TeamOverview = () => {
       </div>
 
       {/* chart section */}
-      <Card className="bg-white/10 w-full h-full relative rounded-3xl py-0 ">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect w-full h-full relative rounded-3xl pb-4 ">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl pt-4">
           <div className="flex items-center justify-between px-4">

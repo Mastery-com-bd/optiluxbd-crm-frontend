@@ -188,10 +188,13 @@
 }
 
 .neumorphism {
-  box-shadow: 20px 20px 60px #0000004a,
-    -20px -20px 60px #00000024,
-    1.2px 1.1px 1px -.5px #ffffff67,
-    -1.2px -1.1px 1px -.5px #ffffff8d,
-     4px 4px 1px 1px #00000026 inset,
-    -4px -4px 1px 1px #00000013 inset;
+  background: #4b00660f;
+  box-shadow:
+    10px 10px 10px #0000004a,
+    -10px -10px 10px #00000024,
+    1.2px 1.1px 1px -.5px #ffffff74,
+    -1.2px -1.1px 1px -.5px #ffffff74,
+    4px 4px 32px 32px #9292920b inset,
+    -4px -4px 12px 12px #0000000b inset;
+    backdrop-filter: blur(100px);
 }

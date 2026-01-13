@@ -8,15 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  GLDropdownMenu,
-  GLDropdownMenuContent,
-  GLDropdownMenuItem,
-  GLDropdownMenuLabel,
-  GLDropdownMenuSeparator,
-  GLDropdownMenuTrigger,
-} from "@/components/ui/glass-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -25,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDownIcon, MoreVerticalIcon, Search } from "lucide-react";
+import { MoreVerticalIcon, Search } from "lucide-react";
 import { useState } from "react";
 
 const AllTaskTable = () => {
@@ -42,10 +35,10 @@ const AllTaskTable = () => {
     page: 1,
   });
   const [show, setShow] = useState("10");
-
+  const [status, setStatus] = useState("all");
   return (
-    <div className="space-y-5">
-      <div className="flex justify-between items-center mb-8">
+    <div className="">
+      <div className="flex justify-between items-center my-6">
         <div className="relative w-full max-w-[340px]">
           <Input
             placeholder="Search Agent by name or ID"
@@ -53,40 +46,30 @@ const AllTaskTable = () => {
             icon={<Search size={16} />}
           />
         </div>
-        <div className="flex items-center gap-8">
-          <GLDropdownMenu>
-            <GLDropdownMenuTrigger className="focus:outline-none">
-              <div className="flex items-center gap-2 focus:outline-none">
-                <span>Team</span> <ChevronDownIcon size={16} />
-              </div>
-            </GLDropdownMenuTrigger>
-            <GLDropdownMenuContent>
-              <GLDropdownMenuLabel>My Account</GLDropdownMenuLabel>
-              <GLDropdownMenuSeparator />
-              <GLDropdownMenuItem>Profile</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Billing</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Team</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Subscription</GLDropdownMenuItem>
-            </GLDropdownMenuContent>
-          </GLDropdownMenu>
-          <GLDropdownMenu>
-            <GLDropdownMenuTrigger className="focus:outline-none">
-              <div className="flex items-center gap-2 focus:outline-none">
-                <span>Level</span> <ChevronDownIcon size={16} />
-              </div>
-            </GLDropdownMenuTrigger>
-            <GLDropdownMenuContent>
-              <GLDropdownMenuLabel>My Account</GLDropdownMenuLabel>
-              <GLDropdownMenuSeparator />
-              <GLDropdownMenuItem>Profile</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Billing</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Team</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Subscription</GLDropdownMenuItem>
-            </GLDropdownMenuContent>
-          </GLDropdownMenu>
+        <div className="flex flex-wrap items-center gap-3">
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setFilters((prev) => ({
+                ...prev,
+                status: value === "all" ? undefined : value,
+                page: 1,
+              }));
+            }}>
+            <SelectTrigger className="w-36" aria-label="Status Filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="Published">Published</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
-      <Table>
+      <Table className="mb-6">
         <TableHeader>
           <TableRow>
             {[

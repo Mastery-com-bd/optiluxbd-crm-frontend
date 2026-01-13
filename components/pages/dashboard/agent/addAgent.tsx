@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import ImageIcon from "@/public/icons/image-icon";
 import Image from "next/image";
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const AddAgent = () => {
   const [isActive, setIsActive] = React.useState(false);
@@ -23,23 +24,7 @@ const AddAgent = () => {
     <Dialog>
       <DialogTrigger asChild>
         <div className="relative">
-          <LiquidGlass
-            glowIntensity="none"
-            borderRadius="10px"
-            className="w-fit"
-          >
-            <Button
-              style={{
-                backgroundImage: "url('/svg/button-background.svg')",
-                backgroundSize: "cover",
-              }}
-              className="rounded-xl bg-transparent border-none"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Agent
-            </Button>
-            <div className="w-full absolute bottom-0 left-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-[#FFB13F] to-transparent h-[1.5px]" />
-          </LiquidGlass>
+          <ButtonComponent buttonName="Add New Agent" icon={Plus} varient="yellow" />
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-white/7 border-white/10 backdrop-blur-2xl">
@@ -51,11 +36,8 @@ const AddAgent = () => {
                 Add New Agent
               </DialogTitle>
             </DialogHeader>
-            <Button className="h-10 px-6 rounded-xl bg-linear-to-b from-[#3E3A4B] to-[#2D2B3B] border border-[#f6c56b]/40 text-[#f6c56b] shadow-[0_0_15px_-3px_rgba(246,197,107,0.3)] hover:opacity-90">
-              Add Agent
-            </Button>
+            <ButtonComponent buttonName="Add Agent" varient="yellow" />
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column */}
 
