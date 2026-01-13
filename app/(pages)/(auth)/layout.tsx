@@ -20,11 +20,11 @@ const geistMono = Geist_Mono({
 // };
 
 // Root layout component
-export default function AuthLayout({
+const AuthLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <div
       className={`${geistSans.variable} ${geistMono.variable} relative min-h-screen bg-[#030115] overflow-hidden`}
@@ -33,4 +33,6 @@ export default function AuthLayout({
       {children}
     </div>
   );
-}
+};
+
+export default AuthLayout;

@@ -47,8 +47,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const user = useAppSelector(currentUser);
-  const { role } = getPermissions(user as TAuthUSer);
-  // const role = ["Owner"];
+  // const { role } = getPermissions(user as TAuthUSer);
+  const role = ["Owner"];
   const percent = 50;
 
   const handleLogOut = async () => {
