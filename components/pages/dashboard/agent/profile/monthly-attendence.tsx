@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 type AttendanceStatus = "PRESENT" | "LATE" | "ABSENT" | "LEAVE" | null;
 
@@ -142,13 +141,8 @@ export function MonthlyAttendance() {
   ];
 
   return (
-    <LiquidGlass
-      borderRadius="24px"
-      className="rounded-3xl p-8"
-      style={{
-        background:
-          "linear-gradient(145deg, rgba(45, 25, 70, 0.8) 0%, rgba(25, 15, 45, 0.9) 100%)",
-      }}
+    <div
+      className="rounded-3xl p-8 effect"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -225,6 +219,6 @@ export function MonthlyAttendance() {
           })
         )}
       </div>
-    </LiquidGlass>
+    </div>
   );
 }

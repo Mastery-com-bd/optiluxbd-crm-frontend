@@ -159,16 +159,10 @@ export function TeamCards() {
   return (
     <div className="grid grid-cols-3 mx-auto gap-6 justify-items-center">
       {teamsData.map((team) => (
-        <LiquidGlass
+        <div
           key={team.name}
-          className={`rounded-[32px] overflow-hidden p-4 ${
-            expandedTeam === team.name ? "h-auto" : "h-[224px]"
-          }`}
-          style={{
-            width: "340px",
-            background: "linear-gradient(145deg, #1e1628 0%, #15101d 100%)",
-            border: "1px solid rgba(80, 60, 100, 0.3)",
-          }}
+          className={`rounded-4xl overflow-hidden p-4 neumorphism ${expandedTeam === team.name ? "h-auto" : "h-56"
+            }`}
         >
           {/* Header */}
           <div
@@ -179,9 +173,8 @@ export function TeamCards() {
           >
             <div className="flex items-center gap-2">
               <ChevronRight
-                className={`w-4 h-4 text-white transition-transform ${
-                  expandedTeam === team.name ? "rotate-90" : ""
-                }`}
+                className={`w-4 h-4 text-white transition-transform ${expandedTeam === team.name ? "rotate-90" : ""
+                  }`}
               />
               <span className="text-white font-semibold text-lg">
                 {team.name}
@@ -197,14 +190,8 @@ export function TeamCards() {
 
           {/* Stats Card */}
           <div className="px-4 pb-4">
-            <LiquidGlass
-              borderRadius="24px"
-              className="rounded-[24px] p-4 "
-              style={{
-                background:
-                  "linear-gradient(145deg, rgba(45, 35, 60, 0.6) 0%, rgba(30, 22, 40, 0.4) 100%)",
-                border: "1px solid rgba(80, 60, 100, 0.25)",
-              }}
+            <div
+              className="rounded-3xl p-4 effect"
             >
               <div className="h-20 flex justify-between items-center">
                 <div className="text-center">
@@ -226,7 +213,7 @@ export function TeamCards() {
                   <p className="text-[#7a7580] text-xs">Calls Today</p>
                 </div>
               </div>
-            </LiquidGlass>
+            </div>
           </div>
 
           {/* Expanded Member List */}
@@ -268,7 +255,7 @@ export function TeamCards() {
               ))}
             </div>
           )}
-        </LiquidGlass>
+        </div>
       ))}
     </div>
   );

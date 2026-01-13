@@ -4,7 +4,7 @@ import AllAgentTable from "../allAgentTable";
 
 const AllAgent = () => {
     return (
-        <div className="space-y-4">
+        <div className="my-6">
             <AgentOverview/>
             <AllAgentTable/>
         </div>

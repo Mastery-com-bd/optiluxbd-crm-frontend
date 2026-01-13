@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import CreateTeam from "../team/CreateTeam";
 import OverviewChart from "./OverviewChart";
 import TeamOverViewCard from "./TeamOverViewCard";
+import PageHeader from "../../../shared/pageHeader";
 
 const TeamOverview = () => {
   return (
@@ -11,10 +12,7 @@ const TeamOverview = () => {
       {/* headers */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">Teams Overview</h1>
-          <p className="text-[#A1A1A1] leading-5">
-            Operational overview and quick actions.
-          </p>
+          <PageHeader title="Teams Overview" description="Operational overview and quick actions." />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <CreateTeam />
@@ -25,20 +23,14 @@ const TeamOverview = () => {
       <TeamOverViewCard />
 
       {/* overview chart */}
-      <Card className="bg-white/10 w-full h-full relative rounded-3xl px-6 py-2">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect w-full h-full relative rounded-3xl px-6 py-2 mt-8 border-0">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl pt-4 space-y-4">
-          <div>
-            <h1 className="text-xl font-semibold">Team Performance</h1>
-            <p className="text-sm text-text-secondary font-medium">
-              Conversion rates and lead performance across all teams (sorted by
-              highest conversion)
-            </p>
-          </div>
+          <PageHeader
+            title="Team Performance"
+            description="Conversion rates and lead performance across all teams (sorted by
+              highest conversion)"
+          />
           <OverviewChart />
           <div className="flex items-center justify-center gap-5">
             <p className="flex items-center gap-1">

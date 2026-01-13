@@ -45,7 +45,7 @@ const stats = [
 export function AgentOverview() {
 
   return (
-    <div className="space-y-6 w-full ">
+    <div className="mb-8 w-full ">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center justify-between">
@@ -55,11 +55,6 @@ export function AgentOverview() {
           />
         </div>
         <AddAgent />
-        {/*  <Button className="">
-          <Plus className="w-4 h-4 mr-2" />
-          Create New Category
-          <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-orange-500 to-orange-300" />
-        </Button> */}
       </div>
 
       {/* Overview Card */}

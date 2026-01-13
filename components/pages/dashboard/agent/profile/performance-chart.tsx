@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from "recharts";
 import { ChevronDown } from "lucide-react";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 
 const performanceData = [
   { month: "Jan", conversionRate: 50, calls: 70 },
@@ -26,13 +25,8 @@ export function PerformanceChart() {
   const [year, setYear] = useState("2025");
 
   return (
-    <LiquidGlass
-      borderRadius="12px"
-      className="rounded-xl p-6"
-      style={{
-        background:
-          "linear-gradient(145deg, rgba(60, 40, 80, 0.4) 0%, rgba(30, 20, 50, 0.6) 100%)",
-      }}
+    <div
+      className="rounded-4xl p-6 effect"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -119,6 +113,6 @@ export function PerformanceChart() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </LiquidGlass>
+    </div>
   );
 }
