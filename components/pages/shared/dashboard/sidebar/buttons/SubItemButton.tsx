@@ -6,7 +6,7 @@ import { SidebarMenuSubButton } from "@/components/ui/sidebar";
 import SidebarButtonSvg from "../../../../../svgIcon/SidebarButtonSvg";
 import { NavRoute } from "@/constants/CRM_Navigation";
 
-type SubItemButtonProps = {
+export type SubItemButtonProps = {
   isActive: boolean;
   subItem: NavRoute;
 };

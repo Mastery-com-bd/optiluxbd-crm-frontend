@@ -23,10 +23,11 @@ import { Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import SidebarButtonEffect from "../buttons/ItemButton";
 
 type TCoreManagementRoute = {
   sidebarRoutes: NavRoute[];
-  platform: string;
+  platform?: string;
   singleRoute?: NavRoute;
 };
 
@@ -44,27 +45,46 @@ const CoreManagement = ({
 
   return (
     <div>
-      <SidebarGroupLabel>{platform}</SidebarGroupLabel>
+      {platform && <SidebarGroupLabel>{platform}</SidebarGroupLabel>}
+
       <SidebarMenu>
         {visibleRoutes.map((item, i) => {
           const isActive = pathname === item.path;
+
           if (!item.children || item.children.length === 0) {
             return (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.title} className="w-full">
                 {item.path ? (
                   <Link href={item.path}>
                     <SidebarMenuButton
                       tooltip={item.title}
-                      className={isActive ? "bg-gray-100" : ""}
+                      asChild
+                      className=" px-0"
                     >
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
+                      <button className="w-full text-left cursor-pointer">
+                        <SidebarButtonEffect active={isActive}>
+                          <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
+                            <p className="flex items-center gap-2">
+                              <span>
+                                {item.icon && <item.icon size={16} />}
+                              </span>
+                              <span>{item.title}</span>
+                            </p>
+                          </div>
+                        </SidebarButtonEffect>
+                      </button>
                     </SidebarMenuButton>
                   </Link>
                 ) : (
-                  <SidebarMenuButton tooltip={item.title}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
+                  <SidebarMenuButton tooltip={item.title} asChild>
+                    <button className="w-full text-left cursor-pointer">
+                      <SidebarButtonEffect active={isActive}>
+                        <div className="flex items-center gap-2 px-2 py-2">
+                          {item.icon && <item.icon size={16} />}
+                          <span>{item.title}</span>
+                        </div>
+                      </SidebarButtonEffect>
+                    </button>
                   </SidebarMenuButton>
                 )}
               </SidebarMenuItem>

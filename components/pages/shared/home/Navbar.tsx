@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPermissions } from "@/utills/getPermissionAndRole";
 import { motion } from "framer-motion";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -44,16 +45,18 @@ export default function Navbar() {
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
     try {
-      const res = await logout(undefined).unwrap();
-      if (res?.success) {
-        dispatch(logOut());
-        dispatch(baseApi.util.resetApiState());
-        toast.success(res?.message, {
-          id: toastId,
-          duration: 3000,
-        });
-        router.push("/login");
-      }
+      // const res = await logout(undefined).unwrap();
+      // if (res?.success) {
+      //   dispatch(logOut());
+      //   dispatch(baseApi.util.resetApiState());
+      //   toast.success(res?.message, {
+      //     id: toastId,
+      //     duration: 3000,
+      //   });
+      //   router.push("/login");
+      //   signOut({ callbackUrl: "/login" });
+      // }
+      signOut({ callbackUrl: "/login" });
     } catch (error: any) {
       const errorInfo =
         error?.error ||
@@ -223,40 +226,22 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            {/* <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
-              <button
-                onClick={() => {
-                  setTheme("light");
-                  console.log("clicked sun");
-                }}
-                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex cursor-pointer`}
-                aria-label="Switch to light mode"
-              >
-                <SunIcon className="w-6 h-6" />
-              </button>
-              <button
-                onClick={() => {
-                  setTheme("dark");
-                  console.log("clicked moon");
-                }}
-                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden cursor-pointer`}
-                aria-label="Switch to dark mode"
-              >
-                <MoonIcon className="w-6 h-6" />
-              </button>
-            </div> */}
             {user ? (
               <>
                 <Link href={dashboardRoute}>
-                  <ButtonComponent buttonName="Dashboard" icon={LayoutDashboard} varient="yellow"/>
+                  <ButtonComponent
+                    buttonName="Dashboard"
+                    icon={LayoutDashboard}
+                    varient="yellow"
+                  />
                 </Link>
-                {/* <Button
+                <Button
                   onClick={handleLogOut}
                   variant="ghost"
                   className="text-red-400 hover:text-white p-2 cursor-pointer"
                 >
                   <LogOut size={18} />
-                </Button> */}
+                </Button>
               </>
             ) : (
               <div className="flex  gap-3">
