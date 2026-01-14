@@ -3,7 +3,7 @@ import { MonthlyAttendance } from "@/components/pages/dashboard/agent/profile/mo
 
 const Page = () => {
   return (
-    <div>
+    <section>
       <div className="min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -17,7 +17,7 @@ const Page = () => {
           <MonthlyAttendance />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

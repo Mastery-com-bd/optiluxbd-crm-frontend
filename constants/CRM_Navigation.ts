@@ -102,7 +102,7 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Profile",
         icon: CircleUserRound,
-        path: "/dashboard/agent/profile",
+        path: "/dashboard/team-leader/profile",
       },
     ],
   },
