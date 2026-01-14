@@ -5,7 +5,7 @@ import TestimonialsSection from "@/components/pages/home/TestimonialsSection";
 import SecondSection from "@/components/pages/home/SecondSection";
 import FAQ from "@/components/pages/home/FAQ";
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <div>
       <HeroBanner />

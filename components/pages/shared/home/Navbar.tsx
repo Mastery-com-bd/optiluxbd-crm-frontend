@@ -28,13 +28,20 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function Navbar() {
+export type TSocialUser = {
+  name: string;
+  email: string;
+  image: string | null;
+};
+
+export default function Navbar({ user: authUser }: { user: TSocialUser }) {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
+  console.log(user);
   // const { setTheme } = useTheme();
-  const dispatch = useAppDispatch();
-  const [logout] = useLogoutMutation();
+  // const dispatch = useAppDispatch();
+  // const [logout] = useLogoutMutation();
 
   const { role } = getPermissions(user as TAuthUSer);
 
@@ -226,6 +233,15 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
+            {authUser && (
+              <Button
+                onClick={handleLogOut}
+                variant="ghost"
+                className="text-red-400 hover:text-white p-2 cursor-pointer"
+              >
+                <LogOut size={18} />
+              </Button>
+            )}
             {user ? (
               <>
                 <Link href={dashboardRoute}>
