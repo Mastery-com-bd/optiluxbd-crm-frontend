@@ -2,7 +2,7 @@ import { AppSidebar } from "@/components/pages/shared/dashboard/sidebar/app-side
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../../../globals.css";
+import "../../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
 import AuthGuard from "@/provider/AuthGuardProvider";
 
