@@ -46,8 +46,8 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
   const { role } = getPermissions(user as TAuthUSer);
 
   const dashboardRoute = role.includes("ADMIN")
-    ? "/dashboard"
-    : "/dashboard/profile";
+    ? "/dashboard/admin/admin-dashboard"
+    : "/dashboard/agent/profile";
 
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
@@ -233,16 +233,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            {authUser && (
-              <Button
-                onClick={handleLogOut}
-                variant="ghost"
-                className="text-red-400 hover:text-white p-2 cursor-pointer"
-              >
-                <LogOut size={18} />
-              </Button>
-            )}
-            {user ? (
+            {authUser ? (
               <>
                 <Link href={dashboardRoute}>
                   <ButtonComponent
