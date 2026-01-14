@@ -26,7 +26,6 @@ const UpcomingReminders = () => {
     refetchOnMountOrArgChange: false,
   });
   const reminders = (data?.data?.data as IReminder[]) || [];
-  console.log(data);
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "pending":
