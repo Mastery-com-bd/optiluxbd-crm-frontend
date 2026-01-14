@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 // Metadata for Next.js
-// export const metadata: Metadata = {
-//   title: "Optilux CRM",
-//   description: "This is the dashboard of Optiluxbd CRM",
-// };
+export const metadata: Metadata = {
+  title: "Optilux CRM",
+  description: "This is the auth layout of Optiluxbd CRM",
+};
 
 // Root layout component
 const AuthLayout = ({

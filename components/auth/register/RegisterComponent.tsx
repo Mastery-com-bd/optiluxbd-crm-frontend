@@ -86,7 +86,7 @@ const RegisterComponent = ({ user }: { user: TSocialUser }) => {
 
   const handleSocialLogin = () => {
     signIn("google", {
-      callbackUrl: "http://localhost:3000/register",
+      callbackUrl: "http://localhost:3000",
     });
   };
 
