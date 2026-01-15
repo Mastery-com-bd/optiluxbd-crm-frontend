@@ -29,10 +29,11 @@ const CardView = ({ item }: { item: TComboPackage }) => {
         <div className="absolute top-3 flex items-center justify-between gap-3 px-3 w-full">
           {/* activate */}
           <div
-            className={`rounded-[12px] px-2 py-1 ${item?.is_active
-              ? "border border-[#58E081] bg-green-300 text-green-700"
-              : "border border-red-500 bg-red-300 text-red-700 "
-              }`}
+            className={`rounded-[12px] px-2 py-1 ${
+              item?.is_active
+                ? "border border-[#58E081] bg-green-300 text-green-700"
+                : "border border-red-500 bg-red-300 text-red-700 "
+            }`}
           >
             {item?.is_active ? "Activate" : "Deactivate"}
           </div>
@@ -49,7 +50,10 @@ const CardView = ({ item }: { item: TComboPackage }) => {
         <div className="flex items-center justify-between ">
           <h1>{item?.name}</h1>
           <div className="flex items-center gap-2">
-            <Link href={`/dashboard/combo/${item?.id}`} className="effect rounded-[12px]">
+            <Link
+              href={`/dashboard/admin/combo/${item?.id}`}
+              className="effect rounded-[12px]"
+            >
               <button className=" w-7 h-7 p-1.5   cursor-pointer">
                 <Eye size={16} className="text-[#DE9C3A]" />
               </button>

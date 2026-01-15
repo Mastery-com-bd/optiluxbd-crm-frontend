@@ -41,7 +41,7 @@ export function CategoryGrid() {
             className=""
           />
         </div>
-        <Link href={"/dashboard/categories/all"} className="relative">
+        <Link href={"/dashboard/admin/categories"} className="relative">
           <div className="relative">
             <ButtonComponent
               buttonName="See all Category"
@@ -73,9 +73,7 @@ function CategoryCard({
   category: { id: number; name: string; image: string };
 }) {
   return (
-    <div
-      className="effectBlack p-6 cursor-pointer hover:scale-[1.02] transition-transform rounded-xl"
-    >
+    <div className="effectBlack p-6 cursor-pointer hover:scale-[1.02] transition-transform rounded-xl">
       {/* Inner bordered image container */}
       <div className="effectBlack flex justify-center items-center min-h-24 rounded-xl">
         <img

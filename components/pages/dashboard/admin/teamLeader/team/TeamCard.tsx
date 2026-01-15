@@ -92,7 +92,7 @@ const TeamCard = ({ data }: { data: TTeamdata }) => {
 
       {/* team view button */}
       <div className="border-t pt-4">
-        <Link href={`/dashboard/team/${2}`}>
+        <Link href={`/dashboard/admin/team/${2}`}>
           <Button className="effect border-none! rounded-4xl w-full text-sm font-medium cursor-pointer py-6!">
             <span className="flex items-center gap-2">
               <Eye /> View Team Details

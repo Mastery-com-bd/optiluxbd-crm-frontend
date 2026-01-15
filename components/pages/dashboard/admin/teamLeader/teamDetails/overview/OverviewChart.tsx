@@ -52,6 +52,7 @@ const OverviewChart = () => {
             vertical={true}
             horizontal={true}
             stroke="rgba(255,255,255,0.1)"
+            strokeOpacity="0.1"
           />
           <XAxis
             dataKey="month"
