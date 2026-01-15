@@ -142,26 +142,27 @@ const MyLeads = () => {
     setSelectedLeads((prev) =>
       prev.includes(leadId)
         ? prev.filter((id) => id !== leadId)
-        : [...prev, leadId],
+        : [...prev, leadId]
     );
   };
 
   const toggleSelectAll = () => {
     const currentOrderIds = myLeads.map((lead: Lead) => lead.leadId);
     const allSelected = currentOrderIds.every((id: string) =>
-      selectedLeads.includes(id),
+      selectedLeads.includes(id)
     );
     if (allSelected) {
       setSelectedLeads((prev) =>
-        prev.filter((id) => !currentOrderIds.includes(id)),
+        prev.filter((id) => !currentOrderIds.includes(id))
       );
     } else {
       const newSelections = currentOrderIds.filter(
-        (id: string) => !selectedLeads.includes(id),
+        (id: string) => !selectedLeads.includes(id)
       );
       setSelectedLeads((prev) => [...prev, ...newSelections]);
     }
   };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSearch = async (val: any) => {
     setFilters({ ...filters, search: val });
@@ -170,6 +171,7 @@ const MyLeads = () => {
   const allPageLeadsSelected =
     myLeads.length > 0 &&
     myLeads.every((lead: Lead) => selectedLeads.includes(lead.leadId));
+
   return (
     <div className="p-6 ">
       <h3 className="text-xl font-semibold mb-6">My Leads</h3>
@@ -181,7 +183,8 @@ const MyLeads = () => {
             variant="outline"
             className="border border-yellow-600! cursor-pointer py-6 rounded-2xl"
             size="sm"
-            onClick={() => setSelectedLeads([])}>
+            onClick={() => setSelectedLeads([])}
+          >
             <X className="w-4 h-4 mr-1" />
             Selected Leads {selectedLeads.length}
           </Button>
@@ -211,7 +214,8 @@ const MyLeads = () => {
         <div className="flex  gap-4">
           <Select
             onValueChange={(val) => setFilters((f) => ({ ...f, status: val }))}
-            defaultValue="orderDate">
+            defaultValue="orderDate"
+          >
             <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -225,7 +229,8 @@ const MyLeads = () => {
             onValueChange={(val) =>
               setFilters((f) => ({ ...f, priority: val }))
             }
-            defaultValue="orderDate">
+            defaultValue="orderDate"
+          >
             <SelectTrigger>
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
@@ -246,7 +251,8 @@ const MyLeads = () => {
                   first={ind === 0}
                   last={ind === keys.length - 1}
                   key={label}
-                  className="text-left text-xs font-semibold uppercase text-muted-foreground">
+                  className="text-left text-xs font-semibold uppercase text-muted-foreground"
+                >
                   {label === "checkbox" ? (
                     <input
                       className="cursor-pointer"
@@ -265,7 +271,8 @@ const MyLeads = () => {
             {myLeads?.map((lead: Lead) => (
               <TableRow
                 key={lead.id}
-                className="border-muted hover:bg-muted/50 transition-colors">
+                className="border-muted hover:bg-muted/50 transition-colors"
+              >
                 <TableCell className="px-4 py-3">
                   <input
                     className="cursor-pointer"
@@ -295,7 +302,8 @@ const MyLeads = () => {
                                                            "Assigned"
                                                              ? "bg-green-800/30 text-green-400 border border-green-500/30"
                                                              : "bg-red-800/30 text-red-400 border border-red-500/30"
-                                                         }`}>
+                                                         }`}
+                  >
                     {lead.status}
                   </span>
                 </TableCell>
@@ -309,7 +317,8 @@ const MyLeads = () => {
                         : lead.priority === "Medium"
                         ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
                         : "bg-blue-800/30 text-blue-300 border-blue-400/30"
-                    }`}>
+                    }`}
+                  >
                     {lead.priority}
                   </span>
                 </TableCell>
@@ -322,9 +331,9 @@ const MyLeads = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="w-[180px] flex flex-col">
-                      <Link
-                        href={`/dashboard/admin/products/all-products/${lead.id}`}>
+                      className="w-[180px] flex flex-col"
+                    >
+                      <Link href={`/dashboard/team-leader/my-leads/${lead.id}`}>
                         <DropdownMenuItem className="cursor-pointer">
                           <Eye className="w-4 h-4 mr-2" /> View
                         </DropdownMenuItem>

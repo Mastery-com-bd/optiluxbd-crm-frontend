@@ -1,15 +1,9 @@
 "use client";
 import { useGetAllComboPackageQuery } from "@/redux/features/combo/comboApi";
 import { useState } from "react";
-import { ChevronDown, Funnel, Grid2X2, Logs, Plus, Search, Upload } from "lucide-react";
+import { Funnel, Grid2X2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/utills/debounce";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { TComboPackage } from "@/types/comboPackage";
 import CombocardSkeleton from "./CombocardSkeleton";
@@ -19,8 +13,14 @@ import CustomPagination from "@/components/ui/CustomPagination";
 import CreateComboModal from "./CreateComboModal";
 import PageHeader from "../../shared/pageHeader";
 import { useHasPermission } from "@/utills/permission";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Box, User, Briefcase, ArrowUpRight } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Box, User, Briefcase, ArrowUpRight } from "lucide-react";
 import { OverviewCard } from "../../shared/overviewCard";
 
 const AllCombo = () => {
@@ -337,7 +337,6 @@ const AllCombo = () => {
   const hasPermission = useHasPermission("COMBO CREATE");
   const [isGridView, setIsGridView] = useState(true);
   const [status, setStatus] = useState("all");
-  // const [category, setCategory] = useState("all");
 
   const handleSearch = async (val: string) => {
     setFilters({ ...filters, search: val });
@@ -373,7 +372,7 @@ const AllCombo = () => {
       isPositive: true,
       change: "36.8%",
       highlight: true,
-      highlightColor: "text-emerald-400" // Figma-te eta green color-e highlighted
+      highlightColor: "text-emerald-400", // Figma-te eta green color-e highlighted
     },
     {
       icon: ArrowUpRight, // Avg. Discount icon
@@ -384,6 +383,7 @@ const AllCombo = () => {
       highlight: false,
     },
   ];
+
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full ">
       {/* header section */}
@@ -423,29 +423,6 @@ const AllCombo = () => {
 
         {/* dropdown */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* <Select
-            value={category}
-            onValueChange={(value) => {
-              setCategory(value);
-              setFilters((prev) => ({
-                ...prev,
-                category: value === "all" ? undefined : value,
-                page: 1,
-              }));
-            }}
-          >
-            <SelectTrigger className="w-40" aria-label="Category Filter">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories?.map((category: { id: number; name: string }) => (
-                <SelectItem key={category.id} value={category.name}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
           <Select
             value={status}
             onValueChange={(value) => {
@@ -455,7 +432,8 @@ const AllCombo = () => {
                 status: value === "all" ? undefined : value,
                 page: 1,
               }));
-            }}>
+            }}
+          >
             <SelectTrigger className="w-36" aria-label="Status Filter">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -469,7 +447,8 @@ const AllCombo = () => {
           <Button
             variant="default"
             className="rounded-full  cursor-pointer text-2xl effect size-10"
-            onClick={() => setIsGridView((prev) => !prev)}>
+            onClick={() => setIsGridView((prev) => !prev)}
+          >
             <Grid2X2 className="size-4" />
           </Button>
         </div>

@@ -18,9 +18,7 @@ export function AgentProfile() {
 
       <div className="flex gap-6 my-6 ">
         {/* Left Column - Profile Card */}
-        <div
-          className="rounded-4xl p-6 effect w-[360px] relative" 
-        >
+        <div className="rounded-4xl p-6 effect w-[360px] relative">
           {/* Diamond Badge */}
           <span className="effect bg-transparent! rounded-[6px] text-center p-1 absolute">
             Diamond
@@ -50,30 +48,21 @@ export function AgentProfile() {
 
           {/* Contact Info */}
           <div className="space-y-3">
-            <div
-              className="effect flex items-center gap-3 p-3 rounded-lg"
-            >
+            <div className="effect flex items-center gap-3 p-3 rounded-lg">
               <Phone className="w-4 h-4 text-gray-400" />
               <span className="text-gray-300 text-sm">+880 1712-345001</span>
             </div>
-            <div
-              className="effect flex items-center gap-3 p-3 rounded-lg"
-            >
+            <div className="effect flex items-center gap-3 p-3 rounded-lg">
               <Mail className="w-4 h-4 text-gray-400" />
               <span className="text-gray-300 text-sm">
                 karim.hossain@optiluxbd.com
               </span>
             </div>
-            <div
-              
-              className="effect flex items-center gap-3 p-3 rounded-lg"
-            >
+            <div className="effect flex items-center gap-3 p-3 rounded-lg">
               <MapPin className="w-4 h-4 text-gray-400" />
               <span className="text-gray-300 text-sm">Banani, Dhaka</span>
             </div>
-            <div
-              className="effect flex items-center gap-3 p-3 rounded-lg"
-            >
+            <div className="effect flex items-center gap-3 p-3 rounded-lg">
               <Calendar className="w-4 h-4 text-gray-400" />
               <div>
                 <span className="text-gray-400 text-xs block">Joined</span>
@@ -88,9 +77,7 @@ export function AgentProfile() {
           {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-4">
             {/* Conversion Rate */}
-            <div
-              className="rounded-4xl p-5 effect"
-            >
+            <div className="rounded-4xl p-5 effect">
               <div className="relative flex items-start gap-3">
                 <svg
                   width="100"
@@ -103,18 +90,18 @@ export function AgentProfile() {
                   <path
                     d="M66.6719 29.167H91.6719V54.167"
                     stroke="#05DF72"
-                    stroke-opacity="0.1"
-                    stroke-width="8.33333"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="8.33333"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M91.6634 29.167L56.2467 64.5837L35.4134 43.7503L8.33008 70.8337"
                     stroke="#05DF72"
-                    stroke-opacity="0.1"
-                    stroke-width="8.33333"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="8.33333"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
 
@@ -131,9 +118,7 @@ export function AgentProfile() {
             </div>
 
             {/* Calls This Month */}
-            <div
-              className="rounded-4xl p-5 effect"
-            >
+            <div className="rounded-4xl p-5 effect">
               <div className="relative flex items-start gap-3">
                 <svg
                   width="90"
@@ -146,10 +131,10 @@ export function AgentProfile() {
                   <path
                     d="M51.868 62.13C52.6425 62.4857 53.5151 62.5669 54.3419 62.3604C55.1687 62.1539 55.9006 61.6718 56.4168 60.9937L57.748 59.25C58.4466 58.3185 59.3525 57.5625 60.3939 57.0418C61.4354 56.5211 62.5837 56.25 63.748 56.25H74.998C76.9872 56.25 78.8948 57.0402 80.3013 58.4467C81.7079 59.8532 82.498 61.7609 82.498 63.75V75C82.498 76.9891 81.7079 78.8968 80.3013 80.3033C78.8948 81.7098 76.9872 82.5 74.998 82.5C57.0959 82.5 39.927 75.3884 27.2683 62.7297C14.6096 50.071 7.49805 32.9021 7.49805 15C7.49805 13.0109 8.28822 11.1032 9.69475 9.6967C11.1013 8.29018 13.0089 7.5 14.998 7.5H26.248C28.2372 7.5 30.1448 8.29018 31.5513 9.6967C32.9579 11.1032 33.748 13.0109 33.748 15V26.25C33.748 27.4143 33.477 28.5627 32.9563 29.6041C32.4355 30.6455 31.6795 31.5514 30.748 32.25L28.993 33.5663C28.3046 34.0919 27.8194 34.8397 27.6198 35.6826C27.4202 36.5254 27.5185 37.4114 27.898 38.19C33.0231 48.5995 41.4521 57.018 51.868 62.13Z"
                     stroke="#51A2FF"
-                    stroke-opacity="0.1"
-                    stroke-width="7.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="7.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
 
@@ -166,9 +151,7 @@ export function AgentProfile() {
             </div>
 
             {/* Todays Target */}
-            <div
-              className="rounded-4xl p-5 effect"
-            >
+            <div className="rounded-4xl p-5 effect">
               <div className="relative flex items-start gap-3">
                 <svg
                   width="84"
@@ -181,26 +164,26 @@ export function AgentProfile() {
                   <path
                     d="M42 77C61.33 77 77 61.33 77 42C77 22.67 61.33 7 42 7C22.67 7 7 22.67 7 42C7 61.33 22.67 77 42 77Z"
                     stroke="#C27AFF"
-                    stroke-opacity="0.1"
-                    stroke-width="7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M42.002 63C53.5999 63 63.002 53.598 63.002 42C63.002 30.402 53.5999 21 42.002 21C30.404 21 21.002 30.402 21.002 42C21.002 53.598 30.404 63 42.002 63Z"
                     stroke="#C27AFF"
-                    stroke-opacity="0.1"
-                    stroke-width="7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M42 49C45.866 49 49 45.866 49 42C49 38.134 45.866 35 42 35C38.134 35 35 38.134 35 42C35 45.866 38.134 49 42 49Z"
                     stroke="#C27AFF"
-                    stroke-opacity="0.1"
-                    stroke-width="7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeOpacity="0.1"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
 
