@@ -25,6 +25,7 @@ import Link from "next/link";
 import { IoLogoGoogle } from "react-icons/io5";
 import LargeYellowSvg from "@/components/svgIcon/LargeYellowSvg";
 import { signIn } from "next-auth/react";
+import { useUser } from "@/provider/AuthProvider";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -39,6 +40,7 @@ const LoginComponent = () => {
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
   const [redirect, setRedirect] = useState<string | null>(null);
+  const { refetchUser, setIsLoading } = useUser();
 
   const {
     handleSubmit,
@@ -65,6 +67,8 @@ const LoginComponent = () => {
       const res = await login(data).unwrap();
       if (res?.success) {
         const token = res?.data?.token;
+        setIsLoading(false);
+        await refetchUser();
         const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,
@@ -120,6 +124,8 @@ const LoginComponent = () => {
     try {
       const res = await login(data).unwrap();
       if (res?.success) {
+        setIsLoading(false);
+        await refetchUser();
         const roles: TUSerRole[] =
           res?.data?.userData?.roles?.map((r: any) => ({
             userId: r.userId,

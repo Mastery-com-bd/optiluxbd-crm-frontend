@@ -5,6 +5,7 @@ import ReactProvider from "@/provider/ReactProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Provider from "@/provider/Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,18 +32,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ServiceWorkerRegistration />
-            <div className="">{children}</div>
-            <Toaster richColors position="top-center" />
-          </ThemeProvider>
-        </ReactProvider>
+        <Provider>
+          <ReactProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {/* <ServiceWorkerRegistration /> */}
+              <div className="">{children}</div>
+              <Toaster richColors position="top-center" />
+            </ThemeProvider>
+          </ReactProvider>
+        </Provider>
       </body>
     </html>
   );

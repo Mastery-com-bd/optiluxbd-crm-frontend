@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/provider/AuthProvider";
 import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
@@ -38,7 +39,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
-  console.log(user);
+  const { setUser, setIsLoading } = useUser();
   // const { setTheme } = useTheme();
   // const dispatch = useAppDispatch();
   // const [logout] = useLogoutMutation();
@@ -54,6 +55,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
     try {
       // const res = await logout(undefined).unwrap();
       // if (res?.success) {
+      setIsLoading(true);
       //   dispatch(logOut());
       //   dispatch(baseApi.util.resetApiState());
       //   toast.success(res?.message, {
@@ -63,6 +65,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
       //   router.push("/login");
       //   signOut({ callbackUrl: "/login" });
       // }
+      setUser(null);
       signOut({ callbackUrl: "/login" });
     } catch (error: any) {
       const errorInfo =
