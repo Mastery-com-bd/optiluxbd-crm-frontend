@@ -118,7 +118,7 @@ const TableView = ({ packages }: { packages: TComboPackage[] }) => {
                         align="end"
                         className="w-[180px] flex flex-col "
                       >
-                        <Link href={`/dashboard/combo/${item?.id}`}>
+                        <Link href={`/dashboard/admin/combo/${item?.id}`}>
                           <DropdownMenuItem className="cursor-pointer">
                             <Eye className="w-4 h-4 mr-2" />
                             Details

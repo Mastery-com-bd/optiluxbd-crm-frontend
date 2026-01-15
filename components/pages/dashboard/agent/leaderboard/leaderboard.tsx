@@ -40,8 +40,9 @@ const LeaderBoard = () => {
                   <Image
                     width={90}
                     height={90}
-                    src={`/icons/${index === 0 ? "Silver" : index === 1 ? "Gold" : "Bronze"
-                      }-crown.svg`}
+                    src={`/icons/${
+                      index === 0 ? "Silver" : index === 1 ? "Gold" : "Bronze"
+                    }-crown.svg`}
                     alt=""
                   />
                 </div>
@@ -53,11 +54,12 @@ const LeaderBoard = () => {
                       index === 0
                         ? leaders[1].avatar || "/placeholder.svg"
                         : index === 1
-                          ? leaders[2].avatar || "/placeholder.svg"
-                          : leaders[2].avatar || "/placeholder.svg"
+                        ? leaders[2].avatar || "/placeholder.svg"
+                        : leaders[2].avatar || "/placeholder.svg"
                     }
-                    alt={`${index === 0 ? "2nd" : index === 1 ? "1st" : "3rd"
-                      } place ${leaders[index].name}`}
+                    alt={`${
+                      index === 0 ? "2nd" : index === 1 ? "1st" : "3rd"
+                    } place ${leaders[index].name}`}
                     className="w-12 h-12 rounded-[7px] border-2 border-white/20"
                   />
                   <div className="text-right">
@@ -108,8 +110,8 @@ const LeaderBoard = () => {
                     <path
                       d="M13.0088 53.3721H222.828"
                       stroke="white"
-                      stroke-opacity="0.00"
-                      stroke-width="0.667151"
+                      strokeOpacity="0.00"
+                      strokeWidth="0.667151"
                     />
                   </g>
                   <defs>
@@ -121,9 +123,9 @@ const LeaderBoard = () => {
                       y2="17.7341"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#610093" />
-                      <stop offset="1" stop-color="#610093" />
-                      <stop offset="1" stop-color="#180903" />
+                      <stop stopColor="#610093" />
+                      <stop offset="1" stopColor="#610093" />
+                      <stop offset="1" stopColor="#180903" />
                     </linearGradient>
                     <linearGradient
                       id="paint1_linear_600_30896"
@@ -133,9 +135,9 @@ const LeaderBoard = () => {
                       y2="221.933"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#610093" />
-                      <stop offset="0.576923" stop-color="#2A0049" />
-                      <stop offset="1" stop-color="#180720" />
+                      <stop stopColor="#610093" />
+                      <stop offset="0.576923" stopColor="#2A0049" />
+                      <stop offset="1" stopColor="#180720" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -147,14 +149,10 @@ const LeaderBoard = () => {
       <div>
         <div className="text-[#E5B061] flex flex-col justify-center items-center">
           <Clock />
-          <span className="text-center">
-            Ends in
-          </span>
-          <span className="text-center">
-            06d 23h 59m 29s
-          </span>
+          <span className="text-center">Ends in</span>
+          <span className="text-center">06d 23h 59m 29s</span>
         </div>
-        <RankingsTable/>
+        <RankingsTable />
       </div>
     </div>
   );

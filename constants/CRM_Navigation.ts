@@ -40,10 +40,7 @@ export type TCrmNavigation = {
   analyticsAndSettings: {
     routes: NavRoute[];
   };
-  agentRoute?: {
-    routes: NavRoute[];
-  };
-  teamRoute?: {
+  singleRoute?: {
     routes: NavRoute[];
   };
 };
@@ -54,10 +51,62 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Dashboard",
         icon: CircleGauge,
-        path: "/dashboard",
+        path: "/dashboard/admin/admin-dashboard",
       },
     ],
   },
+
+  // single route
+  singleRoute: {
+    routes: [
+      {
+        title: "Dashboard",
+        icon: CircleGauge,
+        path: "/dashboard/agent/agent-dashboard",
+      },
+      {
+        title: "Attendence",
+        icon: CalendarClock,
+        path: "/dashboard/agent/attendance",
+      },
+      {
+        title: "My Leads",
+        icon: Target,
+        path: "/dashboard/agent/leads",
+      },
+      {
+        title: "Profile",
+        icon: CircleUserRound,
+        path: "/dashboard/agent/profile",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        path: "/dashboard/settings",
+      },
+      {
+        title: "Dashboard",
+        icon: CircleGauge,
+        path: "/dashboard/team-leader/dashboard",
+      },
+      {
+        title: "My Leads",
+        icon: Target,
+        path: "/dashboard/team-leader/my-leads",
+      },
+      {
+        title: "My Team",
+        icon: Users,
+        path: "/dashboard/team-leader/my-team",
+      },
+      {
+        title: "Profile",
+        icon: CircleUserRound,
+        path: "/dashboard/team-leader/profile",
+      },
+    ],
+  },
+
   // core management
   coreManagement: [
     //CATEGORIES
@@ -77,7 +126,7 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "Overview",
-          path: "/dashboard/categories",
+          path: "/dashboard/admin/categories/overview",
           // permissions: [
           //   "CATEGORIES CREATE",
           //   "CATEGORIES UPDATE",
@@ -87,7 +136,7 @@ export const crmRoutes: TCrmNavigation = {
         },
         {
           title: "All Category",
-          path: "/dashboard/categories/all",
+          path: "/dashboard/admin/categories",
           // permissions: [
           //   "SUBCATEGORIES CREATE",
           //   "SUBCATEGORIES UPDATE",
@@ -150,17 +199,17 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "All Combo Pack",
-          path: "/dashboard/combo",
+          path: "/dashboard/admin/combo",
           // permissions: ["PACKAGES VIEW"],
         },
         {
           title: "Create Combo",
-          path: "/dashboard/combo/create-combo",
+          path: "/dashboard/admin/combo/create-combo",
           // permissions: ["PACKAGES CREATE"],
         },
         {
           title: "Combo Draft",
-          path: "/dashboard/combo/combo-draft",
+          path: "/dashboard/admin/combo/combo-draft",
           // permissions: ["PACKAGES VIEW"],
         },
       ],
@@ -234,7 +283,7 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "Lead Overview",
-          path: "/dashboard/leads/lead-overview",
+          path: "/dashboard/admin/leads/lead-overview",
           // roles: ["owner", "Agent"],
           // permissions: [
           //   "ALLOCATIONS ASSIGN LEADER",
@@ -246,7 +295,7 @@ export const crmRoutes: TCrmNavigation = {
         },
         {
           title: "All Leads",
-          path: "/dashboard/leads",
+          path: "/dashboard/admin/leads",
           // roles: ["owner", "Agent"],
           // permissions: [
           //   "ALLOCATIONS ASSIGN LEADER",
@@ -272,19 +321,14 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "Customer Overview",
-          path: "/dashboard/customers/overview",
+          path: "/dashboard/admin/customers/overview",
           // permissions: ["CUSTOMERS VIEW"],
         },
         {
           title: "All Customers",
-          path: "/dashboard/customers",
+          path: "/dashboard/admin/customers",
           // permissions: ["CUSTOMERS VIEW"],
         },
-        // {
-        //   title: "Add Customer",
-        //   path: "/dashboard/customers/add",
-        //   permissions: ["CUSTOMERS CREATE"],
-        // },
       ],
     },
   ],
@@ -343,17 +387,17 @@ export const crmRoutes: TCrmNavigation = {
       children: [
         {
           title: "Team`s Overview",
-          path: "/dashboard/team/overview",
+          path: "/dashboard/admin/team/overview",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "All Teams",
-          path: "/dashboard/team",
+          path: "/dashboard/admin/team",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
         {
           title: "Lead Assignment",
-          path: "/dashboard/team/assign-leads",
+          path: "/dashboard/admin/team/assign-leads",
           // permissions: ["ALLOCATIONS REPORTS VIEW"],
         },
       ],
@@ -413,102 +457,46 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Reports & Analytics",
         icon: ChartColumn,
-        path: "/dashboard/analysis",
+        path: "/dashboard/report",
       },
       {
         title: "Help",
         icon: Info,
-        path: "/dashboard/analysis/help",
+        path: "/dashboard/help",
       },
       {
         title: "Settings",
         icon: Settings,
         children: [
           {
+            title: "Settings Home",
+            path: "/dashboard/admin/settings",
+          },
+          {
             title: "General Settings",
-            path: "/dashboard/settings/general",
+            path: "/dashboard/admin/settings/general",
           },
           {
             title: "Users & Roles",
-            path: "/dashboard/settings/users&Roles",
+            path: "/dashboard/admin/settings/users&Roles",
           },
           {
             title: "Email & SMS",
-            path: "/dashboard/settings/email&sms",
+            path: "/dashboard/admin/settings/email&sms",
           },
           {
             title: "Notification",
-            path: "/dashboard/settings/notification",
+            path: "/dashboard/admin/settings/notification",
           },
           {
             title: "Backup & Restore",
-            path: "/dashboard/settings/backup&restore",
+            path: "/dashboard/admin/settings/backup&restore",
           },
           {
             title: "Api Integration",
-            path: "/dashboard/settings/api-Integration",
+            path: "/dashboard/admin/settings/api-Integration",
           },
         ],
-      },
-    ],
-  },
-
-  agentRoute: {
-    routes: [
-      {
-        title: "Dashboard",
-        icon: CircleGauge,
-        path: "/dashboard/agentDashboard",
-      },
-      {
-        title: "Attendence",
-        icon: CalendarClock,
-        path: "/dashboard/agentDashboard/attendance",
-      },
-      {
-        title: "My Leads",
-        icon: Target,
-        path: "/dashboard/agentDashboard/leads",
-      },
-      {
-        title: "Profile",
-        icon: CircleUserRound,
-        path: "/dashboard/agentDashboard/profile",
-      },
-      {
-        title: "Settings",
-        icon: Settings,
-        path: "/dashboard/analysis/settings",
-      },
-    ],
-  },
-
-  teamRoute: {
-    routes: [
-      {
-        title: "Dashboard",
-        icon: CircleGauge,
-        path: "/dashboard/team-leader/home",
-      },
-      {
-        title: "My Leads",
-        icon: Target,
-        path: "/dashboard/team-leader/my-leads",
-      },
-      {
-        title: "My Team",
-        icon: Users,
-        path: "/dashboard/team-leader/my-team",
-      },
-      {
-        title: "Profile",
-        icon: CircleUserRound,
-        path: "/dashboard/agentDashboard/profile",
-      },
-      {
-        title: "Settings",
-        icon: Settings,
-        path: "/dashboard/analysis/settings",
       },
     ],
   },

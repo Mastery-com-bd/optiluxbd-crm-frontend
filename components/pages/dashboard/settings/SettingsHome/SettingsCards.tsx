@@ -29,7 +29,7 @@ const settingsCardData: TSettingsCard[] = [
     title: "General Settings",
     description:
       "Company profile, currency, timezone, and regional preferences",
-    path: "/dashboard/settings/general",
+    path: "/dashboard/admin/settings/general",
     tags: ["Company Name", "Logo Upload", "Currency", "Timezone"],
   },
   {
@@ -38,7 +38,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#2A85FF]",
     title: "Users & Roles",
     description: "Manage user accounts, roles, and permission settings",
-    path: "/dashboard/settings/users&Roles",
+    path: "/dashboard/admin/settings/users&Roles",
     tags: ["User Management", "Role Permission", "Access Control"],
   },
   {
@@ -47,7 +47,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-success",
     title: "Email & SMS Settings",
     description: "Configure SMTP, SMS gateway, and notification templates",
-    path: "/dashboard/settings/email&sms",
+    path: "/dashboard/admin/settings/email&sms",
     tags: ["SMTP Setup", "SMS Gateway", "Email Templates"],
   },
   {
@@ -56,7 +56,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#7F5FFF]",
     title: "Notification Settings",
     description: "Manage notification triggers and delivery channels",
-    path: "/dashboard/settings/notification",
+    path: "/dashboard/admin/settings/notification",
     tags: ["Email Alerts", "SMS Alert", "Push Notification"],
   },
   {
@@ -65,7 +65,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-brand",
     title: "Backup & Restore",
     description: "Database backups, scheduling, and restoration options",
-    path: "/dashboard/settings/backup&restore",
+    path: "/dashboard/admin/settings/backup&restore",
     tags: ["Auto Backup", "Manual backup", "Restore Points"],
   },
   {
@@ -74,7 +74,7 @@ const settingsCardData: TSettingsCard[] = [
     textColor: "text-[#2A85FF]",
     title: "API & Integrations",
     description: "Third-party APIs, courier services, and payment gateways",
-    path: "/dashboard/settings/api-Integration",
+    path: "/dashboard/admin/settings/api-Integration",
     tags: ["Courier APIs", "Payment Gateways", "Webhooks"],
   },
 ];

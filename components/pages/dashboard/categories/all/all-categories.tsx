@@ -1,5 +1,4 @@
 "use client";
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import AddCategory from "../addCategory";
 import CategoryCard from "../category-card";
 import PageHeader from "../../shared/pageHeader";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 type Child = { id: string; name: string; image: string };
 type Parent = {
@@ -98,7 +98,10 @@ const AllCategories = () => {
   return (
     <div className="min-h-screen w-full ">
       <div className="flex items-center justify-between mb-6">
-        <PageHeader title="All Category" description="Browse and manage All Category" />
+        <PageHeader
+          title="All Category"
+          description="Browse and manage All Category"
+        />
         <div>
           <AddCategory />
         </div>
@@ -176,12 +179,12 @@ const AllCategories = () => {
                         </defs>
                       </svg>
                     )}
-                    <div
-                      className="flex items-center justify-center cursor-pointer effect rounded-[12px] overflow-hidden bg-transparent!"
-                    >
-                      <img
+                    <div className="flex items-center justify-center cursor-pointer effect rounded-[12px] overflow-hidden bg-transparent!">
+                      <Image
                         src={p.image}
                         alt={p.name}
+                        height={100}
+                        width={100}
                         className=" w-24 h-24 object-contain"
                       />
                     </div>
@@ -200,7 +203,7 @@ const AllCategories = () => {
           <h2 className="text-[28px] font-semibold mb-4">Sub Categories</h2>
           <div className="grid grid-cols-3 gap-5">
             {current.children.map((c) => (
-              <Link href={`/dashboard/categories/products`} key={c.id}>
+              <Link href={`/dashboard/admin/categories/products`} key={c.id}>
                 <CategoryCard
                   category={{
                     id: Number(c.id),
