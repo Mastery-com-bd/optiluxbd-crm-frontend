@@ -248,7 +248,7 @@ const AssignLeadsTable = ({
                     align="end"
                     className="w-[180px] flex flex-col "
                   >
-                    <Link href={`/dashboard/customers/${2}`}>
+                    <Link href={`/dashboard/admin/customers/${2}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         <Eye className="w-4 h-4 mr-2" />
                         Details

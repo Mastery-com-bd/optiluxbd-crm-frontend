@@ -1,26 +1,25 @@
 "use client";
 
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
 import { TCustomer } from "@/types/customer.types";
 import { debounce } from "@/utills/debounce";
-import { ChevronDown, Download, Funnel, Grid2X2, Search, Upload } from "lucide-react";
+import { Download, Funnel, Search } from "lucide-react";
 import { useState } from "react";
 import CreateCustomerModal from "./CreateCustomerModal";
 import CustomerTable from "./customerTable";
 import CustomerTableSkeleton from "./CustomerTableSkeleton";
 import PageHeader from "../../../shared/pageHeader";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Customers = () => {
   const [filters, setFilters] = useState({
@@ -37,7 +36,6 @@ const Customers = () => {
   });
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState("all");
-  const [tire, setTire] = useState("All");
   const [show, setShow] = useState("10");
   const [category, setCategory] = useState("all");
   const categories = [
@@ -65,7 +63,10 @@ const Customers = () => {
       {/* header */}
       <div className="flex items-center justify-between">
         <div>
-          <PageHeader title="All Customers" description="Operational overview and quick actions" />
+          <PageHeader
+            title="All Customers"
+            description="Operational overview and quick actions"
+          />
         </div>
         <div className="flex items-center justify-end gap-3 ">
           <CreateCustomerModal />
@@ -134,7 +135,11 @@ const Customers = () => {
               <SelectItem value="Rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
-          <ButtonComponent icon={Download} buttonName="Export" varient="yellow"/>
+          <ButtonComponent
+            icon={Download}
+            buttonName="Export"
+            varient="yellow"
+          />
         </div>
       </div>
 

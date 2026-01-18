@@ -158,11 +158,12 @@ export function TeamCards() {
 
   return (
     <div className="grid grid-cols-3 mx-auto gap-6 justify-items-center">
-      {teamsData.map((team) => (
+      {teamsData.map((team, i) => (
         <div
-          key={team.name}
-          className={`rounded-4xl overflow-hidden p-4 neumorphism ${expandedTeam === team.name ? "h-auto" : "h-56"
-            }`}
+          key={i}
+          className={`rounded-4xl overflow-hidden p-4 neumorphism ${
+            expandedTeam === team.name ? "h-auto" : "h-56"
+          }`}
         >
           {/* Header */}
           <div
@@ -173,8 +174,9 @@ export function TeamCards() {
           >
             <div className="flex items-center gap-2">
               <ChevronRight
-                className={`w-4 h-4 text-white transition-transform ${expandedTeam === team.name ? "rotate-90" : ""
-                  }`}
+                className={`w-4 h-4 text-white transition-transform ${
+                  expandedTeam === team.name ? "rotate-90" : ""
+                }`}
               />
               <span className="text-white font-semibold text-lg">
                 {team.name}
@@ -190,9 +192,7 @@ export function TeamCards() {
 
           {/* Stats Card */}
           <div className="px-4 pb-4">
-            <div
-              className="rounded-3xl p-4 effect"
-            >
+            <div className="rounded-3xl p-4 effect">
               <div className="h-20 flex justify-between items-center">
                 <div className="text-center">
                   <p className="text-[28px] font-semibold text-[#FDFDFD]">

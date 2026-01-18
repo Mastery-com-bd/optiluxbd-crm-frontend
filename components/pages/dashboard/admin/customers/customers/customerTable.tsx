@@ -185,7 +185,8 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                 first={ind === 0}
                 last={ind === headers.length - 1}
                 key={label}
-                className="text-left text-xs font-semibold uppercase text-muted-foreground">
+                className="text-left text-xs font-semibold uppercase text-muted-foreground"
+              >
                 {label}
               </TableHead>
             ))}
@@ -248,8 +249,9 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-[180px] flex flex-col ">
-                    <Link href={`/dashboard/customers/${2}`}>
+                    className="w-[180px] flex flex-col "
+                  >
+                    <Link href={`/dashboard/admin/customers/${2}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         <Eye className="w-4 h-4 mr-2" />
                         Details
@@ -266,7 +268,8 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                       //     setDeleteProductId(product.id);
                       //     setDeleteDialogOpen(true);
                       //   }}
-                      className="cursor-pointer">
+                      className="cursor-pointer"
+                    >
                       <Trash2 className="w-4 h-4 text-destructive mr-2" />
                       Delete
                     </DropdownMenuItem>

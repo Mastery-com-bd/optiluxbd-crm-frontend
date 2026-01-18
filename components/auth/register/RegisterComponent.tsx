@@ -16,6 +16,7 @@ import LargeYellowSvg from "@/components/svgIcon/LargeYellowSvg";
 import { useState } from "react";
 import SubmissionSuccess from "./SubmissionSuccess";
 import { signIn } from "next-auth/react";
+import { TSocialUser } from "@/components/pages/shared/home/Navbar";
 
 export const passwordRules = [
   { label: "Min 8 characters", regex: /^.{8,}$/ },
@@ -46,7 +47,7 @@ const registrationSchema = z.object({
 
 export type TRegisterForm = z.infer<typeof registrationSchema>;
 
-const RegisterComponent = () => {
+const RegisterComponent = ({ user }: { user: TSocialUser }) => {
   const { visible, toggle } = usePasswordToggle();
   const [passwordtext, setPasswordText] = useState("");
   const [touched, setTouched] = useState(false);
@@ -61,6 +62,8 @@ const RegisterComponent = () => {
   } = useForm<TRegisterForm>({
     resolver: zodResolver(registrationSchema),
   });
+
+  console.log(user);
 
   const onSubmit = async (data: TRegisterForm) => {
     // data.phone = `+88${data.phone}`;

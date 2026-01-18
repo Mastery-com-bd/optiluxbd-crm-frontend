@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/provider/AuthProvider";
 import { baseApi } from "@/redux/api/baseApi";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import {
@@ -28,25 +29,33 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function Navbar() {
+export type TSocialUser = {
+  name: string;
+  email: string;
+  image: string | null;
+};
+
+export default function Navbar({ user: authUser }: { user: TSocialUser }) {
   const user = useAppSelector(currentUser);
   const pathname = usePathname();
   const router = useRouter();
+  const { setUser, setIsLoading } = useUser();
   // const { setTheme } = useTheme();
-  const dispatch = useAppDispatch();
-  const [logout] = useLogoutMutation();
+  // const dispatch = useAppDispatch();
+  // const [logout] = useLogoutMutation();
 
   const { role } = getPermissions(user as TAuthUSer);
 
   const dashboardRoute = role.includes("ADMIN")
-    ? "/dashboard"
-    : "/dashboard/profile";
+    ? "/dashboard/admin/admin-dashboard"
+    : "/dashboard/agent/profile";
 
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
     try {
       // const res = await logout(undefined).unwrap();
       // if (res?.success) {
+      setIsLoading(true);
       //   dispatch(logOut());
       //   dispatch(baseApi.util.resetApiState());
       //   toast.success(res?.message, {
@@ -56,6 +65,7 @@ export default function Navbar() {
       //   router.push("/login");
       //   signOut({ callbackUrl: "/login" });
       // }
+      setUser(null);
       signOut({ callbackUrl: "/login" });
     } catch (error: any) {
       const errorInfo =
@@ -226,7 +236,7 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            {user ? (
+            {authUser ? (
               <>
                 <Link href={dashboardRoute}>
                   <ButtonComponent

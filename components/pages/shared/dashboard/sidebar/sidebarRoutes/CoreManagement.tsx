@@ -53,7 +53,7 @@ const CoreManagement = ({
 
           if (!item.children || item.children.length === 0) {
             return (
-              <SidebarMenuItem key={item.title} className="w-full">
+              <SidebarMenuItem key={i} className="w-full">
                 {item.path ? (
                   <Link href={item.path}>
                     <SidebarMenuButton

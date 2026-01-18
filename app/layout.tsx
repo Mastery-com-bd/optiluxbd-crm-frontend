@@ -1,5 +1,3 @@
-import Footer from "@/components/pages/shared/home/Footer";
-import Navbar from "@/components/pages/shared/home/Navbar";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -7,6 +5,7 @@ import ReactProvider from "@/provider/ReactProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Provider from "@/provider/Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,21 +28,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <ReactProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange>
-            <ServiceWorkerRegistration />
-            <div className="">{children}</div>
-            <Toaster richColors position="top-center" />
-          </ThemeProvider>
-        </body>
-      </ReactProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Provider>
+          <ReactProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {/* <ServiceWorkerRegistration /> */}
+              <div className="">{children}</div>
+              <Toaster richColors position="top-center" />
+            </ThemeProvider>
+          </ReactProvider>
+        </Provider>
+      </body>
     </html>
   );
 }
