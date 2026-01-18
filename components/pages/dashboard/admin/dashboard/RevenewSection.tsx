@@ -37,11 +37,7 @@ const RevenewSection = () => {
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 lg:gap-6">
       {/* bar chart component */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 py-6 w-full">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect h-full relative rounded-3xl px-6 py-6 w-full border-0">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-4">
           {/* header section */}
@@ -91,11 +87,7 @@ const RevenewSection = () => {
       </Card>
 
       {/* pie chart component */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 py-4 w-full">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect border-0 h-full relative rounded-3xl px-6 py-4 w-full">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl ">
           <PieChartSection />
