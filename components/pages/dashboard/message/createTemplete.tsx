@@ -2,6 +2,7 @@
 
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 import {
   Dialog,
   DialogContent,
@@ -41,8 +42,7 @@ const formSchema = z.object({
 
 const CreateTemplete = () => {
 
-      const [isOpen, setIsOpen] = useState(false);
-        
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,25 +82,7 @@ const CreateTemplete = () => {
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <div className="relative inline-block group cursor-pointer">
-            <LiquidGlass
-              glowIntensity="none"
-              borderRadius="10px"
-              className="w-fit"
-            >
-              <Button
-                style={{
-                  backgroundImage: "url('/svg/button-background.svg')",
-                  backgroundSize: "cover",
-                }}
-                className="rounded-xl bg-transparent border-none"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create New Template
-              </Button>
-            </LiquidGlass>
-            <div className="w-full absolute bottom-0 left-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-[#FFB13F] to-transparent h-[1.5px]" />
-          </div>
+          <ButtonComponent buttonName="New template" varient="yellow" icon={Plus}/>
         </DialogTrigger>
         <DialogContent className="w-[770px] bg-white/5 backdrop-blur-xl border border-white/10 p-0 overflow-hidden rounded-3xl gap-0 shadow-2xl">
           {/* Header */}
@@ -218,11 +200,11 @@ const CreateTemplete = () => {
                 <Button
                   type="submit"
                   className="flex-1 h-12 rounded-xl text-white font-medium text-lg relative overflow-hidden border-0"
-                  
+
                 >
-                  
+
                   <span className="relative z-10">Send Now</span>
-                 
+
                 </Button>
 
                 {/* Cancel Button */}

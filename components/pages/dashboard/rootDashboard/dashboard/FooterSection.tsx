@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import ProductCard from "./ProductCard";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -11,7 +10,8 @@ import {
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import ChartComponent from "./AreaChart";
+import ProductCard from "../../admin/dashboard/ProductCard";
+import ChartComponent from "../../admin/dashboard/AreaChart";
 
 export type TProductdata = {
   name: string;

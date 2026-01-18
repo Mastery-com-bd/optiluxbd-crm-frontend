@@ -1,5 +1,5 @@
 export const routePermissions: Record<string, string[]> = {
-  //   👤 User Management
+  //   User Management
   "/dashboard/admin/manage-users": ["USERS VIEW"],
   "/dashboard/admin/approve-user": ["USERS VIEW"],
 

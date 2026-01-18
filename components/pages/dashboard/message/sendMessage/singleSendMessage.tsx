@@ -85,9 +85,8 @@ const SingleSendMessage = () => {
   }
 
   return (
-    <LiquidGlass
-      borderRadius="32px"
-      className=" p-8 shadow-2xl w-full mx-auto border border-white/5"
+    <div
+      className="rounded-4xl p-8 effect w-full mx-auto "
     >
       <h2 className="text-2xl font-semibold text-white mb-8">Send Message</h2>
 
@@ -218,14 +217,11 @@ const SingleSendMessage = () => {
             <div className="space-y-2">
               <Label className="text-gray-300">Live Preview</Label>
               <div className="relative h-[400px] w-full rounded-3xl overflow-hidden p-px">
-                {/* Gradient Border */}
-                <div className="absolute inset-0 rounded-3xl bg-linear-to-b from-white/20 to-white/5 pointer-events-none" />
-
                 {/* Glass Card Content */}
-                <div className="h-full w-full bg-white/5 backdrop-blur-md rounded-3xl p-6 flex flex-col">
+                <div className="h-full w-full  effect rounded-3xl p-6 flex flex-col">
                   {/* Preview Header */}
                   <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
-                    <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
+                    <div className="h-12 w-12 rounded-full flex items-center justify-center border">
                       <MessageSquare className="h-6 w-6 text-white/80" />
                     </div>
                     <div>
@@ -274,7 +270,7 @@ const SingleSendMessage = () => {
           </div>
         </form>
       </Form>
-    </LiquidGlass>
+    </div>
   );
 };
 

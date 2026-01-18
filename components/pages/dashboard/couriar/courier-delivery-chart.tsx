@@ -29,7 +29,7 @@ const deliveryData = [
 
 export function CourierDeliveryChart() {
   return (
-    <LiquidGlass borderRadius="24px" className="rounded-3xl p-8">
+    <div className=" effect rounded-3xl p-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h2 className="mb-4 text-3xl font-semibold text-white">
@@ -115,6 +115,6 @@ export function CourierDeliveryChart() {
           />
         </LineChart>
       </ResponsiveContainer>
-    </LiquidGlass>
+    </div>
   );
 }
