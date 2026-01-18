@@ -56,11 +56,7 @@ const FooterSection = () => {
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3 lg:gap-6">
       {/* bar chart component */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 py-6 w-full">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect h-full relative rounded-3xl px-6 py-6 w-full">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-4">
           {/* header section */}
@@ -72,26 +68,18 @@ const FooterSection = () => {
             ))}
           </div>
 
-          <div className="w-full flex items-center relative rounded-3xl bg-white/5">
-            <div className="absolute top-0 left-0 inset-4 border-l border-t border-white/40 rounded-tl-3xl pointer-events-none" />
-            <div className="absolute bottom-0 right-0 inset-4 border-r border-b border-white/40 rounded-br-3xl pointer-events-none" />
-
+          <div className="w-full flex items-center relative rounded-3xl effect">
             <Link
               href="/dashboard/admin/products/all-products"
-              className="text-[#727272] w-full py-1 px-4 text-center"
+              className=" w-full py-1 px-4 text-center"
             >
               All Products
             </Link>
           </div>
         </div>
       </Card>
-
       {/* area chart component */}
-      <Card className="bg-white/10 h-full relative rounded-3xl px-6 py-4 w-full">
-        {/* top and bottom border effect */}
-        <div className="absolute top-0 left-px inset-5 border-l border-t border-white/10 rounded-tl-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-px inset-5 border-r border-b border-white/10 rounded-br-3xl pointer-events-none" />
-
+      <Card className="effect border-0 h-full relative rounded-3xl px-6 py-4 w-full">
         {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-3">
           <div className="flex items-center justify-between">

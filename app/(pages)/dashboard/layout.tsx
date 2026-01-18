@@ -44,11 +44,12 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset>
             <Navbar />
-            <AuthGuard>
-              <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden max-w-[1135px]">
-                {children}
-              </div>
-            </AuthGuard>
+            {/* <AuthGuard>
+              
+            </AuthGuard> */}
+            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 px-1 overflow-hidden max-w-[1135px]">
+              {children}
+            </div>
           </SidebarInset>
         </SidebarProvider>
       </div>

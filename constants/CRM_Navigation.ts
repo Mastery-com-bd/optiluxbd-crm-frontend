@@ -54,7 +54,7 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Dashboard",
         icon: CircleGauge,
-        path: "/dashboard",
+        path: "/dashboard/admin",
       },
     ],
   },
@@ -366,7 +366,7 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Communication",
         icon: Phone,
-        path: "/dashboard/communication",
+        path: "/dashboard/admin/communication",
       },
 
       {
@@ -376,7 +376,7 @@ export const crmRoutes: TCrmNavigation = {
         children: [
           {
             title: "Courier Overview",
-            path: "/dashboard/couriar",
+            path: "/dashboard/admin/couriar",
             // permissions: ["ORDERS VIEW"],
           },
           {
@@ -384,22 +384,22 @@ export const crmRoutes: TCrmNavigation = {
             children: [
               {
                 title: "Pathao",
-                path: "/dashboard/couriar/pathao",
+                path: "/dashboard/admin/couriar/pathao",
               },
               {
                 title: "Redex",
-                path: "/dashboard/couriar/redx",
+                path: "/dashboard/admin/couriar/redx",
               },
               {
                 title: "Steedfast",
-                path: "/dashboard/couriar/steadFast",
+                path: "/dashboard/admin/couriar/steadFast",
               },
             ],
             // permissions: ["ORDERS VIEW"],
           },
           {
             title: "Courier Assignemnts",
-            path: "/dashboard/couriar/assignments",
+            path: "/dashboard/admin/couriar/assignments",
             // permissions: ["ORDERS VIEW"],
           },
         ],

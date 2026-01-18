@@ -13,10 +13,7 @@ const SendMessageTabs = () => {
   return (
     <div>
       <div className="w-full space-y-4">
-        <Card className="bg-white/10 px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
-          {/* top and bottom border */}
-          <div className="absolute top-0 left-px inset-2.5 border-l border-t border-white/20 rounded-tl-xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-2.5 border-r border-b border-white/20 rounded-br-xl pointer-events-none" />
+        <Card className="effect px-3 rounded-2xl flex flex-row items-center justify-between gap-1 py-1.5 relative">
 
           {/* upper section */}
           {buttons.map((item, i) => {
