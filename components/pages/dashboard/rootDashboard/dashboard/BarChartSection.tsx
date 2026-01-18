@@ -34,7 +34,7 @@ const chartConfig = {
 
 const BarChartSection = () => {
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <ChartContainer config={chartConfig} className="shadow-none ">
         <BarChart
           accessibilityLayer
