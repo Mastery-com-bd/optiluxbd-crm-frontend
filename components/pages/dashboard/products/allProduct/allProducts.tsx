@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  ChevronDown,
   Eye,
   Funnel,
   Grid2X2,
@@ -21,7 +20,6 @@ import {
   Pencil,
   Search,
   Trash2,
-  Upload,
 } from "lucide-react";
 import {
   useDeleteProductMutation,
@@ -323,16 +321,14 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <div className="flex items-center justify-between">
-          <CustomPagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            onPageChange={(page) => setFilters({ ...filters, page })}
-            show={show}
-            setShow={setShow}
-            setFilters={setFilters}
-          />
-        </div>
+        <CustomPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) => setFilters({ ...filters, page })}
+          show={show}
+          setShow={setShow}
+          setFilters={setFilters}
+        />
       </div>
 
       {/* Delete Confirm Dialog */}
