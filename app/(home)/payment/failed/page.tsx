@@ -11,6 +11,7 @@ export default function Failed() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -44,7 +45,8 @@ export default function Failed() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-100">Transaction ID</span>
                 <span className="text-sm font-mono font-semibold text-gray-100">
-                  TXN-{Math.random().toString(36).substring(2, 10).toUpperCase()}
+                  {/* TXN-{Math.random().toString(36).substring(2, 10).toUpperCase()} */}
+                  TXN- 
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -106,7 +108,7 @@ export default function Failed() {
           </div>
 
           {/* Information Box */}
-          <div className="effect rounded-lg p-4 text-left">
+          <div className="effect  rounded-lg p-4 text-left">
             <div className="flex gap-3">
               <Mail className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div className="space-y-1">

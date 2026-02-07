@@ -13,6 +13,7 @@ export default function Success() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
 
         // Confetti animation
@@ -77,7 +78,8 @@ export default function Success() {
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-100">Transaction ID</span>
                                 <span className="text-sm font-mono font-semibold text-gray-100">
-                                    TXN-{Math.random().toString(36).substring(2, 10).toUpperCase()}
+                                    {/* TXN-{Math.random().toString(36).substring(2, 10).toUpperCase()}  */}
+                                    TXN-
                                 </span>
                             </div>
                             <div className="flex items-center justify-between">
