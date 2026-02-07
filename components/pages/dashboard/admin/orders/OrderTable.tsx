@@ -10,11 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import PaginationControls from "@/components/ui/paginationComponent";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
 import { Eye, MoreVertical, Pencil, X } from "lucide-react";
 import Loading from "@/components/pages/shared/Loading";
-import { OrderData, OrderItem, TProfileOrderData } from "@/types/orders";
+import { OrderData, OrderItem } from "@/types/orders";
 import Link from "next/link";
 import {
   Table,
@@ -27,6 +26,7 @@ import {
 import { PlaceBulkOrder } from "../../couriar/bulkOrder/PlaceBulkOrder";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import CustomPagination from "@/components/ui/CustomPagination";
 export function OrderTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filters, setFilters] = useState({
@@ -35,7 +35,7 @@ export function OrderTable() {
     page: 1,
     search: "",
   });
-
+  const [show, setShow] = useState("10");
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [courierOrders, setCourierOrders] = useState<{ [key: string]: any[] }>({});
@@ -391,16 +391,13 @@ export function OrderTable() {
       </div>
 
       {/* Pagination Controls */}
-      <PaginationControls
-        pagination={pagination}
-        onPrev={() => {
-          setFilters((f) => ({ ...f, page: Math.max(1, f.page - 1) }));
-          setSelectedOrders([]); // optional: clear selections when changing pages
-        }}
-        onNext={() => {
-          setFilters((f) => ({ ...f, page: f.page + 1 }));
-          setSelectedOrders([]); // optional
-        }}
+      <CustomPagination
+        currentPage={pagination.page}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
       />
     </div>
   );

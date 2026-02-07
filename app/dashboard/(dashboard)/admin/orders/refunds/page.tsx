@@ -2,12 +2,12 @@
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { pageHeader } from "@/styles/headerAndDecription";
 import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { Box, Briefcase, User, Archive, LucideIcon } from 'lucide-react';
+import { Box, Briefcase, User, Archive } from 'lucide-react';
 import PageHeader from "@/components/pages/dashboard/shared/pageHeader";
 import { OverviewCard } from "@/components/pages/dashboard/shared/overviewCard";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 const stats = [
     {
@@ -271,6 +271,14 @@ const ReturnAndRefunds = () => {
                     </Table>
                 </div>
             </Card>
+            {/* <CustomPagination
+                currentPage={pagination.page}
+                totalPages={10}
+                onPageChange={(page) => setFilters({ ...filters, page })}
+                show={show}
+                setShow={setShow}
+                setFilters={setFilters}
+            /> */}
         </div>
     );
 };
