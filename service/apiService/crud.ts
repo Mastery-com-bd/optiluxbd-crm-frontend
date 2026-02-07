@@ -3,10 +3,12 @@
 import { getValidToken } from "../authService/validToken";
 import { revalidatePath } from "next/cache";
 import { config } from "@/config";
-import { buildParams } from "@/utils/paramsBuilder";
 import { cookies } from "next/headers";
 import { Query } from "@/types/shared";
+import { buildParams } from "@/utills/paramsBuilder";
 
+
+//create
 export async function createData<T>(
   endPoint: string,
   revalPath: string,
@@ -97,5 +99,57 @@ export async function patchData<T>(
     return result;
   } catch (error: any) {
     return error;
+  }
+}
+
+
+
+
+//public api
+
+
+// public read
+export async function readPublicData(
+  endPoint: string,
+  tags: string[],
+  query?: Query,
+) {
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api}${endPoint}?${query ? buildParams(query) : ""}`,
+      {
+        method: "GET",
+        next: {
+          tags: [...tags],
+        },
+      } as RequestInit,
+    );
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return error;
+  }
+}
+
+
+//public create
+export async function createPublicData<T>(
+  endPoint: string,
+  revalPath: string,
+  data?: T,
+) {
+  try {
+    const res = await fetch(`${config.next_public_base_api}${endPoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    revalidatePath(revalPath);
+    return result;
+  } catch (error: any) {
+    return Error(error);
   }
 }
