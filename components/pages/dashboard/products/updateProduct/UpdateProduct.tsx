@@ -64,9 +64,8 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product }) => {
   const {
     register,
     handleSubmit,
-    setValue,
     control,
-    formState: { errors, isDirty },
+    formState: { isDirty },
   } = useForm<FormValues>({
     defaultValues: {
       name: product.name,

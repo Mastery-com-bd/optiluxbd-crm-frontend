@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { config } from "@/config";
 import { urlBase64ToUint8Array } from "@/lib/utils";
-import { Button } from "../ui/button";
 import { Bell } from "lucide-react";
 import {
   Popover,

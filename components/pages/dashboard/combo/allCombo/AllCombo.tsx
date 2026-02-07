@@ -473,16 +473,14 @@ const AllCombo = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <CustomPagination
-          currentPage={pagination.page}
-          totalPages={10}
-          onPageChange={(page) => setFilters({ ...filters, page })}
-          show={show}
-          setShow={setShow}
-          setFilters={setFilters}
-        />
-      </div>
+      <CustomPagination
+        currentPage={pagination.page}
+        totalPages={10}
+        onPageChange={(page) => setFilters({ ...filters, page })}
+        show={show}
+        setShow={setShow}
+        setFilters={setFilters}
+      />
     </section>
   );
 };
