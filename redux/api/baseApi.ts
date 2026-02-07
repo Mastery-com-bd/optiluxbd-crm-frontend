@@ -8,17 +8,12 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
 import { logOut } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: config.next_public_base_api,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token;
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
-    }
     return headers;
   },
 });
@@ -35,7 +30,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       {
         method: "POST",
         credentials: "include",
-      }
+      },
     );
     const data = await res.json();
     if (data?.data) {

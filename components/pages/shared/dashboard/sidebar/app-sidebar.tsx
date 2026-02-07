@@ -15,17 +15,12 @@ import {
 import { crmRoutes } from "@/constants/CRM_Navigation";
 import Optilux from "../../../../../public/images/OptiluxBD.png";
 import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  currentUser,
-  logOut,
-  TAuthUSer,
-} from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { logOut } from "@/redux/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { baseApi } from "@/redux/api/baseApi";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import SidebarButtonEffect from "./buttons/ItemButton";
 // This is sample data.
 const data = {
@@ -46,8 +41,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
-  const user = useAppSelector(currentUser);
-  // const { role } = getPermissions(user as TAuthUSer);
   const role = ["Owner"];
   const percent = 50;
 

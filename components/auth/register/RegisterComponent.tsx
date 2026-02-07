@@ -41,7 +41,7 @@ const registrationSchema = z.object({
     .regex(/[0-9]/, "Must include at least one number")
     .regex(
       /[!@#$%^&*(),.?":{}|<>]/,
-      "Must include at least one special character"
+      "Must include at least one special character",
     ),
 });
 
@@ -62,8 +62,6 @@ const RegisterComponent = ({ user }: { user: TSocialUser }) => {
   } = useForm<TRegisterForm>({
     resolver: zodResolver(registrationSchema),
   });
-
-  console.log(user);
 
   const onSubmit = async (data: TRegisterForm) => {
     // data.phone = `+88${data.phone}`;

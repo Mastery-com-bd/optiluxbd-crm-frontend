@@ -94,3 +94,8 @@ export const logout = async () => {
   }
   return result;
 };
+
+export const getAccesstoken = async () => {
+  const accessToken = (await cookies()).get("accessToken")?.value;
+  return accessToken;
+};
