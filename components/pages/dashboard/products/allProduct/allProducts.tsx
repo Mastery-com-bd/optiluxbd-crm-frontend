@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -102,10 +102,6 @@ const AllProducts = () => {
     } catch (error) {
       console.error("Error deleting product:", error);
     }
-  };
-
-  const HandlePageChange = (page: number) => {
-    setFilters({ ...filters, page });
   };
   const keys = [
     "Product",

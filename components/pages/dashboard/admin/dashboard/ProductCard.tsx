@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useState } from "react";
 import { TProductdata } from "./FooterSection";
 
 const ProductCard = ({ product }: { product: TProductdata }) => {
