@@ -36,7 +36,6 @@ const Customers = () => {
   });
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState("all");
-  const [show, setShow] = useState("10");
   const [category, setCategory] = useState("all");
   const categories = [
     { id: 1, name: "Electronics" },
@@ -151,14 +150,7 @@ const Customers = () => {
       )}
 
       {/* Pagination */}
-      <CustomPagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
-        onPageChange={(page) => setFilters({ ...filters, page })}
-        show={show}
-        setShow={setShow}
-        setFilters={setFilters}
-      />
+      <CustomPagination totalPage={pagination.totalPages} />
     </div>
   );
 };

@@ -16,6 +16,7 @@ import {
   CalendarClock,
   Target,
   CircleUserRound,
+  Radio,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -412,7 +413,11 @@ export const crmRoutes: TCrmNavigation = {
         icon: Phone,
         path: "/dashboard/admin/communication",
       },
-
+      {
+        title: "Broadcast",
+        icon: Radio,
+        path: "/dashboard/broadcast",
+      },
       {
         title: "Courier & Delivery",
         icon: PackageCheck,
