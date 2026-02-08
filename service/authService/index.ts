@@ -24,7 +24,6 @@ export const login = async (loginData: TLogin) => {
       },
     );
     const result = await res.json();
-
     if (result?.success) {
       const cookieStore = await cookies();
       cookieStore.set("accessToken", result?.data?.token, {
@@ -108,11 +107,6 @@ export const logout = async () => {
   } catch (error: any) {
     return Error(error);
   }
-};
-
-export const getAccesstoken = async () => {
-  const accessToken = (await cookies()).get("accessToken")?.value;
-  return accessToken;
 };
 
 export const getAccesstoken = async () => {

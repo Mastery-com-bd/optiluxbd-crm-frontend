@@ -2,7 +2,7 @@
 "use client";
 
 import { NotificationBell } from "@/components/notification/NotificationBell";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -10,10 +10,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { baseApi } from "@/redux/api/baseApi";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import { logOut } from "@/redux/features/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useUser } from "@/provider/AuthProvider";
+import { logout } from "@/service/authService";
 import { debounce } from "@/utills/debounce";
 import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
@@ -24,11 +22,10 @@ import { toast } from "sonner";
 const Navbar: React.FC = () => {
   // const { setTheme } = useTheme();
   const { state } = useSidebar();
-  const dispatch = useAppDispatch();
-  const [logout] = useLogoutMutation();
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const { setUser, user, setIsLoading } = useUser();
 
   const handleSearch = async (val: any) => {
     // setFilters({ ...filters, search: val });
@@ -48,15 +45,14 @@ const Navbar: React.FC = () => {
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
     try {
-      const res = await logout(undefined).unwrap();
-      if (res?.success) {
-        dispatch(logOut());
-        dispatch(baseApi.util.resetApiState());
-        toast.success(res?.message, {
-          id: toastId,
-          duration: 3000,
-        });
+      const res = await logout();
+      if (res.success) {
+        setIsLoading(true);
+        setUser(null);
+        toast.success(res?.message, { id: toastId, duration: 3000 });
         router.push("/login");
+      } else {
+        toast.error(res.message);
       }
     } catch (error: any) {
       const errorInfo =
@@ -102,16 +98,13 @@ const Navbar: React.FC = () => {
                 <button className="flex items-center gap-4 text-sm font-medium text-foreground/80 hover:bg-accent/50 hover:text-foreground transition-all duration-200 cursor-pointer p-2 rounded-lg ">
                   <Avatar className="w-10 h-10 rounded-lg">
                     <AvatarImage src="https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687" />
-                    <AvatarFallback className="bg-linear-to-br from-primary/20 to-primary/40 text-primary-foreground">
-                      BI
-                    </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:flex flex-col items-start">
                     <span className="text-sm font-semibold text-foreground">
-                      Name
+                      {user?.tenantSlug}
                     </span>
                     <span className="text-xs text-muted-foreground/70">
-                      Admin
+                      {user?.roles[0]}
                     </span>
                   </div>
                   <span>
@@ -126,12 +119,11 @@ const Navbar: React.FC = () => {
                 <div className="flex items-center gap-3 px-2 py-2">
                   <Avatar className="w-10 h-10">
                     <AvatarImage src="https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687" />
-                    <AvatarFallback>BI</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-semibold"> Name</p>
+                    <p className="text-sm font-semibold"> {user?.tenantSlug}</p>
                     <p className="text-xs text-muted-foreground">
-                      something@example.com
+                      {user?.roles[0]}
                     </p>
                   </div>
                 </div>

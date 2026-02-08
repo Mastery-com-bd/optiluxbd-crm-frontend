@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser, getNewToken, logout } from "./service/authService";
 import { isTokenExpired } from "./service/authService/validToken";
-
 import { permissionBasedRoutes } from "./constants/permissionBasedRoutes";
 import { hasPermission } from "./utills/hasPermission";
 import { getUserPermisssion } from "./service/user";
@@ -64,9 +63,9 @@ export const proxy = async (request: NextRequest) => {
     new URL(`/login`, request.url);
   }
 
-  //   if (role === "Landlord Admin") {
-  //     return response; // 🔥 FULL ACCESS
-  //   }
+  if (role === "Owner") {
+    return response; // 🔥 FULL ACCESS
+  }
 
   // ✅ Step 3: Role check
   const matchedRoute = permissionBasedRoutes.find((route) =>
