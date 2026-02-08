@@ -15,14 +15,12 @@ import {
 import { crmRoutes } from "@/constants/CRM_Navigation";
 import Optilux from "../../../../../public/images/OptiluxBD.png";
 import Image from "next/image";
-import { useAppDispatch } from "@/redux/hooks";
-import { logOut } from "@/redux/features/auth/authSlice";
 import { useRouter } from "next/navigation";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
-import { baseApi } from "@/redux/api/baseApi";
 import SidebarButtonEffect from "./buttons/ItemButton";
-// This is sample data.
+import { useUser } from "@/provider/AuthProvider";
+import { logout } from "@/service/authService";
+
 const data = {
   teams: [
     {
@@ -39,23 +37,20 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // const user = useAppSelector(currentUser);
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [logout] = useLogoutMutation();
-  const role = ["Owner"];
+  const { setUser, setIsLoading, user } = useUser();
   const percent = 50;
 
   const handleLogOut = async () => {
     const toastId = toast.loading("logging out", { duration: 3000 });
     try {
-      const res = await logout(undefined).unwrap();
-      if (res?.success) {
-        dispatch(logOut());
-        dispatch(baseApi.util.resetApiState());
-        toast.success(res?.message, {
-          id: toastId,
-          duration: 3000,
-        });
+      const res = await logout();
+      if (res.success) {
+        setIsLoading(true);
+        setUser(null);
+        toast.success(res?.message, { id: toastId, duration: 3000 });
         router.push("/login");
+      } else {
+        toast.error(res.message);
       }
     } catch (error: any) {
       const errorInfo =
@@ -82,8 +77,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
 
         <SidebarFooter>
-          {/* <NavUser user={user as TAuthUSer} /> */}
-          {role.includes("Agent") && (
+          {/* <NavUser /> */}
+          {user?.roles[0] === "Agent" && (
             <div className="w-full bg-[rgba(255,255,255,0.05)] effect rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
               <div className="flex items-center gap-2">
                 <div className="rounded-full border border-[rgba(255,107,0,0.5)] bg-[linear-gradient(135deg,rgba(255,107,0,0.30)_0%,rgba(255,107,0,0.10)_100%)] text-[#FF6B00] p-2">

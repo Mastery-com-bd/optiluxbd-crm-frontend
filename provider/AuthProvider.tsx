@@ -9,11 +9,10 @@ import {
   useState,
 } from "react";
 
-type TCurrentUser = {
-  userId: string;
-  email: string;
-  username: string;
-  role: string;
+export type TCurrentUser = {
+  userId: 1;
+  tenantSlug: string;
+  roles: string[];
   iat: number;
   exp: number;
 };
