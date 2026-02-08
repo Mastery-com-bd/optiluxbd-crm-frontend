@@ -2,9 +2,8 @@ import { AppSidebar } from "@/components/pages/shared/dashboard/sidebar/app-side
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../../globals.css";
+import "../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
-import AuthGuard from "@/provider/AuthGuardProvider";
 
 // Load custom fonts
 const geistSans = Geist({
@@ -44,8 +43,7 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset>
             <Navbar />
-            {/* <AuthGuard></AuthGuard> */}
-            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 px-1 overflow-hidden max-w-[1135px]">
+            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden max-w-[1135px]">
               {children}
             </div>
           </SidebarInset>

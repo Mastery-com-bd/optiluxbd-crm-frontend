@@ -5,7 +5,6 @@ import { config } from "@/config";
 import { getAccesstoken } from "../authService";
 import { getValidToken } from "../authService/validToken";
 import { revalidatePath } from "next/cache";
-import { TReason } from "@/components/dashboard/user/allUser/UserRejectModal";
 
 export type TCreateUserData = {
   name: string;
@@ -165,28 +164,6 @@ export const suspendUser = async (id: number) => {
         headers: {
           Authorization: token,
         },
-      },
-    );
-    const result = await res.json();
-    revalidatePath("/dashboard/user");
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-export const rejectUser = async (data: TReason, id: number) => {
-  const token = await getValidToken();
-  try {
-    const res = await fetch(
-      `${config.next_public_base_api}/auth/users/${id}/reject`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
       },
     );
     const result = await res.json();

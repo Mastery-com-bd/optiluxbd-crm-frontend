@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useState } from "react";
-import { useNotifications } from "@/hooks/useNotifications";
 import { config } from "@/config";
 import { urlBase64ToUint8Array } from "@/lib/utils";
 import { Bell } from "lucide-react";
@@ -15,15 +13,6 @@ import {
 import NotificationSvgComponent from "../svgIcon/NotificationSvgComponent";
 
 export function NotificationBell() {
-  const {
-    notifications,
-    unreadCount,
-    handleMarkAsRead,
-    handleMarkAllAsRead,
-    isConnected,
-    isLoading,
-    handleDeleteNotification,
-  } = useNotifications();
   // const [isOpen, setIsOpen] = useState(false);
   const [isPushSupported, setIsPushSupported] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -60,7 +49,7 @@ export function NotificationBell() {
         `${config.next_public_base_api}/notifications/push/vapid-key`,
         {
           credentials: "include",
-        }
+        },
       );
       if (!res.ok) throw new Error(`Failed to get VAPID key: ${res.status}`);
       const { data } = await res.json();
@@ -82,7 +71,7 @@ export function NotificationBell() {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ subscription }),
-        }
+        },
       );
       if (!subRes.ok) {
         const txt = await subRes.text();
@@ -123,13 +112,11 @@ export function NotificationBell() {
               style={{ borderWidth: "2px" }}
             />
 
-            {unreadCount > 0 && (
-              <span
-                className={`absolute -top-1.5 -right-1.5 flex items-center justify-center text-[10px] font-bold text-white bg-red-600 rounded-full h-5 min-w-5 px-1 `}
-              >
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
-            )}
+            <span
+              className={`absolute -top-1.5 -right-1.5 flex items-center justify-center text-[10px] font-bold text-white bg-red-600 rounded-full h-5 min-w-5 px-1 `}
+            >
+              99+
+            </span>
           </button>
         </PopoverTrigger>
         <PopoverContent
@@ -140,40 +127,12 @@ export function NotificationBell() {
             {/* Header */}
             <div className="p-2 space-y-3">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold ">
-                  Notifications {unreadCount > 0 && `(${unreadCount})`}
-                </h3>
+                <h3 className="text-lg font-semibold ">Notifications</h3>
 
                 {/* Connection indicator */}
-                <span
-                  title={
-                    isConnected
-                      ? "Connected"
-                      : isLoading
-                      ? "Loading..."
-                      : "Disconnected"
-                  }
-                  className={`w-3 h-3 rounded-full inline-block ${
-                    isConnected
-                      ? "bg-green-500"
-                      : isLoading
-                      ? "bg-yellow-400"
-                      : "bg-gray-300 dark:bg-gray-500"
-                  }`}
-                ></span>
               </div>
               <div className="flex flex-row-reverse justify-between items-center">
                 {/* Mark all as read */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMarkAllAsRead();
-                  }}
-                  disabled={unreadCount === 0}
-                  className="px-2 py-1 text-xs rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 disabled:opacity-50"
-                >
-                  Mark all read
-                </button>
 
                 {/* Push subscribe UI */}
                 {isPushSupported && (
@@ -189,8 +148,8 @@ export function NotificationBell() {
                     {pushLoading
                       ? "..."
                       : isSubscribed
-                      ? "Push Enabled"
-                      : "Enable Push"}
+                        ? "Push Enabled"
+                        : "Enable Push"}
                   </button>
                 )}
               </div>
@@ -198,70 +157,9 @@ export function NotificationBell() {
 
             {/* Notification List */}
             <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-700">
-              {notifications.length === 0 ? (
-                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                  No notifications yet
-                </div>
-              ) : (
-                <div className="space-y-2 py-2">
-                  {notifications.map((notification: any) => (
-                    <div
-                      key={notification.id}
-                      className={`px-2 py-1 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${
-                        !notification.isRead
-                          ? "bg-gray-200 dark:bg-gray-800"
-                          : ""
-                      }`}
-                      onClick={() => {
-                        handleMarkAsRead(notification.id);
-                        if (notification.actionUrl) {
-                          window.location.href = notification.actionUrl;
-                        }
-                      }}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                              {notification.title}
-                            </h4>
-                            {!notification.isRead && (
-                              <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                            {notification.message}
-                          </p>
-                          <p className="text-xs text-gray-400 dark:text-gray-400 mt-1">
-                            {new Date(notification.createdAt).toLocaleString()}
-                          </p>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteNotification(notification.id);
-                          }}
-                          className="text-gray-400 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-500 ml-2"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                No notifications yet
+              </div>
             </div>
           </div>
         </PopoverContent>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { NotificationBell } from "@/components/notification/NotificationBell";
@@ -12,22 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/provider/AuthProvider";
-import { baseApi } from "@/redux/api/baseApi";
-import { useLogoutMutation } from "@/redux/features/auth/authApi";
-import {
-  currentUser,
-  logOut,
-  TAuthUSer,
-} from "@/redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { motion } from "framer-motion";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 export type TSocialUser = {
   name: string;
@@ -35,46 +23,18 @@ export type TSocialUser = {
   image: string | null;
 };
 
-export default function Navbar({ user: authUser }: { user: TSocialUser }) {
-  const user = useAppSelector(currentUser);
+export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { setUser, setIsLoading } = useUser();
-  // const { setTheme } = useTheme();
-  // const dispatch = useAppDispatch();
-  // const [logout] = useLogoutMutation();
+  const { user } = useUser();
+  const role = user?.role;
 
-  const { role } = getPermissions(user as TAuthUSer);
-
-  const dashboardRoute = role.includes("ADMIN")
-    ? "/dashboard/admin/admin-dashboard"
-    : "/dashboard/agent/profile";
+  const dashboardRoute =
+    role === "ADMIN"
+      ? "/dashboard/admin/admin-dashboard"
+      : "/dashboard/agent/profile";
 
   const handleLogOut = async () => {
-    const toastId = toast.loading("logging out", { duration: 3000 });
-    try {
-      // const res = await logout(undefined).unwrap();
-      // if (res?.success) {
-      setIsLoading(true);
-      //   dispatch(logOut());
-      //   dispatch(baseApi.util.resetApiState());
-      //   toast.success(res?.message, {
-      //     id: toastId,
-      //     duration: 3000,
-      //   });
-      //   router.push("/login");
-      //   signOut({ callbackUrl: "/login" });
-      // }
-      setUser(null);
-      signOut({ callbackUrl: "/login" });
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.message ||
-        error?.data?.errors[0]?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { id: toastId, duration: 3000 });
-    }
+    console.log("clicked");
   };
 
   return (
@@ -84,7 +44,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
         "fixed max-w-full w-full z-50 backdrop-blur-md bg-black/40 border-b border-white/10 ",
-        "text-white"
+        "text-white",
       )}
     >
       <div className="max-w-[1444px] mx-auto px-4 ">
@@ -110,7 +70,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
                 href="/products"
                 className={cn(
                   "hover:text-yellow-400 transition",
-                  pathname === "/products" && "text-yellow-400"
+                  pathname === "/products" && "text-yellow-400",
                 )}
               >
                 Products
@@ -121,7 +81,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
                 href="/all-user"
                 className={cn(
                   "hover:text-yellow-400 transition",
-                  pathname === "/products" && "text-yellow-400"
+                  pathname === "/products" && "text-yellow-400",
                 )}
               >
                 Products
@@ -150,26 +110,6 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
             <div className="relative w-10 h-10 overflow-hidden rounded-full hover:bg-accent transition-colors">
-              {/* <button
-                onClick={() => {
-                  setTheme("light");
-                  console.log("clicked sun");
-                }}
-                className={`absolute inset-0 items-center justify-center transition-transform duration-300 ease-in-out hidden dark:flex`}
-                aria-label="Switch to light mode"
-              >
-                <SunIcon className="w-6 h-6" />
-              </button>
-              <button
-                onClick={() => {
-                  setTheme("dark");
-                  console.log("clicked moon");
-                }}
-                className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-in-out dark:hidden`}
-                aria-label="Switch to dark mode"
-              >
-                <MoonIcon className="w-6 h-6" />
-              </button> */}
               <NotificationBell />
             </div>
             <DropdownMenu>
@@ -236,7 +176,7 @@ export default function Navbar({ user: authUser }: { user: TSocialUser }) {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            {authUser ? (
+            {user ? (
               <>
                 <Link href={dashboardRoute}>
                   <ButtonComponent

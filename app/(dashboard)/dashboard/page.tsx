@@ -1,6 +1,6 @@
 import Dashboard from "@/components/pages/dashboard/admin/dashboard/Dashboard";
 
-const AdminDashboardPage = () => {
+const DashboardRoute = () => {
   return (
     <section>
       <Dashboard />
@@ -8,4 +8,4 @@ const AdminDashboardPage = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default DashboardRoute;

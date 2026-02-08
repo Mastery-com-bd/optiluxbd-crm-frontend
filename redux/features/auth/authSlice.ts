@@ -1,4 +1,3 @@
-import { RootState } from "@/redux/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TPermission = {
@@ -50,5 +49,3 @@ const authSlice = createSlice({
 
 export const { setUser, setToken, logOut } = authSlice.actions;
 export default authSlice.reducer;
-export const currentToken = (state: RootState) => state.auth.token;
-export const currentUser = (state: RootState) => state.auth.user;

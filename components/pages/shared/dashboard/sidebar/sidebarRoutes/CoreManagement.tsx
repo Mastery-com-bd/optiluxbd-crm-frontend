@@ -14,10 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import SubItemButton from "@/components/pages/shared/dashboard/sidebar/buttons/SubItemButton";
 import { NavRoute } from "@/constants/CRM_Navigation";
-import { currentUser, TAuthUSer } from "@/redux/features/auth/authSlice";
-import { useAppSelector } from "@/redux/hooks";
-import { getPermissions } from "@/utills/getPermissionAndRole";
-import { getSidebarRoutes } from "@/utills/getSidebarRoutes";
 import { matchRoute } from "@/utills/matchRoute";
 import { Minus, Plus } from "lucide-react";
 import Link from "next/link";
@@ -36,10 +32,7 @@ const CoreManagement = ({
   platform,
   singleRoute,
 }: TCoreManagementRoute) => {
-  const user = useAppSelector(currentUser);
-  const { role, permissions } = getPermissions(user as TAuthUSer);
   const pathname = usePathname();
-  const visibleRoutes = getSidebarRoutes(sidebarRoutes, role, permissions);
   const [open, setOpen] = useState(false);
   const isActiveCommunication = pathname === singleRoute?.path;
 
@@ -48,7 +41,7 @@ const CoreManagement = ({
       {platform && <SidebarGroupLabel>{platform}</SidebarGroupLabel>}
 
       <SidebarMenu>
-        {visibleRoutes.map((item, i) => {
+        {sidebarRoutes.map((item, i) => {
           const isActive = pathname === item.path;
 
           if (!item.children || item.children.length === 0) {
@@ -153,7 +146,7 @@ const CoreManagement = ({
                         : false;
 
                       const visibleChildrenRoute = subItem?.children
-                        ? getSidebarRoutes(subItem?.children, role, permissions)
+                        ? subItem?.children
                         : [];
                       const hasChildren =
                         subItem?.children && subItem?.children.length > 0
@@ -220,7 +213,7 @@ const CoreManagement = ({
                                           const isActive = childItem.path
                                             ? matchRoute(
                                                 pathname,
-                                                childItem.path
+                                                childItem.path,
                                               )
                                             : false;
                                           return (
@@ -234,7 +227,7 @@ const CoreManagement = ({
                                               />
                                             </SidebarMenuSubItem>
                                           );
-                                        }
+                                        },
                                       )}
                                     </SidebarMenuSub>
                                   </CollapsibleContent>

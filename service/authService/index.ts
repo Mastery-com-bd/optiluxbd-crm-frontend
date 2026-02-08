@@ -114,3 +114,8 @@ export const getAccesstoken = async () => {
   const accessToken = (await cookies()).get("accessToken")?.value;
   return accessToken;
 };
+
+export const getAccesstoken = async () => {
+  const accessToken = (await cookies()).get("accessToken")?.value;
+  return accessToken;
+};
