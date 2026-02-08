@@ -45,11 +45,11 @@ const courierServices = [
 
 export function CourierPatnerCards() {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 ">
       {courierServices.map((service) => (
-        <LiquidGlass borderRadius="24px" key={service.name}>
+        <div className="rounded-3xl effect hover:scale-[1.02] transition-transform duration-300" key={service.name}>
           <div
-            className={`relative rounded-3xl border overflow-hidden border-white/10 p-6 hover:scale-[1.02] transition-transform duration-300`}
+            className={`relative rounded-3xl overflow-hidden  p-6 `}
           >
             <svg
               width="266"
@@ -161,7 +161,7 @@ export function CourierPatnerCards() {
               ))}
             </div>
           </div>
-        </LiquidGlass>
+        </div>
       ))}
     </div>
   );

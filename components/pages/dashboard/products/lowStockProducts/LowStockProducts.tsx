@@ -23,7 +23,13 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import ProductCard from "../productCard/ProductCart";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Loading from "@/components/pages/shared/Loading";
@@ -32,12 +38,13 @@ import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import { toast } from "sonner";
 import { useDeleteProductMutation, useGetAllProductQuery } from "@/redux/features/products/productsApi";
 import { Product } from "@/types/product";
-import PaginationControls from "@/components/ui/paginationComponent";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 
 
 const LowStockProducts = () => {
+    const [show, setShow] = useState("10");
     const [isGridView, setIsGridView] = useState(false);
     const [filters, setFilters] = useState({
         search: "",
@@ -316,10 +323,13 @@ const LowStockProducts = () => {
                 )}
 
                 {/* Pagination */}
-                <PaginationControls
-                    pagination={pagination}
-                    onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-                    onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+                <CustomPagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.totalPages}
+                    onPageChange={(page) => setFilters({ ...filters, page })}
+                    show={show}
+                    setShow={setShow}
+                    setFilters={setFilters}
                 />
             </div>
 

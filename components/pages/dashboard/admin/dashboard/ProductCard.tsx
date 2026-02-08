@@ -1,22 +1,11 @@
 import Image from "next/image";
-import { useState } from "react";
 import { TProductdata } from "./FooterSection";
 
 const ProductCard = ({ product }: { product: TProductdata }) => {
-  const [hover, setHover] = useState(false);
   return (
     <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       className="flex items-center justify-between gap-10 p-3 rounded-xl hover:bg-white/10 duration-500 relative"
     >
-      {hover && (
-        <div className="absolute top-0 left-px inset-3 border-l border-t border-white/40 rounded-tl-xl pointer-events-none" />
-      )}
-      {hover && (
-        <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/40 rounded-br-xl pointer-events-none" />
-      )}
-
       <div className="flex gap-4">
         <Image
           src={
@@ -37,18 +26,14 @@ const ProductCard = ({ product }: { product: TProductdata }) => {
           <span>{product?.price.toFixed(2)}</span>
         </p>
         <div
-          className={`relative rounded-lg px-3 ${
-            product?.status === "Active"
+          className={`relative rounded-lg px-3 effect ${product?.status === "Active"
               ? "bg-[rgba(0,166,86,0.05)]"
               : "bg-[rgba(255,106,85,0.05)] "
-          }`}
-        >
-          <div className="absolute top-0 left-0 inset-2 border-l border-t border-white/30 rounded-tl-lg pointer-events-none" />
-          <div className="absolute bottom-0 right-0 inset-2 border-r border-b border-white/30 rounded-br-lg pointer-events-none" />
-          <span
-            className={`text-xs ${
-              product?.status === "Active" ? "text-success" : "text-[#F85E5E]"
             }`}
+        >
+          <span
+            className={`text-xs ${product?.status === "Active" ? "text-success" : "text-[#F85E5E]"
+              }`}
           >
             {product?.status}
           </span>

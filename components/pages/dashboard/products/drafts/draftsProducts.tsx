@@ -36,13 +36,14 @@ import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import { toast } from "sonner";
 import { useDeleteProductMutation, useGetAllProductQuery } from "@/redux/features/products/productsApi";
 import { Product } from "@/types/product";
-import PaginationControls from "@/components/ui/paginationComponent";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import PageHeader from "../../shared/pageHeader";
+import CustomPagination from "@/components/ui/CustomPagination";
 
 
 
 const DraftsProducts = () => {
+  const [show, setShow] = useState("10");
   const user = useAppSelector(currentUser);
   const [isGridView, setIsGridView] = useState(false);
   const { permissions } = getPermissions(user as TAuthUSer);
@@ -325,10 +326,13 @@ const DraftsProducts = () => {
         )}
 
         {/* Pagination */}
-        <PaginationControls
-          pagination={pagination}
-          onPrev={() => setFilters({ ...filters, page: filters.page - 1 })}
-          onNext={() => setFilters({ ...filters, page: filters.page + 1 })}
+        <CustomPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) => setFilters({ ...filters, page })}
+          show={show}
+          setShow={setShow}
+          setFilters={setFilters}
         />
       </div>
 

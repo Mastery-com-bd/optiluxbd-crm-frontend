@@ -204,7 +204,6 @@ export function AgentProfile() {
           <PerformanceChart />
         </div>
       </div>
-      <MonthlyAttendance />
     </div>
   );
 }

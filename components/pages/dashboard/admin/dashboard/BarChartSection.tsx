@@ -10,7 +10,7 @@ import {
 
 const BAR_COLORS = ["#FFB13F", "#3A63DE", "#9C3ADE"];
 
-// ✅ Single source of truth (month + value together)
+// Single source of truth (month + value together)
 const chartData = [
   { month: "Jan", number: 1200 },
   { month: "Feb", number: 1500 },
@@ -34,7 +34,7 @@ const chartConfig = {
 
 const BarChartSection = () => {
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <ChartContainer config={chartConfig} className="shadow-none ">
         <BarChart
           accessibilityLayer
@@ -71,7 +71,7 @@ const BarChartSection = () => {
 
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-          {/* 🎯 Color cycles based on index */}
+          {/*Color cycles based on index */}
           <Bar dataKey="number" barSize={35} radius={[15, 15, 15, 15]}>
             {chartData.map((_, index) => (
               <Cell

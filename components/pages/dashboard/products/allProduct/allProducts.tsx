@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  ChevronDown,
   Eye,
   Funnel,
   Grid2X2,
@@ -21,7 +20,6 @@ import {
   Pencil,
   Search,
   Trash2,
-  Upload,
 } from "lucide-react";
 import {
   useDeleteProductMutation,
@@ -104,10 +102,6 @@ const AllProducts = () => {
     } catch (error) {
       console.error("Error deleting product:", error);
     }
-  };
-
-  const HandlePageChange = (page: number) => {
-    setFilters({ ...filters, page });
   };
   const keys = [
     "Product",
@@ -323,16 +317,14 @@ const AllProducts = () => {
         )}
 
         {/* Pagination */}
-        <div className="flex items-center justify-between">
-          <CustomPagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            onPageChange={(page) => setFilters({ ...filters, page })}
-            show={show}
-            setShow={setShow}
-            setFilters={setFilters}
-          />
-        </div>
+        <CustomPagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) => setFilters({ ...filters, page })}
+          show={show}
+          setShow={setShow}
+          setFilters={setFilters}
+        />
       </div>
 
       {/* Delete Confirm Dialog */}
