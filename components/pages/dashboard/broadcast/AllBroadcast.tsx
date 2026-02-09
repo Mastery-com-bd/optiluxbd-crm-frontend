@@ -29,7 +29,11 @@ const AllBroadcast = ({ broadcasts }: { broadcasts: TBroadcast[] }) => {
 
   const handleChange = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set(name, value);
+    if (value === "all") {
+      params.delete(name);
+    } else {
+      params.set(name, value.toString());
+    }
     router.push(`${pathName}?${params.toString()}`, {
       scroll: false,
     });
@@ -39,7 +43,7 @@ const AllBroadcast = ({ broadcasts }: { broadcasts: TBroadcast[] }) => {
     router.push(`${pathName}`);
     setShow("10");
     setCurrentPage(1);
-    setStatus("All");
+    setStatus("all");
   };
 
   return (
@@ -62,7 +66,7 @@ const AllBroadcast = ({ broadcasts }: { broadcasts: TBroadcast[] }) => {
           }}
         >
           <SelectTrigger className="w-40" aria-label="Category Filter">
-            <SelectValue placeholder="Category" />
+            <SelectValue placeholder="Select Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>

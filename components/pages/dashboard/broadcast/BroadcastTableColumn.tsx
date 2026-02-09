@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import ActionDropdown from "@/components/ui/ActionDropdown";
 import { Badge } from "@/components/ui/badge";
 import TooltipComponent from "@/components/ui/TooltipComponent";
+import { readBroadcast } from "@/service/broadcast";
 import { TBroadcast } from "@/types/broadcast.types";
 import { convertDate } from "@/utills/dateConverter";
 import { ColumnDef } from "@tanstack/react-table";
+import { Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
 
 export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
   {
@@ -34,7 +39,9 @@ export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
     header: "Type",
     cell: ({ row }) => {
       const type = row.original?.type;
-      return <p>{type}</p>;
+      return (
+        <p>{type?.charAt(0).toUpperCase() + type?.slice(1).toLowerCase()}</p>
+      );
     },
   },
   {
@@ -47,6 +54,15 @@ export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
           {status ? "Active" : "Inactive"}
         </Badge>
       );
+    },
+  },
+
+  {
+    accessorKey: "createdBy",
+    header: "Created By",
+    cell: ({ row }) => {
+      const createdBy = row.original?.createdBy;
+      return <p>{createdBy}</p>;
     },
   },
   {
@@ -67,37 +83,22 @@ export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
     header: "Read At",
     cell: ({ row }) => {
       const readAt = row.original?.readAt;
+      const { creationDate, creationTime } = convertDate(
+        new Date(row.original?.createdAt),
+      );
       return (
         <>
           {readAt && (
-            <h1 className="flex flex-col items-start">
-              <span>
-                {
-                  convertDate(new Date(row.original?.readAt as string))
-                    .creationDate
-                }
-              </span>
-              <span>
-                {
-                  convertDate(new Date(row.original?.readAt as string))
-                    .creationTime
-                }
-              </span>
-            </h1>
+            <div className="flex flex-col text-xs leading-tight whitespace-nowrap">
+              <span className="font-medium">{creationDate}</span>
+              <span className="text-muted-foreground">{creationTime}</span>
+            </div>
           )}
         </>
       );
     },
   },
 
-  {
-    accessorKey: "createdBy",
-    header: "Created By",
-    cell: ({ row }) => {
-      const createdBy = row.original?.createdBy;
-      return <p>{createdBy}</p>;
-    },
-  },
   {
     accessorKey: "createdAt",
     header: "Created",
@@ -107,10 +108,10 @@ export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
       );
 
       return (
-        <h1 className="flex flex-col items-start">
-          <span>{creationDate}</span>
-          <span>{creationTime}</span>
-        </h1>
+        <div className="flex flex-col text-xs leading-tight whitespace-nowrap">
+          <span className="font-medium">{creationDate}</span>
+          <span className="text-muted-foreground">{creationTime}</span>
+        </div>
       );
     },
   },
@@ -118,26 +119,59 @@ export const broadcastTableColumn = (): ColumnDef<TBroadcast>[] => [
     accessorKey: "expiresAt",
     header: "Expires At",
     cell: ({ row }) => {
-      const readAt = row.original?.expiresAt;
+      const expiresAt = row.original?.expiresAt;
+      const { creationDate, creationTime } = convertDate(
+        new Date(row.original?.expiresAt as string),
+      );
       return (
         <>
-          {readAt && (
-            <h1 className="flex flex-col items-start">
-              <span>
-                {
-                  convertDate(new Date(row.original?.expiresAt as string))
-                    .creationDate
-                }
-              </span>
-              <span>
-                {
-                  convertDate(new Date(row.original?.expiresAt as string))
-                    .creationTime
-                }
-              </span>
-            </h1>
+          {expiresAt && (
+            <div className="flex flex-col text-xs leading-tight whitespace-nowrap">
+              <span className="font-medium">{creationDate}</span>
+              <span className="text-muted-foreground">{creationTime}</span>
+            </div>
           )}
         </>
+      );
+    },
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      const id = row.original.id;
+      const isRead = row.original?.isRead;
+      const handleChange = async (
+        setLoading: Dispatch<SetStateAction<boolean>>,
+      ) => {
+        const toastId = toast.loading("updating");
+        try {
+          const res = await readBroadcast(id.toString());
+          if (res?.success) {
+            setLoading(false);
+            toast.success(res?.message, { id: toastId, duration: 3000 });
+          } else {
+            setLoading(false);
+            toast.error(res?.message, { id: toastId, duration: 3000 });
+          }
+        } catch (error: any) {
+          const errorInfo =
+            error?.error ||
+            error?.data?.message ||
+            error?.data?.errors[0]?.message ||
+            "Something went wrong!";
+          setLoading(false);
+          toast.error(errorInfo, { id: toastId, duration: 3000 });
+        }
+      };
+      return (
+        <ActionDropdown
+          path={`dashboard/broadcast/${id}`}
+          detailsButtonName="View Details"
+          buttonName="Mark as Read"
+          handleChange={handleChange}
+          isConfirmed={isRead}
+        />
       );
     },
   },

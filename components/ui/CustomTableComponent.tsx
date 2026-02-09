@@ -74,7 +74,7 @@ const TableComponent = <T,>({ data = [], columns }: TableProps<T>) => {
             <tr>
               <td
                 colSpan={columns.length}
-                className="p-8 text-center text-muted-foreground"
+                className="p-2 font-medium text-sm whitespace-nowrap text-center"
               >
                 No data available
               </td>
