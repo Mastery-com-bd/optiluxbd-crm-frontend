@@ -2,15 +2,6 @@
 "use client";
 
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
-import { useLoginMutation } from "@/redux/features/auth/authApi";
-import {
-  setToken,
-  setUser,
-  TAuthUSer,
-  TUSerRole,
-} from "@/redux/features/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
-import { getPermissions } from "@/utills/getPermissionAndRole";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,6 +17,7 @@ import { IoLogoGoogle } from "react-icons/io5";
 import LargeYellowSvg from "@/components/svgIcon/LargeYellowSvg";
 import { signIn } from "next-auth/react";
 import { useUser } from "@/provider/AuthProvider";
+import { login } from "@/service/authService";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -35,8 +27,6 @@ const loginSchema = z.object({
 export type TLoginData = z.infer<typeof loginSchema>;
 
 const LoginComponent = () => {
-  const [login] = useLoginMutation();
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const { visible, toggle } = usePasswordToggle();
   const [redirect, setRedirect] = useState<string | null>(null);
@@ -64,50 +54,15 @@ const LoginComponent = () => {
   const onSubmit = async (data: TLoginData) => {
     const toastId = toast.loading("logging in");
     try {
-      const res = await login(data).unwrap();
+      const res = await login(data);
       if (res?.success) {
-        const token = res?.data?.token;
         setIsLoading(false);
         await refetchUser();
-        const roles: TUSerRole[] =
-          res?.data?.userData?.roles?.map((r: any) => ({
-            userId: r.userId,
-            role: {
-              name: r.role.name,
-              permissions:
-                r.role.permissions?.map((p: any) => ({
-                  name: p.permission.name,
-                })) || [],
-            },
-          })) || [];
-
-        const user: TAuthUSer = {
-          id: res?.data?.userData?.id,
-          name: res?.data?.userData?.name,
-          email: res?.data?.userData?.email,
-          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
-          roles: roles,
-        };
-        const { role } = getPermissions(res?.data?.userData);
-        dispatch(setUser(user as TAuthUSer));
-        dispatch(setToken(token));
         toast.success(res?.message, { id: toastId, duration: 3000 });
         reset();
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          if (!role.length) {
-            router.push("/activeAccount");
-            return;
-          }
-          if (role.includes("Owner")) {
-            router.push("/dashboard");
-          } else if (role.includes("Agent")) {
-            router.push("dashboard/agentDashboard/profile");
-          } else {
-            router.push("/dashboard/profile");
-          }
-        }
+        router.push(redirect ? redirect : "/dashboard");
+      } else {
+        toast.error(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       const errorInfo =
@@ -122,48 +77,16 @@ const LoginComponent = () => {
   const handleAdmin = async (data: { email: string; password: string }) => {
     const toastId = toast.loading("logging in");
     try {
-      const res = await login(data).unwrap();
+      const res = await login(data);
+
       if (res?.success) {
         setIsLoading(false);
         await refetchUser();
-        const roles: TUSerRole[] =
-          res?.data?.userData?.roles?.map((r: any) => ({
-            userId: r.userId,
-            role: {
-              name: r.role.name,
-              permissions:
-                r.role.permissions?.map((p: any) => ({
-                  name: p.permission.name,
-                })) || [],
-            },
-          })) || [];
-        const user: TAuthUSer = {
-          id: res?.data?.userData?.id,
-          name: res?.data?.userData?.name,
-          email: res?.data?.userData?.email,
-          avatar_secure_url: res?.data?.userData?.avatar_secure_url || null,
-          roles: roles,
-        };
-        const token = res?.data?.token;
-        const { role } = getPermissions(res?.data?.userData);
-        dispatch(setUser(user as TAuthUSer));
-        dispatch(setToken(token));
         toast.success(res?.message, { id: toastId, duration: 3000 });
-        if (redirect) {
-          router.push(redirect);
-        } else {
-          if (!role.length) {
-            router.push("/activeAccount");
-            return;
-          }
-          if (role.includes("Owner")) {
-            router.push("/dashboard");
-          } else if (role.includes("Agent")) {
-            router.push("dashboard/agentDashboard/profile");
-          } else {
-            router.push("/dashboard/profile");
-          }
-        }
+        reset();
+        router.push(redirect ? redirect : "/dashboard");
+      } else {
+        toast.error(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       const errorInfo =
@@ -222,13 +145,13 @@ const LoginComponent = () => {
               disabled={isSubmitting}
               onClick={() =>
                 handleAdmin({
-                  email: "organization1@gmail.com",
-                  password: "Password@123",
+                  email: "owner@gmail.com",
+                  password: "owner123",
                 })
               }
               className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
             >
-              {isSubmitting ? "Logging in..." : "Owner"}
+              Owner
             </button>
             <button
               type="submit"
@@ -254,7 +177,7 @@ const LoginComponent = () => {
               }
               className="font-medium py-2 w-full rounded-full flex items-center justify-center text-[#C3C0D8] border border-[#2C293D] gap-2 cursor-pointer"
             >
-              {isSubmitting ? "Logging in..." : " Team Leader"}
+              {isSubmitting ? "Logging in..." : " Leader"}
             </button>
           </div>
         )}

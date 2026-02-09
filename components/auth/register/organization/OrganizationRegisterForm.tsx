@@ -27,8 +27,7 @@ interface PriceData {
     billingCycle: string;
 }
 
-export default function OrganizationRegisterForm({ planData }: { planData?: { planId: number, slug: string } }) {
-
+export default function OrganizationRegisterForm({ planData }: { planData?: { planId: string, slug: string } }) {
     const [plans, setPlans] = useState<TPlan[]>([]);
     const [couponValidationResult, setCouponValidationResult] = useState<any>(null);
     const [priceData, setPriceData] = useState<PriceData | null>(null);
@@ -67,7 +66,6 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
     const selectedPlan = form.watch("planId");
     const billingCycle = form.watch("billingCycle");
     const couponCode = form.watch("couponCode");
-
     // Function to fetch price
     const fetchPrice = useCallback(async (planId: string | number, cycle: string, coupon?: string) => {
         if (!planId || !cycle) return;
@@ -75,11 +73,10 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
         setIsLoadingPrice(true);
         try {
             const res = await calculatePrice({
-                planId,
+                planId: Number(planId),
                 billingCycle: cycle,
                 couponCode: coupon || undefined,
             });
-
             if (res.success) {
                 setPriceData(res.data);
             } else {
@@ -91,7 +88,7 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
         } finally {
             setIsLoadingPrice(false);
         }
-    }, []);
+    }, [billingCycle]);
 
     // Debounced coupon validation
     const debouncedValidateCoupon = useMemo(
@@ -424,7 +421,7 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {plans.map((plan) => (
+                                            {plans?.map((plan) => (
                                                 <SelectItem key={plan.id} value={plan.id.toString()}>
                                                     {plan.name}
                                                 </SelectItem>

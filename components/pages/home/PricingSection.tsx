@@ -6,11 +6,24 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { TPlan } from "@/types/plan.types";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/provider/AuthProvider";
 
 export default function PricingSection({ plans }: { plans: TPlan[] }) {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "monthly",
   );
+  const router = useRouter();
+  const { user } = useUser();
+
+  function handlePlanSelect(planId: number, slug: string) {
+    if (!user) {
+      router.push(`/register/organization?planId=${planId}&slug=${slug}`);
+    } else {
+      // Handle plan selection for logged-in users, e.g., redirect to dashboard or billing page
+      router.push(`/payment/subscribe?planId=${planId}&slug=${slug}`);
+    }
+  }
   return (
     <section
       className=" bg-[#030115] text-white relative  bg-no-repeat bg-bottom"
@@ -52,16 +65,15 @@ export default function PricingSection({ plans }: { plans: TPlan[] }) {
           {plans.map((plan) => (
             <div
               key={plan?.name}
-              className={`relative group rounded-4xl p-8 transition-all duration-500 border  ${
-                Number(plan?.trialDays)
-                  ? "bg-white/5 border-[#AB28FA] shadow-[0_0_40px_rgba(168,85,247,0.15)]"
-                  : "bg-white/2 border-white/30"
-              } backdrop-blur-sm hover:bg-white/8`}
+              className={`relative group rounded-4xl p-8 transition-all duration-500 border  ${plan?.isActive === true
+                ? "bg-white/5 border-[#AB28FA] shadow-[0_0_40px_rgba(168,85,247,0.15)]"
+                : "bg-white/2 border-white/30"
+                } backdrop-blur-sm hover:bg-white/8`}
             >
               <div
-                className={`${Number(plan?.trialDays) ? "" : ""} space-y-4 `}
+                className={`${plan?.isActive === true ? "" : ""} space-y-4 `}
               >
-                {Number(plan?.trialDays) ? (
+                {plan?.isActive === true ? (
                   <div
                     className="w-[152px]  border border-[#A25ACD] px-3 py-1   flex justify-center items-center overflow-hidden rounded-xl"
                     style={{
@@ -102,10 +114,10 @@ export default function PricingSection({ plans }: { plans: TPlan[] }) {
                 {plan.features.map((feature, idx) => (
                   <div key={idx} className="flex items-center gap-3 ">
                     <div
-                      className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center ${Number(plan?.trialDays) ? "border-[#AB28FA]" : "border-white/20"}`}
+                      className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center ${plan?.isActive === true ? "border-[#AB28FA]" : "border-white/20"}`}
                     >
                       <Check
-                        className={`w-3 h-3 ${Number(plan?.trialDays) ? "text-[#AB28FA]" : "text-gray-400"}`}
+                        className={`w-3 h-3 ${plan?.isActive === true ? "text-[#AB28FA]" : "text-gray-400"}`}
                       />
                     </div>
                     <span className="text-sm text-[#9A98B9] text-[16px]">
@@ -116,21 +128,21 @@ export default function PricingSection({ plans }: { plans: TPlan[] }) {
               </div>
 
               <button
-                className={`w-full py-4 rounded-4xl font-semibold transition-all duration-300 backdrop-blur-xl bg-white/5 border border-red-700 ${
-                  Number(plan?.trialDays)
-                    ? "text-white hover:opacity-90 shadow-lg shadow-purple-500/20 border-[1.5px] border-[#D028FA]"
-                    : " border-[1.5px] border-white/40 text-white hover:bg-white/10"
-                }`}
+                onClick={() => handlePlanSelect(plan.id, plan.slug)}
+
+                className={`cursor-pointer w-full py-4 rounded-4xl font-semibold transition-all duration-300 backdrop-blur-xl bg-white/5 border ${plan?.isActive === true
+                  ? "text-white hover:opacity-90 shadow-lg shadow-purple-500/20 border-[1.5px] border-[#D028FA]"
+                  : " border-[1.5px] border-white/40 text-white hover:bg-white/10"
+                  }`}
                 style={{
-                  backgroundImage: `${
-                    Number(plan?.trialDays)
-                      ? "linear-gradient(0deg,rgba(208, 40, 250, 0.55) 20%, rgba(208, 40, 250, 0.12) 99%)"
-                      : "linear-gradient(180deg,rgba(34, 2, 48, 0.42) 82%, rgba(115, 51, 138, 0.5) 100%)"
-                  }`,
+                  backgroundImage: `${plan?.isActive === true
+                    ? "linear-gradient(0deg,rgba(208, 40, 250, 0.55) 20%, rgba(208, 40, 250, 0.12) 99%)"
+                    : "linear-gradient(180deg,rgba(34, 2, 48, 0.42) 82%, rgba(115, 51, 138, 0.5) 100%)"
+                    }`,
                 }}
               >
-                {Number(plan?.trialDays) ? (
-                  <span>Start {plan?.trialDays} Free Trial</span>
+                {plan?.isActive === true ? (
+                  <span>Start {plan?.trialDays === "0"} Free Trial</span>
                 ) : (
                   "Purchage"
                 )}

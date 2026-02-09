@@ -4,12 +4,12 @@ import PricingSection from "@/components/pages/home/PricingSection";
 import TestimonialsSection from "@/components/pages/home/TestimonialsSection";
 import SecondSection from "@/components/pages/home/SecondSection";
 import FAQ from "@/components/pages/home/FAQ";
-import { getAllPlans } from "@/service/plan";
 import { Suspense } from "react";
 import PricingSkeleton from "@/components/pages/home/PricingSkeleton";
+import { getAllPlan } from "@/service/planService";
 
 const Home = async () => {
-  const result = await getAllPlans();
+  const result = await getAllPlan();
   const plans = result?.data || [];
 
   return (
