@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Pagination,
@@ -18,31 +17,49 @@ import {
 import { Button } from "./button";
 import { ChevronDown } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-interface PaginationProps {
+type TCustomPaginationProps = {
+  totalPage: number;
   currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
   show: string;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
   setShow: Dispatch<SetStateAction<string>>;
-  setFilters: Dispatch<SetStateAction<any>>;
-}
+  handleChange: (name: string, value: string) => void;
+};
 
 const CustomPagination = ({
-  currentPage = 1,
-  totalPages = 10,
-  onPageChange,
+  totalPage = 10,
+  currentPage,
   show,
+  setCurrentPage,
   setShow,
-  setFilters,
-}: PaginationProps) => {
+  handleChange,
+}: TCustomPaginationProps) => {
+  const router = useRouter();
+  const pathName = usePathname();
+
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      router.push(`${pathName}?page=${currentPage - 1}`);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+      router.push(`${pathName}?page=${currentPage + 1}`);
+    }
+  };
+
   const renderPages = () => {
     const pages = [];
     const maxVisible = 5;
     const half = Math.floor(maxVisible / 2);
 
     let start = Math.max(1, currentPage - half);
-    const end = Math.min(totalPages, start + maxVisible - 1);
+    const end = Math.min(totalPage, start + maxVisible - 1);
 
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1);
@@ -55,12 +72,14 @@ const CustomPagination = ({
             isActive={currentPage === 1}
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(1);
+              setCurrentPage(1);
+              router.push(`${pathName}?page=${1}`);
             }}
             href="#"
             className={`${
               currentPage === 1 && "bg-[rgba(248,248,248,0.10)] rounded-xl"
-            }`}>
+            }`}
+          >
             1
           </PaginationLink>
         </PaginationItem>,
@@ -77,36 +96,40 @@ const CustomPagination = ({
             isActive={i === currentPage}
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(i);
+              setCurrentPage(i);
+              router.push(`${pathName}?page=${i}`);
             }}
             href={`/dashboard/customers/${i}`}
             className={`${
               currentPage === i && "bg-[rgba(248,248,248,0.10)] rounded-xl"
-            }`}>
+            }`}
+          >
             {i}
           </PaginationLink>
         </PaginationItem>,
       );
     }
 
-    if (end < totalPages) {
-      if (end < totalPages - 1) {
+    if (end < totalPage) {
+      if (end < totalPage - 1) {
         pages.push(<PaginationEllipsis key="ellipsis-end" />);
       }
       pages.push(
-        <PaginationItem key={totalPages}>
+        <PaginationItem key={totalPage}>
           <PaginationLink
-            isActive={currentPage === totalPages}
+            isActive={currentPage === totalPage}
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(totalPages);
+              setCurrentPage(totalPage);
+              router.push(`${pathName}?page=${totalPage}`);
             }}
             href="#"
             className={`${
-              currentPage === totalPages &&
+              currentPage === totalPage &&
               "bg-[rgba(248,248,248,0.10)] rounded-xl"
-            }`}>
-            {totalPages}
+            }`}
+          >
+            {totalPage}
           </PaginationLink>
         </PaginationItem>,
       );
@@ -114,6 +137,7 @@ const CustomPagination = ({
 
     return pages;
   };
+
   return (
     <div className="flex items-center justify-between">
       <Pagination>
@@ -124,7 +148,7 @@ const CustomPagination = ({
               <PaginationPrevious
                 onClick={(e) => {
                   e.preventDefault();
-                  if (currentPage > 1) onPageChange(currentPage - 1);
+                  if (currentPage > 1) handlePrev();
                 }}
                 href="#"
                 className={` border border-[#8A8A8A] rounded-xl ${
@@ -141,11 +165,11 @@ const CustomPagination = ({
               <PaginationNext
                 onClick={(e) => {
                   e.preventDefault();
-                  if (currentPage < totalPages) onPageChange(currentPage + 1);
+                  if (currentPage < totalPage) handleNext();
                 }}
                 href="#"
                 className={` border border-[#8A8A8A] rounded-xl ${
-                  currentPage === totalPages
+                  currentPage === totalPage
                     ? "pointer-events-none opacity-50"
                     : ""
                 }`}
@@ -162,7 +186,8 @@ const CustomPagination = ({
           <DropdownMenuTrigger asChild>
             <Button
               variant="default"
-              className="flex items-center text-[14px] font-normal border border-white/10 px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent">
+              className="flex items-center text-[14px] font-normal border border-white/10 px-3.5 py-2 rounded-[12px] cursor-pointer bg-transparent"
+            >
               <p className="flex items-center gap-2">
                 <span className="text-[14px]">Show {show}</span>
                 <ChevronDown size={18} />
@@ -171,21 +196,19 @@ const CustomPagination = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="bg-white/5 backdrop-blur-2xl">
+            className="bg-white/5 backdrop-blur-2xl"
+          >
             {["10", "20", "30", "40", "50"].map((item) => (
               <DropdownMenuItem
                 key={item}
                 onClick={() => {
                   setShow(item);
-                  setFilters((prev: any) => ({
-                    ...prev,
-                    limit: Number(item),
-                    page: 1,
-                  }));
+                  handleChange("limit", item);
                 }}
                 className={`cursor-pointer ${
                   item === show ? "font-medium" : ""
-                }`}>
+                }`}
+              >
                 {item}
               </DropdownMenuItem>
             ))}

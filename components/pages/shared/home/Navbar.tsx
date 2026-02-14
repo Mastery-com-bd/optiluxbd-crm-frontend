@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { NotificationBell } from "@/components/notification/NotificationBell";
@@ -11,11 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/provider/AuthProvider";
+import { logout } from "@/service/authService";
 import { motion } from "framer-motion";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export type TSocialUser = {
   name: string;
@@ -25,16 +28,29 @@ export type TSocialUser = {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user } = useUser();
-  const role = user?.role;
-
-  const dashboardRoute =
-    role === "ADMIN"
-      ? "/dashboard/admin/admin-dashboard"
-      : "/dashboard/agent/profile";
+  const router = useRouter();
+  const { user, setIsLoading, setUser } = useUser();
 
   const handleLogOut = async () => {
-    console.log("clicked");
+    const toastId = toast.loading("logging out", { duration: 3000 });
+    try {
+      const res = await logout();
+      if (res.success) {
+        setIsLoading(true);
+        setUser(null);
+        toast.success(res?.message, { id: toastId, duration: 3000 });
+        router.push("/login");
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      const errorInfo =
+        error?.error ||
+        error?.data?.message ||
+        error?.data?.errors[0]?.message ||
+        "Something went wrong!";
+      toast.error(errorInfo, { id: toastId, duration: 3000 });
+    }
   };
 
   return (
@@ -146,7 +162,7 @@ export default function Navbar() {
                   <DropdownMenuItem>
                     <Link
                       hidden={!user}
-                      href={dashboardRoute}
+                      href="/dashboard"
                       className="w-full block text-orange-400"
                     >
                       Dashboard
@@ -178,7 +194,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <Link href={dashboardRoute}>
+                <Link href="/dashboard">
                   <ButtonComponent
                     buttonName="Dashboard"
                     icon={LayoutDashboard}

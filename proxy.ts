@@ -49,6 +49,7 @@ export const proxy = async (request: NextRequest) => {
   }
   // ✅ Step 2: Get user info using valid token
   const userInfo = await getCurrentUser();
+  console.log(userInfo);
   const result = await getUserPermisssion();
   const permission = result?.data?.permissions || [];
   if (!userInfo) {
