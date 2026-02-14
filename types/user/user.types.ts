@@ -26,3 +26,13 @@ export type TUser = {
   roles: TUSerRole[];
   addresses: [];
 };
+
+
+export interface TOwner {
+  id: number;
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  country: string;
+}

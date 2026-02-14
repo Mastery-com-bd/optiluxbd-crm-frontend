@@ -1,6 +1,4 @@
 
-
-import React from 'react';
 import { XCircle, RefreshCcw, Home } from 'lucide-react'; // Icons
 
 export default function Cancelled() {
@@ -15,7 +13,7 @@ export default function Cancelled() {
                 </div>
 
                 {/* Text Content */}
-                <h1 className="text-3xl font-bold text-gray-100 mb-2">
+                <h1 className="text-3xl font-bold text-red-600 mb-2">
                     Payment Cancelled
                 </h1>
                 <p className="text-gray-600 mb-8">
