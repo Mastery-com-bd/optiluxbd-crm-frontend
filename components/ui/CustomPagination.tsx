@@ -42,14 +42,14 @@ const CustomPagination = ({
   const handlePrev = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      router.push(`${pathName}?page=${currentPage - 1}`);
+      router.push(`${pathName}?page=${currentPage - 1}&limit=${show}`);
     }
   };
 
   const handleNext = () => {
     if (currentPage < totalPage) {
       setCurrentPage(currentPage + 1);
-      router.push(`${pathName}?page=${currentPage + 1}`);
+      router.push(`${pathName}?page=${currentPage + 1}&limit=${show}`);
     }
   };
 
@@ -73,7 +73,7 @@ const CustomPagination = ({
             onClick={(e) => {
               e.preventDefault();
               setCurrentPage(1);
-              router.push(`${pathName}?page=${1}`);
+              router.push(`${pathName}?page=${1}&limit=${show}`);
             }}
             href="#"
             className={`${
@@ -97,7 +97,7 @@ const CustomPagination = ({
             onClick={(e) => {
               e.preventDefault();
               setCurrentPage(i);
-              router.push(`${pathName}?page=${i}`);
+              router.push(`${pathName}?page=${i}&limit=${show}`);
             }}
             href={`/dashboard/customers/${i}`}
             className={`${
@@ -121,7 +121,7 @@ const CustomPagination = ({
             onClick={(e) => {
               e.preventDefault();
               setCurrentPage(totalPage);
-              router.push(`${pathName}?page=${totalPage}`);
+              router.push(`${pathName}?page=${totalPage}&limit=${show}`);
             }}
             href="#"
             className={`${
