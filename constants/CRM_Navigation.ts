@@ -472,6 +472,11 @@ export const crmRoutes: TCrmNavigation = {
       {
         title: "Settings",
         icon: Settings,
+        path: "/dashboard/settings/user",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
         children: [
           {
             title: "Settings Home",

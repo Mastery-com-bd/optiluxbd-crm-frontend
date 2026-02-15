@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type TCustomPaginationProps = {
-  totalPage: number;
+  totalPage?: number;
   currentPage: number;
   show: string;
   setCurrentPage: Dispatch<SetStateAction<number>>;
@@ -31,8 +31,8 @@ type TCustomPaginationProps = {
 const CustomPagination = ({
   totalPage = 10,
   currentPage,
-  show,
   setCurrentPage,
+  show,
   setShow,
   handleChange,
 }: TCustomPaginationProps) => {

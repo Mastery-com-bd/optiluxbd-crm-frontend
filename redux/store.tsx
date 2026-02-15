@@ -4,14 +4,17 @@ import settingReducer from "./features/settings/settingsSlice";
 import comboReducer from "./features/combo/comboSlice";
 import addressReducer from "./features/address/addressSlice";
 
-export const store = configureStore({
-  reducer: {
-    agentProfile: agentProfileSlice,
-    settings: settingReducer,
-    combo: comboReducer,
-    address: addressReducer,
-  },
-});
+export const makeStore = () => {
+  return configureStore({
+    reducer: {
+      agentProfile: agentProfileSlice,
+      settings: settingReducer,
+      combo: comboReducer,
+      address: addressReducer,
+    },
+  });
+};
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];

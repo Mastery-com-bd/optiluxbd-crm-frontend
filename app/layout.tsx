@@ -1,7 +1,5 @@
-import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import ReactProvider from "@/provider/ReactProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -33,18 +31,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Provider>
-          <ReactProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {/* <ServiceWorkerRegistration /> */}
-              <div className="">{children}</div>
-              <Toaster richColors position="top-center" />
-            </ThemeProvider>
-          </ReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* <ServiceWorkerRegistration /> */}
+            <div className="">{children}</div>
+            <Toaster richColors position="top-center" />
+          </ThemeProvider>
         </Provider>
       </body>
     </html>
