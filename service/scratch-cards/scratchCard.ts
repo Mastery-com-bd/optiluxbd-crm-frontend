@@ -1,5 +1,5 @@
 import { TCreateScratchCard, TScratchCard } from "@/types/scratch-cards/scratch-cards.type";
-import { createData, readData } from "../apiService/crud";
+import { createData, readData, uploadFile } from "../apiService/crud";
 import { Query } from "@/types/shared";
 
 export async function getAllScratchCards(query?: Query) {
@@ -12,9 +12,9 @@ export async function createScratchCard(data: TCreateScratchCard) {
     return res;
 }
 
-export async function bulkUploadCoupons(file:File) {
-    console.log(file);
-    const res = await createData<File>(`/scratch-cards/bulk-import`, '/dashboard/admin/scratch-cards', file);
+export async function bulkUploadCoupons(file: FormData) {
+    console.log("file->>> ", file);
+    const res = await uploadFile<FormData>(`/scratch-cards/bulk-import`, '/dashboard/admin/scratch-cards', file);
     console.log("res-> ", res);
     return res;
 }

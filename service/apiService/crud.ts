@@ -31,6 +31,8 @@ export async function createData<T>(
     return Error(error);
   }
 }
+
+// upload file 
 export async function uploadFile<T>(
   endPoint: string,
   revalPath: string,
@@ -42,7 +44,6 @@ export async function uploadFile<T>(
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
       body: data as any,
     });

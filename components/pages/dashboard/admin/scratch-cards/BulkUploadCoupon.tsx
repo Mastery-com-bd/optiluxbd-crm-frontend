@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 export default function BulkUploadCoupon() {
     const [open, setOpen] = useState(false);
-    const [file, setFile] = useState<File | null>(null);
+    const [fileData, setFileData] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -95,13 +95,12 @@ export default function BulkUploadCoupon() {
                 }
                 return;
             }
-
-            setFile(selectedFile);
+            setFileData(selectedFile);
         }
     };
 
     const handleUpload = async () => {
-        if (!file) {
+        if (!fileData) {
             toast.error("Please select a CSV file first");
             return;
         }
@@ -110,12 +109,12 @@ export default function BulkUploadCoupon() {
         const toastId = toast.loading("Uploading coupons...");
 
         try {
-            const file = new FormData();
-            file.append("file", file);
-            const res = await bulkUploadCoupons(file);
+            const formData = new FormData();
+            formData.append("file", fileData);
+            const res = await bulkUploadCoupons(formData);
             if (res.success) {
                 toast.success(res.message || "Coupons uploaded successfully!", { id: toastId });
-                setFile(null);
+                setFileData(null);
                 setOpen(false);
                 if (fileInputRef.current) {
                     fileInputRef.current.value = "";
@@ -127,7 +126,7 @@ export default function BulkUploadCoupon() {
             // Temporary - remove after API integration
             await new Promise(resolve => setTimeout(resolve, 2000));
             toast.success("Coupons uploaded successfully!", { id: toastId });
-            setFile(null);
+            setFileData(null);
             setOpen(false);
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
@@ -142,7 +141,7 @@ export default function BulkUploadCoupon() {
     };
 
     const handleRemoveFile = () => {
-        setFile(null);
+        setFileData(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -169,7 +168,7 @@ export default function BulkUploadCoupon() {
                         </label>
 
                         <div
-                            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${file
+                            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${fileData
                                 ? "border-green-500 bg-green-50/10"
                                 : "border-muted-foreground/25 hover:border-muted-foreground/50"
                                 }`}
@@ -184,15 +183,15 @@ export default function BulkUploadCoupon() {
                                 disabled={isUploading}
                             />
 
-                            {file ? (
+                            {fileData ? (
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-center">
                                         <FileUp className="h-12 w-12 text-green-500" />
                                     </div>
                                     <div>
-                                        <p className="font-medium text-sm">{file.name}</p>
+                                        <p className="font-medium text-sm">{fileData.name}</p>
                                         <p className="text-xs text-muted-foreground">
-                                            {(file.size / 1024).toFixed(2)} KB
+                                            {(fileData.size / 1024).toFixed(2)} KB
                                         </p>
                                     </div>
                                     <Button
@@ -240,15 +239,11 @@ export default function BulkUploadCoupon() {
 
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button type="button" variant="outline" disabled={isUploading}>
-                            Cancel
-                        </Button>
+                        <ButtonComponent buttonName="Cancel" varient="red" disabled={isUploading} />
                     </DialogClose>
-                    <Button onClick={handleUpload} disabled={!file || isUploading}>
-                        {isUploading ? "Uploading..." : "Upload Coupons"}
-                    </Button>
+                    <ButtonComponent onClick={handleUpload} varient="yellow" buttonName={isUploading ? "Uploading..." : "Upload Coupons"} disabled={!fileData || isUploading} />
                 </DialogFooter>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }
