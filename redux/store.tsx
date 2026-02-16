@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import agentProfileSlice from "./features/agent/agentProfileSlice";
-import settingReducer from "./features/settings/settingsSlice";
+import userSettingReducer from "./features/settings/userSettingsSlice";
 import comboReducer from "./features/combo/comboSlice";
 import addressReducer from "./features/address/addressSlice";
 
@@ -8,7 +8,7 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       agentProfile: agentProfileSlice,
-      settings: settingReducer,
+      userSettings: userSettingReducer,
       combo: comboReducer,
       address: addressReducer,
     },
