@@ -5,6 +5,7 @@ import GeneralSettings from "./GeneralSettings";
 import SystemInfoSettings from "./SystemInfoSettings";
 import MaintananceSettings from "./MaintananceSettings";
 import SocialLinksSettings from "./SocialLinksSettings";
+import SystemImage from "./SystemImage";
 
 const UpdateSettings = ({ settings }: { settings: TUserSettings }) => {
   return (
@@ -15,6 +16,7 @@ const UpdateSettings = ({ settings }: { settings: TUserSettings }) => {
       />
 
       <div className="space-y-8">
+        <SystemImage settings={settings} />
         <GeneralSettings settings={settings} />
         <SystemInfoSettings settings={settings} />
         <SocialLinksSettings settings={settings} />

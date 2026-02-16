@@ -20,6 +20,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateUserSettings } from "@/service/userSettings";
 import { TUserSettings } from "@/types/settings/userSettings.types";
+import Image from "next/image";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -76,22 +77,37 @@ const SocialLinksSettings = ({ settings }: { settings: TUserSettings }) => {
     );
   };
 
+  const handleOpenLink = (url: string) => {
+    if (!url.startsWith("http")) url = "https://" + url;
+    window.open(url, "_blank");
+  };
+
   return (
     <Card className="effect">
       <CardHeader>
         <CardTitle>Social Links Settings</CardTitle>
       </CardHeader>
-
       <CardContent className="grid md:grid-cols-2 gap-4">
         {platforms.map(({ key, label }) => {
           const links = socialLinks?.[key] ?? [];
-
           return (
             <div key={key} className="space-y-3">
               <Label className="text-base font-semibold">{label}</Label>
 
               {links.map((link, index) => (
                 <div key={index} className="flex gap-2">
+                  <button
+                    onClick={() => handleOpenLink(link)}
+                    className="w-7 h-7 rounded-full"
+                  >
+                    <Image
+                      height={200}
+                      width={200}
+                      src={`https://www.google.com/s2/favicons?domain=${link}`}
+                      alt={link}
+                      className="w-full h-full cursor-pointer "
+                    />
+                  </button>
                   <Input
                     value={link}
                     placeholder={`Enter ${label}`}
