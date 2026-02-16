@@ -142,22 +142,22 @@ const MyLeads = () => {
     setSelectedLeads((prev) =>
       prev.includes(leadId)
         ? prev.filter((id) => id !== leadId)
-        : [...prev, leadId]
+        : [...prev, leadId],
     );
   };
 
   const toggleSelectAll = () => {
     const currentOrderIds = myLeads.map((lead: Lead) => lead.leadId);
     const allSelected = currentOrderIds.every((id: string) =>
-      selectedLeads.includes(id)
+      selectedLeads.includes(id),
     );
     if (allSelected) {
       setSelectedLeads((prev) =>
-        prev.filter((id) => !currentOrderIds.includes(id))
+        prev.filter((id) => !currentOrderIds.includes(id)),
       );
     } else {
       const newSelections = currentOrderIds.filter(
-        (id: string) => !selectedLeads.includes(id)
+        (id: string) => !selectedLeads.includes(id),
       );
       setSelectedLeads((prev) => [...prev, ...newSelections]);
     }
@@ -188,13 +188,7 @@ const MyLeads = () => {
             <X className="w-4 h-4 mr-1" />
             Selected Leads {selectedLeads.length}
           </Button>
-          {/* <Button
-                        variant="outline"
-                        onClick={() => console.log('clicked')}
-                        className="cursor-pointer py-6 rounded-2xl"
-                    >
-                        Assign to Agent
-                    </Button> */}
+
           <AssignLeadsToTeam selectedLeads={selectedLeads} />
         </div>
       )}
@@ -315,8 +309,8 @@ const MyLeads = () => {
                       lead.priority === "High"
                         ? "bg-red-800/30 text-red-400 border-red-500/30"
                         : lead.priority === "Medium"
-                        ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
-                        : "bg-blue-800/30 text-blue-300 border-blue-400/30"
+                          ? "bg-yellow-800/30 text-yellow-300 border-yellow-400/30"
+                          : "bg-blue-800/30 text-blue-300 border-blue-400/30"
                     }`}
                   >
                     {lead.priority}

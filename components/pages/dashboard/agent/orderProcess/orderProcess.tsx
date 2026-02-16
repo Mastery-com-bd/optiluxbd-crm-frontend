@@ -192,13 +192,13 @@ const OrderProcessingSystem = () => {
   const [customerOutcome, setCustomerOutcome] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null
+    null,
   );
   const [additionalInfo, setAdditionalInfo] = useState<CustomField[]>([]);
 
   /* Handle Add Additional Info */
   const handleAddAdditionalInfo = async (
-    data: { fieldName: string; fieldValue: string }[]
+    data: { fieldName: string; fieldValue: string }[],
   ) => {
     setLoading(true);
     toast.loading("Updating additional info...");
@@ -212,8 +212,6 @@ const OrderProcessingSystem = () => {
       },
     };
 
-    console.log(payload);
-
     try {
       const res = await updateCustomerInfo(payload).unwrap();
       if (res?.success) {
@@ -225,7 +223,6 @@ const OrderProcessingSystem = () => {
         setAdditionalInfo([]);
       }
     } catch (error) {
-      console.log(error);
       toast.dismiss();
       toast.error("Failed to update additional info");
       setLoading(false);
@@ -282,7 +279,6 @@ const OrderProcessingSystem = () => {
         batchId: batchId,
       };
       const res = await acceptPendingLeads(payload).unwrap();
-      console.log("Accept Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
@@ -301,7 +297,6 @@ const OrderProcessingSystem = () => {
         batchId: batchId,
       };
       const res = await rejectPendingLeads(payload).unwrap();
-      console.log("Reject Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
@@ -523,7 +518,7 @@ const OrderProcessingSystem = () => {
                                             </Label>
                                             <div className="col-span-3">
                                               {new Date(
-                                                lead.assignedAt
+                                                lead.assignedAt,
                                               ).toLocaleString()}
                                             </div>
                                           </div>
@@ -552,7 +547,7 @@ const OrderProcessingSystem = () => {
                                     </Dialog>
                                   </td>
                                 </tr>
-                              )
+                              ),
                             )}
                           </tbody>
                         </table>
@@ -668,7 +663,7 @@ const OrderProcessingSystem = () => {
                                     </Label>
                                     <div className="col-span-3">
                                       {new Date(
-                                        lead.assignedAt
+                                        lead.assignedAt,
                                       ).toLocaleString()}
                                     </div>
                                   </div>
@@ -694,7 +689,7 @@ const OrderProcessingSystem = () => {
                               </DialogContent>
                             </Dialog>
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -742,7 +737,7 @@ const OrderProcessingSystem = () => {
                             hour: "numeric",
                             minute: "2-digit",
                             hour12: true,
-                          }
+                          },
                         )
                       : "N/A"}
                   </Badge>
@@ -756,7 +751,17 @@ const OrderProcessingSystem = () => {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-2">
                       Customer Details :
                     </h3>
-                    <EditCustomerDetails details={{name: currentCustomer.name, phone: currentCustomer.phone, email: currentCustomer.email, date_of_birth: currentCustomer.date_of_birth, profession: currentCustomer.profession, isMarried: currentCustomer.isMarried}} userId={currentCustomer?.id} />
+                    <EditCustomerDetails
+                      details={{
+                        name: currentCustomer.name,
+                        phone: currentCustomer.phone,
+                        email: currentCustomer.email,
+                        date_of_birth: currentCustomer.date_of_birth,
+                        profession: currentCustomer.profession,
+                        isMarried: currentCustomer.isMarried,
+                      }}
+                      userId={currentCustomer?.id}
+                    />
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="flex items-start gap-3 p-3 rounded-lg border">
@@ -848,7 +853,7 @@ const OrderProcessingSystem = () => {
                       {currentCustomerCustomFields?.map(
                         (
                           item: { fieldName: string; fieldValue: string },
-                          index: number
+                          index: number,
                         ) => (
                           <div
                             key={index}
@@ -865,7 +870,7 @@ const OrderProcessingSystem = () => {
                               </p>
                             </div>
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                     <div className="w-full flex flex-col gap-4 mt-4">
@@ -899,7 +904,7 @@ const OrderProcessingSystem = () => {
                             size="icon"
                             onClick={() => {
                               const newInfo = additionalInfo.filter(
-                                (_, i) => i !== index
+                                (_, i) => i !== index,
                               );
                               setAdditionalInfo(newInfo);
                             }}

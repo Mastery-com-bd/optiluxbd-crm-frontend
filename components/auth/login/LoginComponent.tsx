@@ -78,7 +78,6 @@ const LoginComponent = () => {
     const toastId = toast.loading("logging in");
     try {
       const res = await login(data);
-      console.log(res);
       if (res?.success) {
         setIsLoading(false);
         await refetchUser();

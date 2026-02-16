@@ -70,10 +70,9 @@ export default function CreatePathaoCouriar() {
     try {
       const payload = {
         ...values,
-        orderId: Number(values.orderId)
-      }
+        orderId: Number(values.orderId),
+      };
       const res = await createPathaoCouriar(payload).unwrap();
-      console.log("Create Courier Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {

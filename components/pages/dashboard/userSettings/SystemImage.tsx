@@ -12,7 +12,6 @@ import {
 import { TUserSettings } from "@/types/settings/userSettings.types";
 
 const SystemImage = ({ settings }: { settings: TUserSettings }) => {
-  console.log(settings);
   return (
     <Card className="effect">
       <CardHeader>

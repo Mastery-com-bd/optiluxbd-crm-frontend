@@ -34,7 +34,7 @@ const formSchema = z.object({
     .min(1, "Recipient phone is required")
     .regex(
       /^(\+8801|01)[0-9]{9}$/,
-      "Must be a valid Bangladeshi number (e.g. +8801XXXXXXXXX or 01XXXXXXXXX)"
+      "Must be a valid Bangladeshi number (e.g. +8801XXXXXXXXX or 01XXXXXXXXX)",
     ),
   recipientAddress: z.string().min(1, "Recipient address is required"),
   codAmount: z
@@ -81,7 +81,6 @@ export default function LocalCreateCourier() {
 
     try {
       const res = await createCouriar(payload).unwrap();
-      console.log("Create Courier Response", res);
       if (res?.success) {
         toast.dismiss();
         form.reset();
