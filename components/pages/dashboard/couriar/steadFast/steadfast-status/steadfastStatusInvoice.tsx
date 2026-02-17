@@ -15,9 +15,17 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLazyCheckStatusByInvoiceQuery } from "@/redux/features/couriar/steadfast/steadfastCouriarApi";
-import { Barcode, Calendar, DollarSign, MapPin, Package, Search, Truck, User } from "lucide-react";
+import {
+  Barcode,
+  Calendar,
+  DollarSign,
+  MapPin,
+  Package,
+  Search,
+  Truck,
+  User,
+} from "lucide-react";
 import { useState } from "react";
-
 
 export default function SteadfastStatusByInvoice() {
   const [id, setId] = useState("");
@@ -30,9 +38,7 @@ export default function SteadfastStatusByInvoice() {
     e.preventDefault();
     const result = await trigger(id);
     if (result.data) {
-      console.log("Result Data:", result.data.data);
       setData(result.data.data);
-      console.log(data)
     }
   }
 
@@ -63,7 +69,9 @@ export default function SteadfastStatusByInvoice() {
       <div className="max-w-3xl mx-auto px-4 py-6 md:py-10">
         <div className="flex items-center gap-3 mb-6">
           <Truck className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Steadfast Status by Invoice</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            Steadfast Status by Invoice
+          </h1>
         </div>
 
         <Card className="shadow-sm">
@@ -72,9 +80,14 @@ export default function SteadfastStatusByInvoice() {
             <CardDescription>Enter courier ID to fetch details</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-3"
+            >
               <div className="flex-1">
-                <Label htmlFor="courier-id" className="sr-only">Courier ID</Label>
+                <Label htmlFor="courier-id" className="sr-only">
+                  Courier ID
+                </Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
@@ -86,7 +99,11 @@ export default function SteadfastStatusByInvoice() {
                   />
                 </div>
               </div>
-              <Button type="submit" disabled={isFetching || !id.trim()} className="w-full sm:w-auto">
+              <Button
+                type="submit"
+                disabled={isFetching || !id.trim()}
+                className="w-full sm:w-auto"
+              >
                 {isFetching ? "Searching..." : "Search"}
               </Button>
             </form>
@@ -109,10 +126,14 @@ export default function SteadfastStatusByInvoice() {
             <CardHeader className="pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
-                  <CardTitle className="text-lg md:text-xl">Courier Details</CardTitle>
+                  <CardTitle className="text-lg md:text-xl">
+                    Courier Details
+                  </CardTitle>
                   <CardDescription>ID: {data.id}</CardDescription>
                 </div>
-                <Badge className={statusColor(data.status)}>{data.status}</Badge>
+                <Badge className={statusColor(data.status)}>
+                  {data.status}
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -179,7 +200,9 @@ export default function SteadfastStatusByInvoice() {
                   <div>
                     <p className="text-sm text-gray-500">Created</p>
                     <p className="font-medium">
-                      {data.createdAt ? new Date(data.createdAt).toLocaleString() : "—"}
+                      {data.createdAt
+                        ? new Date(data.createdAt).toLocaleString()
+                        : "—"}
                     </p>
                   </div>
                 </div>
@@ -190,7 +213,9 @@ export default function SteadfastStatusByInvoice() {
                   <Separator />
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Note</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{data.note}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      {data.note}
+                    </p>
                   </div>
                 </>
               )}

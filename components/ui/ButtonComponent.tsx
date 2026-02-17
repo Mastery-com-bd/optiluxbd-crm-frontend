@@ -50,6 +50,7 @@ const ButtonComponent = forwardRef<HTMLButtonElement, TButtonComponentProps>(
         ref={ref}
         type="button"
         {...rest}
+        onClick={handleSubmit}
         className={cn(
           "relative cursor-pointer bg-white/5 rounded-xl py-2 flex items-center justify-center px-4 overflow-hidden",
           clasName,

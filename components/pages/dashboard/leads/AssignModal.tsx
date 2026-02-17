@@ -61,7 +61,6 @@ export default function AssignModal({
   customers,
 }: Props) {
   const [count, setCount] = useState(0);
-  console.log(customers);
 
   const handleAssign = () => {
     const customerIds = customers.map((customer) => customer.id);

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/pages/shared/dashboard/navbar";
+import StoreProvider from "@/provider/StoreProvider";
 
 // Load custom fonts
 const geistSans = Geist({
@@ -43,9 +44,11 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset>
             <Navbar />
-            <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden px-2">
-              {children}
-            </div>
+            <StoreProvider>
+              <div className="flex flex-1 flex-col w-full mx-auto gap-4 py-4 overflow-hidden px-2">
+                {children}
+              </div>
+            </StoreProvider>
           </SidebarInset>
         </SidebarProvider>
       </div>

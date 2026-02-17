@@ -138,7 +138,6 @@ const ComboCreation = () => {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err?.data?.errors?.[0]?.message);
       const errorMessage =
         err?.data?.errors?.[0]?.message ||
         err?.data?.message ||
@@ -235,7 +234,7 @@ const ComboCreation = () => {
                                   >
                                     {cat.name}
                                   </SelectItem>
-                                )
+                                ),
                               )}
                             </SelectContent>
                           }
@@ -276,7 +275,7 @@ const ComboCreation = () => {
                                   >
                                     {sub.name}
                                   </SelectItem>
-                                )
+                                ),
                               )
                             )}
                           </SelectContent>

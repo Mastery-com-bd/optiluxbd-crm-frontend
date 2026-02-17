@@ -4,14 +4,9 @@ import { Button } from "@/components/ui/button";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import CustomPagination from "@/components/ui/CustomPagination";
 import { Input } from "@/components/ui/input";
-import { useGetAllCustomerQuery } from "@/redux/features/customers/cutomersApi";
-import { TCustomer } from "@/types/customer.types";
-import { debounce } from "@/utills/debounce";
 import { Download, Funnel, Search } from "lucide-react";
 import { useState } from "react";
 import CreateCustomerModal from "./CreateCustomerModal";
-import CustomerTable from "./customerTable";
-import CustomerTableSkeleton from "./CustomerTableSkeleton";
 import PageHeader from "../../../shared/pageHeader";
 import {
   Select,
@@ -20,20 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const Customers = () => {
-  const [filters, setFilters] = useState({
-    search: "",
-    customerLevel: "",
-    gender: "",
-    isMarried: "",
-    thana: "",
-    district: "",
-    sortBy: "createdAt",
-    order: "desc",
-    limit: 10,
-    page: 1,
-  });
+  const [show, setShow] = useState("10");
+  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+
   const [inputValue, setInputValue] = useState("");
   const [status, setStatus] = useState("all");
   const [category, setCategory] = useState("all");
@@ -44,18 +34,25 @@ const Customers = () => {
     { id: 4, name: "Books" },
     { id: 5, name: "Sports" },
   ];
-  const { data, isLoading } = useGetAllCustomerQuery(filters, {
-    refetchOnMountOrArgChange: false,
-  });
 
-  // Derive customers directly from data
-  const customers: TCustomer[] = (data?.data as TCustomer[]) ?? [];
-  const pagination = data?.pagination || { page: 1, totalPages: 1, total: 0 };
-
-  const handleSearch = (query: string) => {
-    setFilters((prev) => ({ ...prev, search: query, page: 1 }));
+  const handleChange = (name: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all") {
+      params.delete(name);
+    } else {
+      params.set(name, value.toString());
+    }
+    router.push(`${pathName}?${params.toString()}`, {
+      scroll: false,
+    });
   };
-  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+
+  const handleReset = () => {
+    router.push(`${pathName}`);
+    setShow("10");
+    setCurrentPage(1);
+    setStatus("all");
+  };
 
   return (
     <div className="min-h-screen bg-transparent text-foreground space-y-6 w-full px-4">
@@ -80,7 +77,6 @@ const Customers = () => {
             value={inputValue}
             icon={<Search />}
             onChange={(e) => {
-              debouncedLog(e.target.value);
               setInputValue(e.target.value);
             }}
             placeholder="Search product by name"
@@ -94,11 +90,6 @@ const Customers = () => {
             value={category}
             onValueChange={(value) => {
               setCategory(value);
-              setFilters((prev) => ({
-                ...prev,
-                category: value === "all" ? undefined : value,
-                page: 1,
-              }));
             }}
           >
             <SelectTrigger className="w-40" aria-label="Category Filter">
@@ -117,11 +108,6 @@ const Customers = () => {
             value={status}
             onValueChange={(value) => {
               setStatus(value);
-              setFilters((prev) => ({
-                ...prev,
-                status: value === "all" ? undefined : value,
-                page: 1,
-              }));
             }}
           >
             <SelectTrigger className="w-36" aria-label="Status Filter">
@@ -142,15 +128,14 @@ const Customers = () => {
         </div>
       </div>
 
-      {/* Customer Table */}
-      {isLoading ? (
-        <CustomerTableSkeleton />
-      ) : (
-        <CustomerTable customers={customers} />
-      )}
-
       {/* Pagination */}
-      <CustomPagination totalPage={pagination.totalPages} />
+      <CustomPagination
+        show={show}
+        currentPage={currentPage}
+        setShow={setShow}
+        setCurrentPage={setCurrentPage}
+        handleChange={handleChange}
+      />
     </div>
   );
 };

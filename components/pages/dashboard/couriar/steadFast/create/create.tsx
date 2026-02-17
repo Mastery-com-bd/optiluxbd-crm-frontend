@@ -77,7 +77,6 @@ export default function CreateSteadFastCouriar() {
         deliveryCharge: Number(values.deliveryCharge),
       };
       const res = await createCouriarWithSteadFast(payload).unwrap();
-      console.log("Create Courier Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {

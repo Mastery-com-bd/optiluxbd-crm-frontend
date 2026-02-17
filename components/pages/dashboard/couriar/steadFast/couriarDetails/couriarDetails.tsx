@@ -115,7 +115,8 @@ export default function CouriarDetails({ id }: { id: string }) {
   const [returnRequest] = useCreateSteadfastReturnRequestMutation();
   const handleReturnRequest = async () => {
     const payload = {
-      consignment_id: details.consignmentId || details.invoice || details.trackingCode,
+      consignment_id:
+        details.consignmentId || details.invoice || details.trackingCode,
       reason: "Customer refused delivery",
     };
     setLoading(true);
@@ -123,14 +124,13 @@ export default function CouriarDetails({ id }: { id: string }) {
 
     try {
       const res = await returnRequest(payload).unwrap();
-      console.log("Return Request Response", res);
       if (res?.success) {
         toast.dismiss();
         toast.success(res?.message, {
           duration: 3000,
         });
         setLoading(false);
-        router.push("/dashboard/couriar/steadFast")
+        router.push("/dashboard/couriar/steadFast");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -328,8 +328,6 @@ export default function CouriarDetails({ id }: { id: string }) {
       </div>
     );
   }
-
-  // console.log("Details Data:",detail.data)
 
   return (
     <div className="min-h-screen">

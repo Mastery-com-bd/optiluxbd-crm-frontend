@@ -1,23 +1,23 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 import { HexColorPicker } from "react-colorful";
-import { useRef, useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Bold,
   Italic,
@@ -29,16 +29,27 @@ import {
   ImageIcon,
   Image,
   Plus,
-} from "lucide-react"
-import { toast } from "sonner"
+} from "lucide-react";
+import { toast } from "sonner";
 import {
   useAddProductImageMutation,
   useAddProductMutation,
-} from "@/redux/features/products/productsApi"
-import { useGetAllCategoryQuery, useGetCategoryAndSubcategoryQuery, } from "@/redux/features/category/categoryApi"
-import { Switch } from "@/components/ui/switch"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+} from "@/redux/features/products/productsApi";
+import {
+  useGetAllCategoryQuery,
+  useGetCategoryAndSubcategoryQuery,
+} from "@/redux/features/category/categoryApi";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const productSchema = z.object({
@@ -47,15 +58,12 @@ const productSchema = z.object({
     .string()
     .min(1, { message: "SKU is required" })
     .regex(/^[a-zA-Z0-9_-]+$/, {
-      message: "SKU can only contain letters, numbers, hyphens, and underscores",
+      message:
+        "SKU can only contain letters, numbers, hyphens, and underscores",
     }),
-  stock: z
-    .int()
-    .min(0, { message: "Stock must be 0 or greater" }),
+  stock: z.int().min(0, { message: "Stock must be 0 or greater" }),
   description: z.string().optional(),
-  basePrice: z
-    .int()
-    .min(0, { message: "Base Price must be non-negative" }),
+  basePrice: z.int().min(0, { message: "Base Price must be non-negative" }),
   discountType: z.enum(["percentage", "fixed"]),
   discountValue: z
     .number()
@@ -68,9 +76,9 @@ const productSchema = z.object({
   tags: z.string().optional(),
   color: z.array(z.string()).optional(),
   size: z.array(z.string()).optional(),
-})
+});
 
-type InferedFormData = z.infer<typeof productSchema>
+type InferedFormData = z.infer<typeof productSchema>;
 
 const AddProduct = () => {
   const {
@@ -97,33 +105,32 @@ const AddProduct = () => {
       status: "",
       tags: "",
     },
-  })
+  });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation()
-  const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation()
-  const isSubmitting = isAddingProduct || isAddingImage
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation();
+  const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation();
+  const isSubmitting = isAddingProduct || isAddingImage;
 
   const handleDivClick = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
   //color....
   const [colorOpen, setColorOpen] = useState(false);
   const [availableColors, setAvailableColors] = useState<string[]>([
-    "#dc2626",  // red-600
-    "#2563eb",  // blue-600
-    "#16a34a",  // green-600
-    "#ca8a04",  // yellow-600
-    "#ea580c",  // orange-600
-    "#ffffff",  // white
+    "#dc2626", // red-600
+    "#2563eb", // blue-600
+    "#16a34a", // green-600
+    "#ca8a04", // yellow-600
+    "#ea580c", // orange-600
+    "#ffffff", // white
   ]);
   const [newColor, setNewColor] = useState<string>("#ffffff");
   const [selectedColor, setSelectedColor] = useState<string[]>([]);
   const [colorEnabled, setColorEnabled] = useState<boolean>(false);
-
 
   //size....
   const [sizeOpen, setSizeOpen] = useState(false);
@@ -136,7 +143,6 @@ const AddProduct = () => {
   const [newSize, setNewSize] = useState<string>("XXL");
   const [selectedSize, setSelectedSize] = useState<string[]>([]);
   const [sizeEnabled, setSizeEnabled] = useState<boolean>(false);
-
 
   //submit function....
   const onSubmit = async (data: InferedFormData) => {
@@ -153,50 +159,51 @@ const AddProduct = () => {
       isActive: true,
       size: sizeEnabled ? selectedSize : [],
       color: colorEnabled ? selectedColor : [],
-    }
-    console.log(productInfo);
+    };
+
     try {
-      const res = await addProduct(productInfo).unwrap()
+      const res = await addProduct(productInfo).unwrap();
       if (res.success) {
         if (image) {
-          const result = await addImage({ id: res?.data?.id, image }).unwrap()
+          const result = await addImage({ id: res?.data?.id, image }).unwrap();
           if (result.success) {
-            toast.success("Product added successfully")
+            toast.success("Product added successfully");
           } else {
-            toast.error("Image upload failed")
+            toast.error("Image upload failed");
           }
         } else {
-          toast.success("Product added successfully")
+          toast.success("Product added successfully");
         }
-        reset()
-        setImage(null)
-        setPreviewUrl(null)
+        reset();
+        setImage(null);
+        setPreviewUrl(null);
       } else {
-        toast.error("Failed to add product")
+        toast.error("Failed to add product");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err?.data?.errors?.[0]?.message)
       const errorMessage =
         err?.data?.errors?.[0]?.message ||
         err?.data?.message ||
-        "Something went wrong"
-      toast.error(errorMessage)
+        "Something went wrong";
+      toast.error(errorMessage);
     }
-  }
+  };
 
   const onDiscard = () => {
-    reset()
-    setImage(null)
-    setPreviewUrl(null)
-  }
-  const { data: categories, data: isCategoryLoading } = useGetAllCategoryQuery(undefined);
+    reset();
+    setImage(null);
+    setPreviewUrl(null);
+  };
+  const { data: categories, data: isCategoryLoading } =
+    useGetAllCategoryQuery(undefined);
 
   const [parentCategory, setParentCategory] = useState<number | null>(null);
-  const { data: subcategoriesData, isLoading: isSubCategoryIdLoading } = useGetCategoryAndSubcategoryQuery(
-    parentCategory,
-    { skip: !parentCategory, refetchOnMountOrArgChange: true, }
-  )
+  const { data: subcategoriesData, isLoading: isSubCategoryIdLoading } =
+    useGetCategoryAndSubcategoryQuery(parentCategory, {
+      skip: !parentCategory,
+      refetchOnMountOrArgChange: true,
+    });
   const subCategories = subcategoriesData?.subCategories;
 
   return (
@@ -212,7 +219,9 @@ const AddProduct = () => {
               {/* Product Details Section */}
               <div className="flex-1 min-w-0  ">
                 <div className="effect rounded-xl p-6 h-full flex flex-col justify-between">
-                  <h2 className="text-xl font-semibold text-white">Product details</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Product details
+                  </h2>
                   <div>
                     <Label htmlFor="productName">Product Name *</Label>
                     <Input
@@ -231,14 +240,15 @@ const AddProduct = () => {
                   <div>
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
-
                       id="sku"
                       placeholder="Inter an unique SKU"
                       {...register("sku")}
                       className="mt-2"
                     />
                     {errors.sku && (
-                      <p className="text-destructive text-sm">{errors.sku?.message}</p>
+                      <p className="text-destructive text-sm">
+                        {errors.sku?.message}
+                      </p>
                     )}
                   </div>
 
@@ -261,20 +271,25 @@ const AddProduct = () => {
                           </SelectTrigger>
                           {
                             <SelectContent>
-                              {
-                                categories?.map((cat: { id: number; name: string }) => (
-                                  <SelectItem key={cat.id} value={String(cat.id)}>
+                              {categories?.map(
+                                (cat: { id: number; name: string }) => (
+                                  <SelectItem
+                                    key={cat.id}
+                                    value={String(cat.id)}
+                                  >
                                     {cat.name}
                                   </SelectItem>
-                                ))
-                              }
+                                ),
+                              )}
                             </SelectContent>
                           }
                         </Select>
                       )}
                     />
                     {errors.category && (
-                      <p className="text-destructive text-sm">{errors.category?.message}</p>
+                      <p className="text-destructive text-sm">
+                        {errors.category?.message}
+                      </p>
                     )}
                   </div>
 
@@ -297,18 +312,25 @@ const AddProduct = () => {
                             {isSubCategoryIdLoading ? (
                               <div>Loading subcategories...</div>
                             ) : (
-                              subCategories?.map((sub: { id: number; name: string }) => (
-                                <SelectItem key={sub.id} value={String(sub.id)}>
-                                  {sub.name}
-                                </SelectItem>
-                              ))
+                              subCategories?.map(
+                                (sub: { id: number; name: string }) => (
+                                  <SelectItem
+                                    key={sub.id}
+                                    value={String(sub.id)}
+                                  >
+                                    {sub.name}
+                                  </SelectItem>
+                                ),
+                              )
                             )}
                           </SelectContent>
                         </Select>
                       )}
                     />
                     {errors.subCategoryId && (
-                      <p className="text-destructive text-sm">{errors.subCategoryId?.message}</p>
+                      <p className="text-destructive text-sm">
+                        {errors.subCategoryId?.message}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -318,7 +340,9 @@ const AddProduct = () => {
               <div className="flex-1 min-w-0 flex flex-col gap-6">
                 {/* Stock & Pricing */}
                 <div className="effect rounded-xl p-6  space-y-5">
-                  <h2 className="text-xl font-semibold text-white">Stock & Pricing</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Stock & Pricing
+                  </h2>
 
                   <div className="flex justify-between gap-2">
                     <div className="w-1/2">
@@ -330,7 +354,9 @@ const AddProduct = () => {
                         className="mt-2"
                       />
                       {errors.stock && (
-                        <p className="text-destructive text-sm">{errors.stock?.message}</p>
+                        <p className="text-destructive text-sm">
+                          {errors.stock?.message}
+                        </p>
                       )}
                     </div>
                     <div className="w-1/2">
@@ -342,15 +368,24 @@ const AddProduct = () => {
                         placeholder="e.g., 199.99"
                       />
                       {errors.basePrice && (
-                        <p className="text-destructive text-sm">{errors.basePrice?.message}</p>
+                        <p className="text-destructive text-sm">
+                          {errors.basePrice?.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
                   {/* Checkbox + Discount Fields */}
                   <div className="flex items-center gap-2 mt-2">
-                    <input type="checkbox" id="discountCheck" className="accent-purple-500" />
-                    <label htmlFor="discountCheck" className="text-white text-sm">
+                    <input
+                      type="checkbox"
+                      id="discountCheck"
+                      className="accent-purple-500"
+                    />
+                    <label
+                      htmlFor="discountCheck"
+                      className="text-white text-sm"
+                    >
                       Schedule a discount
                     </label>
                   </div>
@@ -362,12 +397,17 @@ const AddProduct = () => {
                         control={control}
                         name="discountType"
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
                             <SelectTrigger className="mt-2">
                               <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="percentage">Percentage</SelectItem>
+                              <SelectItem value="percentage">
+                                Percentage
+                              </SelectItem>
                               <SelectItem value="fixed">Fixed</SelectItem>
                             </SelectContent>
                           </Select>
@@ -383,7 +423,9 @@ const AddProduct = () => {
                         placeholder="10 or 50"
                       />
                       {errors.discountValue && (
-                        <p className="text-destructive text-sm">{errors.discountValue?.message}</p>
+                        <p className="text-destructive text-sm">
+                          {errors.discountValue?.message}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -410,7 +452,9 @@ const AddProduct = () => {
                         style={{ backgroundColor: c }}
                         onClick={() => {
                           if (selectedColor.includes(c)) {
-                            setSelectedColor(selectedColor.filter((color) => color !== c));
+                            setSelectedColor(
+                              selectedColor.filter((color) => color !== c),
+                            );
                           } else {
                             setSelectedColor([...selectedColor, c]);
                           }
@@ -432,16 +476,24 @@ const AddProduct = () => {
               {/* Product Image Upload */}
               <div className="flex-1 min-w-0">
                 <div className="effect rounded-xl p-6 h-full flex flex-col  shadow-lg">
-                  <h2 className="text-lg font-medium text-white mb-4">Product Image</h2>
+                  <h2 className="text-lg font-medium text-white mb-4">
+                    Product Image
+                  </h2>
                   <div
                     className="border-2 border-dashed border-white/30 bg-white/10 hover:bg-white/20 transition duration-300 px-4 py-8 text-center w-full h-full rounded-2xl cursor-pointer flex flex-col justify-center items-center"
                     onClick={handleDivClick}
                   >
                     <div className={previewUrl ? "hidden" : "block"}>
                       <Image className="w-10 h-10 mx-auto mb-4 text-white opacity-80" />
-                      <p className="text-base font-semibold text-white mb-2">Upload your product image.</p>
-                      <p className="text-sm text-white/70">Only PNG, JPG format allowed.</p>
-                      <p className="text-sm text-white/70">500x500 pixels are recommended.</p>
+                      <p className="text-base font-semibold text-white mb-2">
+                        Upload your product image.
+                      </p>
+                      <p className="text-sm text-white/70">
+                        Only PNG, JPG format allowed.
+                      </p>
+                      <p className="text-sm text-white/70">
+                        500x500 pixels are recommended.
+                      </p>
                     </div>
 
                     <div className="hidden">
@@ -452,9 +504,9 @@ const AddProduct = () => {
                         ref={fileInputRef}
                         onChange={(e) => {
                           if (e.target.files?.[0]) {
-                            const file = e.target.files[0]
-                            setImage(file)
-                            setPreviewUrl(URL.createObjectURL(file))
+                            const file = e.target.files[0];
+                            setImage(file);
+                            setPreviewUrl(URL.createObjectURL(file));
                           }
                         }}
                       />
@@ -503,7 +555,9 @@ const AddProduct = () => {
                           `}
                         onClick={() => {
                           if (selectedSize.includes(size)) {
-                            setSelectedSize(selectedSize.filter((s) => s !== size));
+                            setSelectedSize(
+                              selectedSize.filter((s) => s !== size),
+                            );
                           } else {
                             setSelectedSize([...selectedSize, size]);
                           }
@@ -535,7 +589,10 @@ const AddProduct = () => {
                       name="status"
                       rules={{ required: true }}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger className="mt-2">
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>
@@ -548,12 +605,18 @@ const AddProduct = () => {
                       )}
                     />
                     {errors.status && (
-                      <p className="text-destructive text-sm">{errors.status?.message}</p>
+                      <p className="text-destructive text-sm">
+                        {errors.status?.message}
+                      </p>
                     )}
                   </div>
                   <div>
                     <Label>Tags</Label>
-                    <Input {...register("tags")} className="mt-2" placeholder="chair,wood" />
+                    <Input
+                      {...register("tags")}
+                      className="mt-2"
+                      placeholder="chair,wood"
+                    />
                   </div>
                 </Card>
               </div>
@@ -618,8 +681,14 @@ const AddProduct = () => {
           </DialogHeader>
           <div className="gap-4">
             <div className="">
-              <HexColorPicker color={newColor} onChange={setNewColor} className="w-full mx-auto" />
-              <p className="mt-2 text-sm">Selected color: <span className="font-medium">{newColor}</span></p>
+              <HexColorPicker
+                color={newColor}
+                onChange={setNewColor}
+                className="w-full mx-auto"
+              />
+              <p className="mt-2 text-sm">
+                Selected color: <span className="font-medium">{newColor}</span>
+              </p>
             </div>
           </div>
           <DialogFooter>
@@ -630,9 +699,9 @@ const AddProduct = () => {
               type="button"
               onClick={() => {
                 if (!availableColors.includes(newColor)) {
-                  setAvailableColors((prev) => [...prev, newColor])
+                  setAvailableColors((prev) => [...prev, newColor]);
                 }
-                setColorOpen(false)
+                setColorOpen(false);
               }}
             >
               Save Color
@@ -646,9 +715,7 @@ const AddProduct = () => {
         <DialogContent className="max-w-[425px]!">
           <DialogHeader>
             <DialogTitle>Add a new size</DialogTitle>
-            <DialogDescription>
-              Write a new size.
-            </DialogDescription>
+            <DialogDescription>Write a new size.</DialogDescription>
           </DialogHeader>
           <div className="gap-4">
             <div>
@@ -674,9 +741,9 @@ const AddProduct = () => {
               type="button"
               onClick={() => {
                 if (!availableSize.includes(newSize)) {
-                  setAvailableSize((prev) => [...prev, newSize])
+                  setAvailableSize((prev) => [...prev, newSize]);
                 }
-                setSizeOpen(false)
+                setSizeOpen(false);
               }}
             >
               Save Size
@@ -685,6 +752,6 @@ const AddProduct = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 export default AddProduct;

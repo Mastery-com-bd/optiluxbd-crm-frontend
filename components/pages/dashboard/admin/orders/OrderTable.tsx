@@ -25,7 +25,13 @@ import {
 } from "@/components/ui/table";
 import { PlaceBulkOrder } from "../../couriar/bulkOrder/PlaceBulkOrder";
 import { Card } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import CustomPagination from "@/components/ui/CustomPagination";
 export function OrderTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -38,7 +44,9 @@ export function OrderTable() {
   const [show, setShow] = useState("10");
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [courierOrders, setCourierOrders] = useState<{ [key: string]: any[] }>({});
+  const [courierOrders, setCourierOrders] = useState<{ [key: string]: any[] }>(
+    {},
+  );
   const { data, isLoading } = useGetAllOrdersQuery(filters, {
     refetchOnMountOrArgChange: false,
   });
@@ -53,22 +61,22 @@ export function OrderTable() {
     setSelectedOrders((prev) =>
       prev.includes(orderId)
         ? prev.filter((id) => id !== orderId)
-        : [...prev, orderId]
+        : [...prev, orderId],
     );
   };
 
   const toggleSelectAll = () => {
     const currentOrderIds = orders.map((order: OrderData) => order.id);
     const allSelected = currentOrderIds.every((id: number) =>
-      selectedOrders.includes(id)
+      selectedOrders.includes(id),
     );
     if (allSelected) {
       setSelectedOrders((prev) =>
-        prev.filter((id) => !currentOrderIds.includes(id))
+        prev.filter((id) => !currentOrderIds.includes(id)),
       );
     } else {
       const newSelections = currentOrderIds.filter(
-        (id: number) => !selectedOrders.includes(id)
+        (id: number) => !selectedOrders.includes(id),
       );
       setSelectedOrders((prev) => [...prev, ...newSelections]);
     }
@@ -84,7 +92,6 @@ export function OrderTable() {
       month: "short",
       day: "numeric",
     });
-
 
   const handleBookToCourier = () => {
     const data = orders
@@ -103,9 +110,8 @@ export function OrderTable() {
           order.shipping_address_division,
         ].filter(Boolean);
 
-        const recipient_address = parts.length > 0
-          ? parts.join(", ")
-          : "No address provided";
+        const recipient_address =
+          parts.length > 0 ? parts.join(", ") : "No address provided";
 
         return {
           invoice,
@@ -115,8 +121,8 @@ export function OrderTable() {
           cod_amount,
         };
       });
-    const processedOrders = { data }
-    console.log(processedOrders);
+    const processedOrders = { data };
+
     setCourierOrders(processedOrders);
     setIsDialogOpen(true);
   };
@@ -210,9 +216,7 @@ export function OrderTable() {
           }
         />
         <Select
-          onValueChange={(val) =>
-            setFilters((f) => ({ ...f, sortBy: val }))
-          }
+          onValueChange={(val) => setFilters((f) => ({ ...f, sortBy: val }))}
           defaultValue="orderDate"
         >
           <SelectTrigger>
@@ -252,10 +256,7 @@ export function OrderTable() {
             <X className="w-4 h-4 mr-1" />
             Deselect All
           </Button>
-          <Button
-            onClick={handleBookToCourier}
-            className="cursor-pointer"
-          >
+          <Button onClick={handleBookToCourier} className="cursor-pointer">
             book to courier
           </Button>
         </div>
@@ -325,14 +326,11 @@ export function OrderTable() {
                         {order?.customer?.name}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm font-medium text-center">
-                        {new Date(order.orderDate).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "2-digit",
-                          }
-                        )}
+                        {new Date(order.orderDate).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "2-digit",
+                        })}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-sm font-semibold text-center">
                         {order.quantity}
@@ -355,9 +353,7 @@ export function OrderTable() {
                             align="end"
                             className="w-[180px] flex flex-col "
                           >
-                            <Link
-                              href={`/dashboard/admin/orders/${order.id}`}
-                            >
+                            <Link href={`/dashboard/admin/orders/${order.id}`}>
                               <DropdownMenuItem className="cursor-pointer">
                                 <Eye className="w-4 h-4 mr-2" /> view
                               </DropdownMenuItem>

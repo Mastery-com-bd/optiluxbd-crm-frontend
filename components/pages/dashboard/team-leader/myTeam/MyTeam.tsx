@@ -145,22 +145,22 @@ const MyTeam = () => {
     setSelectedAgents((prev) =>
       prev.includes(agentId)
         ? prev.filter((id) => id !== agentId)
-        : [...prev, agentId]
+        : [...prev, agentId],
     );
   };
 
   const toggleSelectAll = () => {
     const currentOrderIds = myAgents.map((agent: Agent) => agent.agentId);
     const allSelected = currentOrderIds.every((id: string) =>
-      selectedAgents.includes(id)
+      selectedAgents.includes(id),
     );
     if (allSelected) {
       setSelectedAgents((prev) =>
-        prev.filter((id) => !currentOrderIds.includes(id))
+        prev.filter((id) => !currentOrderIds.includes(id)),
       );
     } else {
       const newSelections = currentOrderIds.filter(
-        (id: string) => !selectedAgents.includes(id)
+        (id: string) => !selectedAgents.includes(id),
       );
       setSelectedAgents((prev) => [...prev, ...newSelections]);
     }
@@ -185,17 +185,9 @@ const MyTeam = () => {
             <X className="w-4 h-4 mr-1" />
             Selected agents {selectedAgents.length}
           </Button>
-          {/* <Button
-                        variant="outline"
-                        onClick={() => console.log('clicked')}
-                        className="cursor-pointer py-6 rounded-2xl"
-                    >
-                        Assign to Agent
-                    </Button> */}
-          {/* <AssignagentsToTeam selectedAgents={selectedAgents} /> */}
         </div>
       )}
-      {/* Filter Options */}
+
       <div className="flex justify-between gap-4 my-4 ">
         <Input
           placeholder="Search product by id name sku...."

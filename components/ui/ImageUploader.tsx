@@ -3,23 +3,30 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import UploadImage from "./UploadImage";
 import { Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type TImageUpload = {
+  handleChange: (imageFile: File) => Promise<void>;
+  image?: string;
+  clasName?: string;
+};
+
 const ImageUploader = ({
   handleChange,
-  profileImage,
-  id,
-  clasName = "h-56 w-56 rounded-full shadow-md",
-}: {
-  handleChange: (imageFile: File) => Promise<void>;
-  profileImage?: string;
-  id: string;
-  clasName?: string;
-}) => {
+  image,
+  clasName = "h-36 w-36 rounded-full shadow-md",
+}: TImageUpload) => {
   const [hovered, setHovered] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleChange(file);
+    }
+    return;
+  };
 
   return (
     <div
@@ -31,7 +38,7 @@ const ImageUploader = ({
     >
       <Image
         src={
-          profileImage ??
+          image ??
           "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
         }
         alt="Agent Avatar"
@@ -39,7 +46,13 @@ const ImageUploader = ({
         height={500}
         className={cn(" object-cover ", clasName)}
       />
-      <UploadImage fileInputRef={fileInputRef} handleChange={handleChange} />
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={(e) => handleFileChange(e)}
+      />
       <AnimatePresence>
         {hovered && (
           <motion.button

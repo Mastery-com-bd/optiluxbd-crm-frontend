@@ -45,7 +45,6 @@ export const getAllUser = async () => {
 };
 
 export const getUserById = async (id: string) => {
-  console.log(id);
   const token = (await getAccesstoken()) as string;
   try {
     const res = await fetch(

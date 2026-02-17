@@ -16,6 +16,7 @@ import {
   currentConfiguration,
   systemInformation,
 } from "../SettingsHome/const/settings.const";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const GeneralSettings = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -239,9 +240,9 @@ const GeneralSettings = () => {
                         item.value === "Connected" || item.value === "Active"
                           ? "text-success"
                           : item.value === "Disconnected" ||
-                            item.value === "Inactive"
-                          ? "text-red-600"
-                          : "text-[#FDFDFD]"
+                              item.value === "Inactive"
+                            ? "text-red-600"
+                            : "text-[#FDFDFD]"
                       } `}
                     >
                       {item.value}
@@ -251,6 +252,17 @@ const GeneralSettings = () => {
               </div>
             </div>
           </Card>
+        </div>
+      </div>
+
+      {/* bellow button */}
+      <div className="flex justify-between items-center border-t border-white/10 pt-6 mt-10">
+        <div>
+          <ButtonComponent buttonName="Reset to Default" varient="default" />
+        </div>
+        <div className="flex items-center gap-4">
+          <ButtonComponent buttonName="Cancel" varient="purple" />
+          <ButtonComponent buttonName="Save Changes" varient="yellow" />
         </div>
       </div>
     </section>
