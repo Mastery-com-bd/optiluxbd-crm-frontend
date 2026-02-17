@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import SidebarButtonEffect from "./buttons/ItemButton";
 import { useUser } from "@/provider/AuthProvider";
 import { logout } from "@/service/authService";
+import { CustomScrollbar } from "@/components/ui/CustomScrollbar";
 
 const data = {
   teams: [
@@ -64,83 +65,85 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <div className="flex flex-col justify-between h-full ">
-        <div>
+      <div className="flex flex-col justify-between h-full space-y-2">
+        <div className="space-y-2">
           <SidebarHeader>
             <TeamSwitcher teams={data?.teams} />
           </SidebarHeader>
-          <div className="border border-dashed border-[rgba(255,177,63,0.50)]"></div>
-
-          <SidebarContent>
-            <NavMain items={data?.navMain} />
-          </SidebarContent>
+          <div className="border border-dashed border-[rgba(255,177,63,0.50)]" />
         </div>
 
-        <SidebarFooter>
-          {/* <NavUser /> */}
-          {user?.roles[0] === "Agent" && (
-            <div className="w-full bg-[rgba(255,255,255,0.05)] effect rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
-              <div className="flex items-center gap-2">
-                <div className="rounded-full border border-[rgba(255,107,0,0.5)] bg-[linear-gradient(135deg,rgba(255,107,0,0.30)_0%,rgba(255,107,0,0.10)_100%)] text-[#FF6B00] p-2">
-                  <PhoneCall size={22} />
-                </div>
-                <h1 className="flex flex-col">
-                  <span className="text-base font-bold">Pending Calls</span>
-                  <span className="text-xs font-medium text-[#FCF5EB]">
-                    2 of 4 left
-                  </span>
-                </h1>
-              </div>
-              <div className="space-y-1">
-                <p className="flex items-center justify-between">
-                  <span className="text-sm">Progress</span>{" "}
-                  <span className="text-[#FF6B00] font-semibold">
-                    {percent}%
-                  </span>
-                </p>
-                <div className="w-full h-2 rounded-full border border-white/15 bg-transparent overflow-hidden">
-                  <div
-                    className="h-full bg-orange-500 rounded-full transition-all"
-                    style={{ width: `${percent}%` }}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <div className="bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5 px-3 py-1 rounded-xl border border-white/10 w-full">
-                  <CircleCheck size={16} className="text-success" />
-                  <span className="font-medium">2</span>
-                </div>
-                <div className="bg-[rgba(255,107,0,0.10)] flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[rgba(255,107,0,0.30)] w-full text-[#FF6B00]">
-                  <Clock size={16} />
-                  <span className="font-medium">2</span>
-                </div>
-              </div>
-            </div>
-          )}
-          {/* allert card for agent */}
-
-          <SidebarMenuItem key={"logout"} className="w-full">
-            <SidebarMenuButton tooltip={"Logout"} asChild className=" px-0">
-              <button
-                onClick={handleLogOut}
-                className="w-full text-left cursor-pointer"
-              >
-                <SidebarButtonEffect>
-                  <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
-                    <p className="flex items-center gap-2">
-                      <span>
-                        <LogOut size={16} />
+        <div className="space-y-2 min-h-0">
+          <CustomScrollbar>
+            <SidebarContent>
+              <NavMain items={data?.navMain} />
+            </SidebarContent>
+            <SidebarFooter>
+              {/* <NavUser /> */}
+              {user?.roles[0] === "Owner" && (
+                <div className="w-full bg-[rgba(255,255,255,0.05)] effect rounded-3xl p-3 space-y-3 group-data-[collapsible=icon]:hidden">
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-full border border-[rgba(255,107,0,0.5)] bg-[linear-gradient(135deg,rgba(255,107,0,0.30)_0%,rgba(255,107,0,0.10)_100%)] text-[#FF6B00] p-2">
+                      <PhoneCall size={22} />
+                    </div>
+                    <h1 className="flex flex-col">
+                      <span className="text-base font-bold">Pending Calls</span>
+                      <span className="text-xs font-medium text-[#FCF5EB]">
+                        2 of 4 left
                       </span>
-                      <span className="text-red-600">Logout</span>
-                    </p>
+                    </h1>
                   </div>
-                </SidebarButtonEffect>
-              </button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarFooter>
+                  <div className="space-y-1">
+                    <p className="flex items-center justify-between">
+                      <span className="text-sm">Progress</span>{" "}
+                      <span className="text-[#FF6B00] font-semibold">
+                        {percent}%
+                      </span>
+                    </p>
+                    <div className="w-full h-2 rounded-full border border-white/15 bg-transparent overflow-hidden">
+                      <div
+                        className="h-full bg-orange-500 rounded-full transition-all"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5 px-3 py-1 rounded-xl border border-white/10 w-full">
+                      <CircleCheck size={16} className="text-success" />
+                      <span className="font-medium">2</span>
+                    </div>
+                    <div className="bg-[rgba(255,107,0,0.10)] flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[rgba(255,107,0,0.30)] w-full text-[#FF6B00]">
+                      <Clock size={16} />
+                      <span className="font-medium">2</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* allert card for agent */}
+
+              <SidebarMenuItem key={"logout"} className="w-full">
+                <SidebarMenuButton tooltip={"Logout"} asChild className=" px-0">
+                  <button
+                    onClick={handleLogOut}
+                    className="w-full text-left cursor-pointer"
+                  >
+                    <SidebarButtonEffect>
+                      <div className="relative z-10 flex w-full items-center justify-between px-4 group-data-[collapsible=icon]:p-2 py-1.5">
+                        <p className="flex items-center gap-2">
+                          <span>
+                            <LogOut size={16} />
+                          </span>
+                          <span className="text-red-600">Logout</span>
+                        </p>
+                      </div>
+                    </SidebarButtonEffect>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarFooter>
+          </CustomScrollbar>
+        </div>
       </div>
-      {/* <SidebarRail /> */}
     </Sidebar>
   );
 }

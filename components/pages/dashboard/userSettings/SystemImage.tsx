@@ -2,6 +2,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageUploader from "@/components/ui/ImageUploader";
+import { Label } from "@/components/ui/label";
 import { uploadFavicon, uploadLogo } from "@/service/userSettings";
 import { TUserSettings } from "@/types/settings/userSettings.types";
 import { toast } from "sonner";
@@ -54,14 +55,20 @@ const SystemImage = ({ settings }: { settings: TUserSettings }) => {
         <CardTitle>System Logo and Favicon Update</CardTitle>
       </CardHeader>
       <CardContent className="flex items-center justify-between">
-        <ImageUploader
-          image={settings?.site_logo_url as string}
-          handleChange={handleLogoChnage}
-        />
-        <ImageUploader
-          image={settings?.site_favicon_url as string}
-          handleChange={handleFaviconChnage}
-        />
+        <div className="space-y-2">
+          <Label>Site Logo</Label>
+          <ImageUploader
+            image={settings?.site_logo_url as string}
+            handleChange={handleLogoChnage}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Site Favicon</Label>
+          <ImageUploader
+            image={settings?.site_favicon_url as string}
+            handleChange={handleFaviconChnage}
+          />
+        </div>
       </CardContent>
     </Card>
   );
