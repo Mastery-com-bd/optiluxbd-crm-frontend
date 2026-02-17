@@ -17,6 +17,7 @@ import {
   Target,
   CircleUserRound,
   Radio,
+  WalletCards,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -216,6 +217,29 @@ export const crmRoutes: TCrmNavigation = {
       ],
     },
 
+    {
+      title: "Scratch Cards",
+      icon: WalletCards,
+      // permissions: [
+      //   "ALLOCATIONS ASSIGN LEADER",
+      //   "ALLOCATIONS DISTRIBUTE",
+      //   "ALLOCATIONS REPORTS VIEW",
+      //   "ALLOCATIONS REPORTS VIEW OWN",
+      //   "ALLOCATIONS VIEW OWN",
+      // ],
+      children: [
+        {
+          title: "All Scratch Cards",
+          path: "/dashboard/admin/scratch-cards",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+        {
+          title: "Lead Assignment",
+          path: "/dashboard/admin/team/assign-leads",
+          // permissions: ["ALLOCATIONS REPORTS VIEW"],
+        },
+      ],
+    },
     // orders route
     {
       title: "Orders",

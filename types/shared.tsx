@@ -9,3 +9,10 @@ export type TSearchParams = Promise<{
 export type ChangeInput =
   | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   | { name: string; value: string };
+
+export type TPagination = {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
