@@ -50,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         toast.success(res?.message, { id: toastId, duration: 3000 });
         router.push("/login");
       } else {
-        toast.error(res.message);
+        toast.error(res?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       const errorInfo =

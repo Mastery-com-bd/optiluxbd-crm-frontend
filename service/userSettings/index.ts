@@ -2,6 +2,9 @@
 "use server";
 import { SettingsFormValues } from "@/components/pages/dashboard/userSettings/CreateSettings";
 import { createData, patchData, readData } from "../apiService/crud";
+import { getValidToken } from "../authService/validToken";
+import { config } from "@/config";
+import { revalidatePath } from "next/cache";
 
 export const getSettings = async () => {
   const res = await readData("/settings", ["Settings"]);
@@ -46,6 +49,48 @@ export const manualBackup = async () => {
       `/settings/backup/manual`,
       "dashboard/settings/user",
     );
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const uploadLogo = async (data: FormData) => {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api}/settings/branding/logo`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: token,
+        },
+        body: data,
+      },
+    );
+    const result = await res.json();
+    revalidatePath("/dashboard/settings/user");
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const uploadFavicon = async (data: FormData) => {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api}/settings/branding/favicon`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: token,
+        },
+        body: data,
+      },
+    );
+    const result = await res.json();
+    revalidatePath("/dashboard/settings/user");
     return result;
   } catch (error: any) {
     return Error(error);
