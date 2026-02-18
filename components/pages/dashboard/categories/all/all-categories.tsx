@@ -8,6 +8,7 @@ import CategoryCard from "../category-card";
 import PageHeader from "../../shared/pageHeader";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { TCategories, TSubCategories } from "@/types/category.type";
 
 type Child = { id: string; name: string; image: string };
 type Parent = {
@@ -15,6 +16,11 @@ type Parent = {
   name: string;
   image: string;
   children: Child[];
+};
+
+type TCategoryPageProps = {
+  categories: TCategories[];
+  subCategories: TSubCategories[];
 };
 
 const CATEGORIES: Parent[] = [
@@ -86,9 +92,11 @@ const CATEGORIES: Parent[] = [
   },
 ];
 
-const AllCategories = () => {
+const AllCategories = ({ categories, subCategories }: TCategoryPageProps) => {
   const [query, setQuery] = useState("");
   const [current, setCurrent] = useState<Parent>(CATEGORIES[0]);
+
+  console.log(categories);
 
   const filteredParents = useMemo(() => {
     const q = query.toLowerCase();
@@ -96,28 +104,32 @@ const AllCategories = () => {
   }, [query]);
 
   return (
-    <div className="min-h-screen w-full ">
-      <div className="flex items-center justify-between mb-6">
-        <PageHeader
-          title="All Category"
-          description="Browse and manage All Category"
-        />
+    <div className="min-h-screen w-full space-y-6">
+      <div className="flex items-center justify-between">
         <div>
+          <PageHeader
+            title="All Category"
+            description="Browse and manage All Category"
+          />
+        </div>
+        <div className="flex items-center justify-end gap-3 ">
           <AddCategory />
         </div>
       </div>
 
+      <div className="relative flex items-center justify-start">
+        <Input
+          icon={<Search />}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search in category"
+        />
+      </div>
+
       <div className="grid grid-cols-12 gap-6">
         {/* Sidebar */}
-        <aside className="col-span-3">
-          <div className="relative mb-4.5">
-            <Input
-              icon={<Search />}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search in category"
-            />
-          </div>
+        <aside className="col-span-3 space-y-3">
+          <h1 className="text-[28px] font-semibold">Categories</h1>
           <div className="space-y-3">
             {filteredParents.map((p) => {
               const active = current.id === p.id;
@@ -129,7 +141,7 @@ const AllCategories = () => {
                   <button
                     onClick={() => setCurrent(p)}
                     className={cn(
-                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden "
+                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden ",
                     )}
                   >
                     {active && (
@@ -200,7 +212,7 @@ const AllCategories = () => {
 
         {/* Content */}
         <section className="col-span-9">
-          <h2 className="text-[28px] font-semibold mb-4">Sub Categories</h2>
+          <h2 className="text-[28px] font-semibold ">Sub Categories</h2>
           <div className="grid grid-cols-3 gap-5">
             {current.children.map((c) => (
               <Link href={`/dashboard/admin/categories/products`} key={c.id}>

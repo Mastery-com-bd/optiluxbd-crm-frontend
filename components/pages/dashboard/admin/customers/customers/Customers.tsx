@@ -16,8 +16,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { TCustomer } from "@/types/customer.types";
+import { TMeta } from "@/types/meta.type";
+import { customerTableColumn } from "./CustomerTableColumn";
+import TableComponent from "@/components/ui/CustomTableComponent";
+import { Card, CardContent } from "@/components/ui/card";
 
-const Customers = () => {
+type TCustomersProps = {
+  customers: TCustomer[];
+  meta: TMeta;
+};
+
+const Customers = ({ customers, meta }: TCustomersProps) => {
   const [show, setShow] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
@@ -34,6 +44,8 @@ const Customers = () => {
     { id: 4, name: "Books" },
     { id: 5, name: "Sports" },
   ];
+
+  console.log(meta);
 
   const handleChange = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -53,6 +65,8 @@ const Customers = () => {
     setCurrentPage(1);
     setStatus("all");
   };
+
+  const column = customerTableColumn();
 
   return (
     <div className="min-h-screen bg-transparent text-foreground space-y-6 w-full px-4">
@@ -128,8 +142,17 @@ const Customers = () => {
         </div>
       </div>
 
+      {!customers.length ? (
+        <Card>
+          <CardContent>No Customers are available right now</CardContent>
+        </Card>
+      ) : (
+        <TableComponent data={customers} columns={column} />
+      )}
+
       {/* Pagination */}
       <CustomPagination
+        totalPage={meta?.totalPages}
         show={show}
         currentPage={currentPage}
         setShow={setShow}

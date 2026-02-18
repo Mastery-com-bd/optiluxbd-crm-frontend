@@ -1,17 +1,29 @@
-export interface TCustomer {
+export type TCustomerLevel =
+  | "BRONZE_PENDING"
+  | "BRONZE"
+  | "SILVER_PENDING"
+  | "SILVER"
+  | "GOLD_PENDING"
+  | "GOLD"
+  | "DIAMOND_PENDING"
+  | "DIAMOND"
+  | "PLATINUM_PENDING"
+  | "PLATINUM";
+
+export type TGender = "MALE" | "FEMALE" | "OTHER";
+
+export type TCustomer = {
   id: number;
-  customerId: string;
   name: string;
   phone: string;
-  email: string;
-  address: string;
-  district?: string | null;
-  thana?: string | null;
-  date_of_birth?: string | null;
-  profession?: string | null;
-  isMarried?: boolean | null;
-  gender?: string | null;
-  customerLevel: string;
-  created_at?: string | null;
-  updated_at?: string | null;
-}
+  customerId: string;
+  gender: TGender;
+  isMarried: boolean;
+  customerLevel: TCustomerLevel;
+  customFields?: {
+    referredBy?: string;
+    marriageAnniversary?: string;
+  };
+  created_at: string;
+  updated_at: string;
+};
