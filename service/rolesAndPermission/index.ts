@@ -35,6 +35,26 @@ export const GetAllRoles = async () => {
   }
 };
 
+export const GetAllRolesForOrganization = async () => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/roles`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["OrganizationRoles"],
+        revalidate: 30,
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
 export const GetAllPermissions = async () => {
   const token = (await getAccesstoken()) as string;
   try {

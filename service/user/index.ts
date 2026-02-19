@@ -4,7 +4,7 @@
 import { config } from "@/config";
 import { getAccesstoken } from "../authService";
 import { getValidToken } from "../authService/validToken";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export type TCreateUserData = {
   name: string;
@@ -34,6 +34,50 @@ export const getAllUser = async () => {
       },
       next: {
         tags: ["Users"],
+        revalidate: 30,
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const createNewUser = async (data: TCreateUserData) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/users`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      next: {
+        tags: ["OrganizationUsers"],
+        revalidate: 30,
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath("/dashboard/admin/users");
+    revalidateTag("OrganizationUsers", "default");
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const getAllOrganizationUser = async () => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["OrganizationUsers"],
         revalidate: 30,
       },
     });
