@@ -74,6 +74,16 @@ const LoginComponent = () => {
     }
   };
 
+  // const handleAdmin = async (data: { email: string; password: string }) => {
+  //   try {
+  //     const res = await login(data);
+  //     console.log(res);
+  //     const currentUser = await getCurrentUser();
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleAdmin = async (data: { email: string; password: string }) => {
     const toastId = toast.loading("logging in");
     try {
@@ -94,6 +104,7 @@ const LoginComponent = () => {
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
       toast.error(errorInfo, { id: toastId, duration: 3000 });
+      console.log(error);
     }
   };
 
