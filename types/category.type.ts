@@ -9,7 +9,7 @@ export type TSubCategories = {
   updated_at: string;
 };
 
-export type TCategories = {
+export type TCategory = {
   id: number;
   organizationId: number;
   name: string;
@@ -19,3 +19,5 @@ export type TCategories = {
   created_at: string;
   updated_at: string;
 };
+
+export type TCategories = TCategory[];
