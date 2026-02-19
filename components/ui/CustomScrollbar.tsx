@@ -1,7 +1,10 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 
-export function CustomScrollbar({ children }: { children: React.ReactNode }) {
+type TCustomSAcrollbar = { children: React.ReactNode; className?: string };
+
+export function CustomScrollbar({ children, className }: TCustomSAcrollbar) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [thumbHeight, setThumbHeight] = useState(20);
   const [thumbTop, setThumbTop] = useState(0);
@@ -48,7 +51,7 @@ export function CustomScrollbar({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="relative h-full">
+    <div className={cn("relative h-full", className)}>
       {/* Scrollable content */}
       <div ref={containerRef} className="overflow-y-scroll h-full no-scrollbar">
         {children}

@@ -1,7 +1,5 @@
 "use client";
 
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-import { Plus } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -11,25 +9,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ButtonComponent from "@/components/ui/ButtonComponent";
 import PageHeader from "../../../shared/pageHeader";
 import { OverviewCard } from "../../../shared/overviewCard";
-import { Box, User, Briefcase, ArrowUpRight } from 'lucide-react';
+import { Box, User, Briefcase, ArrowUpRight } from "lucide-react";
+import CreateCustomerModal from "../customers/CreateCustomerModal";
 
 type TOverviewdata = {
   month:
-  | "Jan"
-  | "Feb"
-  | "Mar"
-  | "Apr"
-  | "May"
-  | "Jun"
-  | "Jul"
-  | "Aug"
-  | "Sep"
-  | "Oct"
-  | "Nov"
-  | "Dec";
+    | "Jan"
+    | "Feb"
+    | "Mar"
+    | "Apr"
+    | "May"
+    | "Jun"
+    | "Jul"
+    | "Aug"
+    | "Sep"
+    | "Oct"
+    | "Nov"
+    | "Dec";
   first?: string;
   second?: string;
   third?: string;
@@ -163,7 +161,7 @@ const CustomerOverview = () => {
       isPositive: true,
       change: "36.8",
       highlight: true,
-      highlightColor: "text-rose-500" // Design-e Red color-e highlighted
+      highlightColor: "text-rose-500", // Design-e Red color-e highlighted
     },
     {
       icon: ArrowUpRight,
@@ -174,17 +172,17 @@ const CustomerOverview = () => {
       highlight: false,
     },
   ];
+
   return (
     <section className="min-h-screen bg-transparent text-foreground space-y-4 w-full">
       <div className="flex items-center justify-between">
         <div>
-          <PageHeader title="Customer Overview" description="Operational overview and quick actions.  " />
+          <PageHeader
+            title="Customer Overview"
+            description="Operational overview and quick actions.  "
+          />
         </div>
-        <ButtonComponent
-          buttonName="Create New Customer"
-          icon={Plus}
-          varient="dark yellow"
-        />
+        <CreateCustomerModal />
       </div>
       <div className="w-full ">
         <OverviewCard stats={stats} />
@@ -241,10 +239,11 @@ const CustomerOverview = () => {
                       return (
                         <TableCell key={key} className="px-4 py-3">
                           <div
-                            className={`px-4 py-3 text-sm text-center rounded-3xl ${value
-                              ? getCellBg(value)
-                              : "bg-[rgba(255,255,255,0.05)]"
-                              }`}
+                            className={`px-4 py-3 text-sm text-center rounded-3xl ${
+                              value
+                                ? getCellBg(value)
+                                : "bg-[rgba(255,255,255,0.05)]"
+                            }`}
                           >
                             {value ?? "-"}
                           </div>
