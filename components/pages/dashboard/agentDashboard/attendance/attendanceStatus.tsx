@@ -1,9 +1,28 @@
+"use client";
+
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, CalendarClock, Clock, LogOut } from "lucide-react";
+import { useUser } from "@/provider/AuthProvider";
+import { Calendar, CalendarClock, Clock, Coffee, LogOut } from "lucide-react";
 
 const AttendanceStatus = () => {
+  const { user } = useUser();
+
+  const handleCheckIn = async () => {
+    // const res = await AgentCheckIn();
+    // const data = await res.json();
+    console.log("Check In Response: ", user);
+  };
+
+  const handleCheckOut = () => {
+    console.log("Check Out");
+  };
+
+  const handleBreak = () => {
+    console.log("Break");
+  };
+
   return (
     <div>
       <div className="grid grid-cols-3 gap-5">
@@ -37,10 +56,29 @@ const AttendanceStatus = () => {
                 </div>
               </div>
 
-              <Button className="w-full -mt-3 rounded-full bg-white/5 hover:bg-white/10 border-2 border-white/20 text-white/90 h-12">
-                <LogOut className="w-4 h-4 mr-2 inline" />
-                Check Out Now
+              <Button
+                onClick={handleCheckIn}
+                className="w-full -mt-3 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 text-white/90 h-12"
+              >
+                <CalendarClock className="w-4 h-4 mr-2 inline" />
+                Check In
               </Button>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={handleCheckOut}
+                  className="flex-1 rounded-xl bg-white/5 hover:bg-white/10 border-2 border-white/20 text-white/90 h-12"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Check Out
+                </Button>
+                <Button
+                  onClick={handleBreak}
+                  className="flex-1 rounded-xl bg-[#FF4B4B]/10 hover:bg-[#FF4B4B]/20 border-2 border-[#FF4B4B]/30 text-[#FF4B4B] h-12"
+                >
+                  <Coffee className="w-4 h-4 mr-2" />
+                  Break
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </LiquidGlass>

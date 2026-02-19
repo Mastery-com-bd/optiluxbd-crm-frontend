@@ -1,13 +1,12 @@
 import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-import {
-  GLDropdownMenu,
-  GLDropdownMenuContent,
-  GLDropdownMenuItem,
-  GLDropdownMenuLabel,
-  GLDropdownMenuSeparator,
-  GLDropdownMenuTrigger,
-} from "@/components/ui/glass-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -16,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDownIcon, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 const AgentDashboardAttendance = () => {
   return (
@@ -29,22 +28,20 @@ const AgentDashboardAttendance = () => {
             icon={<Search size={16} />}
           />
         </div>
-        <div className="flex items-center gap-8">
-          <GLDropdownMenu>
-            <GLDropdownMenuTrigger className="focus:outline-none">
-              <div className="flex items-center gap-2 focus:outline-none">
-                <span>Status</span> <ChevronDownIcon size={16} />
-              </div>
-            </GLDropdownMenuTrigger>
-            <GLDropdownMenuContent>
-              <GLDropdownMenuLabel>My Account</GLDropdownMenuLabel>
-              <GLDropdownMenuSeparator />
-              <GLDropdownMenuItem>Profile</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Billing</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Team</GLDropdownMenuItem>
-              <GLDropdownMenuItem>Subscription</GLDropdownMenuItem>
-            </GLDropdownMenuContent>
-          </GLDropdownMenu>
+        <div className="flex  gap-4">
+          <Select defaultValue="all">
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="Absent">Absent</SelectItem>
+              <SelectItem value="Present">Present</SelectItem>
+              <SelectItem value="Remote">Remote</SelectItem>
+              <SelectItem value="Leave">Leave</SelectItem>
+              <SelectItem value="Late">Late</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <Table>
@@ -60,7 +57,7 @@ const AgentDashboardAttendance = () => {
                 >
                   {label}
                 </TableHead>
-              )
+              ),
             )}
           </TableRow>
         </TableHeader>
