@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ProductCreatePayload } from "@/types/products/product.type";
-import { createData, uploadFile } from "../apiService/crud";
+import { createData, patchData, readData, uploadFile } from "../apiService/crud";
+import { Query } from "@/types/shared";
+import { success } from "zod";
 
 
 export async function addProduct(
@@ -13,6 +15,7 @@ export async function addProduct(
             "/dashboard/admin/products",
             data
         );
+        console.log("Product res ->> ", productRes.data.id);
 
         if (!productRes.success) {
             console.log(productRes);
@@ -24,13 +27,11 @@ export async function addProduct(
             formData.append("product_image", img);
 
             const imageRes = await uploadFile(
-                `/products/${productRes.data.id}/image`,
+                `/images/products/${productRes?.data?.id}/image`,
                 "/dashboard/admin/products",
                 formData
             );
-
             if (imageRes.success) {
-                console.log(imageRes);
                 return {
                     success: true,
                     message: "Product and image uploaded successfully",
@@ -64,4 +65,72 @@ export async function addProduct(
             message: error.message || "Failed to add product"
         };
     }
-}   
+}
+
+export async function updateProduct(
+    productId: number,
+    data: ProductCreatePayload,
+    img?: File | null
+) {
+    try {
+        const productRes = await patchData<ProductCreatePayload>(
+            `/products/${productId}`,
+            "/dashboard/admin/products",
+            data
+        );
+        console.log("Product update res ->> ", productRes.data.id);
+
+        if (!productRes.success) {
+            return productRes;
+        }
+
+        if (img && productRes?.success) {
+            const formData = new FormData();
+            formData.append("product_image", img);
+
+            const imageRes = await uploadFile(
+                `/images/products/${productId}/image`,
+                "/dashboard/admin/products",
+                formData
+            );
+            if (imageRes.success) {
+                return {
+                    success: true,
+                    message: "Product and image uploaded successfully",
+                    data: {
+                        ...productRes.data,
+                        imageUploaded: true
+                    }
+                };
+            }
+
+            return {
+                success: true,
+                message: "Product created but image upload failed",
+                data: {
+                    ...productRes.data,
+                    imageUploaded: false
+                }
+            };
+        }
+
+        return {
+            success: true,
+            message: "Product created successfully (no image)",
+            data: productRes.data
+        };
+
+    } catch (error: any) {
+        console.error("Error adding product:", error);
+        return {
+            success: false,
+            message: error.message || "Failed to add product"
+        };
+    }
+}
+
+
+export async function getAllProducts(query?: Query) {
+    const res = await readData("/products", ["Products"], query);
+    return res;
+}

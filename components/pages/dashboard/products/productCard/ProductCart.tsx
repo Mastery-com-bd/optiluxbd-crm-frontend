@@ -1,14 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import GreenSvgForButton from "@/components/svgIcon/GreenSvgForButton";
-import { Button } from "@/components/ui/button";
 import ButtonComponent from "@/components/ui/ButtonComponent";
-import { Product } from "@/types/product";
+import { TProduct } from "@/types/products/product.type";
 import { Eye, Pencil, Trash } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 type PropsType = {
-    product: Product;
+    product: TProduct;
     setDeleteProductId: (id: number) => void;
     setDeleteDialogOpen: (open: boolean) => void;
 };
@@ -18,7 +15,7 @@ const ProductCard = ({ product, setDeleteProductId, setDeleteDialogOpen }: Props
         <div className=" rounded-[14px] w-full bgGlass p-4  flex flex-col items-center shadow-lg justify-between">
             <div className=" h-[290px] w-full">
                 <img
-                    src={product.image_url}
+                    src={product?.image_url || ""}
                     alt={product.name}
                     // height={290}
                     // width={323}
