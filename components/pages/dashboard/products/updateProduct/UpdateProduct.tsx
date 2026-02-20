@@ -1,44 +1,64 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import { Pencil, Upload, X } from "lucide-react";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Pencil, Upload } from "lucide-react";
+import { Product } from "@/types/product";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { TProduct } from "@/types/products/product.type";
-import { TSubCategory } from "@/types/category.type";
 import { updateProduct } from "@/service/product-service/product.service";
+import { TSubCategories } from "@/types/category.type";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
 
-// Zod Schema based on your TProduct interface
+
+
+type FormValues = {
+  name: string;
+  brand: string;
+  category: string;
+  description: string;
+  price: number;
+  stock: number;
+  status: string;
+  stock_status: string;
+  is_active: boolean;
+  is_featured: boolean;
+};
+
+type updateProductProps = {
+  product: TProduct,
+  subCategories: TSubCategories,
+  isUpdateOpen: boolean,
+  setIsUPdateOpen: (val: boolean) => void;
+}
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   description: z.string().optional(),
@@ -55,22 +75,11 @@ const formSchema = z.object({
   stock_status: z.string().default("IN_STOCK"),
   weight: z.string().optional(),
   dimensions: z.string().optional(),
-  tags: z.string().optional(), // We'll convert string to array on submit
+  tags: z.string().optional(),
 });
 
-type UpdateProductProps = {
-  product: TProduct;
-  subCategories: TSubCategory[];
-  isUpdateOpen: boolean;
-  setIsUPdateOpen: (val: boolean) => void;
-};
-
-const UpdateProduct = ({
-  product,
-  subCategories,
-  isUpdateOpen,
-  setIsUPdateOpen,
-}: UpdateProductProps) => {
+const UpdateProduct = ({ product, subCategories, isUpdateOpen, setIsUPdateOpen }: updateProductProps) => {
+  console.log("update product->>>", product)
   const [imagePreview, setImagePreview] = useState(product.image_url || "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,56 +105,39 @@ const UpdateProduct = ({
       tags: product.tags?.join(", ") || "",
     },
   });
-
   const { isDirty } = form.formState;
-
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (typeof reader.result === "string") setImagePreview(reader.result);
+        if (typeof reader.result === "string") {
+          setImagePreview(reader.result);
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const toastId = toast.loading("Updating product...");
-
-    // Formatting data for API
-    const formattedData = {
-      ...values,
-      subCategoryId: Number(values.subCategoryId),
-      tags: values.tags ? values.tags.split(",").map(t => t.trim()) : [],
-    };
-
-    try {
-      const res = await updateProduct(product.id,  formattedData, imageFile);
-      if (res.success) {
-        toast.success("Product updated successfully", { id: toastId });
-        setIsUPdateOpen(false);
-      } else {
-        toast.error("Failed to update", { id: toastId });
-      }
-    } catch (error) {
-      toast.error("Something went wrong", { id: toastId });
-    }
-  }
+  const onSubmit = async (values: FormValues) => {
+    return
+    // setSheetOpen(false);
+    // const toastId = toast.loading("updating ....")
+    // const res = await updateProduct(productId: Number(product.id), data: values, img: ImageFile);
+    // if (res.success) {
+    //   toast.success("Product updated successfully", { id: toastId })
+    // }
+    // else {
+    //   toast.error("update fail", { id: toastId });
+    // }
+  };
 
   return (
     <Sheet open={isUpdateOpen} onOpenChange={setIsUPdateOpen}>
-      <SheetContent className="sm:max-w-[700px] overflow-y-auto">
-        <SheetHeader className="mb-6">
-          <SheetTitle>Edit Product: {product.name}</SheetTitle>
-          <SheetDescription>
-            Make changes to your product here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader>
-
+      <SheetContent side="bottom" className="lg:w-[50%] w-full mx-auto">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 max-h-[calc(100vh-60px)] overflow-y-auto space-y-6">
             {/* 1. Basic Information */}
             <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
               <h3 className="font-medium text-primary">Basic Details</h3>
