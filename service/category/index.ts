@@ -6,6 +6,7 @@ import { createData, deleteData, readData } from "../apiService/crud";
 import { config } from "@/config";
 import { getValidToken } from "../authService/validToken";
 import { revalidatePath } from "next/cache";
+import { TData } from "@/components/pages/dashboard/categories/all/UpdateCategory";
 
 export type TCreateCategory = {
   name: string;
@@ -128,4 +129,48 @@ export const deleteSubCategoryImage = async (id: number) => {
     "/dashboard/admin/categories",
   );
   return res;
+};
+
+export const updateCategory = async (data: Partial<TData>, id: number) => {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api as string}/categories/${id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const result = await res.json();
+    revalidatePath("/dashboard/admin/categories");
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const updateSubCategory = async (data: Partial<TData>, id: number) => {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api as string}/categories/${id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const result = await res.json();
+    revalidatePath("/dashboard/admin/categories");
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
 };

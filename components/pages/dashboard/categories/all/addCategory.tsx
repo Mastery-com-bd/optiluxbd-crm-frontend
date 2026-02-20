@@ -102,7 +102,6 @@ const AddCategory = () => {
           formData,
           categoryId,
         );
-        console.log(imageUploadResult);
         if (imageUploadResult?.success) {
           toast.success(imageUploadResult?.message, { id: imageLoadingId });
         } else {
@@ -158,7 +157,7 @@ const AddCategory = () => {
             />
           </div>
         </DialogTrigger>
-        <DialogContent className="w-[430px]! bg-[#1a102e] border-white/10 px-3">
+        <DialogContent className="w-[430px]! bg-[#1a102e] border-white/10 px-3 max-h-[80vh]! overflow-y-auto no-scrollbar">
           <div className="space-y-4 ">
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-white">
@@ -265,7 +264,7 @@ const AddCategory = () => {
                 </div>
 
                 {fields.length > 0 && (
-                  <div className="max-h-66 overflow-y-auto space-y-3 no-scrollbar p-1">
+                  <div className=" space-y-3 p-1">
                     {fields.map((field, index) => (
                       <div
                         key={field.id}

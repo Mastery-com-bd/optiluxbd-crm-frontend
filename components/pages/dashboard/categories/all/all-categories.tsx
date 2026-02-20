@@ -11,9 +11,17 @@ import ActiveIcon from "@/components/svgIcon/ActiveIcon";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import AddSubCategory from "./AddSubCategory";
 import { toast } from "sonner";
-import { deleteCategory, deleteSubCategory } from "@/service/category";
+import {
+  deleteCategory,
+  deleteCategoryImage,
+  deleteSubCategory,
+  deleteSubCategoryImage,
+  uploadCategoryImage,
+  uploadSubCategoryImage,
+} from "@/service/category";
 import Link from "next/link";
 import CategoryDropdown from "../CategoryDropdown";
+import UpdateCategory from "./UpdateCategory";
 
 type TCategoryPageProps = {
   categories: TCategories[];
@@ -62,6 +70,114 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
     const toastId = toast.loading("Processing...");
     try {
       const result = await deleteSubCategory(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleSetCategoryImage = async ({
+    image,
+    id,
+    setLoading,
+    setOpen,
+  }: {
+    image: File;
+    id: number;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => {
+    const formData = new FormData();
+    formData.append("category_image", image);
+    const toastId = toast.loading("image uploading");
+    setLoading(true);
+    try {
+      const result = await uploadCategoryImage(formData, id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId, duration: 3000 });
+        setLoading(false);
+        setOpen(false);
+      } else {
+        toast.error(result?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId, duration: 3000 });
+    }
+  };
+
+  const handleSetSubCategoryImage = async ({
+    image,
+    id,
+    setLoading,
+    setOpen,
+  }: {
+    image: File;
+    id: number;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => {
+    const formData = new FormData();
+    formData.append("subcategory_image", image);
+    const toastId = toast.loading("image uploading");
+    setLoading(true);
+    try {
+      const result = await uploadSubCategoryImage(formData, id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId, duration: 3000 });
+        setLoading(false);
+        setOpen(false);
+      } else {
+        toast.error(result?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId, duration: 3000 });
+    }
+  };
+
+  const handleDeleteCategoryImage = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Deleting Category Image...");
+    try {
+      const result = await deleteCategoryImage(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSubCategoryImage = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Deleting SubCategory Image...");
+    try {
+      const result = await deleteSubCategoryImage(id);
       if (result?.success) {
         toast.success(result?.message, { id: toastId });
         setOpen(false);
@@ -132,7 +248,20 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                         id={p?.id}
                         onConfirm={handleDeleteCategory}
                         buttonName="Delete Category"
-                      />
+                        secondButtonName="Delete Image"
+                        handleSubmit={handleSetCategoryImage}
+                        onDeleteConfirm={handleDeleteCategoryImage}
+                        imageTitle="Want to delete this category image?"
+                        imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
+                        imageUrl={p?.image_url as string}
+                      >
+                        <UpdateCategory
+                          title="Update Category"
+                          slug="category"
+                          data={p}
+                          id={p?.id}
+                        />
+                      </CategoryDropdown>
                     </div>
                     {active && <ActiveIcon />}
                     <div className="flex items-center justify-center rounded-[12px] overflow-hidden bg-transparent!">
@@ -175,8 +304,21 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                         description="If you delete this sub-category, the product with this sub-category will be uncategorized. This action can`t be undone"
                         id={c?.id}
                         onConfirm={handleDeleteSubCategory}
+                        handleSubmit={handleSetSubCategoryImage}
                         buttonName="Delete Sub Category"
-                      />
+                        secondButtonName="Delete Image"
+                        onDeleteConfirm={handleDeleteSubCategoryImage}
+                        imageTitle="Want to delete this category image?"
+                        imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
+                        imageUrl={c?.image_url as string}
+                      >
+                        <UpdateCategory
+                          title="Update Sub Category"
+                          slug="subCategory"
+                          data={c}
+                          id={c?.id}
+                        />
+                      </CategoryDropdown>
                     </div>
                     <Link href="/dashboard">
                       <div className="max-w-[265px] p-5 cursor-pointer hover:scale-[1.02] transition-transform effect rounded-[12px] ">

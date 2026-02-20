@@ -2,7 +2,6 @@
 "use client";
 
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -51,7 +50,6 @@ const RegisterComponent = ({ user }: { user: TSocialUser }) => {
   const { visible, toggle } = usePasswordToggle();
   const [passwordtext, setPasswordText] = useState("");
   const [touched, setTouched] = useState(false);
-  const [registration] = useRegisterMutation();
   const [open, setOpen] = useState(false);
 
   const {
@@ -65,21 +63,22 @@ const RegisterComponent = ({ user }: { user: TSocialUser }) => {
 
   const onSubmit = async (data: TRegisterForm) => {
     // data.phone = `+88${data.phone}`;
-    try {
-      const res = await registration(data).unwrap();
-      if (res?.success) {
-        toast.success(res?.message, { duration: 3000 });
-        setOpen(true);
-        reset();
-      }
-    } catch (error: any) {
-      const errorInfo =
-        error?.error ||
-        error?.data?.errors[0]?.message ||
-        error?.data?.message ||
-        "Something went wrong!";
-      toast.error(errorInfo, { duration: 3000 });
-    }
+    console.log(data);
+    // try {
+    //   const res = await registration(data).unwrap();
+    //   if (res?.success) {
+    //     toast.success(res?.message, { duration: 3000 });
+    //     setOpen(true);
+    //     reset();
+    //   }
+    // } catch (error: any) {
+    //   const errorInfo =
+    //     error?.error ||
+    //     error?.data?.errors[0]?.message ||
+    //     error?.data?.message ||
+    //     "Something went wrong!";
+    //   toast.error(errorInfo, { duration: 3000 });
+    // }
   };
 
   const handleSocialLogin = () => {

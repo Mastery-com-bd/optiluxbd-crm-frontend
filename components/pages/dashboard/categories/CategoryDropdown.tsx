@@ -9,22 +9,49 @@ import {
 import { MoreVertical } from "lucide-react";
 import DeleteCategoryModal from "./all/DeleteCategoryModal";
 import { THandleConfirm } from "./all/all-categories";
+import CategoryImageUpload from "./all/CategoryImageUpload";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 type TCategoryDropdownProps = {
   id: number;
   title?: string;
   description?: string;
+  imageTitle?: string;
+  imageDescription?: string;
   onConfirm: (props: THandleConfirm) => Promise<void> | void;
+  onDeleteConfirm?: (props: THandleConfirm) => Promise<void> | void;
   buttonName?: string;
+  secondButtonName?: string;
+  handleSubmit: ({
+    image,
+    id,
+    setLoading,
+    setOpen,
+  }: {
+    image: File;
+    id: number;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => Promise<void>;
+  imageUrl?: string;
+  children?: ReactNode;
 };
 
 const CategoryDropdown = ({
   id,
   title,
   description,
+  imageTitle,
+  imageDescription,
   onConfirm,
+  onDeleteConfirm,
   buttonName,
+  secondButtonName,
+  handleSubmit,
+  imageUrl,
+  children,
 }: TCategoryDropdownProps) => {
+  console.log(imageUrl);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,27 +67,36 @@ const CategoryDropdown = ({
         >
           Details
         </DropdownMenuItem>
+        {children && (
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            className="p-0"
+          >
+            {children}
+          </DropdownMenuItem>
+        )}
 
-        <DropdownMenuItem
-          onClick={() => console.log("Update")}
-          className="cursor-pointer"
-        >
-          Update
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          onClick={() => console.log("Set Image")}
-          className="cursor-pointer"
-        >
-          Set Image
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          onClick={() => console.log("Delete Image")}
-          className="cursor-pointer text-yellow-400"
-        >
-          Delete Image
-        </DropdownMenuItem>
+        {imageUrl ? (
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            className="p-0"
+          >
+            <DeleteCategoryModal
+              title={imageTitle}
+              description={imageDescription}
+              id={id}
+              onConfirm={onDeleteConfirm!}
+              buttonName={secondButtonName}
+            />
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            className="p-0"
+            onSelect={(e) => e.preventDefault()}
+          >
+            <CategoryImageUpload handleSubmit={handleSubmit} id={id} />
+          </DropdownMenuItem>
+        )}
 
         {/* Delete Category with Modal */}
         <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
