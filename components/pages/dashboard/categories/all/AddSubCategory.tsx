@@ -36,7 +36,6 @@ type FormValues = z.infer<typeof formSchema>;
 
 const AddSubCategory = ({ id }: { id: number }) => {
   const [open, setOpen] = useState(false);
-  // 1. Hook Form Setup
   const {
     register,
     control,
@@ -52,7 +51,6 @@ const AddSubCategory = ({ id }: { id: number }) => {
     },
   });
 
-  // 2. Field Array for Subcategories
   const { fields, append, remove } = useFieldArray({
     control,
     name: "subCategories",

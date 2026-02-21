@@ -57,11 +57,8 @@ const FooterSection = () => {
     <div className=" grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3 lg:gap-6">
       {/* bar chart component */}
       <Card className="effect h-full relative rounded-3xl px-6 py-6 w-full">
-        {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-4">
-          {/* header section */}
           <h1 className="text-xl text-white/70">Popular Product</h1>
-          {/* main content */}
           <div>
             {productData.map((product, i) => (
               <ProductCard key={i} product={product} />
@@ -78,14 +75,13 @@ const FooterSection = () => {
           </div>
         </div>
       </Card>
+
       {/* area chart component */}
       <Card className="effect border-0 h-full relative rounded-3xl px-6 py-4 w-full">
-        {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-3">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold">Lead Conversion Funnel</h1>
             <div className="flex items-center gap-6">
-              {/* status drodpown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <LiquidGlass

@@ -11,6 +11,7 @@ import DeleteCategoryModal from "./all/DeleteCategoryModal";
 import { THandleConfirm } from "./all/all-categories";
 import CategoryImageUpload from "./all/CategoryImageUpload";
 import { Dispatch, ReactNode, SetStateAction } from "react";
+import Link from "next/link";
 
 type TCategoryDropdownProps = {
   id: number;
@@ -35,6 +36,7 @@ type TCategoryDropdownProps = {
   }) => Promise<void>;
   imageUrl?: string;
   children?: ReactNode;
+  path: string;
 };
 
 const CategoryDropdown = ({
@@ -50,8 +52,8 @@ const CategoryDropdown = ({
   handleSubmit,
   imageUrl,
   children,
+  path,
 }: TCategoryDropdownProps) => {
-  console.log(imageUrl);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -61,11 +63,10 @@ const CategoryDropdown = ({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="effect text-white z-10">
-        <DropdownMenuItem
-          onClick={() => console.log("Details")}
-          className="cursor-pointer"
-        >
-          Details
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href={path} className="w-full ">
+            Details
+          </Link>
         </DropdownMenuItem>
         {children && (
           <DropdownMenuItem

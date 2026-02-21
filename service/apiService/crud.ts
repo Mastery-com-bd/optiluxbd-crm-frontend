@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 import { Query } from "@/types/shared";
 import { buildParams } from "@/utills/paramsBuilder";
 
-
 //create
 export async function createData<T>(
   endPoint: string,
@@ -50,6 +49,7 @@ export async function readData(
         },
         next: {
           tags: [...tags],
+          revalidate: 30,
         },
       } as RequestInit,
     );
@@ -102,11 +102,7 @@ export async function patchData<T>(
   }
 }
 
-
-
-
 // ========================================= public api ===========================
-
 
 // public read
 export async function readPublicData(
@@ -121,6 +117,7 @@ export async function readPublicData(
         method: "GET",
         next: {
           tags: [...tags],
+          revalidate: 30,
         },
       } as RequestInit,
     );
@@ -130,7 +127,6 @@ export async function readPublicData(
     return error;
   }
 }
-
 
 //public create
 export async function createPublicData<T>(

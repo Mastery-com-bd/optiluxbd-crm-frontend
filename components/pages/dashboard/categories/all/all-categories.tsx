@@ -19,11 +19,12 @@ import {
   uploadCategoryImage,
   uploadSubCategoryImage,
 } from "@/service/category";
-import Link from "next/link";
 import CategoryDropdown from "../CategoryDropdown";
 import UpdateCategory from "./UpdateCategory";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { debounce } from "@/utills/debounce";
 
-type TCategoryPageProps = {
+export type TCategoryPageProps = {
   categories: TCategories[];
 };
 
@@ -34,8 +35,11 @@ export type THandleConfirm = {
 };
 
 const AllCategories = ({ categories }: TCategoryPageProps) => {
-  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
   const [current, setCurrent] = useState<TCategories>(categories[0]);
+  const router = useRouter();
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
 
   const handleDeleteCategory = async ({
     setLoading,
@@ -193,6 +197,18 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
     }
   };
 
+  const handleSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("searchTerm", value.toString());
+    } else params.delete("searchTerm");
+    router.push(`${pathName}?${params.toString()}`, {
+      scroll: false,
+    });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
+
   return (
     <div className="min-h-screen w-full space-y-6">
       <div className="flex items-center justify-between">
@@ -210,8 +226,12 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
       <div className="relative flex items-center justify-start">
         <Input
           icon={<Search />}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={search}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearch(value);
+            debouncedLog(value);
+          }}
           placeholder="Search in category"
         />
       </div>
@@ -254,6 +274,7 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                         imageTitle="Want to delete this category image?"
                         imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
                         imageUrl={p?.image_url as string}
+                        path={`/dashboard/admin/categories/${p?.id}`}
                       >
                         <UpdateCategory
                           title="Update Category"
@@ -311,6 +332,7 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                         imageTitle="Want to delete this category image?"
                         imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
                         imageUrl={c?.image_url as string}
+                        path={`/dashboard/admin/sub-categories/${c?.id}`}
                       >
                         <UpdateCategory
                           title="Update Sub Category"
@@ -320,25 +342,23 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                         />
                       </CategoryDropdown>
                     </div>
-                    <Link href="/dashboard">
-                      <div className="max-w-[265px] p-5 cursor-pointer hover:scale-[1.02] transition-transform effect rounded-[12px] ">
-                        <div className="flex items-center justify-center py-2 effect rounded-[12px] overflow-hidden bg-transparent!">
-                          <Image
-                            src={
-                              c?.image_url ||
-                              "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
-                            }
-                            alt={c?.name}
-                            width={200}
-                            height={200}
-                            className=" w-24 h-24 object-contain"
-                          />
-                        </div>
-                        <h3 className="text-white font-semibold text-center mt-4">
-                          {c?.name}
-                        </h3>
+                    <div className="max-w-[265px] p-5 cursor-pointer hover:scale-[1.02] transition-transform effect rounded-[12px] ">
+                      <div className="flex items-center justify-center py-2 effect rounded-[12px] overflow-hidden bg-transparent!">
+                        <Image
+                          src={
+                            c?.image_url ||
+                            "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                          }
+                          alt={c?.name}
+                          width={200}
+                          height={200}
+                          className=" w-24 h-24 object-contain"
+                        />
                       </div>
-                    </Link>
+                      <h3 className="text-white font-semibold text-center mt-4">
+                        {c?.name}
+                      </h3>
+                    </div>
                   </div>
                 ))}
               </div>

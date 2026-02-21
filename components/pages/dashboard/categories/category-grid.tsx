@@ -1,91 +1,103 @@
-import { LiquidGlass } from "@/components/glassEffect/liquid-glass";
-import { Button } from "@/components/ui/button";
+"use client";
 import ButtonComponent from "@/components/ui/ButtonComponent";
 import { Input } from "@/components/ui/input";
-import { Eye, Search } from "lucide-react";
+import { ArrowUpRight, Box, Briefcase, Search, User } from "lucide-react";
 import Link from "next/link";
+import { TCategoryPageProps } from "./all/all-categories";
+import Image from "next/image";
+import { OverviewCard } from "../shared/overviewCard";
 
-const categories = [
+const stats = [
   {
-    id: 1,
-    name: "Fashion Categories",
-    image: "/category1.png",
+    icon: Box,
+    label: "Active Combo",
+    value: "128",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
   },
   {
-    id: 2,
-    name: "Electronics Headphone",
-    image: "/category2.png",
+    icon: User,
+    label: "Total Sales",
+    value: "512",
+    isPositive: false,
+    change: "36.8%",
+    highlight: false,
   },
   {
-    id: 3,
-    name: "Foot Wares",
-    image: "/category1.png",
+    icon: Briefcase,
+    label: "Revenue Generated",
+    value: "120.4k",
+    isPositive: true,
+    change: "36.8%",
+    highlight: true,
+    highlightColor: "text-emerald-400",
   },
   {
-    id: 4,
-    name: "Eye Ware & Sunglass",
-    image: "/category2.png",
+    icon: ArrowUpRight,
+    label: "Avg. Discount",
+    value: "25%",
+    isPositive: true,
+    change: "36.8%",
+    highlight: false,
   },
 ];
 
-export function CategoryGrid() {
+export function CategoryGrid({ categories }: TCategoryPageProps) {
   return (
-    <div className="space-y-6 w-full  mt-10">
-      {/* Header with search and link */}
-      <div className="flex items-center justify-between">
-        <div className="relative">
-          <Input
-            icon={<Search className="w-4 h-4" />}
-            type="text"
-            placeholder="Search In category"
-            className=""
-          />
-        </div>
-        <Link href={"/dashboard/admin/categories"} className="relative">
+    <section className="space-y-10">
+      <OverviewCard stats={stats} />
+      <div className="space-y-6 w-full">
+        {/* Header with search and link */}
+        <div className="flex items-center justify-between">
           <div className="relative">
-            <ButtonComponent
-              buttonName="See all Category"
-              varient="purple"
-              clasName="p-[12px]"
+            <Input
+              icon={<Search className="w-4 h-4" />}
+              type="text"
+              placeholder="Search In category"
+              className=""
             />
           </div>
-        </Link>
-      </div>
+          <Link href={"/dashboard/admin/categories"} className="relative">
+            <div className="relative">
+              <ButtonComponent
+                buttonName="See all Category"
+                varient="purple"
+                clasName="p-[12px]"
+              />
+            </div>
+          </Link>
+        </div>
 
-      {/* Category Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* First row */}
-        {categories.map((category) => (
-          <CategoryCard key={category.id} category={category} />
-        ))}
-        {/* Second row - same categories */}
-        {categories.map((category) => (
-          <CategoryCard key={`row2-${category.id}`} category={category} />
-        ))}
+        {/* Category Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* First row */}
+          {categories.map((category) => (
+            <div
+              key={category?.id}
+              className="effectBlack p-6 cursor-pointer hover:scale-[1.02] transition-transform rounded-xl"
+            >
+              {/* Inner bordered image container */}
+              <div className="effectBlack flex justify-center items-center min-h-24 rounded-xl">
+                <Image
+                  src={
+                    category?.image_url ||
+                    "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                  }
+                  height={300}
+                  width={300}
+                  alt={category?.name}
+                  className="h-24 w-24 object-contain"
+                />
+              </div>
+              {/* Category name */}
+              <h3 className="text-white font-semibold text-center mt-4">
+                {category?.name}
+              </h3>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
-
-function CategoryCard({
-  category,
-}: {
-  category: { id: number; name: string; image: string };
-}) {
-  return (
-    <div className="effectBlack p-6 cursor-pointer hover:scale-[1.02] transition-transform rounded-xl">
-      {/* Inner bordered image container */}
-      <div className="effectBlack flex justify-center items-center min-h-24 rounded-xl">
-        <img
-          src={category.image || "/placeholder.svg"}
-          alt={category.name}
-          className="h-24 w-24 object-contain"
-        />
-      </div>
-      {/* Category name */}
-      <h3 className="text-white font-semibold text-center mt-4">
-        {category.name}
-      </h3>
-    </div>
+    </section>
   );
 }
