@@ -89,3 +89,31 @@ export interface RolesResponse {
     message: string;
     data: Role[];
 }
+
+export interface UserResponse {
+    success: boolean;
+    message: string;
+    data: {
+        id: number;
+        userId: string;
+        name: string;
+        email: string;
+        phone: string | null;
+        roles: {
+            id: number;
+            userId: number;
+            roleId: number;
+            role: {
+                id: number;
+                name: string;
+                description: string;
+            };
+        }[];
+        is_active: boolean;
+        avatar_public_id: string | null;
+        avatar_secure_url: string | null;
+        created_at: string;
+        updated_at: string;
+        last_login: string | null;
+    };
+}

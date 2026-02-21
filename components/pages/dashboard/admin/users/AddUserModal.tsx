@@ -30,43 +30,71 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Switch } from "@/components/ui/switch";
-import { AllUsersProps } from "@/types/user/organizationUsers.types";
-import { useState } from "react";
-import { createNewUser } from "@/service/user";
+import {
+  AllUsersProps,
+  UserResponse,
+} from "@/types/user/organizationUsers.types";
+import { useEffect, useState } from "react";
+import {
+  TCreateUserData,
+  createNewUser,
+  updateOrganizationUserById,
+} from "@/service/user";
 import { toast } from "sonner";
 
 // Validation Schema
-const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  roleId: z.number().min(1, "Role is required"),
-  phone: z.string().min(11, "Valid phone number is required"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain uppercase, lowercase, number and special character",
-    ),
-  status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED", "DISABLED", "REJECTED"]),
-  is_approved: z.boolean(),
-  email_verified: z.boolean(),
-  is_active: z.boolean(),
-});
+const getFormSchema = (isEditMode: boolean) =>
+  z.object({
+    name: z.string().min(2, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    roleId: z.number().min(1, "Role is required"),
+    phone: z.string().min(11, "Valid phone number is required"),
+    password: isEditMode
+      ? z.string().optional()
+      : z
+          .string()
+          .min(8, "Password must be at least 8 characters")
+          .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            "Password must contain uppercase, lowercase, number and special character",
+          ),
+    status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED", "DISABLED", "REJECTED"]),
+    is_approved: z.boolean(),
+    email_verified: z.boolean(),
+    is_active: z.boolean(),
+  });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<ReturnType<typeof getFormSchema>>;
 
-const AddUserModal = ({ rolesData }: { rolesData: AllUsersProps }) => {
-  const [open, setOpen] = useState(false);
+interface AddUserModalProps {
+  rolesData: AllUsersProps;
+  userData?: UserResponse["data"];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const AddUserModal = ({
+  rolesData,
+  userData,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+}: AddUserModalProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isControlled = typeof controlledOpen !== "undefined";
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? controlledOnOpenChange : setInternalOpen;
+  const isEditMode = !!userData;
+
+  const formSchema = getFormSchema(isEditMode);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
-      roleId: 3,
+      roleId: 2,
       phone: "",
       password: "",
       status: "ACTIVE",
@@ -76,11 +104,63 @@ const AddUserModal = ({ rolesData }: { rolesData: AllUsersProps }) => {
     },
   });
 
+  useEffect(() => {
+    if (userData) {
+      form.reset({
+        name: userData.name || "",
+        email: userData.email || "",
+        roleId:
+          userData.roles && userData.roles.length > 0
+            ? userData.roles[0].roleId
+            : 2,
+        phone: userData.phone || "",
+        password: "", // Password usually not pre-filled
+        status: "ACTIVE", // userData might not have status in UserResponse, defaulting
+        is_approved: true, // Assuming approved if existing? Or default false
+        email_verified: false, // Default or map if available
+        is_active: userData.is_active ?? true,
+      });
+      // If there are fields mapping from userData that I missed or inferred
+    } else {
+      form.reset({
+        name: "",
+        email: "",
+        roleId: 2,
+        phone: "",
+        password: "",
+        status: "ACTIVE",
+        is_approved: false,
+        email_verified: false,
+        is_active: true,
+      });
+    }
+  }, [userData, form]);
+
   const onSubmit = async (data: FormValues) => {
+    if (isEditMode) {
+      setIsLoading(true);
+      toast.loading("Updating user...");
+      const res = await updateOrganizationUserById(
+        userData?.id?.toString() || "",
+        data,
+      );
+
+      if (res.success) {
+        toast.dismiss();
+        toast.success(res.message || "User updated successfully");
+      } else {
+        toast.dismiss();
+        toast.error(res.message || "Failed to update user");
+      }
+
+      if (setOpen) setOpen(false);
+      return;
+    }
+
     setIsLoading(true);
     toast.loading("Creating new user...");
 
-    const result = await createNewUser(data);
+    const result = await createNewUser(data as TCreateUserData); // Cast as TCreateUserData
 
     console.log("Add User Submit Response :", result);
 
@@ -92,44 +172,46 @@ const AddUserModal = ({ rolesData }: { rolesData: AllUsersProps }) => {
       setIsLoading(false);
     } else {
       toast.dismiss();
-      setOpen(false);
+      if (setOpen) setOpen(false);
       toast.error(result.message || "Failed to create user");
       setIsLoading(false);
     }
     form.reset();
-    setOpen(false);
+    if (setOpen) setOpen(false);
     setShow(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className="relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden">
-          <p className="flex items-center gap-2">
-            <Plus size={18} />
-            <span className="text-sm text-white">Add User</span>
-          </p>
-          <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-          <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
-          <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
-            <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
-          </div>
-          <CornerGlowSvg />
-        </button>
-      </DialogTrigger>
+      {!isEditMode && (
+        <DialogTrigger asChild>
+          <button className="relative cursor-pointer bg-white/5 rounded-2xl py-2 flex items-center justify-center px-4 overflow-hidden">
+            <p className="flex items-center gap-2">
+              <Plus size={18} />
+              <span className="text-sm text-white">Add User</span>
+            </p>
+            <div className="absolute top-0 left-px inset-3 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
+            <div className="absolute bottom-0 right-px inset-3 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
+            <div className="pointer-events-none absolute bottom-0 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 z-20">
+              <span className="block h-[1.5px] w-full bg-[linear-gradient(to_right,rgba(255,177,63,0)_0%,#FFB13F_50%,rgba(255,177,63,0)_100%)]" />
+            </div>
+            <CornerGlowSvg />
+          </button>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="px-6 py-4 w-[40vw] max-w-[600px] gap-2 bg-[#1A1129] border-white/10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader className="flex flex-row items-center justify-between mt-4">
               <DialogTitle className="text-xl font-semibold text-white">
-                Add New User
+                {isEditMode ? "Edit User" : "Add New User"}
               </DialogTitle>
               <ButtonComponent
                 disabled={isLoading}
                 type="submit"
                 varient="yellow"
-                buttonName="Save"
+                buttonName={isEditMode ? "Update" : "Save"}
                 className="h-10 px-6 rounded-2xl"
               />
             </DialogHeader>
