@@ -34,10 +34,19 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   RejectOrganizationUser,
-  UpdateOrganizationUserStatus
+  UpdateOrganizationUserStatus,
 } from "@/service/user";
-import { AllUsersProps, RolesResponse, UserResponse } from "@/types/user/organizationUsers.types";
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search } from "lucide-react";
+import {
+  AllUsersProps,
+  RolesResponse,
+  UserResponse,
+} from "@/types/user/organizationUsers.types";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Search,
+} from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -50,7 +59,6 @@ const TUserStatus = {
   Disabled: "DISABLED",
   Rejected: "REJECTED",
 } as const;
-
 
 const AllUsers = ({
   userData,
@@ -66,13 +74,15 @@ const AllUsers = ({
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
-  
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // Local state for search to handle debounce
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || "",
+  );
 
   // Debounce search update
   useEffect(() => {
@@ -143,7 +153,10 @@ const AllUsers = ({
     }
   };
 
-  const handleUserStatus = async (userId: string, status: (typeof TUserStatus)[keyof typeof TUserStatus]) => {
+  const handleUserStatus = async (
+    userId: string,
+    status: (typeof TUserStatus)[keyof typeof TUserStatus],
+  ) => {
     if (!userId) {
       toast.error("Please select a user to update status");
       return;
@@ -185,7 +198,7 @@ const AllUsers = ({
           <h2 className="text-xl font-semibold">All Users</h2>
           <AddUserModal rolesData={rolesData} />
         </div>
-        
+
         {/* Filters and Search */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="relative w-full md:w-72">
@@ -245,7 +258,7 @@ const AllUsers = ({
                 <SelectItem value="false">Inactive</SelectItem>
               </SelectContent>
             </Select>
-            
+
             <Select
               value={searchParams.get("sortBy") || "created_at"}
               onValueChange={(value) => updateFilter("sortBy", value)}
@@ -336,35 +349,61 @@ const AllUsers = ({
                           Copy User ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View details</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(`/dashboard/admin/users/${user.id}`)
+                          }
+                        >
+                          View details
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleEditUser(user.id.toString())}
                         >
                           Edit user
                         </DropdownMenuItem>
-                      {user.status === TUserStatus.Inactive ? (
+                        {user.status === TUserStatus.Inactive ? (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleUserStatus(
+                                user.id.toString(),
+                                TUserStatus.Active,
+                              )
+                            }
+                            className="text-green-600 cursor-pointer"
+                          >
+                            Activate user
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleUserStatus(
+                                user.id.toString(),
+                                TUserStatus.Inactive,
+                              )
+                            }
+                            className="text-red-600 cursor-pointer"
+                          >
+                            Deactivate user
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem
-                          onClick={() => handleUserStatus(user.id.toString(), TUserStatus.Active)}
-                          className="text-green-600 cursor-pointer"
-                        >
-                          Activate user
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem
-                          onClick={() => handleUserStatus(user.id.toString(), TUserStatus.Inactive)}
-                          className="text-red-600 cursor-pointer"
-                        >
-                          Deactivate user
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                          onClick={() => handleUserStatus(user.id.toString(), TUserStatus.Disabled)}
+                          onClick={() =>
+                            handleUserStatus(
+                              user.id.toString(),
+                              TUserStatus.Disabled,
+                            )
+                          }
                           className="text-red-600 cursor-pointer"
                         >
                           Disable user
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleUserStatus(user.id.toString(), TUserStatus.Suspended)}
+                          onClick={() =>
+                            handleUserStatus(
+                              user.id.toString(),
+                              TUserStatus.Suspended,
+                            )
+                          }
                           className="text-red-600 cursor-pointer"
                         >
                           Suspend user
@@ -431,7 +470,8 @@ const AllUsers = ({
       {/* Pagination */}
       <div className="flex items-center justify-between px-2">
         <div className="flex-1 text-sm text-muted-foreground">
-          Page {pagination?.page || 1} of {pagination?.totalPages || 1} ({pagination?.total || 0} items)
+          Page {pagination?.page || 1} of {pagination?.totalPages || 1} (
+          {pagination?.total || 0} items)
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">

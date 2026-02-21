@@ -2,7 +2,7 @@ import AllUsers from "@/components/pages/dashboard/admin/users/all-users";
 import { GetAllRolesForOrganization } from "@/service/rolesAndPermission";
 import {
   getAllOrganizationUser,
-  getOrganizationUserById
+  getOrganizationUserById,
 } from "@/service/user";
 
 const Page = async ({
@@ -29,11 +29,13 @@ const Page = async ({
     userDetails = await getOrganizationUserById(userId?.toString() || "");
   }
 
-
   return (
     <div>
-      {/* {userDetails && <p>User Details: {JSON.stringify(userDetails)}</p>} */}
-      <AllUsers userData={userData} rolesData={rolesData} userDetails={userDetails} />
+      <AllUsers
+        userData={userData}
+        rolesData={rolesData}
+        userDetails={userDetails}
+      />
     </div>
   );
 };
