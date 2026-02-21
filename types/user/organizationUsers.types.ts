@@ -109,6 +109,9 @@ export interface UserResponse {
                 description: string;
             };
         }[];
+        status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "DISABLED";
+        email_verified?: boolean;
+        is_approved?: boolean;
         is_active: boolean;
         avatar_public_id: string | null;
         avatar_secure_url: string | null;

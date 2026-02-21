@@ -17,13 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -31,15 +24,15 @@ import * as z from "zod";
 
 import { Switch } from "@/components/ui/switch";
 import {
-  AllUsersProps,
-  UserResponse,
-} from "@/types/user/organizationUsers.types";
-import { useEffect, useState } from "react";
-import {
   TCreateUserData,
   createNewUser,
   updateOrganizationUserById,
 } from "@/service/user";
+import {
+  RolesResponse,
+  UserResponse
+} from "@/types/user/organizationUsers.types";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // Validation Schema
@@ -67,7 +60,7 @@ const getFormSchema = (isEditMode: boolean) =>
 type FormValues = z.infer<ReturnType<typeof getFormSchema>>;
 
 interface AddUserModalProps {
-  rolesData: AllUsersProps;
+  rolesData: RolesResponse;
   userData?: UserResponse["data"];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -115,9 +108,9 @@ const AddUserModal = ({
             : 2,
         phone: userData.phone || "",
         password: "", // Password usually not pre-filled
-        status: "ACTIVE", // userData might not have status in UserResponse, defaulting
-        is_approved: true, // Assuming approved if existing? Or default false
-        email_verified: false, // Default or map if available
+        status: userData.status || "ACTIVE", // userData might not have status in UserResponse, defaulting
+        is_approved: userData.is_approved ?? true, // Assuming approved if existing? Or default false
+        email_verified: userData.email_verified ?? false, // Default or map if available
         is_active: userData.is_active ?? true,
       });
       // If there are fields mapping from userData that I missed or inferred
@@ -138,6 +131,8 @@ const AddUserModal = ({
 
   const onSubmit = async (data: FormValues) => {
     if (isEditMode) {
+
+      console.log("Updated Data", data)
       setIsLoading(true);
       toast.loading("Updating user...");
       const res = await updateOrganizationUserById(
@@ -280,46 +275,46 @@ const AddUserModal = ({
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="space-y-1">
-                          <FormLabel className="text-xs font-normal text-white">
-                            Password
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                type={show ? "text" : "password"}
-                                placeholder="Enter password"
-                                className="bg-white/10 border-none rounded-lg text-white pr-10"
-                                {...field}
-                              />
-                              <button
-                                type="button"
-                                onClick={() => setShow((s) => !s)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-xs"
-                              >
-                                {show ? (
-                                  <EyeOffIcon className="w-5 h-5" />
-                                ) : (
-                                  <EyeIcon className="w-5 h-5" />
-                                )}
-                              </button>
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-[10px]" />
-                        </FormItem>
-                      );
-                    }}
-                  />
+                {!userData && <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs font-normal text-white">
+                          Password
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type={show ? "text" : "password"}
+                              placeholder="Enter password"
+                              className="bg-white/10 border-none rounded-lg text-white pr-10"
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShow((s) => !s)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-xs"
+                            >
+                              {show ? (
+                                <EyeOffIcon className="w-5 h-5" />
+                              ) : (
+                                <EyeIcon className="w-5 h-5" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    );
+                  }}
+                />}
                 </div>
 
                 {/* Right Side */}
                 <div className="space-y-4">
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="roleId"
                     render={({ field }) => (
@@ -352,9 +347,9 @@ const AddUserModal = ({
                         <FormMessage className="text-[10px]" />
                       </FormItem>
                     )}
-                  />
+                  /> */}
 
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="status"
                     render={({ field }) => (
@@ -375,12 +370,13 @@ const AddUserModal = ({
                             <SelectItem value="ACTIVE">ACTIVE</SelectItem>
                             <SelectItem value="INACTIVE">INACTIVE</SelectItem>
                             <SelectItem value="SUSPENDED">SUSPENDED</SelectItem>
+                            <SelectItem value="DISABLED">DISABLED</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage className="text-[10px]" />
                       </FormItem>
                     )}
-                  />
+                  /> */}
 
                   {/* Boolean Switches */}
                   <div className="space-y-3 pt-2">

@@ -70,10 +70,13 @@ export const createNewUser = async (data: TCreateUserData) => {
   }
 };
 
-export const getAllOrganizationUser = async () => {
+import { buildParams } from "@/utills/paramsBuilder";
+
+export const getAllOrganizationUser = async (query: Record<string, any> = {}) => {
   const token = (await getAccesstoken()) as string;
   try {
-    const res = await fetch(`${config.next_public_base_api}/users`, {
+    const queryString = buildParams(query);
+    const res = await fetch(`${config.next_public_base_api}/users?${queryString}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -166,21 +169,22 @@ export const RejectOrganizationUser = async (userId: string, reason: string) => 
   }
 };
 
-export const SuspendOrganizationUser = async (userId: string) => {
+export const UpdateOrganizationUserStatus = async (userId: string, status: string) => {
   const token = (await getAccesstoken()) as string;
   try {
     const res = await fetch(
-      `${config.next_public_base_api}/auth/users/${userId}/suspend`,
+      `${config.next_public_base_api}/auth/users/${userId}/status`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         next: {
           tags: ["OrganizationUsers"],
           revalidate: 30,
         },
-
+        body: JSON.stringify({ status }),
       },
     );
     revalidatePath("/dashboard/admin/users");
