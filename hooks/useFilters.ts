@@ -1,4 +1,5 @@
 "use client";
+import { debounce } from "@/utills/debounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -15,7 +16,11 @@ export default function useFilters() {
         if (value === "all" || value === "") {
             params.delete(name);
         } else {
-            params.set(name, value);
+            if (name == "search") {
+                debounce(() => params.set(name, value), 1000)
+            }
+            else
+                params.set(name, value);
             setCurrentPage(1);
         }
 
@@ -37,7 +42,7 @@ export default function useFilters() {
     };
 
     // Reset function - sob URL params clear kore
-    const handleReset = ({setLimit,setCurrPage}: {setLimit: (value: string) => void, setCurrPage: (value: number) => void}) => {
+    const handleReset = ({ setLimit, setCurrPage }: { setLimit: (value: string) => void, setCurrPage: (value: number) => void }) => {
         router.push(`${pathname}`, { scroll: false });
         setLimit("10");
         setCurrPage(1);

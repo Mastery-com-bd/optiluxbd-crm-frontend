@@ -144,7 +144,7 @@ const LoginComponent = () => {
               disabled={isSubmitting}
               onClick={() =>
                 handleAdmin({
-                  email: "mastery@gmail.com",
+                  email: "mastery@corporation.com",
                   password: "mastery1234",
                 })
               }

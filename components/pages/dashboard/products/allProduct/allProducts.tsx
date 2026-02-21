@@ -287,7 +287,7 @@ const AllProducts = ({ products, pagination, subCategories }: { products: TProdu
       </div>
 
       {/* update modal */}
-      {productForUpdate && <UpdateProduct product={productForUpdate} subCategories={subCategories} isUpdateOpen={isUpdateOpen} setIsUPdateOpen={setIsUpdateOpen} />}
+      {productForUpdate && <UpdateProduct product={productForUpdate} subCategories={subCategories} isUpdateOpen={isUpdateOpen} setIsUpdateOpen={setIsUpdateOpen} />}
       {/* Delete Confirm Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
