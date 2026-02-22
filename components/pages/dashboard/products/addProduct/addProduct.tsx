@@ -60,7 +60,7 @@ const productSchema = z.object({
   stock: z.number().int().min(0, { message: "Stock must be 0 or greater" }),
   description: z.string().optional(),
   basePrice: z.number().min(0, { message: "Base Price must be non-negative" }),
-  discountType: z.enum(["percentage", "fixed"]),
+  discountType: z.enum(["PERCENTAGE", "FIXED_AMOUNT"]),
   discountValue: z
     .number()
     .min(0, { message: "Discount value must be 0 or greater" })
@@ -72,6 +72,12 @@ const productSchema = z.object({
   tags: z.string().optional(),
   color: z.array(z.string()).optional(),
   size: z.array(z.string()).optional(),
+  is_active: z.boolean(),
+  is_featured: z.boolean(),
+  weight: z.number().optional(),
+  hight: z.number().optional(),
+  width: z.number().min(0, { message: "min width is required" }).optional(),
+  costPrice: z.number().min(0, { message: "Cost price is required." })
 });
 
 type InferedFormData = z.infer<typeof productSchema>;
@@ -95,13 +101,15 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
       stock: 0,
       description: "",
       basePrice: 0,
-      discountType: "percentage",
+      discountType: "PERCENTAGE",
       discountValue: 0,
       brand: "",
       category: "",
       subCategoryId: "",
       status: "",
       tags: "",
+      is_active: true,
+      is_featured: false,
     },
   });
 
@@ -166,18 +174,25 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
       description: data.description ?? "",
       sku: data.sku,
       price: data.basePrice,
+      costPrice: data.costPrice,
+      discountType: data.discountType,
+      discountValue: data.discountValue,
       stock: data.stock,
       subCategoryId: Number(data.subCategoryId),
       brand: data.brand,
-      public_id: "",
-      secure_url: "",
-      isActive: true,
+      weight: data.weight,
+      hight: data.hight,
+      width: data.width,
       size: sizeEnabled ? selectedSize : [],
       color: colorEnabled ? selectedColor : [],
+      is_active: data.is_active,
+      is_featured: data.is_featured,
+      tags: data.tags,
     };
     try {
       const toastId = toast.loading("Creating product..it may take some time...");
       const res = await addProduct(productInfo, image);
+      console.log("add product res->>> ", res);
       if (res.success) {
         toast.success("Product created successfully.", { id: toastId })
         reset();
@@ -334,6 +349,86 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
                       </p>
                     )}
                   </div>
+                  <div className="flex gap-2">
+
+                    <div>
+                      <Label htmlFor="hight">hight (cm)</Label>
+                      <Input
+                        id="hight"
+                        type="number"
+                        placeholder="Enter a unique SKU"
+                        {...register("hight", { valueAsNumber: true })}
+                        className="mt-2"
+                      />
+                      {errors.hight && (
+                        <p className="text-destructive text-sm">
+                          {errors.hight?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="width">width (cm)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        placeholder="Enter width"
+                        {...register("width", { valueAsNumber: true })}
+                        className="mt-2"
+                      />
+                      {errors.width && (
+                        <p className="text-destructive text-sm">
+                          {errors.width?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="weight">weight (g)</Label>
+                      <Input
+                        id="weight"
+                        type="number"
+                        placeholder="Enter width"
+                        {...register("weight", { valueAsNumber: true })}
+                        className="mt-2"
+                      />
+                      {errors.width && (
+                        <p className="text-destructive text-sm">
+                          {errors.weight?.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-6 pt-2">
+                    <div className="flex items-center gap-2">
+                      <Controller
+                        control={control}
+                        name="is_active"
+                        render={({ field }) => (
+                          <Switch
+                            id="is_active"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        )}
+                      />
+                      <Label htmlFor="is_active" className="cursor-pointer">Active</Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Controller
+                        control={control}
+                        name="is_featured"
+                        render={({ field }) => (
+                          <Switch
+                            id="is_featured"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        )}
+                      />
+                      <Label htmlFor="is_featured" className="cursor-pointer">Featured</Label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -361,7 +456,7 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
                       )}
                     </div>
                     <div className="w-1/2">
-                      <Label>Base Price *</Label>
+                      <Label>Regular Price *</Label>
                       <Input
                         type="number"
                         {...register("basePrice", { valueAsNumber: true })}
@@ -377,7 +472,7 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
                   </div>
 
                   {/* Checkbox + Discount Fields */}
-                  <div className="flex items-center gap-2 mt-2">
+                  {/* <div className="flex items-center gap-2 mt-2">
                     <input
                       type="checkbox"
                       id="discountCheck"
@@ -389,7 +484,7 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
                     >
                       Schedule a discount
                     </label>
-                  </div>
+                  </div> */}
 
                   <div className="flex flex-col gap-4">
                     <div>
@@ -406,28 +501,44 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
                               <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="percentage">
+                              <SelectItem value="PERCENTAGE">
                                 Percentage
                               </SelectItem>
-                              <SelectItem value="fixed">Fixed</SelectItem>
+                              <SelectItem value="FIXED_AMOUNT">Fixed</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
                       />
                     </div>
-                    <div>
-                      <Label>Discount Value</Label>
-                      <Input
-                        type="number"
-                        {...register("discountValue", { valueAsNumber: true })}
-                        className="mt-2"
-                        placeholder="10 or 50"
-                      />
-                      {errors.discountValue && (
-                        <p className="text-destructive text-sm">
-                          {errors.discountValue?.message}
-                        </p>
-                      )}
+                    <div className="flex gap-2">
+                      <div>
+                        <Label>Discount Value</Label>
+                        <Input
+                          type="number"
+                          {...register("discountValue", { valueAsNumber: true })}
+                          className="mt-2"
+                          placeholder="10 or 50"
+                        />
+                        {errors.discountValue && (
+                          <p className="text-destructive text-sm">
+                            {errors.discountValue?.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Cost Price*</Label>
+                        <Input
+                          type="number"
+                          {...register("costPrice", { valueAsNumber: true })}
+                          className="mt-2"
+                          placeholder="10 or 50"
+                        />
+                        {errors.discountValue && (
+                          <p className="text-destructive text-sm">
+                            {errors.costPrice?.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
