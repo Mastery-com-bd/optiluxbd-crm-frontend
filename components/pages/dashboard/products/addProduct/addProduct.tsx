@@ -187,7 +187,7 @@ const AddProduct = ({ categories }: { categories: TCategories }) => {
       color: colorEnabled ? selectedColor : [],
       is_active: data.is_active,
       is_featured: data.is_featured,
-      tags: data.tags,
+      tags: data.tags ? data.tags.split(",").map((tag) => tag.trim()) : [],
     };
     try {
       const toastId = toast.loading("Creating product..it may take some time...");

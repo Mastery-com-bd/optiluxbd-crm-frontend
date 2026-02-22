@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
@@ -9,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Pencil, Plus, Upload, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -44,7 +45,6 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import { HexColorPicker } from "react-colorful";
 import {
@@ -57,21 +57,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import ButtonComponent from "@/components/ui/ButtonComponent";
 
 const productUpdateSchema = z.object({
   name: z.string().min(1, { message: "Product name is required" }),
   stock: z.number().int().min(0, { message: "Stock must be 0 or greater" }),
-  description: z.string().optional(),
+  description: z.string().min(10, { message: "Product description required" }),
   price: z.number().min(0, { message: "Price must be non-negative" }),
-  costPrice: z.number().min(0, { message: "Cost price must be non-negative" }).optional(),
-  discountPrice: z.number().min(0, { message: "Discount price must be non-negative" }).optional(),
+  costPrice: z.number().min(0, { message: "Cost price must be non-negative" }),
+  discountType: z.enum(["PERCENTAGE", "FIXED_AMOUNT"]),
+  discountValue: z.number().min(0, { message: "Discount value must be non-negative" }),
   brand: z.string().optional(),
   subCategoryId: z.string().min(1, { message: "Sub category is required" }),
   status: z.enum(["ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"]),
   stock_status: z.enum(["IN_STOCK", "OUT_OF_STOCK", "LOW_STOCK", "DISCONTINUED"]),
   tags: z.string().optional(),
   weight: z.string().optional(),
-  dimensions: z.string().optional(),
+  height: z.string().optional(),
+  width: z.string().optional(),
   is_active: z.boolean(),
   is_featured: z.boolean(),
 });
@@ -85,6 +88,16 @@ type UpdateProductProps = {
   setIsUpdateOpen: (val: boolean) => void;
 };
 
+// Parse helper function
+const parseProductArray = (data: any): string[] => {
+  if (!data) return [];
+  try {
+    return typeof data === 'string' ? JSON.parse(data) : Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+};
+
 const UpdateProduct = ({
   product,
   subCategories,
@@ -95,77 +108,20 @@ const UpdateProduct = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  console.log("clor-->> ",product.color)
-  // Color state
+
+  // Color state - Initialize from product
   const [colorOpen, setColorOpen] = useState(false);
-  const [availableColors, setAvailableColors] = useState<string[] | null>([
-    "#dc2626",
-    "#2563eb",
-    "#16a34a",
-    "#ca8a04",
-    "#ea580c",
-    "#ffffff",
-  ]);
+  const [availableColors, setAvailableColors] = useState<string[]>(() => parseProductArray(product.color));
   const [newColor, setNewColor] = useState<string>("#ffffff");
-  const [selectedColor, setSelectedColor] = useState<string[]>([]);
-  const [colorEnabled, setColorEnabled] = useState<boolean>(false);
+  const [selectedColor, setSelectedColor] = useState<string[]>(() => parseProductArray(product.color));
+  const [colorEnabled, setColorEnabled] = useState<boolean>(() => parseProductArray(product.color).length > 0);
 
-  // Size state
+  // Size state - Initialize from product
   const [sizeOpen, setSizeOpen] = useState(false);
-  const [availableSize, setAvailableSize] = useState<string[]>([
-    "S",
-    "M",
-    "X",
-    "XL",
-  ]);
+  const [availableSize, setAvailableSize] = useState<string[]>(() => parseProductArray(product.size));
   const [newSize, setNewSize] = useState<string>("");
-  const [selectedSize, setSelectedSize] = useState<string[]>([]);
-  const [sizeEnabled, setSizeEnabled] = useState<boolean>(false);
-
-  // Initialize color and size from product
-  // useEffect(() => {
-  //   if (product.color) {
-  //     try {
-  //       const colors = typeof product.color === 'string'
-  //         ? JSON.parse(product.color)
-  //         : product.color;
-
-  //       if (Array.isArray(colors) && colors.length > 0) {
-  //         setSelectedColor(colors);
-  //         setColorEnabled(true);
-  //         // Add product colors to available colors if not already present
-  //         colors.forEach(color => {
-  //           if (!availableColors.includes(color)) {
-  //             setAvailableColors(prev => [...prev, color]);
-  //           }
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error parsing product colors:", error);
-  //     }
-  //   }
-
-  //   if (product.size) {
-  //     try {
-  //       const sizes = typeof product.size === 'string'
-  //         ? JSON.parse(product.size)
-  //         : product.size;
-
-  //       if (Array.isArray(sizes) && sizes.length > 0) {
-  //         setSelectedSize(sizes);
-  //         setSizeEnabled(true);
-  //         // Add product sizes to available sizes if not already present
-  //         sizes.forEach(size => {
-  //           if (!availableSize.includes(size)) {
-  //             setAvailableSize(prev => [...prev, size]);
-  //           }
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error parsing product sizes:", error);
-  //     }
-  //   }
-  // }, [product.color, product.size]);
+  const [selectedSize, setSelectedSize] = useState<string[]>(() => parseProductArray(product.size));
+  const [sizeEnabled, setSizeEnabled] = useState<boolean>(() => parseProductArray(product.size).length > 0);
 
   const form = useForm<ProductUpdateForm>({
     resolver: zodResolver(productUpdateSchema),
@@ -175,7 +131,8 @@ const UpdateProduct = ({
       stock: product.stock,
       price: Number(product.price),
       costPrice: product.costPrice ? Number(product.costPrice) : undefined,
-      discountPrice: product.discountPrice ? Number(product.discountPrice) : undefined,
+      discountType: product.discountType || undefined,
+      discountValue: product.discountValue ? Number(product.discountValue) : undefined,
       brand: product.brand || "",
       subCategoryId: product.subCategoryId.toString(),
       status: product.status,
@@ -183,7 +140,8 @@ const UpdateProduct = ({
       is_active: product.is_active,
       is_featured: product.is_featured,
       weight: product.weight || "",
-      dimensions: product.dimensions || "",
+      height: product.height || "",
+      width: product.width || "",
       tags: product.tags?.join(", ") || "",
     },
   });
@@ -263,7 +221,8 @@ const UpdateProduct = ({
         description: values.description,
         price: values.price,
         costPrice: values.costPrice,
-        discountPrice: values.discountPrice,
+        discountType: values.discountType,
+        discountValue: values.discountValue,
         stock: values.stock,
         brand: values.brand,
         status: values.status,
@@ -271,14 +230,15 @@ const UpdateProduct = ({
         is_active: values.is_active,
         is_featured: values.is_featured,
         weight: values.weight,
-        dimensions: values.dimensions,
+        height: values.height,
+        width: values.width,
         tags: values.tags ? values.tags.split(",").map((tag) => tag.trim()) : [],
         color: colorEnabled ? selectedColor : [],
         size: sizeEnabled ? selectedSize : [],
       };
-
+      console.log(product.id);
       const res = await updateProduct(product.id, updateData, imageFile);
-
+      console.log("res->> ", res);
       if (res.success) {
         toast.success(res.message || "Product updated successfully!", {
           id: toastId,
@@ -414,7 +374,7 @@ const UpdateProduct = ({
             <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
               <h3 className="font-semibold text-lg">Pricing & Stock</h3>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="price"
@@ -468,13 +428,42 @@ const UpdateProduct = ({
                     </FormItem>
                   )}
                 />
+              </div>
+
+              {/* Discount Section */}
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="discountType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Discount Type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={isSubmitting}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select discount type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="PERCENTAGE">Percentage</SelectItem>
+                          <SelectItem value="FIXED_AMOUNT">Fixed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
-                  name="discountPrice"
+                  name="discountValue"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Discount Price</FormLabel>
+                      <FormLabel>Discount Value</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -487,6 +476,7 @@ const UpdateProduct = ({
                                 : Number(e.target.value)
                             )
                           }
+                          placeholder="e.g., 10 or 50"
                           disabled={isSubmitting}
                         />
                       </FormControl>
@@ -701,7 +691,7 @@ const UpdateProduct = ({
                 {/* Available Color */}
                 <div className="border rounded-xl p-4 bg-muted/20 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Available Colors</h3>
+                    <h3 className="font-medium">Colors</h3>
                     <Switch
                       checked={colorEnabled}
                       onCheckedChange={setColorEnabled}
@@ -716,8 +706,8 @@ const UpdateProduct = ({
                         disabled={!colorEnabled || isSubmitting}
                         onClick={() => handleColorToggle(color)}
                         className={`w-10 h-10 rounded-full border-2 transition-all ${selectedColor.includes(color)
-                            ? "border-primary scale-110"
-                            : "border-muted"
+                          ? "border-primary scale-110 ring-2 ring-primary ring-offset-2"
+                          : "border-muted"
                           } ${!colorEnabled
                             ? "opacity-40 cursor-not-allowed"
                             : "cursor-pointer hover:scale-105"
@@ -741,7 +731,7 @@ const UpdateProduct = ({
                 {/* Available Size */}
                 <Card className="border bg-muted/20 p-4 rounded-xl space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Available Sizes</h3>
+                    <h3 className="font-medium">Sizes</h3>
                     <Switch
                       checked={sizeEnabled}
                       onCheckedChange={setSizeEnabled}
@@ -756,8 +746,8 @@ const UpdateProduct = ({
                         disabled={!sizeEnabled || isSubmitting}
                         onClick={() => handleSizeToggle(size)}
                         className={`px-4 py-2 rounded-full border transition-all ${selectedSize.includes(size)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-background"
+                          ? "bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2"
+                          : "bg-background"
                           } ${!sizeEnabled
                             ? "opacity-40 cursor-not-allowed"
                             : "cursor-pointer hover:scale-105"
@@ -785,7 +775,7 @@ const UpdateProduct = ({
             <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
               <h3 className="font-semibold text-lg">Specifications</h3>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="weight"
@@ -805,13 +795,30 @@ const UpdateProduct = ({
 
                 <FormField
                   control={form.control}
-                  name="dimensions"
+                  name="height"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Dimensions</FormLabel>
+                      <FormLabel>Height</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g., 10x5x2 cm"
+                          placeholder="e.g., 10cm"
+                          {...field}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="width"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Width</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., 5cm"
                           {...field}
                           disabled={isSubmitting}
                         />
@@ -844,20 +851,23 @@ const UpdateProduct = ({
 
             {/* Footer Actions */}
             <div className="py-4 flex justify-end gap-3">
-              <Button
+              <ButtonComponent
                 type="button"
-                variant="outline"
+                varient="red"
                 onClick={handleCancel}
                 disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
+                buttonName="Cancel"
+              />
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button disabled={!hasChanges || isSubmitting}>
-                    {isSubmitting ? "Updating..." : "Update Product"}
-                  </Button>
+                  <ButtonComponent
+                    type="submit"
+                    varient="yellow"
+                    disabled={!hasChanges || isSubmitting}
+                    buttonName={isSubmitting ? "Updating..." : "Update Product"}
+                  />
+
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -890,7 +900,7 @@ const UpdateProduct = ({
 
       {/* Color Picker Dialog */}
       <Dialog open={colorOpen} onOpenChange={setColorOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="max-w-[425px]! z-50">
           <DialogHeader>
             <DialogTitle>Add New Color</DialogTitle>
             <DialogDescription>
@@ -925,7 +935,7 @@ const UpdateProduct = ({
 
       {/* Size Input Dialog */}
       <Dialog open={sizeOpen} onOpenChange={setSizeOpen}>
-        <DialogContent className="max-w-[425px]! z-50!">
+        <DialogContent className="max-w-[425px]! z-50">
           <DialogHeader>
             <DialogTitle>Add New Size</DialogTitle>
             <DialogDescription>Enter a new size option</DialogDescription>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ProductCreatePayload } from "@/types/products/product.type";
-import { createData, patchData, readData, uploadFile } from "../apiService/crud";
+import { ProductCreatePayload, ProductUpdatePayload } from "@/types/products/product.type";
+import { createData, patchData, putData, readData, uploadFile } from "../apiService/crud";
 import { Query } from "@/types/shared";
 
 
@@ -68,16 +68,15 @@ export async function addProduct(
 
 export async function updateProduct(
     productId: number,
-    data: ProductCreatePayload,
+    data: ProductUpdatePayload,
     img?: File | null
 ) {
     try {
-        const productRes = await patchData<ProductCreatePayload>(
+        const productRes = await putData<ProductUpdatePayload>(
             `/products/${productId}`,
             "/dashboard/admin/products",
             data
         );
-        console.log("Product update res ->> ", productRes.data.id);
 
         if (!productRes.success) {
             return productRes;
