@@ -1,14 +1,14 @@
-'use client'
 import ProductDetails from "@/components/pages/dashboard/products/productDetails/ProductDetails";
-import { useGetProductByIdQuery } from "@/redux/features/products/productsApi";
-import { useParams } from "next/navigation";
+import { getSingleProduct } from "@/service/product-service/product.service";
 
-const SingleProduct = () => {
-    const { productId } = useParams();
-    const { data } = useGetProductByIdQuery(productId);
+const SingleProduct = async ({ params }: {
+    params: Promise<{ productId: string }>
+}) => {
+    const { productId } = await params;
+    const product = await getSingleProduct(productId);
     return (
         <div>
-            <ProductDetails />
+            <ProductDetails product={product.data} />
         </div>
     );
 };

@@ -127,8 +127,12 @@ export async function updateProduct(
     }
 }
 
-
 export async function getAllProducts(query?: Query) {
     const res = await readData("/products", ["Products"], query);
+    return res;
+}
+
+export async function getSingleProduct(id: string) {
+    const res = await readData(`/products/${id}`, ["Products"]);
     return res;
 }

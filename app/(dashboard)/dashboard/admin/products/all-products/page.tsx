@@ -10,7 +10,6 @@ const Page: React.FC = async ({ searchParams }: { searchParams?: TSearchParams }
   // const [products, subCategories] = await Promise.all([getAllProducts(query as Query), getSubCategories()]);
   const products = await getAllProducts(query as Query);
   const subCategories = await getSubCategories();
-  console.log("products->> ",products)
 
   return (
     <div className="">
