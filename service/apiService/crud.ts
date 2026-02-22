@@ -31,6 +31,29 @@ export async function createData<T>(
   }
 }
 
+// upload file 
+export async function uploadFile<T>(
+  endPoint: string,
+  revalPath: string,
+  data?: T,
+) {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(`${config.next_public_base_api}${endPoint}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data as any,
+    });
+    const result = await res.json();
+    revalidatePath(revalPath);
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+}
+
 //get
 export async function readData(
   endPoint: string,

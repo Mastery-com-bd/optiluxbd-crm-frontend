@@ -1,5 +1,4 @@
 'use client'
-import { useHasPermission } from "@/utills/permission";
 import { AlertTriangle, Box, Upload, User, XCircle } from "lucide-react";
 import PageHeader from "../../shared/pageHeader";
 import Link from "next/link";
@@ -7,7 +6,6 @@ import ButtonComponent from "@/components/ui/ButtonComponent";
 import { OverviewCard } from "../../shared/overviewCard";
 
 export default function AllProductHeaderOverview() {
-    const permission = useHasPermission("PRODUCTS CREATE");
     const stats = [
         {
             icon: Box,
@@ -52,11 +50,9 @@ export default function AllProductHeaderOverview() {
                         description="Browse and manage your complete product catalog"
                     />
                 </div>
-                {permission && (
-                    <Link href={"/dashboard/admin/products/add-product"}>
-                        <ButtonComponent varient="yellow" buttonName="Add Product" icon={Upload} />
-                    </Link>
-                )}
+                <Link href={"/dashboard/admin/products/add-product"}>
+                    <ButtonComponent varient="yellow" buttonName="Add Product" icon={Upload} />
+                </Link>
             </div>
             <OverviewCard stats={stats} />
         </div>

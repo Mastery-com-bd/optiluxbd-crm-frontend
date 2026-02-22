@@ -1,13 +1,12 @@
-
 import AddProduct from "@/components/pages/dashboard/products/addProduct/addProduct";
-import React from "react";
+import { getAllCategories } from "@/service/category";
 
-const Page: React.FC = () => {
+
+export default async function page() {
+  const categories = await getAllCategories();
   return (
     <div>
-      <AddProduct />
+      <AddProduct categories={categories.data} />
     </div>
-  );
-};
-
-export default Page;
+  )
+}

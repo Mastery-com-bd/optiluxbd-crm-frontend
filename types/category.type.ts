@@ -1,5 +1,6 @@
-export type TSubCategories = {
+export type TSubCategory = {
   id: number;
+  category: { name: string, id: number }
   categoryId: number;
   organizationId: number;
   name: string;
@@ -11,15 +12,18 @@ export type TSubCategories = {
   image_url: string | null;
 };
 
-export type TCategories = {
+export type TCategory = {
   id: number;
   organizationId: number;
   name: string;
   slug: string;
-  subCategories: TSubCategories[];
+  subCategories: TSubCategory[];
   description: string;
   created_at: string;
   updated_at: string;
   image_public_id: string | null;
   image_url: string | null;
 };
+
+export type TCategories = TCategory[];
+export type TSubCategories = TSubCategory[];

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { HexColorPicker } from "react-colorful";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,14 +32,7 @@ import {
   Plus,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  useAddProductImageMutation,
-  useAddProductMutation,
-} from "@/redux/features/products/productsApi";
-import {
-  useGetAllCategoryQuery,
-  useGetCategoryAndSubcategoryQuery,
-} from "@/redux/features/category/categoryApi";
+
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -51,6 +45,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import ButtonComponent from "@/components/ui/ButtonComponent";
+import { TCategories, TCategory } from "@/types/category.type";
+import { addProduct } from "@/service/product-service/product.service";
 
 const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
@@ -61,9 +57,9 @@ const productSchema = z.object({
       message:
         "SKU can only contain letters, numbers, hyphens, and underscores",
     }),
-  stock: z.int().min(0, { message: "Stock must be 0 or greater" }),
+  stock: z.number().int().min(0, { message: "Stock must be 0 or greater" }),
   description: z.string().optional(),
-  basePrice: z.int().min(0, { message: "Base Price must be non-negative" }),
+  basePrice: z.number().min(0, { message: "Base Price must be non-negative" }),
   discountType: z.enum(["percentage", "fixed"]),
   discountValue: z
     .number()
@@ -71,7 +67,7 @@ const productSchema = z.object({
     .optional(),
   brand: z.string().optional(),
   category: z.string().min(1, { message: "Category is required" }),
-  subCategoryId: z.string().min(1, { message: "subCategoryId is required" }),
+  subCategoryId: z.string().min(1, { message: "Sub category is required" }),
   status: z.string().min(1, { message: "Status is required" }),
   tags: z.string().optional(),
   color: z.array(z.string()).optional(),
@@ -80,12 +76,14 @@ const productSchema = z.object({
 
 type InferedFormData = z.infer<typeof productSchema>;
 
-const AddProduct = () => {
+const AddProduct = ({ categories }: { categories: TCategories }) => {
   const {
     register,
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<InferedFormData>({
     resolver: zodResolver(productSchema),
@@ -110,9 +108,6 @@ const AddProduct = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [addProduct, { isLoading: isAddingProduct }] = useAddProductMutation();
-  const [addImage, { isLoading: isAddingImage }] = useAddProductImageMutation();
-  const isSubmitting = isAddingProduct || isAddingImage;
 
   const handleDivClick = () => {
     fileInputRef.current?.click();
@@ -131,6 +126,7 @@ const AddProduct = () => {
   const [newColor, setNewColor] = useState<string>("#ffffff");
   const [selectedColor, setSelectedColor] = useState<string[]>([]);
   const [colorEnabled, setColorEnabled] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>();
 
   //size....
   const [sizeOpen, setSizeOpen] = useState(false);
@@ -144,8 +140,27 @@ const AddProduct = () => {
   const [selectedSize, setSelectedSize] = useState<string[]>([]);
   const [sizeEnabled, setSizeEnabled] = useState<boolean>(false);
 
+  // Watch category changes
+  const selectedCategoryId = watch("category");
+  const [selectedCategory, setSelectedCategory] = useState<TCategory | undefined>();
+
+  // Update selected category when category field changes
+  useEffect(() => {
+    if (selectedCategoryId) {
+      const category = categories.find((cat) => String(cat.id) === selectedCategoryId);
+      setSelectedCategory(category);
+      // Reset subcategory when category changes
+      setValue("subCategoryId", "");
+    } else {
+      setSelectedCategory(undefined);
+    }
+  }, [selectedCategoryId, categories, setValue]);
+
+  const subCategories = selectedCategory?.subCategories || [];
+
   //submit function....
   const onSubmit = async (data: InferedFormData) => {
+    setIsSubmitting(true);
     const productInfo = {
       name: data.productName,
       description: data.description ?? "",
@@ -160,27 +175,20 @@ const AddProduct = () => {
       size: sizeEnabled ? selectedSize : [],
       color: colorEnabled ? selectedColor : [],
     };
-
     try {
-      const res = await addProduct(productInfo).unwrap();
+      const toastId = toast.loading("Creating product..it may take some time...");
+      const res = await addProduct(productInfo, image);
       if (res.success) {
-        if (image) {
-          const result = await addImage({ id: res?.data?.id, image }).unwrap();
-          if (result.success) {
-            toast.success("Product added successfully");
-          } else {
-            toast.error("Image upload failed");
-          }
-        } else {
-          toast.success("Product added successfully");
-        }
+        toast.success("Product created successfully.", { id: toastId })
         reset();
         setImage(null);
         setPreviewUrl(null);
+        setSelectedCategory(undefined);
+        setSelectedColor([]);
+        setSelectedSize([]);
       } else {
-        toast.error("Failed to add product");
+        toast.error("Failed to add product", { id: toastId });
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const errorMessage =
         err?.data?.errors?.[0]?.message ||
@@ -188,36 +196,32 @@ const AddProduct = () => {
         "Something went wrong";
       toast.error(errorMessage);
     }
+    finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onDiscard = () => {
     reset();
     setImage(null);
     setPreviewUrl(null);
+    setSelectedCategory(undefined);
+    setSelectedColor([]);
+    setSelectedSize([]);
   };
-  const { data: categories, data: isCategoryLoading } =
-    useGetAllCategoryQuery(undefined);
-
-  const [parentCategory, setParentCategory] = useState<number | null>(null);
-  const { data: subcategoriesData, isLoading: isSubCategoryIdLoading } =
-    useGetCategoryAndSubcategoryQuery(parentCategory, {
-      skip: !parentCategory,
-      refetchOnMountOrArgChange: true,
-    });
-  const subCategories = subcategoriesData?.subCategories;
 
   return (
-    <div className="min-h-screen  text-foreground ">
-      <div className=" max-w-[1130px] mx-auto">
+    <div className="min-h-screen text-foreground">
+      <div className="max-w-[1130px] mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Add Product</h1>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
             {/* LEFT Section */}
-            <div className="flex flex-col lg:flex-row gap-6  w-full">
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
               {/* Product Details Section */}
-              <div className="flex-1 min-w-0  ">
+              <div className="flex-1 min-w-0">
                 <div className="effect rounded-xl p-6 h-full flex flex-col justify-between">
                   <h2 className="text-xl font-semibold text-white">
                     Product details
@@ -241,7 +245,7 @@ const AddProduct = () => {
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
                       id="sku"
-                      placeholder="Inter an unique SKU"
+                      placeholder="Enter a unique SKU"
                       {...register("sku")}
                       className="mt-2"
                     />
@@ -260,29 +264,24 @@ const AddProduct = () => {
                       rules={{ required: true }}
                       render={({ field }) => (
                         <Select
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            setParentCategory(Number(value));
-                          }}
+                          onValueChange={field.onChange}
                           value={field.value}
                         >
                           <SelectTrigger className="mt-2">
                             <SelectValue placeholder="Select Category" />
                           </SelectTrigger>
-                          {
-                            <SelectContent>
-                              {categories?.map(
-                                (cat: { id: number; name: string }) => (
-                                  <SelectItem
-                                    key={cat.id}
-                                    value={String(cat.id)}
-                                  >
-                                    {cat.name}
-                                  </SelectItem>
-                                ),
-                              )}
-                            </SelectContent>
-                          }
+                          <SelectContent>
+                            {categories?.map(
+                              (cat: { id: number; name: string }) => (
+                                <SelectItem
+                                  key={cat.id}
+                                  value={String(cat.id)}
+                                >
+                                  {cat.name}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
                         </Select>
                       )}
                     />
@@ -294,7 +293,7 @@ const AddProduct = () => {
                   </div>
 
                   <div>
-                    <Label>subCategoryId *</Label>
+                    <Label>Sub Category *</Label>
                     <Controller
                       control={control}
                       name="subCategoryId"
@@ -303,24 +302,26 @@ const AddProduct = () => {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={!parentCategory}
+                          disabled={!selectedCategory || subCategories.length === 0}
                         >
                           <SelectTrigger className="mt-2">
-                            <SelectValue placeholder="Pick a sub category" />
+                            <SelectValue placeholder={
+                              !selectedCategory
+                                ? "Select category first"
+                                : subCategories.length === 0
+                                  ? "No subcategories available"
+                                  : "Pick a sub category"
+                            } />
                           </SelectTrigger>
                           <SelectContent>
-                            {isSubCategoryIdLoading ? (
-                              <div>Loading subcategories...</div>
-                            ) : (
-                              subCategories?.map(
-                                (sub: { id: number; name: string }) => (
-                                  <SelectItem
-                                    key={sub.id}
-                                    value={String(sub.id)}
-                                  >
-                                    {sub.name}
-                                  </SelectItem>
-                                ),
+                            {subCategories?.map(
+                              (sub: { id: number; name: string }) => (
+                                <SelectItem
+                                  key={sub.id}
+                                  value={String(sub.id)}
+                                >
+                                  {sub.name}
+                                </SelectItem>
                               )
                             )}
                           </SelectContent>
@@ -339,7 +340,7 @@ const AddProduct = () => {
               {/* Pricing + Color Section */}
               <div className="flex-1 min-w-0 flex flex-col gap-6">
                 {/* Stock & Pricing */}
-                <div className="effect rounded-xl p-6  space-y-5">
+                <div className="effect rounded-xl p-6 space-y-5">
                   <h2 className="text-xl font-semibold text-white">
                     Stock & Pricing
                   </h2>
@@ -435,7 +436,6 @@ const AddProduct = () => {
                 <div className="effect rounded-xl p-6 space-y-5">
                   <div className="flex items-center justify-between">
                     <h2 className="text-white font-medium">Available Color</h2>
-                    {/* a radio button here. */}
                     <Switch
                       id="enable-color"
                       checked={colorEnabled}
@@ -448,12 +448,13 @@ const AddProduct = () => {
                       <Checkbox
                         disabled={!colorEnabled}
                         key={c}
-                        className={`p-3 accent-white cursor-pointer flex justify-center rounded-full `}
+                        checked={selectedColor.includes(c)}
+                        className={`p-3 accent-white cursor-pointer flex justify-center rounded-full`}
                         style={{ backgroundColor: c }}
                         onClick={() => {
                           if (selectedColor.includes(c)) {
                             setSelectedColor(
-                              selectedColor.filter((color) => color !== c),
+                              selectedColor.filter((color) => color !== c)
                             );
                           } else {
                             setSelectedColor([...selectedColor, c]);
@@ -475,7 +476,7 @@ const AddProduct = () => {
 
               {/* Product Image Upload */}
               <div className="flex-1 min-w-0">
-                <div className="effect rounded-xl p-6 h-full flex flex-col  shadow-lg">
+                <div className="effect rounded-xl p-6 h-full flex flex-col shadow-lg">
                   <h2 className="text-lg font-medium text-white mb-4">
                     Product Image
                   </h2>
@@ -535,7 +536,7 @@ const AddProduct = () => {
             <div className="grid grid-cols-3 w-full gap-6 my-6">
               {/* Organize */}
               <div className="flex flex-col gap-6">
-                <Card className="border-none! effect p-5 rounded-2xl text-white space-y-4">
+                <Card className="border-none effect p-5 rounded-2xl text-white space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-medium">Available Size</h3>
                     <Switch
@@ -556,7 +557,7 @@ const AddProduct = () => {
                         onClick={() => {
                           if (selectedSize.includes(size)) {
                             setSelectedSize(
-                              selectedSize.filter((s) => s !== size),
+                              selectedSize.filter((s) => s !== size)
                             );
                           } else {
                             setSelectedSize([...selectedSize, size]);
@@ -570,13 +571,13 @@ const AddProduct = () => {
                     {/* Add new size button */}
                     <span
                       onClick={() => setSizeOpen(true)}
-                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center effect p-1 cursor-pointer ${!sizeEnabled ? "hidden" : "block"} `}
+                      className={`w-6 h-6 rounded-full text-white text-xs flex items-center justify-center effect p-1 cursor-pointer ${!sizeEnabled ? "hidden" : "block"}`}
                     >
                       <Plus />
                     </span>
                   </div>
                 </Card>
-                <Card className="p-6 space-y-4 effect ">
+                <Card className="p-6 space-y-4 effect">
                   <h2 className="text-lg font-semibold">Organize</h2>
                   <div>
                     <Label>Brand</Label>
@@ -621,10 +622,10 @@ const AddProduct = () => {
                 </Card>
               </div>
               {/* Product description */}
-              <Card className="border-none! space-y-4 effect col-span-2 flex flex-col gap-0">
+              <Card className="border-none space-y-4 effect col-span-2 flex flex-col gap-0">
                 <CardHeader className="">Product Description</CardHeader>
                 <CardContent className="h-full">
-                  <div className="flex gap-2 border-b p-2 px-4 effect rounded-b-none!  overflow-auto">
+                  <div className="flex gap-2 border-b p-2 px-4 effect rounded-b-none overflow-auto">
                     <Bold className="w-4 h-4" />
                     <Italic className="w-4 h-4" />
                     <Underline className="w-4 h-4" />
@@ -639,7 +640,7 @@ const AddProduct = () => {
                       id="description"
                       {...register("description")}
                       placeholder="Product description..."
-                      className="h-full effect border-t-0! rounded-t-none!"
+                      className="h-full effect border-t-0 rounded-t-none"
                     />
                   </div>
                 </CardContent>
@@ -672,7 +673,7 @@ const AddProduct = () => {
       </div>
       {/* color modal */}
       <Dialog open={colorOpen} onOpenChange={setColorOpen}>
-        <DialogContent className="max-w-[425px]!">
+        <DialogContent className="max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add a new color</DialogTitle>
             <DialogDescription>
@@ -712,7 +713,7 @@ const AddProduct = () => {
 
       {/* size modal */}
       <Dialog open={sizeOpen} onOpenChange={setSizeOpen}>
-        <DialogContent className="max-w-[425px]!">
+        <DialogContent className="max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add a new size</DialogTitle>
             <DialogDescription>Write a new size.</DialogDescription>
@@ -724,13 +725,9 @@ const AddProduct = () => {
                 id="productSize"
                 placeholder="Product Size"
                 className="mt-2"
+                value={newSize}
                 onChange={(e) => setNewSize(e.target.value)}
               />
-              {/* {errors.productName && (
-                <p className="text-destructive text-sm">
-                  {errors.productName?.message}
-                </p>
-              )} */}
             </div>
           </div>
           <DialogFooter>
@@ -740,8 +737,9 @@ const AddProduct = () => {
             <Button
               type="button"
               onClick={() => {
-                if (!availableSize.includes(newSize)) {
+                if (newSize && !availableSize.includes(newSize)) {
                   setAvailableSize((prev) => [...prev, newSize]);
+                  setNewSize("");
                 }
                 setSizeOpen(false);
               }}
