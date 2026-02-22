@@ -2,124 +2,55 @@
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import AddCategory from "../addCategory";
 import CategoryCard from "../category-card";
 import PageHeader from "../../shared/pageHeader";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { TCategories } from "@/types/category.type";
+import ActiveIcon from "@/components/svgIcon/ActiveIcon";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
-type Child = { id: string; name: string; image: string };
-type Parent = {
-  id: string;
-  name: string;
-  image: string;
-  children: Child[];
+type TCategoryPageProps = {
+  categories: TCategories[];
 };
 
-const CATEGORIES: Parent[] = [
-  {
-    id: "fashion",
-    name: "Fashion Categories",
-    image: "/category1.png",
-    children: [
-      {
-        id: "electronics-headphone",
-        name: "T-Shart",
-        image: "/category2.png",
-      },
-      {
-        id: "foot-wares",
-        name: "Eye Ware &Sunglass",
-        image: "/category3.png",
-      },
-      {
-        id: "eye-ware",
-        name: "Foot Ware",
-        image: "/category4.png",
-      },
-    ],
-  },
-  {
-    id: "electronics",
-    name: "Electronics",
-    image: "/category2.png",
-    children: [
-      {
-        id: "headphone",
-        name: "Electronics Headphone",
-        image: "/category1.png",
-      },
-      {
-        id: "camera",
-        name: "Cameras",
-        image: "/category3.png",
-      },
-      {
-        id: "wearable",
-        name: "Wearables",
-        image: "/category4.png",
-      },
-    ],
-  },
-  {
-    id: "footwear",
-    name: "Footwear",
-    image: "/category3.png",
-    children: [
-      {
-        id: "sneakers",
-        name: "Sneakers",
-        image: "/category1.png",
-      },
-      {
-        id: "sandals",
-        name: "Sandals",
-        image: "/category2.png",
-      },
-      {
-        id: "boots",
-        name: "Boots",
-        image: "/category3.png",
-      },
-    ],
-  },
-];
-
-const AllCategories = () => {
+const AllCategories = ({ categories }: TCategoryPageProps) => {
   const [query, setQuery] = useState("");
-  const [current, setCurrent] = useState<Parent>(CATEGORIES[0]);
+  const [current, setCurrent] = useState<TCategories>(categories[0]);
 
-  const filteredParents = useMemo(() => {
-    const q = query.toLowerCase();
-    return CATEGORIES.filter((p) => p.name.toLowerCase().includes(q));
-  }, [query]);
+  console.log(categories);
 
   return (
-    <div className="min-h-screen w-full ">
-      <div className="flex items-center justify-between mb-6">
-        <PageHeader
-          title="All Category"
-          description="Browse and manage All Category"
-        />
+    <div className="min-h-screen w-full space-y-6">
+      <div className="flex items-center justify-between">
         <div>
+          <PageHeader
+            title="All Category"
+            description="Browse and manage All Category"
+          />
+        </div>
+        <div className="flex items-center justify-end gap-3 ">
           <AddCategory />
         </div>
       </div>
 
+      <div className="relative flex items-center justify-start">
+        <Input
+          icon={<Search />}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search in category"
+        />
+      </div>
+
       <div className="grid grid-cols-12 gap-6">
         {/* Sidebar */}
-        <aside className="col-span-3">
-          <div className="relative mb-4.5">
-            <Input
-              icon={<Search />}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search in category"
-            />
-          </div>
+        <aside className="col-span-3 space-y-3">
+          <h1 className="text-[28px] font-semibold">Categories</h1>
           <div className="space-y-3">
-            {filteredParents.map((p) => {
+            {categories.map((p) => {
               const active = current.id === p.id;
               return (
                 <div
@@ -129,59 +60,13 @@ const AllCategories = () => {
                   <button
                     onClick={() => setCurrent(p)}
                     className={cn(
-                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden "
+                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden ",
                     )}
                   >
-                    {active && (
-                      <svg
-                        width="261"
-                        height="125"
-                        viewBox="0 0 261 125"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full object-cover -z-10"
-                      >
-                        <g filter="url(#filter0_f_758_11327)">
-                          <ellipse
-                            cx="130.5"
-                            cy="108"
-                            rx="130.5"
-                            ry="44"
-                            fill="#FFB13F"
-                            fillOpacity="0.4"
-                          />
-                        </g>
-                        <defs>
-                          <filter
-                            id="filter0_f_758_11327"
-                            x="-100"
-                            y="-36"
-                            width="461"
-                            height="288"
-                            filterUnits="userSpaceOnUse"
-                            colorInterpolationFilters="sRGB"
-                          >
-                            <feFlood
-                              floodOpacity="0"
-                              result="BackgroundImageFix"
-                            />
-                            <feBlend
-                              mode="normal"
-                              in="SourceGraphic"
-                              in2="BackgroundImageFix"
-                              result="shape"
-                            />
-                            <feGaussianBlur
-                              stdDeviation="50"
-                              result="effect1_foregroundBlur_758_11327"
-                            />
-                          </filter>
-                        </defs>
-                      </svg>
-                    )}
+                    {active && <ActiveIcon />}
                     <div className="flex items-center justify-center cursor-pointer effect rounded-[12px] overflow-hidden bg-transparent!">
                       <Image
-                        src={p.image}
+                        src="https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
                         alt={p.name}
                         height={100}
                         width={100}
@@ -199,43 +84,34 @@ const AllCategories = () => {
         </aside>
 
         {/* Content */}
-        <section className="col-span-9">
-          <h2 className="text-[28px] font-semibold mb-4">Sub Categories</h2>
-          <div className="grid grid-cols-3 gap-5">
-            {current.children.map((c) => (
-              <Link href={`/dashboard/admin/categories/products`} key={c.id}>
-                <CategoryCard
-                  category={{
-                    id: Number(c.id),
-                    name: c.name,
-                    image: c.image,
-                  }}
-                />
-              </Link>
-            ))}
-            {current.children.map((c) => (
-              <Link href={`/dashboard/categories/products`} key={c.id}>
-                <CategoryCard
-                  category={{
-                    id: Number(c.id),
-                    name: c.name,
-                    image: c.image,
-                  }}
-                />
-              </Link>
-            ))}
-            {current.children.map((c) => (
-              <Link href={`/dashboard/categories/products`} key={c.id}>
-                <CategoryCard
-                  category={{
-                    id: Number(c.id),
-                    name: c.name,
-                    image: c.image,
-                  }}
-                />
-              </Link>
-            ))}
+        <section className="col-span-9 space-y-3">
+          <div>
+            <h2 className="text-[28px] font-semibold ">Sub Categories</h2>
           </div>
+          {current?.subCategories.length ? (
+            <div className="grid grid-cols-3 gap-5">
+              {current?.subCategories.map((c) => (
+                <Link href={`/dashboard/admin/categories/products`} key={c.id}>
+                  <CategoryCard
+                    category={{
+                      id: Number(c.id),
+                      name: c.name,
+                      image:
+                        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
+                    }}
+                  />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <Card className="effect">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center">
+                  No Sub categories for this category
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          )}
         </section>
       </div>
     </div>

@@ -125,6 +125,32 @@ export async function patchData<T>(
   }
 }
 
+// PUT data
+export async function putData<T>(
+  endPoint: string,
+  revalPath: string,
+  data?: T,
+) {
+  const token = await getValidToken();
+  try {
+    const res = await fetch(`${config.next_public_base_api}${endPoint}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    } as RequestInit);
+    const result = await res.json();
+    revalidatePath(revalPath);
+    return result;
+  } catch (error: any) {
+    return error;
+  }
+}
+
+
+
 
 
 
@@ -153,7 +179,6 @@ export async function readPublicData(
     return error;
   }
 }
-
 
 //public create
 export async function createPublicData<T>(

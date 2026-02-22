@@ -17,7 +17,6 @@ import {
     Funnel,
     MoreVertical,
     Pencil,
-    Search,
     Trash2,
 } from "lucide-react";
 import {
@@ -54,7 +53,6 @@ import useFilters from "@/hooks/useFilters";
 import ResetButton from "@/components/ui/ResetButton";
 
 export default function ScratchCardList({ scratchCards, pagination }: { scratchCards: TScratchCardsList, pagination: TPagination }) {
-    const [statusFilter, setStatusFilter] = useState("all");
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteCouponId, setDeleteCouponId] = useState<number | null>(null);
 

@@ -157,7 +157,7 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
 
             // Organization Create call
             const orgRes = await createOrganization(orgPayload);
-
+            console.log("orgRes->> ", orgRes);
             if (!orgRes.success) {
                 toast.error(orgRes.message || "Failed to create organization", { id: toastId });
                 return;
@@ -184,7 +184,7 @@ export default function OrganizationRegisterForm({ planData }: { planData?: { pl
 
             // --- Step 3: Manual Purchase Function Call ---
             const purchaseRes = await initiatePayment(purchasePayload);
-
+            console.log("purchaseRes -> ", purchaseRes);
             if (purchaseRes.success) {
                 toast.success("Organization & Subscription completed successfully!", {
                     id: toastId,

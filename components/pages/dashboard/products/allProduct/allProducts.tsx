@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,18 +18,13 @@ import {
   Grid2X2,
   MoreVertical,
   Pencil,
-  Search,
   Trash2,
 } from "lucide-react";
 import {
   useDeleteProductMutation,
-  useGetAllProductQuery,
 } from "@/redux/features/products/productsApi";
 import { toast } from "sonner";
 import Link from "next/link";
-import { debounce } from "@/utills/debounce";
-import { Product } from "@/types/product";
-import Loading from "@/components/pages/shared/Loading";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,7 +35,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useGetSubcategoryQuery } from "@/redux/features/category/categoryApi";
 import {
   Table,
   TableBody,
@@ -58,39 +52,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ProductCart from "../productCard/ProductCart";
 import CustomPagination from "@/components/ui/CustomPagination";
+import { TPagination } from "@/types/shared";
+import useFilters from "@/hooks/useFilters";
+import ResetButton from "@/components/ui/ResetButton";
+import { TSubCategories } from "@/types/category.type";
+import { TProduct, TProductsList } from "@/types/products/product.type";
+import UpdateProduct from "../updateProduct/UpdateProduct";
 
-const AllProducts = () => {
+const AllProducts = ({ products, pagination, subCategories }: { products: TProductsList, pagination: TPagination, subCategories: TSubCategories }) => {
   const [isGridView, setIsGridView] = useState(false);
-  const [filters, setFilters] = useState({
-    search: "",
-    sortBy: "created_at",
-    order: "desc",
-    limit: 10,
-    page: 1,
-  });
-  const [category, setCategory] = useState("all");
-  const [status, setStatus] = useState("all");
   const [deleteProduct] = useDeleteProductMutation();
-  const { data: productRes, isLoading } = useGetAllProductQuery(filters, {
-    refetchOnMountOrArgChange: false,
-  });
-  const PRODUCTS = productRes?.data?.products || [];
-  const pagination = productRes?.pagination || {
-    page: 1,
-    totalPages: 1,
-    total: 0,
-  };
-  const [show, setShow] = useState("10");
-  const [inputValue, setInputValue] = useState("");
+  const PRODUCTS = products || [];
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
-
-  const handleSearch = async (val: any) => {
-    setFilters({ ...filters, search: val });
-  };
-  const { data: categories } = useGetSubcategoryQuery(undefined);
-
-  const debouncedLog = debounce(handleSearch, 1000, { leading: false });
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [productForUpdate, setProductForUpdate] = useState<TProduct | undefined>(undefined);
 
   const handleDelete = async (id: number) => {
     try {
@@ -113,7 +89,7 @@ const AllProducts = () => {
     "Created Date",
     "Actions",
   ];
-
+  const { handleChange, show, setShow, currentPage, setCurrentPage } = useFilters();
   return (
     <div className="bg-transparent text-foreground my-4">
       <div className="w-full">
@@ -123,13 +99,8 @@ const AllProducts = () => {
             <div className="flex  gap-3 items-center">
               <Input
                 className="w-64 text-sm bg-transparent"
-                value={inputValue}
-                icon={<Search />}
-                onChange={(e) => {
-                  debouncedLog(e.target.value);
-                  setInputValue(e.target.value);
-                }}
-                placeholder="Search product by name"
+                onChange={(e) => handleChange("search", e.target.value)}
+                placeholder="Search products..."
               />
               <Button className="w-9 h-9 p-2.5 rounded-[12px] bg-transparent effect cursor-pointer">
                 <Funnel size={16} />
@@ -137,21 +108,15 @@ const AllProducts = () => {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select
-                value={category}
-                onValueChange={(value) => {
-                  setCategory(value);
-                  setFilters((prev) => ({
-                    ...prev,
-                    category: value === "all" ? undefined : value,
-                    page: 1,
-                  }));
-                }}>
+                value={useFilters().getParam("category") || "all"}
+                onValueChange={(value) => handleChange("category", value)}
+              >
                 <SelectTrigger className="w-40" aria-label="Category Filter">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {categories?.map((category: { id: number; name: string }) => (
+                  {subCategories?.map((category: { id: number; name: string }) => (
                     <SelectItem key={category.id} value={category.name}>
                       {category.name}
                     </SelectItem>
@@ -159,15 +124,9 @@ const AllProducts = () => {
                 </SelectContent>
               </Select>
               <Select
-                value={status}
-                onValueChange={(value) => {
-                  setStatus(value);
-                  setFilters((prev) => ({
-                    ...prev,
-                    status: value === "all" ? undefined : value,
-                    page: 1,
-                  }));
-                }}>
+                value={useFilters().getParam("status") || "all"}
+                onValueChange={(value) => handleChange("status", value)}
+              >
                 <SelectTrigger className="w-36" aria-label="Status Filter">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -178,6 +137,7 @@ const AllProducts = () => {
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
+              <ResetButton setLimit={setShow} setCurrPage={setCurrentPage} />
               <Button
                 variant="default"
                 className="rounded-full  cursor-pointer text-2xl effect size-10"
@@ -188,9 +148,7 @@ const AllProducts = () => {
           </div>
         </Card>
         {/* Product Table */}
-        {isLoading ? (
-          <Loading />
-        ) : !isGridView ? (
+        {!isGridView ? (
           <Card className="bg-transparent text-card-foreground shadow-sm overflow-hidden mb-5 p-0 pt-2 border-none ">
             <div className="overflow-x-auto w-full">
               <Table className="w-full">
@@ -208,7 +166,7 @@ const AllProducts = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {PRODUCTS?.map((product: Product) => (
+                  {PRODUCTS?.map((product: TProduct) => (
                     <TableRow
                       key={product.id}
                       className="border-muted hover:bg-muted/50 transition-colors">
@@ -227,9 +185,6 @@ const AllProducts = () => {
                             />
                             <div>
                               <p className="font-medium">{product.name}</p>
-                              <p className="text-xs text-muted-foreground">
-                                by {product.by}
-                              </p>
                             </div>
                           </div>
                         </div>
@@ -280,9 +235,13 @@ const AllProducts = () => {
                                 <Eye className="w-4 h-4 mr-2" /> view
                               </DropdownMenuItem>
                             </Link>
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Pencil className="w-4 h-4 mr-2" />
-                              Update
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setIsUpdateOpen(true);
+                                setProductForUpdate(product);
+                              }}>
+                              <Pencil className="w-4 h-4 mr-2" />  Update
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
@@ -305,7 +264,7 @@ const AllProducts = () => {
           </Card>
         ) : (
           <div className="grid grid-cols-3 gap-6  my-6">
-            {PRODUCTS?.map((product: Product) => (
+            {PRODUCTS?.map((product: TProduct) => (
               <ProductCart
                 key={product.id}
                 product={product}
@@ -318,15 +277,17 @@ const AllProducts = () => {
 
         {/* Pagination */}
         <CustomPagination
-          currentPage={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={(page) => setFilters({ ...filters, page })}
+          totalPage={pagination?.totalPages}
           show={show}
+          currentPage={currentPage}
           setShow={setShow}
-          setFilters={setFilters}
+          setCurrentPage={setCurrentPage}
+          handleChange={handleChange}
         />
       </div>
 
+      {/* update modal */}
+      {productForUpdate && <UpdateProduct product={productForUpdate} subCategories={subCategories} isUpdateOpen={isUpdateOpen} setIsUPdateOpen={setIsUpdateOpen} />}
       {/* Delete Confirm Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

@@ -1,85 +1,103 @@
 "use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
+import { Pencil, Upload, X } from "lucide-react";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Pencil } from "lucide-react";
-import { Product } from "@/types/product";
-import { useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import {
-  useAddProductImageMutation,
-  useUpdateProductMutation,
-} from "@/redux/features/products/productsApi";
-import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { TProduct } from "@/types/products/product.type";
+import { TSubCategory } from "@/types/category.type";
+import { updateProduct } from "@/service/product-service/product.service";
 
-interface UpdateProductProps {
-  product: Product;
-}
+// Zod Schema based on your TProduct interface
+const formSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  description: z.string().optional(),
+  price: z.coerce.number().min(0),
+  costPrice: z.coerce.number().optional(),
+  discountPrice: z.coerce.number().optional(),
+  sku: z.string().min(1, "SKU is required"),
+  stock: z.coerce.number().int().min(0),
+  brand: z.string().optional(),
+  subCategoryId: z.string().min(1, "Category is required"),
+  is_active: z.boolean().default(true),
+  is_featured: z.boolean().default(false),
+  status: z.string().default("PUBLISHED"),
+  stock_status: z.string().default("IN_STOCK"),
+  weight: z.string().optional(),
+  dimensions: z.string().optional(),
+  tags: z.string().optional(), // We'll convert string to array on submit
+});
 
-type FormValues = {
-  name: string;
-  brand: string;
-  category: string;
-  description: string;
-  price: number;
-  stock: number;
-  status: string;
-  stock_status: string;
-  is_active: boolean;
-  is_featured: boolean;
+type UpdateProductProps = {
+  product: TProduct;
+  subCategories: TSubCategory[];
+  isUpdateOpen: boolean;
+  setIsUPdateOpen: (val: boolean) => void;
 };
 
-const UpdateProduct: React.FC<UpdateProductProps> = ({ product }) => {
-  const [imagePreview, setImagePreview] = useState(product.image_url);
+const UpdateProduct = ({
+  product,
+  subCategories,
+  isUpdateOpen,
+  setIsUPdateOpen,
+}: UpdateProductProps) => {
+  const [imagePreview, setImagePreview] = useState(product.image_url || "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [addImage] = useAddProductImageMutation();
-  const [updateProduct] = useUpdateProductMutation();
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { isDirty },
-  } = useForm<FormValues>({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: product.name,
-      brand: product.brand,
-      category: product.category,
-      description: product.description ?? "",
+      description: product.description || "",
       price: Number(product.price),
+      costPrice: Number(product.costPrice || 0),
+      discountPrice: Number(product.discountPrice || 0),
+      sku: product.sku,
       stock: product.stock,
-      status: product.status,
-      stock_status: product.stock_status,
+      brand: product.brand || "",
+      subCategoryId: product.subCategoryId.toString(),
       is_active: product.is_active,
       is_featured: product.is_featured,
+      status: product.status,
+      stock_status: product.stock_status,
+      weight: product.weight || "",
+      dimensions: product.dimensions || "",
+      tags: product.tags?.join(", ") || "",
     },
   });
+
+  const { isDirty } = form.formState;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -87,189 +105,283 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ product }) => {
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setImagePreview(reader.result);
-        }
+        if (typeof reader.result === "string") setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const onSubmit = async (values: FormValues) => {
-    setSheetOpen(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const toastId = toast.loading("Updating product...");
 
-    const updateAndUpload = (async () => {
-      await updateProduct({ id: product.id, data: values }).unwrap();
-      if (imageFile) {
-        await addImage({ id: product.id, image: imageFile }).unwrap();
+    // Formatting data for API
+    const formattedData = {
+      ...values,
+      subCategoryId: Number(values.subCategoryId),
+      tags: values.tags ? values.tags.split(",").map(t => t.trim()) : [],
+    };
+
+    try {
+      const res = await updateProduct(product.id,  formattedData, imageFile);
+      if (res.success) {
+        toast.success("Product updated successfully", { id: toastId });
+        setIsUPdateOpen(false);
+      } else {
+        toast.error("Failed to update", { id: toastId });
       }
-    })();
-
-    toast.promise(updateAndUpload, {
-      loading: "Updating product...",
-      success: "Product updated successfully!",
-      error: "Failed to update product.",
-    });
-  };
+    } catch (error) {
+      toast.error("Something went wrong", { id: toastId });
+    }
+  }
 
   return (
-    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="cursor-pointer"
-          onClick={() => setSheetOpen(true)}
-        >
-          <Pencil className="w-4 h-4" />
-        </Button>
-      </SheetTrigger>
+    <Sheet open={isUpdateOpen} onOpenChange={setIsUPdateOpen}>
+      <SheetContent className="sm:max-w-[700px] overflow-y-auto">
+        <SheetHeader className="mb-6">
+          <SheetTitle>Edit Product: {product.name}</SheetTitle>
+          <SheetDescription>
+            Make changes to your product here. Click save when you're done.
+          </SheetDescription>
+        </SheetHeader>
 
-      <SheetContent side="bottom" className="lg:w-[50%] w-full mx-auto">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="p-4 max-h-[calc(100vh-60px)] overflow-y-auto space-y-6"
-        >
-          <SheetHeader>
-            <SheetTitle>Edit Product</SheetTitle>
-            <SheetDescription>
-              Update the product details. Click save when you&apos;re done.
-            </SheetDescription>
-          </SheetHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* 1. Basic Information */}
+            <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
+              <h3 className="font-medium text-primary">Basic Details</h3>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Product Name</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Product Info */}
-          <section className="border rounded-md p-4 bg-muted/10 space-y-4">
-            <h3 className="text-md font-semibold">Product Information</h3>
-            <Label>Name</Label>
-            <Input {...register("name")} />
-            <Label>Brand</Label>
-            <Input {...register("brand")} />
-            <Label>Category</Label>
-            <Input {...register("category")} />
-            <Label>Description</Label>
-            <Textarea rows={4} {...register("description")} />
-          </section>
-
-          {/* Inventory */}
-          <section className="border rounded-md p-4 bg-muted/10 space-y-4">
-            <h3 className="text-md font-semibold">Pricing & Inventory</h3>
-            <Label>Price</Label>
-            <Input type="number" {...register("price")} />
-            <Label>Stock</Label>
-            <Input type="number" {...register("stock")} />
-            <Label>Status</Label>
-            <Input {...register("status")} />
-            <Label>Stock Status</Label>
-            <Input {...register("stock_status")} />
-          </section>
-
-          {/* Toggles + Image */}
-          <div className="flex gap-4">
-            {/* Image Upload */}
-            <section className="border rounded-md p-4 bg-muted/10 w-1/2">
-              <h3 className="text-md font-semibold mb-2">Product Image</h3>
-              <div className="relative w-full h-48">
-                <img
-                  src={imagePreview}
-                  alt="Product"
-                  className="w-full h-full object-cover rounded-md border"
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="brand"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Brand</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <button
-                  type="button"
-                  className="absolute top-2 right-2 px-3 py-1 text-xs bg-black/60 text-white rounded"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  Edit Image
-                </button>
-                <button
-                  type="button"
-                  className={`absolute top-2 left-2 px-3 py-1 text-xs bg-red-500 text-white rounded ${imageFile ? "block" : "hidden"
-                    }`}
-                  onClick={() => {
-                    setImagePreview(product.image_url);
-                    setImageFile(null);
-                    if (fileInputRef.current) fileInputRef.current.value = "";
-                  }}
-                >
-                  Remove Image
-                </button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleImageChange}
-                  className="hidden"
+                <FormField
+                  control={form.control}
+                  name="subCategoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {subCategories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id.toString()}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-            </section>
 
-            {/* Visibility */}
-            <section className="border rounded-md p-4 bg-muted/10 w-1/2 space-y-4">
-              <h3 className="text-md font-semibold">Visibility</h3>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="is_active">Active</Label>
-                <Controller
-                  control={control}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl><Textarea rows={3} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* 2. Pricing & Inventory */}
+            <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
+              <h3 className="font-medium text-primary">Pricing & Stock</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="costPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cost Price</FormLabel>
+                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="discountPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Discount Price</FormLabel>
+                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="sku"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SKU</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="stock"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Stock Quantity</FormLabel>
+                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* 3. Media & Visibility */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Image Preview Area */}
+              <div className="space-y-4">
+                <FormLabel>Product Image</FormLabel>
+                <div className="relative group aspect-square rounded-md border-2 border-dashed flex items-center justify-center overflow-hidden">
+                  {imagePreview ? (
+                    <>
+                      <img src={imagePreview} className="w-full h-full object-contain" alt="Preview" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <Button type="button" variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()}>
+                          <Pencil className="w-4 h-4 mr-1" /> Change
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <Button type="button" variant="ghost" onClick={() => fileInputRef.current?.click()}>
+                      <Upload className="w-8 h-8 text-muted-foreground" />
+                    </Button>
+                  )}
+                  <input type="file" ref={fileInputRef} className="hidden" onChange={handleImageChange} accept="image/*" />
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
                   name="is_active"
                   render={({ field }) => (
-                    <Switch
-                      id="is_active"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <FormItem className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel>Active Status</FormLabel>
+                        <FormDescription>Show in store</FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
                   )}
                 />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="is_featured">Featured</Label>
-                <Controller
-                  control={control}
+                <FormField
+                  control={form.control}
                   name="is_featured"
                   render={({ field }) => (
-                    <Switch
-                      id="is_featured"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <FormItem className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel>Featured</FormLabel>
+                        <FormDescription>Show on homepage</FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
                   )}
                 />
               </div>
-            </section>
-          </div>
+            </div>
 
-          <SheetFooter className="pt-4">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button disabled={!(isDirty || imageFile)}>Save Changes</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <button
-                      onClick={() => void handleSubmit(onSubmit)()}
-                      className="px-4 py-2 bg-blue-600 text-white rounded"
-                      disabled={!(isDirty || imageFile)}
-                    >
-                      Continue
-                    </button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            {/* 4. Specifications & Tags */}
+            <div className="space-y-4 rounded-lg border p-4 bg-muted/20">
+              <h3 className="font-medium text-primary">Specifications</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight</FormLabel>
+                      <FormControl><Input placeholder="1.2kg" {...field} /></FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="dimensions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dimensions</FormLabel>
+                      <FormControl><Input placeholder="10x5x2 cm" {...field} /></FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tags (separated by comma)</FormLabel>
+                    <FormControl><Input placeholder="electronics, gadget, smart" {...field} /></FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <SheetClose asChild>
-              <Button variant="outline">Close</Button>
-            </SheetClose>
-          </SheetFooter>
-        </form>
+            <div className="flex justify-end gap-3 pb-6">
+              <Button type="button" variant="outline" onClick={() => setIsUPdateOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={!isDirty && !imageFile}>
+                Update Product
+              </Button>
+            </div>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );

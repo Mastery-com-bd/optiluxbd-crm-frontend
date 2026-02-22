@@ -95,11 +95,7 @@ const NotificationTrigger = () => {
   };
 
   return (
-    <Card className="bg-[rgba(255,255,255,0.10)] w-full rounded-2xl relative py-4 px-6">
-      {/* top and bottom border */}
-      <div className="absolute top-0 left-0 inset-5 border-l border-t border-white/20 rounded-tl-2xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 inset-5 border-r border-b border-white/20 rounded-br-2xl pointer-events-none" />
-
+    <Card className=" w-full rounded-2xl effect">
       <div className="space-y-6">
         {/* header */}
         <div>
@@ -128,7 +124,8 @@ const NotificationTrigger = () => {
             {notificationData.map((item) => (
               <TableRow
                 key={item.title}
-                className="border-none hover:bg-transparent">
+                className="border-none hover:bg-transparent"
+              >
                 {/* Trigger */}
                 <TableCell className="py-4 border-none">
                   <div className="space-y-1">
