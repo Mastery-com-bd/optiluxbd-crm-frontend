@@ -74,10 +74,21 @@ const LoginComponent = () => {
     }
   };
 
+  // const handleAdmin = async (data: { email: string; password: string }) => {
+  //   try {
+  //     const res = await login(data);
+  //     console.log(res);
+  //     const currentUser = await getCurrentUser();
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleAdmin = async (data: { email: string; password: string }) => {
     const toastId = toast.loading("logging in");
     try {
       const res = await login(data);
+      console.log(res);
       if (res?.success) {
         setIsLoading(false);
         await refetchUser();
@@ -94,6 +105,7 @@ const LoginComponent = () => {
         error?.data?.errors[0]?.message ||
         "Something went wrong!";
       toast.error(errorInfo, { id: toastId, duration: 3000 });
+      console.log(error);
     }
   };
 
@@ -144,7 +156,7 @@ const LoginComponent = () => {
               disabled={isSubmitting}
               onClick={() =>
                 handleAdmin({
-                  email: "mastery@gmail.com",
+                  email: "mastery@corporation.com",
                   password: "mastery1234",
                 })
               }

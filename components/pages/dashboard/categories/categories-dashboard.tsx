@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import PageHeader from "../shared/pageHeader";
-import AddCategory from "./addCategory";
+import AddCategory from "./all/addCategory";
 
 const timeFilters = ["1D", "7D", "1M", "6M", "1Y"];
 
@@ -63,7 +63,7 @@ export function CategoryOverview() {
           title="Category Overview"
           description="Browse and manage All Category"
         />
-         <AddCategory />
+        <AddCategory />
       </div>
 
       {/* Overview Card */}
@@ -89,10 +89,11 @@ export function CategoryOverview() {
                 className=""
               >
                 <button
-                  className={`px-4 py-2 text-sm font-semibold ${activeFilter !== filter
+                  className={`px-4 py-2 text-sm font-semibold ${
+                    activeFilter !== filter
                       ? " text-gray-400"
                       : "text-[#F3F3F3]"
-                    }`}
+                  }`}
                 >
                   {filter}
                 </button>

@@ -18,7 +18,11 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { createCategories, createSubCategories } from "@/service/category";
+import {
+  createCategories,
+  createSubCategories,
+  uploadCategoryImage,
+} from "@/service/category";
 import { useState } from "react";
 
 // Validation Schema
@@ -26,13 +30,15 @@ const formSchema = z.object({
   name: z.string().min(1, "Category name is required"),
   description: z.string().min(1, "Category description is required"),
   categoryImage: z.any().optional(),
-  subCategories: z.array(
-    z.object({
-      name: z.string().min(1, "Subcategory name is required"),
-      description: z.string().min(1, "Subcategory description is required"),
-      image: z.any().optional(),
-    }),
-  ),
+  subCategories: z
+    .array(
+      z.object({
+        name: z.string().min(1, "Subcategory name is required"),
+        description: z.string().min(1, "Subcategory description is required"),
+        image: z.any().optional(),
+      }),
+    )
+    .optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -53,7 +59,7 @@ const AddCategory = () => {
     defaultValues: {
       name: "",
       description: "",
-      subCategories: [{ name: "", description: "", image: null }],
+      subCategories: [],
     },
   });
 
@@ -71,6 +77,7 @@ const AddCategory = () => {
     categoryName?.trim() !== "" && categoryDescription?.trim() !== "";
 
   const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
     const categoryData = {
       name: data?.name,
       description: data?.description,
@@ -84,15 +91,30 @@ const AddCategory = () => {
         toast.error(result?.message, { id: toastId });
         return;
       }
-
       toast.success(result?.message, { id: toastId });
+      const categoryId = result?.data?.id;
+      if (data?.categoryImage) {
+        const imageLoadingId = toast.loading("image uploading", {
+          duration: 3000,
+        });
+        formData.append("category_image", data?.categoryImage);
+        const imageUploadResult = await uploadCategoryImage(
+          formData,
+          categoryId,
+        );
+        if (imageUploadResult?.success) {
+          toast.success(imageUploadResult?.message, { id: imageLoadingId });
+        } else {
+          toast.error(imageUploadResult?.message, { id: imageLoadingId });
+        }
+      }
+
       if (!subcategoryData.length) {
         reset();
         setOpen(false);
         return;
       }
 
-      const categoryId = result?.data?.id;
       const formattedSubCategories = subcategoryData.map((sub) => ({
         name: sub.name,
         description: sub.description,
@@ -135,7 +157,7 @@ const AddCategory = () => {
             />
           </div>
         </DialogTrigger>
-        <DialogContent className="w-[430px]! bg-[#1a102e] border-white/10 px-3">
+        <DialogContent className="w-[430px]! bg-[#1a102e] border-white/10 px-3 max-h-[80vh]! overflow-y-auto no-scrollbar">
           <div className="space-y-4 ">
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-white">
@@ -242,7 +264,7 @@ const AddCategory = () => {
                 </div>
 
                 {fields.length > 0 && (
-                  <div className="max-h-66 overflow-y-auto space-y-3 no-scrollbar p-1">
+                  <div className=" space-y-3 p-1">
                     {fields.map((field, index) => (
                       <div
                         key={field.id}

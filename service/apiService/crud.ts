@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 import { Query } from "@/types/shared";
 import { buildParams } from "@/utills/paramsBuilder";
 
-
 //create
 export async function createData<T>(
   endPoint: string,
@@ -73,6 +72,7 @@ export async function readData(
         },
         next: {
           tags: [...tags],
+          revalidate: 30,
         },
       } as RequestInit,
     );
@@ -125,37 +125,7 @@ export async function patchData<T>(
   }
 }
 
-// PUT data
-export async function putData<T>(
-  endPoint: string,
-  revalPath: string,
-  data?: T,
-) {
-  const token = await getValidToken();
-  try {
-    const res = await fetch(`${config.next_public_base_api}${endPoint}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    } as RequestInit);
-    const result = await res.json();
-    revalidatePath(revalPath);
-    return result;
-  } catch (error: any) {
-    return error;
-  }
-}
-
-
-
-
-
-
 // ========================================= public api ===========================
-
 
 // public read
 export async function readPublicData(
@@ -170,6 +140,7 @@ export async function readPublicData(
         method: "GET",
         next: {
           tags: [...tags],
+          revalidate: 30,
         },
       } as RequestInit,
     );

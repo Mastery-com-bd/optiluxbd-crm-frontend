@@ -1,26 +1,213 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import AddCategory from "../addCategory";
-import CategoryCard from "../category-card";
+import { Dispatch, SetStateAction, useState } from "react";
+import AddCategory from "./addCategory";
 import PageHeader from "../../shared/pageHeader";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { TCategories } from "@/types/category.type";
 import ActiveIcon from "@/components/svgIcon/ActiveIcon";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import AddSubCategory from "./AddSubCategory";
+import { toast } from "sonner";
+import {
+  deleteCategory,
+  deleteCategoryImage,
+  deleteSubCategory,
+  deleteSubCategoryImage,
+  uploadCategoryImage,
+  uploadSubCategoryImage,
+} from "@/service/category";
+import CategoryDropdown from "../CategoryDropdown";
+import UpdateCategory from "./UpdateCategory";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { debounce } from "@/utills/debounce";
 
-type TCategoryPageProps = {
+export type TCategoryPageProps = {
   categories: TCategories[];
 };
 
-const AllCategories = ({ categories }: TCategoryPageProps) => {
-  const [query, setQuery] = useState("");
-  const [current, setCurrent] = useState<TCategories>(categories[0]);
+export type THandleConfirm = {
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  id: number;
+};
 
-  console.log(categories);
+const AllCategories = ({ categories }: TCategoryPageProps) => {
+  const [search, setSearch] = useState("");
+  const [current, setCurrent] = useState<TCategories>(categories[0]);
+  const router = useRouter();
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleDeleteCategory = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Processing...");
+    try {
+      const result = await deleteCategory(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSubCategory = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Processing...");
+    try {
+      const result = await deleteSubCategory(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleSetCategoryImage = async ({
+    image,
+    id,
+    setLoading,
+    setOpen,
+  }: {
+    image: File;
+    id: number;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => {
+    const formData = new FormData();
+    formData.append("category_image", image);
+    const toastId = toast.loading("image uploading");
+    setLoading(true);
+    try {
+      const result = await uploadCategoryImage(formData, id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId, duration: 3000 });
+        setLoading(false);
+        setOpen(false);
+      } else {
+        toast.error(result?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId, duration: 3000 });
+    }
+  };
+
+  const handleSetSubCategoryImage = async ({
+    image,
+    id,
+    setLoading,
+    setOpen,
+  }: {
+    image: File;
+    id: number;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => {
+    const formData = new FormData();
+    formData.append("subcategory_image", image);
+    const toastId = toast.loading("image uploading");
+    setLoading(true);
+    try {
+      const result = await uploadSubCategoryImage(formData, id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId, duration: 3000 });
+        setLoading(false);
+        setOpen(false);
+      } else {
+        toast.error(result?.message, { id: toastId, duration: 3000 });
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId, duration: 3000 });
+    }
+  };
+
+  const handleDeleteCategoryImage = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Deleting Category Image...");
+    try {
+      const result = await deleteCategoryImage(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSubCategoryImage = async ({
+    setLoading,
+    setOpen,
+    id,
+  }: THandleConfirm) => {
+    setLoading(true);
+    const toastId = toast.loading("Deleting SubCategory Image...");
+    try {
+      const result = await deleteSubCategoryImage(id);
+      if (result?.success) {
+        toast.success(result?.message, { id: toastId });
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error(result?.message, { id: toastId });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong", { id: toastId });
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("searchTerm", value.toString());
+    } else params.delete("searchTerm");
+    router.push(`${pathName}?${params.toString()}`, {
+      scroll: false,
+    });
+  };
+
+  const debouncedLog = debounce(handleSearch, 100, { leading: false });
 
   return (
     <div className="min-h-screen w-full space-y-6">
@@ -39,35 +226,72 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
       <div className="relative flex items-center justify-start">
         <Input
           icon={<Search />}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={search}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearch(value);
+            debouncedLog(value);
+          }}
           placeholder="Search in category"
         />
       </div>
 
-      <div className="grid grid-cols-12 gap-6">
-        {/* Sidebar */}
-        <aside className="col-span-3 space-y-3">
-          <h1 className="text-[28px] font-semibold">Categories</h1>
-          <div className="space-y-3">
-            {categories.map((p) => {
-              const active = current.id === p.id;
-              return (
-                <div
-                  key={p.id}
-                  className="w-[260px] rounded-[12px] effect cursor-pointer hover:scale-[1.02] transition-transform"
-                >
-                  <button
+      {!categories.length ? (
+        <Card className="effect">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              No Category available right now
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-12 gap-6">
+          {/* Sidebar */}
+          <aside className="col-span-3 space-y-3">
+            <h1 className="text-[28px] font-semibold">Categories</h1>
+            <div className="space-y-3">
+              {categories.map((p) => {
+                const active = current?.id === p?.id;
+                return (
+                  <div
+                    key={p?.id}
                     onClick={() => setCurrent(p)}
-                    className={cn(
-                      "w-[260px] relative cursor-pointer flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden ",
-                    )}
+                    className="w-[260px] relative effect hover:scale-[1.02] transition-transform flex items-center gap-6 rounded-xl p-4 text-left overflow-hidden group cursor-pointer effect"
                   >
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-20 duration-500"
+                    >
+                      <CategoryDropdown
+                        title="Want to Delete This Category?"
+                        description="If you delete this category, the sub category of this category will also be deleted. The product with this category will be uncategorized. This action can`t be undone"
+                        id={p?.id}
+                        onConfirm={handleDeleteCategory}
+                        buttonName="Delete Category"
+                        secondButtonName="Delete Image"
+                        handleSubmit={handleSetCategoryImage}
+                        onDeleteConfirm={handleDeleteCategoryImage}
+                        imageTitle="Want to delete this category image?"
+                        imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
+                        imageUrl={p?.image_url as string}
+                        path={`/dashboard/admin/categories/${p?.id}`}
+                      >
+                        <UpdateCategory
+                          title="Update Category"
+                          slug="category"
+                          data={p}
+                          id={p?.id}
+                        />
+                      </CategoryDropdown>
+                    </div>
                     {active && <ActiveIcon />}
-                    <div className="flex items-center justify-center cursor-pointer effect rounded-[12px] overflow-hidden bg-transparent!">
+                    <div className="flex items-center justify-center rounded-[12px] overflow-hidden bg-transparent!">
                       <Image
-                        src="https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
-                        alt={p.name}
+                        src={
+                          p?.image_url ||
+                          "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                        }
+                        alt={p?.name}
                         height={100}
                         width={100}
                         className=" w-24 h-24 object-contain"
@@ -76,44 +300,80 @@ const AllCategories = ({ categories }: TCategoryPageProps) => {
                     <div className="flex-1">
                       <div className="font-medium">{p.name}</div>
                     </div>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </aside>
-
-        {/* Content */}
-        <section className="col-span-9 space-y-3">
-          <div>
-            <h2 className="text-[28px] font-semibold ">Sub Categories</h2>
-          </div>
-          {current?.subCategories.length ? (
-            <div className="grid grid-cols-3 gap-5">
-              {current?.subCategories.map((c) => (
-                <Link href={`/dashboard/admin/categories/products`} key={c.id}>
-                  <CategoryCard
-                    category={{
-                      id: Number(c.id),
-                      name: c.name,
-                      image:
-                        "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
-                    }}
-                  />
-                </Link>
-              ))}
+                  </div>
+                );
+              })}
             </div>
-          ) : (
-            <Card className="effect">
-              <CardHeader>
-                <CardTitle className="text-2xl text-center">
-                  No Sub categories for this category
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          )}
-        </section>
-      </div>
+          </aside>
+
+          {/* Content */}
+          <section className="col-span-9 space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-[28px] font-semibold ">Sub Categories</h2>
+              <AddSubCategory id={current?.id} />
+            </div>
+            {current?.subCategories.length ? (
+              <div className="grid grid-cols-3 gap-5">
+                {current?.subCategories.map((c) => (
+                  <div key={c.id} className="relative group">
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-30 duration-500"
+                    >
+                      <CategoryDropdown
+                        title="Want to Delete This  Sub-Category?"
+                        description="If you delete this sub-category, the product with this sub-category will be uncategorized. This action can`t be undone"
+                        id={c?.id}
+                        onConfirm={handleDeleteSubCategory}
+                        handleSubmit={handleSetSubCategoryImage}
+                        buttonName="Delete Sub Category"
+                        secondButtonName="Delete Image"
+                        onDeleteConfirm={handleDeleteSubCategoryImage}
+                        imageTitle="Want to delete this category image?"
+                        imageDescription="If you delete the image from this category it will be deleted permanently and can`t be undone"
+                        imageUrl={c?.image_url as string}
+                        path={`/dashboard/admin/sub-categories/${c?.id}`}
+                      >
+                        <UpdateCategory
+                          title="Update Sub Category"
+                          slug="subCategory"
+                          data={c}
+                          id={c?.id}
+                        />
+                      </CategoryDropdown>
+                    </div>
+                    <div className="max-w-[265px] p-5 cursor-pointer hover:scale-[1.02] transition-transform effect rounded-[12px] ">
+                      <div className="flex items-center justify-center py-2 effect rounded-[12px] overflow-hidden bg-transparent!">
+                        <Image
+                          src={
+                            c?.image_url ||
+                            "https://images.unsplash.com/photo-1676195470090-7c90bf539b3b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687"
+                          }
+                          alt={c?.name}
+                          width={200}
+                          height={200}
+                          className=" w-24 h-24 object-contain"
+                        />
+                      </div>
+                      <h3 className="text-white font-semibold text-center mt-4">
+                        {c?.name}
+                      </h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Card className="effect">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-center">
+                    No Sub categories for this category
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            )}
+          </section>
+        </div>
+      )}
     </div>
   );
 };

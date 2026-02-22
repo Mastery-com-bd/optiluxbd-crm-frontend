@@ -15,7 +15,7 @@ const RevenewSection = () => {
   const START_YEAR = 2020;
   const CURRENT_YEAR = new Date().getFullYear();
   const years = Array.from({ length: CURRENT_YEAR - START_YEAR + 1 }, (_, i) =>
-    String(START_YEAR + i)
+    String(START_YEAR + i),
   );
   const [year, setYear] = useState(years[years.length - 1]);
   const [filters, setFilters] = useState({
@@ -35,15 +35,11 @@ const RevenewSection = () => {
 
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 lg:gap-6">
-      {/* bar chart component */}
       <Card className="effect h-full relative rounded-3xl px-6 py-6 w-full border-0">
-        {/* main content */}
         <div className=" w-full h-full rounded-3xl space-y-4">
-          {/* header section */}
           <div className="flex items-center justify-between">
             <h1 className="text-xl text-white/70">Total revenue</h1>
             <div className="flex items-center gap-6">
-              {/* status drodpown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -80,14 +76,12 @@ const RevenewSection = () => {
               </DropdownMenu>
             </div>
           </div>
-          {/* main content */}
           <BarChartSection />
         </div>
       </Card>
 
       {/* pie chart component */}
       <Card className="effect border-0 h-full relative rounded-3xl px-6 py-4 w-full">
-        {/* main content */}
         <div className=" w-full h-full rounded-3xl ">
           <PieChartSection />
           <div className="w-full flex justify-center ">

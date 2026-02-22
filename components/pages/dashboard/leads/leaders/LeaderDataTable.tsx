@@ -31,7 +31,7 @@ const LeaderDataTable = ({
     setSelectedMember(member);
     setOpen(true);
   };
-  console.log(members);
+
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">Agent Performance Table</h2>

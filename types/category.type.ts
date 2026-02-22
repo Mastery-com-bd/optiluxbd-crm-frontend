@@ -8,6 +8,8 @@ export type TSubCategory = {
   slug: string;
   created_at: string;
   updated_at: string;
+  image_public_id: string | null;
+  image_url: string | null;
 };
 
 export type TCategory = {
@@ -19,6 +21,8 @@ export type TCategory = {
   description: string;
   created_at: string;
   updated_at: string;
+  image_public_id: string | null;
+  image_url: string | null;
 };
 
 export type TCategories = TCategory[];

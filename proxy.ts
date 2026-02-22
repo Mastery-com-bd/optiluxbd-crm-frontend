@@ -10,6 +10,13 @@ const authRoutes = ["/login", "/forgot-password", "/reset-password"];
 export const proxy = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   let token = request.cookies.get("accessToken")?.value;
+  // const refreshToken = request.cookies.get("refreshToken")?.value;
+
+  // if (!refreshToken) {
+  //   await logout();
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
+
   const response = NextResponse.next();
   if (token && authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
