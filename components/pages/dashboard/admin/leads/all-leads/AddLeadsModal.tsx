@@ -35,12 +35,15 @@ import ButtonComponent from "@/components/ui/ButtonComponent";
 
 // Validation Schema
 const formSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
-  interestedProduct: z.string().min(1, "Product SKU is required"),
-  leadSource: z.string().min(1, "Please select a source"),
-  leadPriority: z.string().min(1, "Please select a priority"),
-  phoneNumber: z.string().min(11, "Valid phone number is required"),
-  initialNotes: z.string().optional(),
+  name: z.string().min(2, "Name is required"),
+  phone: z.string().min(11, "Valid phone number is required"),
+  lead_status: z.string().min(1, "Status is required"),
+  lead_source: z.string().min(1, "Source is required"),
+  email: z.string().email("Invalid email address"),
+  gender: z.string().min(1, "Gender is required"),
+  customFields: z.object({
+    interest: z.string().min(1, "Interest is required"),
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -49,12 +52,15 @@ const AddLeadsModal = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
-      interestedProduct: "",
-      leadSource: "",
-      leadPriority: "",
-      phoneNumber: "",
-      initialNotes: "",
+      name: "",
+      phone: "",
+      lead_status: "",
+      lead_source: "",
+      email: "",
+      gender: "",
+      customFields: {
+        interest: "",
+      },
     },
   });
 
@@ -87,16 +93,13 @@ const AddLeadsModal = () => {
               <DialogTitle className="text-xl font-semibold text-white">
                 Add New Lead
               </DialogTitle>
-              {/* <LiquidGlass glowIntensity="xs" shadowIntensity="xs" borderRadius="16px">
-                <Button
-                  type="submit"
-                  variant="yellow"
-                  className="p-3 flex rounded-2xl border-none cursor-pointer h-10"
-                >
-                  Add Lead
-                </Button>
-              </LiquidGlass> */}
-              <ButtonComponent icon={Plus} type="submit" varient="yellow" buttonName="add" className="h-10 px-6 rounded-2xl"/>
+              <ButtonComponent
+                icon={Plus}
+                type="submit"
+                varient="yellow"
+                buttonName="add"
+                className="h-10 px-6 rounded-2xl"
+              />
             </DialogHeader>
             <div className="space-y-4">
               {/* Upper Section (Grid Layout) */}
@@ -105,10 +108,12 @@ const AddLeadsModal = () => {
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="fullName"
+                    name="name"
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="text-xs font-normal text-white">Full Name</FormLabel>
+                        <FormLabel className="text-xs font-normal text-white">
+                          Name
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter full name"
@@ -123,13 +128,35 @@ const AddLeadsModal = () => {
 
                   <FormField
                     control={form.control}
-                    name="interestedProduct"
+                    name="phone"
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="text-xs font-normal text-white">Interested Product</FormLabel>
+                        <FormLabel className="text-xs font-normal text-white">
+                          Phone
+                        </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Write product SKU"
+                            placeholder="Enter phone number"
+                            className="bg-white/10 border-none rounded-lg text-white"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs font-normal text-white">
+                          Email
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter email address"
                             className="bg-white/10 border-none rounded-lg text-white"
                             {...field}
                           />
@@ -142,67 +169,106 @@ const AddLeadsModal = () => {
 
                 {/* Right Side */}
                 <div className="space-y-4">
-                  <div className="flex items-start gap-2">
-                    <FormField
-                      control={form.control}
-                      name="leadSource"
-                      render={({ field }) => (
-                        <FormItem className="space-y-1 flex-1">
-                          <FormLabel className="text-xs font-normal text-white">Source</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="bg-white/10 border-none text-xs h-10 rounded-lg text-white">
-                                <SelectValue placeholder="Source" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-[#2A1B40] text-white border-white/10">
-                              {["Referral", "Organic", "Facebook", "LinkedIn", "Cold Call"].map((item) => (
-                                <SelectItem key={item} value={item}>{item}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="text-[10px]" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="leadPriority"
-                      render={({ field }) => (
-                        <FormItem className="space-y-1 flex-1">
-                          <FormLabel className="text-xs font-normal text-white">Priority</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="bg-white/10 border-none text-xs h-10 rounded-lg text-white">
-                                <SelectValue placeholder="Priority" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-[#2A1B40] text-white border-white/10">
-                              {["High", "Medium", "Low"].map((item) => (
-                                <SelectItem key={item} value={item}>{item}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="text-[10px]" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs font-normal text-white">
+                          Gender
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-white/10 border-none text-xs h-10 rounded-lg text-white">
+                              <SelectValue placeholder="Select Gender" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-[#2A1B40] text-white border-white/10">
+                            {["MALE", "FEMALE", "OTHER", "NOT_SPECIFIED"].map(
+                              (item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item}
+                                </SelectItem>
+                              ),
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
-                    name="phoneNumber"
+                    name="lead_source"
                     render={({ field }) => (
                       <FormItem className="space-y-1">
-                        <FormLabel className="text-xs font-normal text-white">Phone Number</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="+8801754******"
-                            className="bg-white/10 border-none rounded-lg text-white"
-                            {...field}
-                          />
-                        </FormControl>
+                        <FormLabel className="text-xs font-normal text-white">
+                          Lead Source
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-white/10 border-none text-xs h-10 rounded-lg text-white">
+                              <SelectValue placeholder="Select Source" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-[#2A1B40] text-white border-white/10">
+                            {[
+                              "FACEBOOK",
+                              "WEBSITE",
+                              "MANUAL",
+                              "API",
+                              "REFERRAL",
+                              "OTHER",
+                            ].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="lead_status"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs font-normal text-white">
+                          Lead Status
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-white/10 border-none text-xs h-10 rounded-lg text-white">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-[#2A1B40] text-white border-white/10">
+                            {[
+                              "NEW",
+                              "CONTACTED",
+                              "QUALIFIED",
+                              "CONVERTED",
+                              "LOST",
+                            ].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage className="text-[10px]" />
                       </FormItem>
                     )}
@@ -210,20 +276,23 @@ const AddLeadsModal = () => {
                 </div>
               </div>
 
-              {/* Textarea Section */}
+              {/* Interest Section */}
               <FormField
                 control={form.control}
-                name="initialNotes"
+                name="customFields.interest"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel className="text-xs font-normal text-white">Initial Notes</FormLabel>
+                    <FormLabel className="text-xs font-normal text-white">
+                      Interest (Custom Field)
+                    </FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Optional notes about the leads"
-                        className="bg-white/10 border-none resize-none rounded-xl px-4 py-3 placeholder:text-[#B1B1B1] text-white h-[100px]"
+                      <Input
+                        placeholder="e.g. Premium Package"
+                        className="bg-white/10 border-none rounded-lg text-white"
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />

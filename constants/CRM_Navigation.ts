@@ -356,6 +356,26 @@ export const crmRoutes: TCrmNavigation = {
         },
       ],
     },
+
+    // Users route
+    {
+      title: "Users",
+      icon: Users,
+      // permissions: [
+      //   "CUSTOMERS VIEW",
+      //   "CUSTOMERS CREATE",
+      //   "CUSTOMERS UPDATE",
+      //   "CUSTOMERS DELETE",
+      // ],
+      children: [
+        {
+          title: "All Users",
+          path: "/dashboard/admin/users",
+          // permissions: ["CUSTOMERS VIEW"],
+        },
+        
+      ],
+    },
   ],
 
   // team and sales hub

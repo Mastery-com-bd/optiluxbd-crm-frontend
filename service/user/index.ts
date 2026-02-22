@@ -4,7 +4,7 @@
 import { config } from "@/config";
 import { getAccesstoken } from "../authService";
 import { getValidToken } from "../authService/validToken";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export type TCreateUserData = {
   name: string;
@@ -13,8 +13,10 @@ export type TCreateUserData = {
   phone: string;
   status: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "DISABLED" | "REJECTED";
   is_approved?: boolean | undefined;
+  is_active?: boolean | undefined;
   isActive?: boolean | undefined;
   email_verified?: boolean | undefined;
+  password?: string;
 };
 
 type TInviteUserForm = {
@@ -44,6 +46,156 @@ export const getAllUser = async () => {
   }
 };
 
+export const createNewUser = async (data: TCreateUserData) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/users`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      next: {
+        tags: ["OrganizationUsers"],
+        revalidate: 30,
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath("/dashboard/admin/users");
+    revalidateTag("OrganizationUsers", "default");
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+import { buildParams } from "@/utills/paramsBuilder";
+
+export const getAllOrganizationUser = async (query: Record<string, any> = {}) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const queryString = buildParams(query);
+    const res = await fetch(`${config.next_public_base_api}/users?${queryString}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["OrganizationUsers"],
+        revalidate: 30,
+      },
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+
+export const getOrganizationUserById = async (id: string) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/users/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["OrganizationUsers"],
+        revalidate: 30,
+      },
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+
+export const updateOrganizationUserById = async (id: string, data: TCreateUserData) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(`${config.next_public_base_api}/users/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      next: {
+        tags: ["OrganizationUsers"],
+        revalidate: 30,
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath("/dashboard/admin/users");
+    revalidateTag("OrganizationUsers", "default");
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+
+export const RejectOrganizationUser = async (userId: string, reason: string) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api}/auth/users/${userId}/reject`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["OrganizationUsers"],
+          revalidate: 30,
+        },
+        body: JSON.stringify({ reason }),
+      },
+    );
+    revalidatePath("/dashboard/admin/users");
+    revalidateTag("OrganizationUsers", "default");
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const UpdateOrganizationUserStatus = async (userId: string, status: string) => {
+  const token = (await getAccesstoken()) as string;
+  try {
+    const res = await fetch(
+      `${config.next_public_base_api}/auth/users/${userId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["OrganizationUsers"],
+          revalidate: 30,
+        },
+        body: JSON.stringify({ status }),
+      },
+    );
+    revalidatePath("/dashboard/admin/users");
+    revalidateTag("OrganizationUsers", "default");
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
 export const getUserById = async (id: string) => {
   const token = (await getAccesstoken()) as string;
   try {
@@ -52,7 +204,7 @@ export const getUserById = async (id: string) => {
       {
         method: "GET",
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
         next: {
           tags: ["Users"],
